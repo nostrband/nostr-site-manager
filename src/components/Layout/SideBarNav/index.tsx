@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useParams } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
 import { Box, Divider, List, ListItem } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -14,28 +14,31 @@ import {
   StyledSieBarDrawer,
   StyledSieBarElements,
 } from "./styled";
-import { navConfig, settingsConfig } from "./config";
-import { ViewListSites } from "@/components/ViewListSites";
+import { ListSitesDropdown } from "@/components/ListSitesDropdown";
+import { NavSettings } from "@/components/Layout/SideBarNav/components/NavSettings";
+import { NAV_CONFIG } from "@/consts";
 
 const NAV_WIDTH = 280;
 
 export const SideBarNav = ({ openNav = true }) => {
   const pathname = usePathname();
-  const { push, back } = useRouter();
+  const params = useParams();
+  const router = useRouter();
   const isDesktop = useResponsive("up", "lg");
 
   const handleGoTo = (path: string) => {
-    push(path);
+    router.push(path);
   };
 
-  const isSettings = pathname === "/settings";
+  const isSettings = pathname === `/${params.id}/settings`;
+  const isParamsID = Boolean(params.id);
 
   const renderContent = (
     <StyledSieBarContent>
       <StyledSieBarElements>
         {isSettings ? (
           <StyledSieBarButton
-            onClick={() => back()}
+            onClick={() => router.push(`/${params.id}/dashboard`)}
             size="large"
             fullWidth
             variant="text"
@@ -45,60 +48,55 @@ export const SideBarNav = ({ openNav = true }) => {
             Back to dashboard
           </StyledSieBarButton>
         ) : (
-          <ViewListSites />
+          <ListSitesDropdown />
         )}
       </StyledSieBarElements>
       <Divider />
-      <List disablePadding>
-        {isSettings
-          ? settingsConfig.map(({ title, path, icon }) => (
-              <ListItem key={title}>
-                <StyledSieBarButton
-                  size="large"
-                  fullWidth
-                  variant={pathname === path ? "contained" : "text"}
-                  color={
-                    pathname === path ? "buttonSidebarActive" : "textColor"
-                  }
-                  // href={path}
-                  // LinkComponent={Link}
-                  startIcon={icon}
-                >
-                  {title}
-                </StyledSieBarButton>
-              </ListItem>
-            ))
-          : navConfig.map(({ title, path, icon }) => (
-              <ListItem key={title}>
-                <StyledSieBarButton
-                  size="large"
-                  fullWidth
-                  variant={pathname === path ? "contained" : "text"}
-                  color={
-                    pathname === path ? "buttonSidebarActive" : "textColor"
-                  }
-                  href={path}
-                  LinkComponent={Link}
-                  startIcon={icon}
-                >
-                  {title}
-                </StyledSieBarButton>
-              </ListItem>
-            ))}
-      </List>
+      {isParamsID && (
+        <List disablePadding>
+          {isSettings ? (
+            <NavSettings />
+          ) : (
+            NAV_CONFIG.map(({ title, path: slug, icon }) => {
+              const path = `/${params.id}/${slug}`;
+
+              return (
+                <ListItem key={title}>
+                  <StyledSieBarButton
+                    size="large"
+                    fullWidth
+                    variant={pathname === path ? "contained" : "text"}
+                    color={
+                      pathname === path ? "buttonSidebarActive" : "textColor"
+                    }
+                    href={path}
+                    LinkComponent={Link}
+                    startIcon={icon}
+                  >
+                    {title}
+                  </StyledSieBarButton>
+                </ListItem>
+              );
+            })
+          )}
+        </List>
+      )}
+
       {!isSettings && (
         <StyledSideBarBottom>
           <IconButton aria-label="profile" size="large">
             <AccountCircleTwoToneIcon fontSize="inherit" />
           </IconButton>
 
-          <IconButton
-            onClick={() => handleGoTo("/settings")}
-            aria-label="settings"
-            size="large"
-          >
-            <SettingsTwoToneIcon fontSize="inherit" />
-          </IconButton>
+          {isParamsID && (
+            <IconButton
+              onClick={() => handleGoTo(`/${params.id}/settings`)}
+              aria-label="settings"
+              size="large"
+            >
+              <SettingsTwoToneIcon fontSize="inherit" />
+            </IconButton>
+          )}
         </StyledSideBarBottom>
       )}
     </StyledSieBarContent>

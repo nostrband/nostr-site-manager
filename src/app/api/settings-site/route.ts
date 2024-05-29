@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
         fDescription: "",
         socialAccountFaceBook: "https://www.facebook.com/nostr-blog",
         socialAccountX: "https://twitter.com/nostr-blog",
-        isPrivate: true,
+        isPrivate: false,
         password: "",
       };
     },

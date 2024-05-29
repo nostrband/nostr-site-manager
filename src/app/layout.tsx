@@ -8,6 +8,7 @@ export const metadata = {
   description: "App for managment your blog",
 };
 
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ru" style={{ height: "100%" }}>

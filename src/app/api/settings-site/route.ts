@@ -28,6 +28,16 @@ export async function GET(req: NextRequest) {
         socialAccountX: "https://twitter.com/nostr-blog",
         isPrivate: false,
         password: "",
+
+        name: "",
+        url: "",
+        icon: "",
+        image: "",
+        ogDescription: "",
+        ogImage: "",
+        logo: "",
+        ogTitle: "",
+        xImage: "",
       };
     },
   );

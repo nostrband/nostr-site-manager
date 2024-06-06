@@ -20,7 +20,7 @@ import { NAV_CONFIG } from "@/consts";
 
 const NAV_WIDTH = 280;
 
-export const SideBarNav = ({ openNav = true }) => {
+export const SideBarNav = ({ openNav = false }) => {
   const pathname = usePathname();
   const params = useParams();
   const router = useRouter();

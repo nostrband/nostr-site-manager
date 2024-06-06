@@ -2,14 +2,20 @@ import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 import WebTwoToneIcon from "@mui/icons-material/WebTwoTone";
 import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
 import TitleTwoToneIcon from "@mui/icons-material/TitleTwoTone";
-import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
-// import ContactPageTwoToneIcon from "@mui/icons-material/ContactPageTwoTone";
-import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
-import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
-import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
-import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
+// import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
+import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
+// import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
+// import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
+// import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
+// import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
 import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
-import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
+// import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
+import AltRouteTwoToneIcon from "@mui/icons-material/AltRouteTwoTone";
+import BrushTwoToneIcon from "@mui/icons-material/BrushTwoTone";
+import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
+import LinkTwoToneIcon from "@mui/icons-material/LinkTwoTone";
+import ImageTwoToneIcon from "@mui/icons-material/ImageTwoTone";
+import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
 
 export const NAV_CONFIG = [
   {
@@ -38,7 +44,13 @@ export const HASH_CONFIG = {
   FACEBOOK_CARD: "facebook-card",
   SOCIAL_ACCOUNTS: "social-accounts",
   PRIVATE: "private",
-  STAFF: "staff",
+  CONTRIBUTORS: "contributors",
+  DESIGN_BRANDING: "design-branding",
+  NAVIGATION: "navigation",
+  RECOMMENDATION: "recommendation",
+  URL: "url",
+  ICON: "icon",
+  IMAGE: "image",
 };
 
 export const SETTINGS_CONFIG = [
@@ -50,46 +62,81 @@ export const SETTINGS_CONFIG = [
         path: HASH_CONFIG.TITLE_DESCRIPTION,
         icon: <TitleTwoToneIcon />,
       },
-      {
-        title: "Timezone",
-        path: HASH_CONFIG.TIMEZONE,
-        icon: <AccessTimeTwoToneIcon />,
-      },
-      {
-        title: "Publication language",
-        path: HASH_CONFIG.LANGUAGE,
-        icon: <TranslateTwoToneIcon />,
-      },
+      // {
+      //   title: "Timezone",
+      //   path: HASH_CONFIG.TIMEZONE,
+      //   icon: <AccessTimeTwoToneIcon />,
+      // },
+      // {
+      //   title: "Publication language",
+      //   path: HASH_CONFIG.LANGUAGE,
+      //   icon: <TranslateTwoToneIcon />,
+      // },
       {
         title: "Meta data",
         path: HASH_CONFIG.META_DATA,
         icon: <LineWeightTwoToneIcon />,
       },
-      {
-        title: "X card",
-        path: HASH_CONFIG.X_CARD,
-        icon: <CloseTwoToneIcon />,
-      },
-      {
-        title: "Facebook card",
-        path: HASH_CONFIG.FACEBOOK_CARD,
-        icon: <FacebookTwoToneIcon />,
-      },
-      {
-        title: "Social accounts",
-        path: HASH_CONFIG.SOCIAL_ACCOUNTS,
-        icon: <ThumbUpTwoToneIcon />,
-      },
-      {
-        title: "Make this site private",
-        path: HASH_CONFIG.PRIVATE,
-        icon: <LockTwoToneIcon />,
-      },
       // {
-      //   title: "Staff",
-      //   path: HASH_CONFIG.STAFF,
-      //   icon: <ContactPageTwoToneIcon />,
+      //   title: "X card",
+      //   path: HASH_CONFIG.X_CARD,
+      //   icon: <CloseTwoToneIcon />,
       // },
+      // {
+      //   title: "Facebook card",
+      //   path: HASH_CONFIG.FACEBOOK_CARD,
+      //   icon: <FacebookTwoToneIcon />,
+      // },
+      // {
+      //   title: "Social accounts",
+      //   path: HASH_CONFIG.SOCIAL_ACCOUNTS,
+      //   icon: <ThumbUpTwoToneIcon />,
+      // },
+      {
+        title: "Contributors",
+        path: HASH_CONFIG.CONTRIBUTORS,
+        icon: <AccountCircleTwoToneIcon />,
+      },
+    ],
+  },
+  {
+    title: "Site",
+    sublist: [
+      {
+        title: "Design & Branding",
+        path: HASH_CONFIG.DESIGN_BRANDING,
+        icon: <BrushTwoToneIcon />,
+      },
+      {
+        title: "Icon",
+        path: HASH_CONFIG.ICON,
+        icon: <AppsTwoToneIcon />,
+      },
+      {
+        title: "Image",
+        path: HASH_CONFIG.IMAGE,
+        icon: <ImageTwoToneIcon />,
+      },
+      {
+        title: "URL",
+        path: HASH_CONFIG.URL,
+        icon: <LinkTwoToneIcon />,
+      },
+      {
+        title: "Navigation",
+        path: HASH_CONFIG.NAVIGATION,
+        icon: <AltRouteTwoToneIcon />,
+      },
+    ],
+  },
+  {
+    title: "Growth",
+    sublist: [
+      {
+        title: "Recommendation",
+        path: HASH_CONFIG.RECOMMENDATION,
+        icon: <FavoriteTwoToneIcon />,
+      },
     ],
   },
 ];

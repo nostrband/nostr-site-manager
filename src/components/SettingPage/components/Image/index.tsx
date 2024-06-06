@@ -12,13 +12,11 @@ import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
 
 interface ITitleDescription extends IBaseSetting {
-  title: string;
-  description: string;
+  image: string;
 }
 
-export const TitleDescription = ({
-  title,
-  description,
+export const Image = ({
+  image,
   handleChange,
   handleBlur,
   submitForm,
@@ -39,10 +37,10 @@ export const TitleDescription = ({
   }, [isDisabled]);
 
   return (
-    <StyledSettingCol id={HASH_CONFIG.TITLE_DESCRIPTION}>
+    <StyledSettingCol id={HASH_CONFIG.IMAGE}>
       <StyledSettingBlock>
         <StyledHeadSettingBlock>
-          <Typography variant="h6">Title & Description</Typography>
+          <Typography variant="h6">Image</Typography>
 
           <SaveButton
             isEdit={isEdit}
@@ -52,32 +50,18 @@ export const TitleDescription = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          The details used to identify your publication around the web
+          Banner for site
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
-          <InputLabel htmlFor="title">Title</InputLabel>
+          <InputLabel htmlFor="image">Image url</InputLabel>
           <OutlinedInput
             inputRef={inputRef}
-            id="title"
-            name="title"
-            label="Title"
+            id="image"
+            name="image"
+            label="Image url"
             onChange={handleChange}
-            value={title}
-            onBlur={handleBlur}
-          />
-        </StyledFormControl>
-
-        <StyledFormControl disabled={!isEdit} fullWidth size="small">
-          <InputLabel htmlFor="description">Description</InputLabel>
-          <OutlinedInput
-            id="description"
-            name="description"
-            label="Description"
-            multiline
-            rows={5}
-            onChange={handleChange}
-            value={description}
+            value={image}
             onBlur={handleBlur}
           />
         </StyledFormControl>

@@ -152,6 +152,32 @@ const theme = createTheme({
         disableElevation: true,
       },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          "& .Mui-disabled": {
+            color: "#000 !important",
+            WebkitTextFillColor: "#000 !important",
+          },
+        },
+      },
+    },
+    MuiFab: {
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
+          "&:hover": {
+            boxShadow: "none",
+          },
+          "&:active": {
+            boxShadow: "none",
+          },
+          "&:focus": {
+            boxShadow: "none",
+          },
+        },
+      },
+    },
   },
 });
 

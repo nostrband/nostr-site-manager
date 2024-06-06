@@ -27,11 +27,7 @@ async function ensureNdk(pubkey: string) {
   ndk.connect();
 }
 
-function tags(
-  event: NDKEvent,
-  name: string,
-  len: number = 2
-): string[][] {
+function tags(event: NDKEvent, name: string, len: number = 2): string[][] {
   return event.tags.filter((t) => t.length >= len && t[0] === name);
 }
 
@@ -48,7 +44,6 @@ function tv(event: NDKEvent, name: string): string {
 }
 
 function parseSite(e: NDKEvent) {
-
   const id = nip19.naddrEncode({
     identifier: tv(e, "d") || "",
     kind: KIND_SITE,
@@ -114,7 +109,7 @@ function parseSite(e: NDKEvent) {
     socialAccountFaceBook: "",
     socialAccountX: "",
     isPrivate: false,
-    password: ""    
+    password: "",
   };
 
   return settings;
@@ -128,12 +123,15 @@ export async function fetchSites() {
   console.log("pubkey", pubkey);
   await ensureNdk(pubkey);
 
-  const events = await ndk!.fetchEvents({
-    // @ts-ignore
-    kinds: [KIND_SITE],
-    authors: [pubkey],
-  }, { groupable: false });
+  const events = await ndk!.fetchEvents(
+    {
+      // @ts-ignore
+      kinds: [KIND_SITE],
+      authors: [pubkey],
+    },
+    { groupable: false },
+  );
   console.log("site events", events);
 
-  return [...events].map(e => parseSite(e));
+  return [...events].map((e) => parseSite(e));
 }

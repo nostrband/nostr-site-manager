@@ -40,3 +40,31 @@ export const StyledFormControl = styled((props: FormControlProps) => {
   marginTop: 30,
   maxWidth: 300,
 });
+
+export const StyledComingSoonProfile = styled(Box)(() => ({
+  display: "flex",
+  height: 150,
+  marginTop: 20,
+  width: "100%",
+  gap: 20,
+  alignItems: "center",
+  justifyContent: "center",
+  color: "transparent",
+  backgroundImage: "linear-gradient(to right, #00dbff, #373790)",
+  backgroundClip: "text",
+  WebkitBackgroundClip: "text",
+  border: "2px solid transparent",
+  borderImage: "linear-gradient(to right, #00dbff, #373790) 1",
+  borderImageSlice: 1,
+  position: "relative",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    border: "inherit",
+    borderImage: "inherit",
+  },
+}));

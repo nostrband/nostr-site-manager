@@ -1,11 +1,9 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { SnackbarProvider } from "notistack";
 import { styled } from "@mui/material/styles";
 
 import { initNostrLogin } from "@/modules/auth/nostr-login";
-
-initNostrLogin();
 
 const BodyWrapper = styled("body")({
   height: "100%",
@@ -13,6 +11,9 @@ const BodyWrapper = styled("body")({
 });
 
 export const AppWrapper = ({ children }: { children: ReactNode }) => {
+  useEffect(() => {
+    initNostrLogin().then();
+  }, []);
   return (
     <BodyWrapper>
       <SnackbarProvider>{children}</SnackbarProvider>

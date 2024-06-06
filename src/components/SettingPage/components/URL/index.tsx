@@ -12,13 +12,11 @@ import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
 
 interface ITitleDescription extends IBaseSetting {
-  title: string;
-  description: string;
+  url: string;
 }
 
-export const TitleDescription = ({
-  title,
-  description,
+export const URL = ({
+  url,
   handleChange,
   handleBlur,
   submitForm,
@@ -39,10 +37,10 @@ export const TitleDescription = ({
   }, [isDisabled]);
 
   return (
-    <StyledSettingCol id={HASH_CONFIG.TITLE_DESCRIPTION}>
+    <StyledSettingCol id={HASH_CONFIG.URL}>
       <StyledSettingBlock>
         <StyledHeadSettingBlock>
-          <Typography variant="h6">Title & Description</Typography>
+          <Typography variant="h6">URL</Typography>
 
           <SaveButton
             isEdit={isEdit}
@@ -52,32 +50,18 @@ export const TitleDescription = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          The details used to identify your publication around the web
+          Url for site
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
-          <InputLabel htmlFor="title">Title</InputLabel>
+          <InputLabel htmlFor="url">URL</InputLabel>
           <OutlinedInput
             inputRef={inputRef}
-            id="title"
-            name="title"
-            label="Title"
+            id="url"
+            name="url"
+            label="URL"
             onChange={handleChange}
-            value={title}
-            onBlur={handleBlur}
-          />
-        </StyledFormControl>
-
-        <StyledFormControl disabled={!isEdit} fullWidth size="small">
-          <InputLabel htmlFor="description">Description</InputLabel>
-          <OutlinedInput
-            id="description"
-            name="description"
-            label="Description"
-            multiline
-            rows={5}
-            onChange={handleChange}
-            value={description}
+            value={url}
             onBlur={handleBlur}
           />
         </StyledFormControl>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   StyledFormControl,
   StyledHeadSettingBlock,
@@ -25,6 +25,18 @@ export const MetaData = ({
   isLoading,
 }: IMetaData) => {
   const [isEdit, handleAction] = useEditSettingMode(submitForm);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isDisabled, setDisabled] = useState(false);
+  const handleClick = () => {
+    handleAction().then();
+    setDisabled((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (inputRef.current && isDisabled) {
+      inputRef.current.focus();
+    }
+  }, [isDisabled]);
 
   return (
     <StyledSettingCol id={HASH_CONFIG.META_DATA}>
@@ -35,7 +47,7 @@ export const MetaData = ({
           <SaveButton
             isEdit={isEdit}
             isLoading={isLoading}
-            handleAction={handleAction}
+            handleAction={handleClick}
           />
         </StyledHeadSettingBlock>
 
@@ -46,6 +58,7 @@ export const MetaData = ({
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
           <InputLabel htmlFor="metaTitle">Meta title</InputLabel>
           <OutlinedInput
+            inputRef={inputRef}
             id="metaTitle"
             name="metaTitle"
             label="Meta title"

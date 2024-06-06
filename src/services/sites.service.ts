@@ -1,5 +1,3 @@
-import { AxiosResponse } from "axios";
-import ApiClient from "@/services/core.client";
 import { NostrEvent } from "@nostr-dev-kit/ndk";
 import { fetchSites } from "./nostr/api";
 
@@ -39,6 +37,11 @@ export type ReturnSettingsSiteDataType = {
   password: string;
 
   event?: NostrEvent;
+
+  navigation: {
+    primary: { title: string; link: string; id: number }[];
+    secondary: { title: string; link: string; id: number }[];
+  };
 };
 
 export const getSites = async (): Promise<ReturnSitesDataType[]> => {
@@ -56,9 +59,18 @@ export const getSettingsSite = async (
   id: string,
 ): Promise<ReturnSettingsSiteDataType> => {
   try {
-    const site = (await fetchSites()).find(s => s.id === id)!;
+    const site = (await fetchSites()).find((s) => s.id === id)!;
     console.log("site", site);
-    return site;
+
+    const formatTestData = {
+      ...site,
+      navigation: {
+        primary: [{ title: "About", link: "/about", id: Date.now() }],
+        secondary: [{ title: "Login", link: "/login", id: Date.now() }],
+      },
+    };
+
+    return formatTestData;
     // const res: AxiosResponse<any> = await ApiClient.get(
     //   `/settings-site?id=${id}`,
     // );

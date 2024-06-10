@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import { usePathname, useRouter, useParams } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
@@ -16,11 +15,14 @@ import {
 } from "./styled";
 import { ListSitesDropdown } from "@/components/ListSitesDropdown";
 import { NavSettings } from "@/components/Layout/SideBarNav/components/NavSettings";
-import { NAV_CONFIG } from "@/consts";
+import { NAV_CONFIG, SIDEBAR_WIDTH } from "@/consts";
 
-const NAV_WIDTH = 280;
+interface ISideBarNav {
+  isOpen: boolean;
+  handleClose: () => void;
+}
 
-export const SideBarNav = ({ openNav = false }) => {
+export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
   const pathname = usePathname();
   const params = useParams();
   const router = useRouter();
@@ -106,7 +108,7 @@ export const SideBarNav = ({ openNav = false }) => {
     <Box
       sx={{
         flexShrink: { lg: 0 },
-        width: { lg: NAV_WIDTH },
+        width: { lg: SIDEBAR_WIDTH },
       }}
     >
       {isDesktop ? (
@@ -115,7 +117,7 @@ export const SideBarNav = ({ openNav = false }) => {
           variant="permanent"
           PaperProps={{
             sx: {
-              width: NAV_WIDTH,
+              width: SIDEBAR_WIDTH,
             },
           }}
         >
@@ -123,13 +125,13 @@ export const SideBarNav = ({ openNav = false }) => {
         </StyledSieBarDrawer>
       ) : (
         <StyledSieBarDrawer
-          open={openNav}
-          //   onClose={onCloseNav}
+          open={isOpen}
+          onClose={handleClose}
           ModalProps={{
             keepMounted: true,
           }}
           PaperProps={{
-            sx: { width: NAV_WIDTH },
+            sx: { width: SIDEBAR_WIDTH },
           }}
         >
           {renderContent}

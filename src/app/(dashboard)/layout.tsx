@@ -1,7 +1,4 @@
-import { SideBarNav } from "@/components/Layout/SideBarNav";
-import { MainWrapper } from "@/components/Layout/MainWrapper";
-import { MainContent } from "@/components/Layout/MainContent";
-import { PageWrapper } from "@/components/Layout/PageWrapper";
+import { DashboardWrapper } from "@/components/Layout/DashboardWrapper";
 
 export const metadata = {
   title: "Nostr Blog Admin | Admin",
@@ -13,12 +10,5 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <MainWrapper>
-      <SideBarNav />
-      <MainContent>
-        <PageWrapper>{children}</PageWrapper>
-      </MainContent>
-    </MainWrapper>
-  );
+  return <DashboardWrapper>{children}</DashboardWrapper>;
 }

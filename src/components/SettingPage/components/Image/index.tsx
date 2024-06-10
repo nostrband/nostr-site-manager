@@ -10,6 +10,7 @@ import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
+import { StyledImgPreview } from "@/components/SettingPage/components/Image/styled";
 
 interface ITitleDescription extends IBaseSetting {
   image: string;
@@ -65,6 +66,9 @@ export const Image = ({
             onBlur={handleBlur}
           />
         </StyledFormControl>
+        <StyledImgPreview>
+          <img alt="Image url" src={image} />
+        </StyledImgPreview>
       </StyledSettingBlock>
     </StyledSettingCol>
   );

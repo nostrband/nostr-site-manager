@@ -5,6 +5,9 @@ export type ReturnSitesDataType = {
   id: string;
   name: string;
   title: string;
+  icon: string;
+  description: string;
+  url: string;
 };
 
 export type ReturnSettingsSiteDataType = {

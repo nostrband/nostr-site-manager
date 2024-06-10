@@ -31,21 +31,28 @@ export const ListSites = ({ data }: ListSitesType) => {
                 onClick={() => handleSelect(el.id)}
               >
                 <ListItemAvatar>
-                  <Avatar alt={el.title} src="#" />
+                  <Avatar alt={el.title} src={el.icon} />
                 </ListItemAvatar>
                 <ListItemText
                   primary={el.title}
                   secondary={
                     <React.Fragment>
                       <Typography
-                        sx={{ display: "inline" }}
+                        sx={{ display: "block" }}
+                        component="span"
+                        variant="body1"
+                        color="text.primary"
+                      >
+                        <b>URL:</b> {el.url}
+                      </Typography>
+                      <Typography
+                        sx={{ display: "block" }}
                         component="span"
                         variant="body2"
                         color="text.primary"
                       >
-                        ID: {el.id}
+                        {el.description}
                       </Typography>
-                      {" — some description about site"}
                     </React.Fragment>
                   }
                 />

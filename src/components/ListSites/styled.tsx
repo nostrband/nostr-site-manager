@@ -8,6 +8,9 @@ export const StyledList = styled((props: ListProps) => {
   width: "100%",
   maxWidth: 360,
   margin: "auto",
+  padding: 0,
+  borderRadius: 8,
+  overflow: "hidden",
 });
 
 export const StyledListWrap = styled(Box)(() => ({

@@ -10,6 +10,7 @@ import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
+import { StyledIconPreview } from "@/components/SettingPage/components/Icon/styled";
 
 interface ITitleDescription extends IBaseSetting {
   icon: string;
@@ -65,6 +66,9 @@ export const Icon = ({
             onBlur={handleBlur}
           />
         </StyledFormControl>
+        <StyledIconPreview>
+          <img alt="Icon url" src={icon} />
+        </StyledIconPreview>
       </StyledSettingBlock>
     </StyledSettingCol>
   );

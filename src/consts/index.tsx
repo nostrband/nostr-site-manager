@@ -1,27 +1,29 @@
-import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 import WebTwoToneIcon from "@mui/icons-material/WebTwoTone";
 import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
 import TitleTwoToneIcon from "@mui/icons-material/TitleTwoTone";
-// import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
-import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
-// import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
-// import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
-// import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
-// import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
 import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
-// import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
+import GridOnTwoToneIcon from "@mui/icons-material/GridOnTwoTone";
+import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import AltRouteTwoToneIcon from "@mui/icons-material/AltRouteTwoTone";
 import BrushTwoToneIcon from "@mui/icons-material/BrushTwoTone";
 import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import LinkTwoToneIcon from "@mui/icons-material/LinkTwoTone";
 import ImageTwoToneIcon from "@mui/icons-material/ImageTwoTone";
 import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
+// import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
+// import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
+// import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
+// import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
+// import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
+// import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
+// import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 
+export const SIDEBAR_WIDTH = 280;
 export const NAV_CONFIG = [
   {
     title: "Dashboard",
     path: "dashboard",
-    icon: <HomeTwoToneIcon />,
+    icon: <GridOnTwoToneIcon />,
   },
   {
     title: "View site",

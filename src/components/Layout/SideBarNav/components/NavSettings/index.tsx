@@ -5,14 +5,17 @@ import { ListItem, Skeleton, ListSubheader } from "@mui/material";
 import { StyledSieBarButton } from "@/components/Layout/SideBarNav/styled";
 import Link from "next/link";
 import { SETTINGS_CONFIG } from "@/consts";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 export const NavSettings = () => {
   const params = useParams();
   const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { isLoading, isFetching } = useSettingsSite(siteId);
+  const [hash, setHash] = useState("");
 
-  const hash = window.location.hash;
+  useEffect(() => {
+    setHash(window.location.hash);
+  }, []);
 
   if (isLoading || isFetching) {
     return (
@@ -57,6 +60,9 @@ export const NavSettings = () => {
                 href={hashPath}
                 LinkComponent={Link}
                 startIcon={icon}
+                onClick={() => {
+                  setHash(hashPath);
+                }}
               >
                 {title}
               </StyledSieBarButton>

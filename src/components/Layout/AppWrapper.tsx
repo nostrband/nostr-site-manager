@@ -14,6 +14,7 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     initNostrLogin().then();
   }, []);
+
   return (
     <BodyWrapper>
       <SnackbarProvider>{children}</SnackbarProvider>

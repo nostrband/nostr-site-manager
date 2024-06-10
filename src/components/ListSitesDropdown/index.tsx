@@ -3,15 +3,23 @@ import * as React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ExpandMoreTwoToneIcon from "@mui/icons-material/ExpandMoreTwoTone";
-import LoadingButton from "@mui/lab/LoadingButton";
-import { useParams, useRouter } from "next/navigation";
+import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import { useListSites } from "@/hooks/useListSites";
+import {
+  StyledLoadingButton,
+  StyledWarpperActions,
+} from "@/components/ListSitesDropdown/styled";
+import { IconButton } from "@mui/material";
 
 export const ListSitesDropdown = () => {
   const { data, isLoading, isFetching } = useListSites();
 
   const router = useRouter();
   const params = useParams();
+  const path = usePathname();
+
+  const isHome = path === "/";
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -23,6 +31,10 @@ export const ListSitesDropdown = () => {
     router.push(`/${id}`);
   };
 
+  const handleClickBackToHome = () => {
+    router.push("/");
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -31,8 +43,14 @@ export const ListSitesDropdown = () => {
   const siteTitle = siteInfo?.title ? siteInfo.title : "Select a site";
 
   return (
-    <div>
-      <LoadingButton
+    <StyledWarpperActions>
+      {!isHome && (
+        <IconButton onClick={handleClickBackToHome} aria-label="back to home">
+          <HomeTwoToneIcon />
+        </IconButton>
+      )}
+
+      <StyledLoadingButton
         loading={isLoading || isFetching}
         disabled={isLoading || isFetching}
         id="basic-button"
@@ -44,9 +62,10 @@ export const ListSitesDropdown = () => {
         fullWidth
         variant="contained"
         color="buttonSidebarBackground"
+        sx={{ textTransform: "none" }}
       >
         {siteTitle}
-      </LoadingButton>
+      </StyledLoadingButton>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -56,15 +75,18 @@ export const ListSitesDropdown = () => {
           "aria-labelledby": "basic-button",
         }}
       >
-        {data?.length &&
+        {data?.length ? (
           data.map((el, i) => {
             return (
               <MenuItem key={i} onClick={() => handleSelect(el.id)}>
                 {el.title}
               </MenuItem>
             );
-          })}
+          })
+        ) : (
+          <MenuItem>List sites empty</MenuItem>
+        )}
       </Menu>
-    </div>
+    </StyledWarpperActions>
   );
 };

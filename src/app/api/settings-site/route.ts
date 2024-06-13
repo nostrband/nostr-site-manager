@@ -11,6 +11,10 @@ export async function GET(req: NextRequest) {
 
       return {
         id: `${id}`,
+        navigation: {
+          primary: [{ title: "About", link: "/about", id: Date.now() }],
+          secondary: [{ title: "Login", link: "/login", id: Date.now() }],
+        },
         title: `Site ${id}`,
         description: `Some description about site ${id}`,
         timezone: {

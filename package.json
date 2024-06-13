@@ -17,6 +17,7 @@
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.18",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@next/font": "^14.2.4",
     "@nostr-dev-kit/ndk": "^2.8.2",
     "@tanstack/react-query": "^5.40.0",
     "axios": "^1.7.2",

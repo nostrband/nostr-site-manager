@@ -51,6 +51,7 @@ function parseSite(e: NDKEvent) {
     relays: [],
   });
 
+  // @ts-ignore
   const settings: ReturnSettingsSiteDataType = {
     id,
     event: e.rawEvent(),

@@ -5,6 +5,10 @@ export async function GET() {
   const data: ReturnSitesDataType[] = Array.from({ length: 5 }, (_, i) => ({
     id: `${i + 10}`,
     title: `Site ${i + 10}`,
+    name: "string",
+    icon: "string",
+    description: "string",
+    url: "string",
   }));
 
   await new Promise((resolve) => setTimeout(resolve, 2000));

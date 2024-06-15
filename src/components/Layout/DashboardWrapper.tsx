@@ -34,7 +34,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (localStorage.getItem("__nostrlogin_nip46")) {
-      setLogin(true)
+      setLogin(true);
     }
   }, []);
 

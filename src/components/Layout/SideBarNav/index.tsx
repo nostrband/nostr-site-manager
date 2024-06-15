@@ -17,7 +17,7 @@ import { ListSitesDropdown } from "@/components/ListSitesDropdown";
 import { NavSettings } from "@/components/Layout/SideBarNav/components/NavSettings";
 import { NAV_CONFIG, SIDEBAR_WIDTH } from "@/consts";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 interface ISideBarNav {
   isOpen: boolean;
@@ -41,7 +41,7 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
 
   useEffect(() => {
     if (localStorage.getItem("__nostrlogin_nip46")) {
-      setLogin(true)
+      setLogin(true);
     }
   }, []);
 

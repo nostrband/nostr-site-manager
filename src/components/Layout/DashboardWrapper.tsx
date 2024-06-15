@@ -14,13 +14,12 @@ import { ReturnSitesDataType } from "@/services/sites.service";
 export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const isDesktop = useResponsive("up", "lg");
   const [isOpen, setOpen] = useState(false);
+  const [isLogin, setLogin] = useState(false);
   const params = useParams();
   const pathname = usePathname();
   const router = useRouter();
   const pathAdmin = useFirstPathElement();
   const { data } = useListSites();
-
-  const isLogin = localStorage.getItem("__nostrlogin_nip46");
 
   const getValidParamsId = useCallback(
     (list: ReturnSitesDataType[], id: string | string[]) => {
@@ -32,6 +31,12 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
     },
     [pathAdmin, router],
   );
+
+  useEffect(() => {
+    if (localStorage.getItem("__nostrlogin_nip46")) {
+      setLogin(true)
+    }
+  }, []);
 
   useEffect(() => {
     if (data) {

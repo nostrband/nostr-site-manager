@@ -17,6 +17,7 @@ import { ListSitesDropdown } from "@/components/ListSitesDropdown";
 import { NavSettings } from "@/components/Layout/SideBarNav/components/NavSettings";
 import { NAV_CONFIG, SIDEBAR_WIDTH } from "@/consts";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
+import {useEffect, useState} from "react";
 
 interface ISideBarNav {
   isOpen: boolean;
@@ -29,7 +30,7 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
   const params = useParams();
   const router = useRouter();
   const isDesktop = useResponsive("up", "lg");
-  const isLogin = localStorage.getItem("__nostrlogin_nip46");
+  const [isLogin, setLogin] = useState(false);
 
   const handleGoTo = (path: string) => {
     router.push(path);
@@ -37,6 +38,12 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
 
   const isSettings = pathname === `${pathAdmin}/${params.id}/settings`;
   const isParamsID = Boolean(params.id);
+
+  useEffect(() => {
+    if (localStorage.getItem("__nostrlogin_nip46")) {
+      setLogin(true)
+    }
+  }, []);
 
   const renderContent = (
     <StyledSieBarContent>

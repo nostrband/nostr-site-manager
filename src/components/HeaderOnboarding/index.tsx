@@ -3,15 +3,13 @@ import {
   StyledHeaderContainer,
   StyledHeaderOnboarding,
 } from "@/components/HeaderOnboarding/styled";
-import { Button, Typography, Avatar } from "@mui/material";
-import { useState } from "react";
+import { Button, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export const HeaderOnboarding = () => {
-  // For test login
-  const [isLogin, setLogin] = useState(false);
-
-  const handleLogin = () => {
-    setLogin((prev) => !prev);
+  const router = useRouter();
+  const handleNavigateToAdmin = () => {
+    router.push("/admin");
   };
 
   return (
@@ -21,18 +19,13 @@ export const HeaderOnboarding = () => {
           <b>L O G O</b>
         </Typography>
 
-        {isLogin ? (
-          <Avatar
-            alt="Remy Sharp"
-            onClick={handleLogin}
-            src="https://mui.com/static/images/avatar/1.jpg"
-            sx={{ width: 64, height: 64 }}
-          />
-        ) : (
-          <Button onClick={handleLogin} color="decorate" variant="contained">
-            Log in
-          </Button>
-        )}
+        <Button
+          onClick={handleNavigateToAdmin}
+          color="decorate"
+          variant="contained"
+        >
+          My sites
+        </Button>
       </StyledHeaderContainer>
     </StyledHeaderOnboarding>
   );

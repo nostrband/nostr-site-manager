@@ -16,6 +16,7 @@ import {
 import { ListSitesDropdown } from "@/components/ListSitesDropdown";
 import { NavSettings } from "@/components/Layout/SideBarNav/components/NavSettings";
 import { NAV_CONFIG, SIDEBAR_WIDTH } from "@/consts";
+import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 
 interface ISideBarNav {
   isOpen: boolean;
@@ -24,15 +25,17 @@ interface ISideBarNav {
 
 export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
   const pathname = usePathname();
+  const pathAdmin = useFirstPathElement();
   const params = useParams();
   const router = useRouter();
   const isDesktop = useResponsive("up", "lg");
+  const isLogin = localStorage.getItem("__nostrlogin_nip46");
 
   const handleGoTo = (path: string) => {
     router.push(path);
   };
 
-  const isSettings = pathname === `/${params.id}/settings`;
+  const isSettings = pathname === `${pathAdmin}/${params.id}/settings`;
   const isParamsID = Boolean(params.id);
 
   const renderContent = (
@@ -40,7 +43,7 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
       <StyledSieBarElements>
         {isSettings ? (
           <StyledSieBarButton
-            onClick={() => router.push(`/${params.id}/dashboard`)}
+            onClick={() => router.push(`${pathAdmin}/${params.id}/dashboard`)}
             size="large"
             fullWidth
             variant="text"
@@ -60,7 +63,7 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
             <NavSettings />
           ) : (
             NAV_CONFIG.map(({ title, path: slug, icon }) => {
-              const path = `/${params.id}/${slug}`;
+              const path = `${pathAdmin}/${params.id}/${slug}`;
 
               return (
                 <ListItem key={title}>
@@ -85,21 +88,27 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
       )}
 
       {!isSettings && (
-        <StyledSideBarBottom>
-          <IconButton aria-label="profile" size="large">
-            <AccountCircleTwoToneIcon fontSize="inherit" />
-          </IconButton>
+        <>
+          {isLogin && (
+            <StyledSideBarBottom>
+              <IconButton aria-label="profile" size="large">
+                <AccountCircleTwoToneIcon fontSize="inherit" />
+              </IconButton>
 
-          {isParamsID && (
-            <IconButton
-              onClick={() => handleGoTo(`/${params.id}/settings`)}
-              aria-label="settings"
-              size="large"
-            >
-              <SettingsTwoToneIcon fontSize="inherit" />
-            </IconButton>
+              {isParamsID && (
+                <IconButton
+                  onClick={() =>
+                    handleGoTo(`${pathAdmin}/${params.id}/settings`)
+                  }
+                  aria-label="settings"
+                  size="large"
+                >
+                  <SettingsTwoToneIcon fontSize="inherit" />
+                </IconButton>
+              )}
+            </StyledSideBarBottom>
           )}
-        </StyledSideBarBottom>
+        </>
       )}
     </StyledSieBarContent>
   );

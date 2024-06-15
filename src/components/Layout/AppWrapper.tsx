@@ -4,8 +4,6 @@ import { SnackbarProvider } from "notistack";
 import { styled } from "@mui/material/styles";
 import Script from "next/script";
 
-// import { initNostrLogin } from "@/modules/auth/nostr-login";
-
 export let authed = false;
 
 const BodyWrapper = styled("body")({

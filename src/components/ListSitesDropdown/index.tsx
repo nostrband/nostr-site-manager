@@ -11,6 +11,7 @@ import {
   StyledWarpperActions,
 } from "@/components/ListSitesDropdown/styled";
 import { IconButton } from "@mui/material";
+import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 
 export const ListSitesDropdown = () => {
   const { data, isLoading, isFetching } = useListSites();
@@ -18,8 +19,9 @@ export const ListSitesDropdown = () => {
   const router = useRouter();
   const params = useParams();
   const path = usePathname();
+  const pathAdmin = useFirstPathElement();
 
-  const isHome = path === "/";
+  const isHome = path === pathAdmin;
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -28,11 +30,11 @@ export const ListSitesDropdown = () => {
   };
   const handleSelect = (id: string) => {
     setAnchorEl(null);
-    router.push(`/${id}`);
+    router.push(`${pathAdmin}/${id}`);
   };
 
   const handleClickBackToHome = () => {
-    router.push("/");
+    router.push(pathAdmin);
   };
 
   const handleClose = () => {

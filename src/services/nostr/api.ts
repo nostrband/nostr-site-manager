@@ -1,7 +1,8 @@
-import { authed } from "@/modules/auth/nostr-login";
+// import { authed } from "@/modules/auth/nostr-login";
 import NDK, { NDKEvent } from "@nostr-dev-kit/ndk";
 import { ReturnSettingsSiteDataType } from "../sites.service";
 import { nip19 } from "nostr-tools";
+import { authed } from "@/components/Layout/AppWrapper";
 
 const KIND_SITE = 30512;
 

@@ -10,6 +10,18 @@ import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import LinkTwoToneIcon from "@mui/icons-material/LinkTwoTone";
 import ImageTwoToneIcon from "@mui/icons-material/ImageTwoTone";
 import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
+import img1 from "../../public/images/preview-theme/1.png";
+import img2 from "../../public/images/preview-theme/2.png";
+import img3 from "../../public/images/preview-theme/3.png";
+import img4 from "../../public/images/preview-theme/4.png";
+import img5 from "../../public/images/preview-theme/5.png";
+import img6 from "../../public/images/preview-theme/6.png";
+import img7 from "../../public/images/preview-theme/7.png";
+import img8 from "../../public/images/preview-theme/8.png";
+import img9 from "../../public/images/preview-theme/9.png";
+import img10 from "../../public/images/preview-theme/10.png";
+import img11 from "../../public/images/preview-theme/11.png";
+import img12 from "../../public/images/preview-theme/12.png";
 // import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
 // import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
 // import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
@@ -407,5 +419,75 @@ export const TIMEZONE_LIST = [
   {
     name: "Pacific/Kwajalein",
     label: "(GMT +12:00) International Date Line West",
+  },
+];
+
+export enum TYPES_THEMES_TAG {
+  BLOG = "blog",
+  PODCAST = "podcast",
+  PHOTOGRAPHY = "photography",
+  RECIPES = "recipes",
+}
+
+export const THEMES_PREVIEW = [
+  {
+    id: "1",
+    tag: "blog",
+    preview: img1,
+  },
+  {
+    id: "2",
+    tag: "podcast",
+    preview: img2,
+  },
+  {
+    id: "3",
+    tag: "recipes",
+    preview: img3,
+  },
+  {
+    id: "4",
+    tag: "photography",
+    preview: img4,
+  },
+  {
+    id: "5",
+    tag: "blog",
+    preview: img5,
+  },
+  {
+    id: "6",
+    tag: "podcast",
+    preview: img6,
+  },
+  {
+    id: "7",
+    tag: "recipes",
+    preview: img7,
+  },
+  {
+    id: "8",
+    tag: "photography",
+    preview: img8,
+  },
+  {
+    id: "9",
+    tag: "blog",
+    preview: img9,
+  },
+  {
+    id: "10",
+    tag: "podcast",
+    preview: img10,
+  },
+  {
+    id: "11",
+    tag: "recipes",
+    preview: img11,
+  },
+  {
+    id: "12",
+    tag: "photography",
+    preview: img12,
   },
 ];

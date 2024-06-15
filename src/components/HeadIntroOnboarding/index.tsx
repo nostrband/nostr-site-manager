@@ -10,7 +10,7 @@ export const HeadIntroOnboarding = () => {
   return (
     <StyledContainerIntro maxWidth="lg">
       <StyledTypographyCaption variant="caption" display="block">
-        WEBSTR
+        npub.pro
       </StyledTypographyCaption>
 
       <StyledTypographyTitle variant="h1">

@@ -14,11 +14,11 @@ export const HeadIntroOnboarding = () => {
       </StyledTypographyCaption>
 
       <StyledTypographyTitle variant="h1">
-        Create beautiful nostr-based websites in seconds
+        Create a beautiful nostr-based website in seconds
       </StyledTypographyTitle>
 
       <StyledTypographySubtitle variant="subtitle1">
-        Your nostr content in a beautiful website format, automatically.
+        Easy to set up. Self-hostable. Just works.
       </StyledTypographySubtitle>
     </StyledContainerIntro>
   );

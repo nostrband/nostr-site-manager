@@ -96,7 +96,7 @@ export const SettingPage = () => {
             },
           });
         } catch (e: any) {
-          enqueueSnackbar("Error: "+e.toString(), {
+          enqueueSnackbar("Error: " + e.toString(), {
             autoHideDuration: 3000,
             variant: "error",
             anchorOrigin: {

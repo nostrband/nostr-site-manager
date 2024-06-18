@@ -169,7 +169,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   await ne.sign(signer);
 
   const r = await ne.publish(
-    NDKRelaySet.fromRelayUrls([...relays, SITE_RELAY], ndk!)
+    NDKRelaySet.fromRelayUrls([...relays, SITE_RELAY], ndk!),
   );
   if (!r.size) {
     throw new Error("Failed to publish to relays");
@@ -253,7 +253,7 @@ export async function fetchSites() {
         authors: [pubkey],
       },
       { groupable: false },
-      NDKRelaySet.fromRelayUrls(relays, ndk!)
+      NDKRelaySet.fromRelayUrls(relays, ndk!),
     );
     console.log("site events", events);
 

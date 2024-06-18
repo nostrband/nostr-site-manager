@@ -12,8 +12,8 @@ export async function GET(req: NextRequest) {
       return {
         id: `${id}`,
         navigation: {
-          primary: [{ title: "About", link: "/about", id: '/about' }],
-          secondary: [{ title: "Login", link: "/login", id: '/login' }],
+          primary: [{ title: "About", link: "/about", id: "/about" }],
+          secondary: [{ title: "Login", link: "/login", id: "/login" }],
         },
         title: `Site ${id}`,
         description: `Some description about site ${id}`,

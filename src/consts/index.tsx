@@ -22,6 +22,27 @@ import img9 from "../../public/images/preview-theme/9.png";
 import img10 from "../../public/images/preview-theme/10.png";
 import img11 from "../../public/images/preview-theme/11.png";
 import img12 from "../../public/images/preview-theme/12.png";
+
+import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
+import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
+import tasteDemo from "../../public/images/preview-theme/enki-demo.npub.pro.png";
+import episodeDemo from "../../public/images/preview-theme/episode-demo.npub.pro.png";
+import fizzyDemo from "../../public/images/preview-theme/essential-demo.npub.pro.png";
+import journalDemo from "../../public/images/preview-theme/fiatjaf-demo.npub.pro.png";
+import dawnDemo from "../../public/images/preview-theme/hodlbod-demo.npub.pro.png";
+import edgeDemo from "../../public/images/preview-theme/inkblotart-demo.npub.pro.png";
+import massivelyDemo from "../../public/images/preview-theme/isolabell-demo.npub.pro.png";
+import altoDemo from "../../public/images/preview-theme/jackmallers-demo.npub.pro.png";
+import soloDemo from "../../public/images/preview-theme/karnage-demo.npub.pro.png";
+import dopeDemo from "../../public/images/preview-theme/lectio-demo.npub.pro.png";
+import attilaDemo from "../../public/images/preview-theme/lynalden-demo.npub.pro.png";
+import londonDemo from "../../public/images/preview-theme/malos10-demo.npub.pro.png";
+import simplyDemo from "../../public/images/preview-theme/nogood-demo.npub.pro.png";
+import pawayDemo from "../../public/images/preview-theme/onyx-demo.npub.pro.png";
+import bulletinDemo from "../../public/images/preview-theme/rabble-demo.npub.pro.png";
+import editionDemo from "../../public/images/preview-theme/spiral-demo.npub.pro.png";
+import digestDemo from "../../public/images/preview-theme/tony-demo.npub.pro.png";
+
 // import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
 // import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
 // import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
@@ -436,132 +457,132 @@ export const THEMES_PREVIEW = [
     tag: "photography",
     name: "London",
     url: "https://malos10-demo.npub.pro",
-    preview: img1,
+    preview: londonDemo,
   },
   {
     id: "2",
     tag: "blog",
     name: "Dawn",
     url: "https://hodlbod-demo.npub.pro",
-    preview: img2,
+    preview: dawnDemo,
   },
   {
     id: "3",
     tag: "recipes",
     name: "Taste",
     url: "https://enki-demo.npub.pro",
-    preview: img3,
+    preview: tasteDemo,
   },
   {
     id: "4",
     tag: "podcast",
     name: "Wave",
     url: "https://cd-demo.npub.pro",
-    preview: img4,
+    preview: waveDemo,
   },
   {
     id: "5",
     tag: "podcast",
     name: "Episode",
     url: "https://episode-demo.npub.pro",
-    preview: img5,
+    preview: episodeDemo,
   },
   {
     id: "6",
     tag: "magazine",
     name: "Ruby",
     url: "https://croxroadnews-demo.npub.pro",
-    preview: img6,
+    preview: rubyDemo,
   },
   {
     id: "7",
     tag: "blog",
     name: "Journal",
     url: "https://fiatjaf-demo.npub.pro",
-    preview: img7,
+    preview: journalDemo,
   },
   {
     id: "8",
     tag: "photography",
     name: "Edge",
     url: "https://inkblotart-demo.npub.pro",
-    preview: img8,
+    preview: edgeDemo,
   },
   {
     id: "9",
     tag: "blog",
     name: "Solo",
     url: "https://karnage-demo.npub.pro",
-    preview: img9,
+    preview: soloDemo,
   },
   {
     id: "10",
     tag: "blog",
     name: "Massively",
     url: "https://isolabell-demo.npub.pro",
-    preview: img10,
+    preview: massivelyDemo,
   },
   {
     id: "11",
     tag: "blog",
     name: "Digest",
     url: "https://tony-demo.npub.pro",
-    preview: img11,
+    preview: digestDemo,
   },
   {
     id: "12",
     tag: "photography",
     name: "Paway",
     url: "https://onyx-demo.npub.pro",
-    preview: img12,
+    preview: pawayDemo,
   },
   {
     id: "13",
     tag: "blog",
     name: "Alto",
     url: "https://jackmallers-demo.npub.pro",
-    preview: img12,
+    preview: altoDemo,
   },
   {
     id: "14",
     tag: "blog",
     name: "Edition",
     url: "https://spiral-demo.npub.pro",
-    preview: img12,
+    preview: editionDemo,
   },
   {
     id: "15",
     tag: "blog",
     name: "Bulletin",
     url: "https://rabble-demo.npub.pro",
-    preview: img12,
+    preview: bulletinDemo,
   },
   {
     id: "16",
     tag: "magazine",
     name: "Simply",
     url: "https://nogood-demo.npub.pro",
-    preview: img12,
+    preview: simplyDemo,
   },
   {
     id: "17",
     tag: "recipes",
     name: "Fizzy",
     url: "https://essential-demo.npub.pro",
-    preview: img12,
+    preview: fizzyDemo,
   },
   {
     id: "18",
     tag: "blog",
     name: "Dope",
     url: "https://lectio-demo.npub.pro",
-    preview: img12,
+    preview: dopeDemo,
   },
   {
     id: "19",
     tag: "blog",
     name: "Attila",
     url: "https://lynalden-demo.npub.pro",
-    preview: img12,
+    preview: attilaDemo,
   },
 ];

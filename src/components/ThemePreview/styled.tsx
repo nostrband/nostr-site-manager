@@ -16,6 +16,7 @@ export const StyledWrapPreview = styled(Box)(() => ({
     height: "inherit",
     width: "inherit",
     objectFit: "cover",
+    objectPosition: "left top",
     position: "absolute",
     left: 0,
     top: 0,

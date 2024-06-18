@@ -40,7 +40,7 @@ import londonDemo from "../../public/images/preview-theme/malos10-demo.npub.pro.
 import simplyDemo from "../../public/images/preview-theme/nogood-demo.npub.pro.png";
 import pawayDemo from "../../public/images/preview-theme/onyx-demo.npub.pro.png";
 import bulletinDemo from "../../public/images/preview-theme/rabble-demo.npub.pro.png";
-import editionDemo from "../../public/images/preview-theme/spiral-demo.npub.pro.png";
+import editionDemo from "../../public/images/preview-theme/alanbwt-demo.npub.pro.png";
 import digestDemo from "../../public/images/preview-theme/tony-demo.npub.pro.png";
 
 // import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
@@ -481,13 +481,6 @@ export const THEMES_PREVIEW = [
     preview: waveDemo,
   },
   {
-    id: "5",
-    tag: "podcast",
-    name: "Episode",
-    url: "https://episode-demo.npub.pro",
-    preview: episodeDemo,
-  },
-  {
     id: "6",
     tag: "magazine",
     name: "Ruby",
@@ -523,6 +516,13 @@ export const THEMES_PREVIEW = [
     preview: massivelyDemo,
   },
   {
+    id: "5",
+    tag: "podcast",
+    name: "Episode",
+    url: "https://episode-demo.npub.pro",
+    preview: episodeDemo,
+  },
+  {
     id: "11",
     tag: "blog",
     name: "Digest",
@@ -547,7 +547,7 @@ export const THEMES_PREVIEW = [
     id: "14",
     tag: "blog",
     name: "Edition",
-    url: "https://spiral-demo.npub.pro",
+    url: "https://alanbwt-demo.npub.pro",
     preview: editionDemo,
   },
   {

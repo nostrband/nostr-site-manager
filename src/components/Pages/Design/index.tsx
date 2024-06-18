@@ -318,6 +318,8 @@ export const Design = () => {
             </Select>
           </StyledFormControl>
 
+        <StyledFormControl>
+          <StyledLabel>Navigation</StyledLabel>
           <TabContext value={activeTab}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <TabList onChange={(_, value) => setActiveTab(value)}>
@@ -456,6 +458,7 @@ export const Design = () => {
               </Button>
             </TabPanel>
           </TabContext>
+        </StyledFormControl>
         </StyledWrapper>
         <StyledBottomActions>
           <Button

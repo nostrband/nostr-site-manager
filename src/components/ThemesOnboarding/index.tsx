@@ -62,6 +62,14 @@ export const ThemesOnboarding = () => {
         >
           Photography
         </StyledButton>
+
+        <StyledButton
+          color={getColor(TYPES_THEMES_TAG.MAGAZINE)}
+          variant="contained"
+          onClick={() => handleChoise(TYPES_THEMES_TAG.MAGAZINE)}
+        >
+          Magazine
+        </StyledButton>
       </StyledButtonGroup>
 
       <StyledPreviews>

@@ -12,8 +12,8 @@ export async function GET(req: NextRequest) {
       return {
         id: `${id}`,
         navigation: {
-          primary: [{ title: "About", link: "/about", id: Date.now() }],
-          secondary: [{ title: "Login", link: "/login", id: Date.now() }],
+          primary: [{ title: "About", link: "/about", id: '/about' }],
+          secondary: [{ title: "Login", link: "/login", id: '/login' }],
         },
         title: `Site ${id}`,
         description: `Some description about site ${id}`,
@@ -30,8 +30,6 @@ export async function GET(req: NextRequest) {
         fDescription: "",
         socialAccountFaceBook: "https://www.facebook.com/nostr-blog",
         socialAccountX: "https://twitter.com/nostr-blog",
-        isPrivate: false,
-        password: "",
 
         name: "",
         url: "",

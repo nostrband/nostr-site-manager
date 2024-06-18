@@ -36,14 +36,12 @@ export type ReturnSettingsSiteDataType = {
   fDescription: string;
   socialAccountFaceBook: string;
   socialAccountX: string;
-  isPrivate: boolean;
-  password: string;
 
   event?: NostrEvent;
 
   navigation: {
-    primary: { title: string; link: string; id: number }[];
-    secondary: { title: string; link: string; id: number }[];
+    primary: { title: string; link: string; id: string }[];
+    secondary: { title: string; link: string; id: string }[];
   };
 };
 
@@ -64,16 +62,7 @@ export const getSettingsSite = async (
   try {
     const site = (await fetchSites()).find((s) => s.id === id)!;
     console.log("site", site);
-
-    const formatTestData = {
-      ...site,
-      navigation: {
-        primary: [{ title: "About", link: "/about", id: Date.now() }],
-        secondary: [{ title: "Login", link: "/login", id: Date.now() }],
-      },
-    };
-
-    return formatTestData;
+    return site;
     // const res: AxiosResponse<any> = await ApiClient.get(
     //   `/settings-site?id=${id}`,
     // );

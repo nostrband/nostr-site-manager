@@ -26,18 +26,18 @@ import { StyledItemNavigation } from "@/components/SettingPage/components/Naviga
 
 interface ITitleDescription extends IBaseSetting {
   navigation: {
-    primary: { title: string; link: string; id: number }[];
-    secondary: { title: string; link: string; id: number }[];
+    primary: { title: string; link: string; id: string }[];
+    secondary: { title: string; link: string; id: string }[];
   };
   handleChangeNavigation: (input: {
-    id: number;
+    id: string;
     type: "primary" | "secondary";
     field: "title" | "link";
     value: string;
   }) => void;
   handleAddLinkNavigation: (type: "primary" | "secondary") => void;
   handleRemoveLinkNavigation: (input: {
-    id: number;
+    id: string;
     type: "primary" | "secondary";
   }) => void;
 }

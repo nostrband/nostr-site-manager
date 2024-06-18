@@ -17,9 +17,12 @@ import { Icon } from "@/components/SettingPage/components/Icon";
 import { Image } from "@/components/SettingPage/components/Image";
 import { URL } from "@/components/SettingPage/components/URL";
 import { Navigation } from "@/components/SettingPage/components/Navigation";
+import { editSite } from "@/services/nostr/api";
+import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 
-const initialSettingValue = {
+const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
+  name: "",
   title: "",
   description: "",
   timezone: {
@@ -29,20 +32,23 @@ const initialSettingValue = {
   language: "",
   metaDescription: "",
   metaTitle: "",
+  ogDescription: "",
+  ogTitle: "",
+  ogImage: "",
   xTitle: "",
   xDescription: "",
+  xImage: "",
   fTitle: "",
   fDescription: "",
   socialAccountFaceBook: "",
   socialAccountX: "",
-  isPrivate: false,
-  password: "",
   icon: "",
   image: "",
+  logo: "",
   url: "",
   navigation: {
-    primary: [{ title: "About", link: "/about", id: Date.now() }],
-    secondary: [{ title: "Login", link: "/login", id: Date.now() }],
+    primary: [],
+    secondary: [],
   },
 };
 
@@ -77,9 +83,10 @@ export const SettingPage = () => {
 
         setInitialData(() => values);
 
-        setTimeout(() => {
-          console.log({ values });
+        console.log({ values });
 
+        try {
+          await editSite(values);
           enqueueSnackbar("Edit data success!", {
             autoHideDuration: 3000,
             variant: "success",
@@ -88,15 +95,24 @@ export const SettingPage = () => {
               vertical: "bottom",
             },
           });
-
+        } catch (e: any) {
+          enqueueSnackbar("Error: "+e.toString(), {
+            autoHideDuration: 3000,
+            variant: "error",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "bottom",
+            },
+          });
+        } finally {
           setIsLoading(false);
-        }, 1500);
+        }
       }
     },
   });
 
   const handleChangeNavigation = (input: {
-    id: number;
+    id: string;
     type: "primary" | "secondary";
     field: "title" | "link";
     value: string;
@@ -123,7 +139,7 @@ export const SettingPage = () => {
   };
 
   const handleRemoveLinkNavigation = (input: {
-    id: number;
+    id: string;
     type: "primary" | "secondary";
   }) => {
     const navigation = values.navigation;

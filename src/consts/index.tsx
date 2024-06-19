@@ -51,6 +51,9 @@ import digestDemo from "../../public/images/preview-theme/tony-demo.npub.pro.png
 // import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
 // import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 
+export const NPUB_PRO_DOMAIN = 'npub.pro';
+export const NPUB_PRO_API = "https://api.npubpro.com";
+
 export const SIDEBAR_WIDTH = 280;
 export const NAV_CONFIG = [
   {
@@ -453,133 +456,133 @@ export enum TYPES_THEMES_TAG {
 
 export const THEMES_PREVIEW = [
   {
-    id: "1",
+    id: "naddr1qqrxcmmwv3hkuq3qpr4du5xl28dy5sh4msz9uddnwxgzupkk4qzjzklv84edc6ruevzqxpqqqpmnye00ces",
     tag: "photography",
     name: "London",
     url: "https://malos10-demo.npub.pro",
     preview: londonDemo,
   },
   {
-    id: "2",
+    id: "naddr1qqzxgcthdcpzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxgsugqzh",
     tag: "blog",
     name: "Dawn",
     url: "https://hodlbod-demo.npub.pro",
     preview: dawnDemo,
   },
   {
-    id: "3",
+    id: "naddr1qqzhgctnw3jsygqgat09ph63mf9y9awuq30rtvm3jqhqd44gq5s4hmpawtwxslxtqspsgqqqwueqj9k6nd",
     tag: "recipes",
     name: "Taste",
     url: "https://enki-demo.npub.pro",
     preview: tasteDemo,
   },
   {
-    id: "4",
+    id: "naddr1qqz8wctkv5pzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg06yarz",
     tag: "podcast",
     name: "Wave",
     url: "https://cd-demo.npub.pro",
     preview: waveDemo,
   },
   {
-    id: "6",
+    id: "naddr1qqz8yatz0ypzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg05vddj",
     tag: "magazine",
     name: "Ruby",
     url: "https://croxroadnews-demo.npub.pro",
     preview: rubyDemo,
   },
   {
-    id: "7",
+    id: "naddr1qqrk5mm4wfhxzmqzyqyw4hjsmaga5jjz7hwqgh34kdceqtsx665q2g2mas7h9hrg0n9sgqcyqqq8wvsh25luq",
     tag: "blog",
     name: "Journal",
     url: "https://fiatjaf-demo.npub.pro",
     preview: journalDemo,
   },
   {
-    id: "8",
+    id: "naddr1qqzx2er8v5pzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg7zn273",
     tag: "photography",
     name: "Edge",
     url: "https://inkblotart-demo.npub.pro",
     preview: edgeDemo,
   },
   {
-    id: "9",
+    id: "naddr1qqz8xmmvdupzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg3zdu5d",
     tag: "blog",
     name: "Solo",
     url: "https://karnage-demo.npub.pro",
     preview: soloDemo,
   },
   {
-    id: "10",
+    id: "naddr1qqyk6ctnwd5hvetv0ypzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg65mffq",
     tag: "blog",
     name: "Massively",
     url: "https://isolabell-demo.npub.pro",
     preview: massivelyDemo,
   },
   {
-    id: "5",
+    id: "naddr1qqrk2urfwdhkgegzyqyw4hjsmaga5jjz7hwqgh34kdceqtsx665q2g2mas7h9hrg0n9sgqcyqqq8wvs4lzhhz",
     tag: "podcast",
     name: "Episode",
     url: "https://episode-demo.npub.pro",
     preview: episodeDemo,
   },
   {
-    id: "11",
+    id: "naddr1qqrxg6t8v4ehgq3qpr4du5xl28dy5sh4msz9uddnwxgzupkk4qzjzklv84edc6ruevzqxpqqqpmnytfk8l9",
     tag: "blog",
     name: "Digest",
     url: "https://tony-demo.npub.pro",
     preview: digestDemo,
   },
   {
-    id: "12",
+    id: "naddr1qqzhqcthv9usygqgat09ph63mf9y9awuq30rtvm3jqhqd44gq5s4hmpawtwxslxtqspsgqqqwueqavz5au",
     tag: "photography",
     name: "Paway",
     url: "https://onyx-demo.npub.pro",
     preview: pawayDemo,
   },
   {
-    id: "13",
+    id: "naddr1qqzxzmr5dupzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg3rvw8e",
     tag: "blog",
     name: "Alto",
     url: "https://jackmallers-demo.npub.pro",
     preview: altoDemo,
   },
   {
-    id: "14",
+    id: "naddr1qqrk2erfw35k7mszyqyw4hjsmaga5jjz7hwqgh34kdceqtsx665q2g2mas7h9hrg0n9sgqcyqqq8wvspgnlqu",
     tag: "blog",
     name: "Edition",
     url: "https://alanbwt-demo.npub.pro",
     preview: editionDemo,
   },
   {
-    id: "15",
+    id: "naddr1qqyxyatvd3jhg6twqgsq36k72r04rkj2gt6acpz7xkehrypwqmt2spfpt0kr6ukudp7vkpqrqsqqqaejtrgtuy",
     tag: "blog",
     name: "Bulletin",
     url: "https://rabble-demo.npub.pro",
     preview: bulletinDemo,
   },
   {
-    id: "16",
+    id: "naddr1qqr8x6tdwpk8jq3qpr4du5xl28dy5sh4msz9uddnwxgzupkk4qzjzklv84edc6ruevzqxpqqqpmnyykmacn",
     tag: "magazine",
     name: "Simply",
     url: "https://nogood-demo.npub.pro",
     preview: simplyDemo,
   },
   {
-    id: "17",
+    id: "naddr1qqzkv6t60fusygqgat09ph63mf9y9awuq30rtvm3jqhqd44gq5s4hmpawtwxslxtqspsgqqqwueqkvrjjk",
     tag: "recipes",
     name: "Fizzy",
     url: "https://essential-demo.npub.pro",
     preview: fizzyDemo,
   },
   {
-    id: "18",
+    id: "naddr1qqzxgmmsv5pzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxgvagq2d",
     tag: "blog",
     name: "Dope",
     url: "https://lectio-demo.npub.pro",
     preview: dopeDemo,
   },
   {
-    id: "19",
+    id: "naddr1qqrxzar5d9kxzq3qpr4du5xl28dy5sh4msz9uddnwxgzupkk4qzjzklv84edc6ruevzqxpqqqpmny6ltg6d",
     tag: "blog",
     name: "Attila",
     url: "https://lynalden-demo.npub.pro",

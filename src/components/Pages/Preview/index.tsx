@@ -1,11 +1,10 @@
 "use client";
 import { StyledPreviewTestSite } from "@/components/Pages/Preview/styled";
-// import Image, { StaticImageData } from "next/image";
 import { PreviewNavigation } from "@/components/PreviewNavigation";
 import { useSearchParams, redirect, useRouter } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   loadPreviewSite,
   renderPreview,
@@ -13,27 +12,44 @@ import {
   setPreviewTheme,
   storePreview,
 } from "@/services/nostr/themes";
+import { Box } from "@mui/material";
+import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
+
+const hashtags = [
+  "#cooking",
+  "#photography",
+  "#nostr",
+  "#travel",
+  "#grownostr",
+];
+
+const kinds: { [key: number]: string } = {
+  1: "Short notes",
+  30023: "Long notes",
+};
 
 export const Preview = () => {
   const router = useRouter();
-
   const params = useSearchParams();
   const tag = params.get("tag");
   const themeId = params.get("themeId");
   const siteId = params.get("siteId");
   const theme = THEMES_PREVIEW.find((el) => el.id === themeId);
-  const kinds = (params.get("kinds") || "")
+  const getKinds = (params.get("kinds") || "")
     .split(",")
     .filter((k) => k.trim())
     .map((k) => parseInt(k));
-  if (!kinds.length)
-    kinds.push(
+  if (!getKinds.length)
+    getKinds.push(
       tag === "photography" || tag === "magazine" || tag === "podcast"
         ? 1
-        : 30023
+        : 30023,
     );
+
+  const [hashtagsSelected, setHashtags] = useState<string[]>([]);
+  const [kindsSelected, setKinds] = useState(getKinds);
   const authed = useContext(AuthContext);
-  const [hashtags, setHashtags] = useState<string[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   useEffect(() => {
@@ -46,29 +62,32 @@ export const Preview = () => {
       if (siteId) {
         promise = loadPreviewSite(siteId);
       } else {
-        promise = Promise.resolve(setPreviewSettings({
-          admin: userPubkey,
-          // FIXME DEBUG
-          contributors: [
-            "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411",
-          ], //[userPubkey],
-          kinds,
-          hashtags,
-        }));  
+        promise = Promise.resolve(
+          setPreviewSettings({
+            admin: userPubkey,
+            // FIXME DEBUG
+            contributors: [
+              "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411",
+            ], //[userPubkey],
+            kinds: kindsSelected,
+            hashtags: hashtagsSelected,
+          }),
+        );
       }
 
       promise.then(() => renderPreview(iframeRef.current!));
     } else if (!siteId) {
       iframeRef.current!.src = theme.url;
     }
-  }, [authed, kinds, hashtags, themeId, siteId, iframeRef]);
+  }, [authed, kindsSelected, hashtagsSelected, themeId, siteId, iframeRef]);
 
   if (!themeId || !theme) {
     return redirect("/");
   }
 
-  const onHashtags = async (hashtags: string[]) => {
+  const onContentSettings = async (hashtags: string[], kinds: number[]) => {
     setHashtags(hashtags);
+    setKinds(kinds);
   };
 
   const onUseTheme = async () => {
@@ -88,6 +107,25 @@ export const Preview = () => {
 
   return (
     <>
+      {isLoading && (
+        <Box
+          sx={{
+            position: "absolute",
+            zIndex: 99,
+            background: "#fff",
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <SpinerWrap>
+            <SpinerCircularProgress />
+          </SpinerWrap>
+        </Box>
+      )}
+
       <StyledPreviewTestSite>
         <iframe
           ref={iframeRef}
@@ -95,10 +133,17 @@ export const Preview = () => {
           width={"100%"}
           height={"100%"}
         ></iframe>
-        {/* <Image src={theme?.preview as StaticImageData} alt="test site" /> */}
       </StyledPreviewTestSite>
 
-      <PreviewNavigation onChangeTheme={onChangeTheme} onHashtags={onHashtags} onUseTheme={onUseTheme} />
+      <PreviewNavigation
+        onChangeTheme={onChangeTheme}
+        kindsSelected={kindsSelected}
+        hashtagsSelected={hashtagsSelected}
+        onContentSettings={onContentSettings}
+        hashtags={hashtags}
+        kinds={kinds}
+        onUseTheme={onUseTheme}
+      />
     </>
   );
 };

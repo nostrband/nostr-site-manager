@@ -5,13 +5,15 @@ import {
   NostrEvent,
 } from "@nostr-dev-kit/ndk";
 import { ReturnSettingsSiteDataType } from "../sites.service";
+import { NostrParser, Site, SiteAddr, tv } from "libnostrsite";
 import {
-  NostrParser,
-  Site,
-  SiteAddr,
-  tv,
-} from "libnostrsite";
-import { SITE_RELAY, addOnAuth, ndk, userPubkey, userRelays, stv } from "./nostr";
+  SITE_RELAY,
+  addOnAuth,
+  ndk,
+  userPubkey,
+  userRelays,
+  stv,
+} from "./nostr";
 
 const KIND_SITE = 30512;
 
@@ -61,7 +63,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   await ne.sign(signer);
 
   const r = await ne.publish(
-    NDKRelaySet.fromRelayUrls([...userRelays, SITE_RELAY], ndk)
+    NDKRelaySet.fromRelayUrls([...userRelays, SITE_RELAY], ndk),
   );
   if (!r.size) {
     throw new Error("Failed to publish to relays");
@@ -136,7 +138,7 @@ export async function fetchSites() {
         authors: [userPubkey],
       },
       { groupable: false },
-      NDKRelaySet.fromRelayUrls(userRelays, ndk!)
+      NDKRelaySet.fromRelayUrls(userRelays, ndk!),
     );
     console.log("site events", events);
 
@@ -151,4 +153,4 @@ export async function fetchSites() {
 addOnAuth(async (type: string) => {
   // clear sites on logout
   if (type === "logout") sites.length = 0;
-})
+});

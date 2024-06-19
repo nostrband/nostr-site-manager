@@ -2,14 +2,17 @@
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 
-export const StyledPreviewTestSite = styled(Box)(() => ({
+export const StyledPreviewTestSite = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   width: "100%",
-  height: "calc(100vh + 100px)",
+  height: "100%",
+  paddingBottom: "74px",
+  [theme.breakpoints.down("sm")]: {
+    paddingBottom: "127px",
+  },
   position: "relative",
-  borderRadius: "16px",
   overflow: "hidden",
   boxShadow: "0px 28px 40.1px 0px #00000026",
   img: {

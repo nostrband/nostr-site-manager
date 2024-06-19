@@ -1,6 +1,5 @@
 "use client";
 import { StyledPreviewTestSite } from "@/components/Pages/Preview/styled";
-import Image, { StaticImageData } from "next/image";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSearchParams, redirect, useRouter } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
@@ -9,7 +8,6 @@ import {
   Fab,
   Drawer,
   Button,
-  Select,
   Box,
   Tab,
   FormControl,
@@ -31,9 +29,6 @@ import {
 } from "@/components/Pages/Design/styled";
 import { useFormik } from "formik";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
-import MenuItem from "@mui/material/MenuItem";
-import Checkbox from "@mui/material/Checkbox";
-import ListItemText from "@mui/material/ListItemText";
 import { MuiColorInput } from "mui-color-input";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -128,7 +123,7 @@ export const Design = () => {
 
     console.log("Published");
 
-    window.open(getPreviewSiteUrl(), '_blank');
+    window.open(getPreviewSiteUrl(), "_blank");
 
     // FIXME go to /publishing?siteId and let it call 'publish'
     //    router.push(`/preview?themeId=${themeId}&siteId=${siteId}`);
@@ -204,7 +199,7 @@ export const Design = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id
+      (item) => item.id !== input.id,
     );
 
     setFieldValue("navigation", navigation);

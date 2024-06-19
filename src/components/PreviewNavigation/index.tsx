@@ -1,7 +1,7 @@
-import { Avatar, Box, Button } from "@mui/material";
+import { Avatar, Box, Button, ListSubheader } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -10,7 +10,7 @@ import {
   StyledIconButton,
   StyledWrapper,
 } from "@/components/PreviewNavigation/styled";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
 import { AuthContext, userProfile, userPubkey } from "@/services/nostr/nostr";
 
@@ -25,26 +25,24 @@ const MenuProps = {
   },
 };
 
-const hashtags = [
-  "#cooking",
-  "#photography",
-  "#nostr",
-  "#travel",
-  "#grownostr",
-];
-
 export const PreviewNavigation = ({
-  onHashtags,
+  onContentSettings,
   onUseTheme,
+  hashtagsSelected,
+  kindsSelected,
   onChangeTheme,
+  kinds,
+  hashtags,
 }: {
-  onHashtags: (hastags: string[]) => void;
+  onContentSettings: (hastags: string[], kinds: number[]) => void;
   onUseTheme: () => void;
   onChangeTheme: (id: string) => void;
+  hashtagsSelected: string[];
+  kindsSelected: number[];
+  kinds: { [key: number]: string };
+  hashtags: string[];
 }) => {
-  const [selectHashtag, setSelectHashtag] = useState<string[]>([]);
   const authed = useContext(AuthContext);
-
   const params = useSearchParams();
   const tag = params.get("tag");
   const themeId = params.get("themeId");
@@ -55,6 +53,8 @@ export const PreviewNavigation = ({
       : THEMES_PREVIEW;
   let currentIndex = filteredThemes.findIndex((el) => el.id === themeId);
   let currentTheme = filteredThemes[currentIndex];
+  const selectedOptions = [...hashtagsSelected, ...kindsSelected];
+  const prepareKindOptions = Object.keys(kinds).map((el) => Number(el));
 
   const handleNext = () => {
     currentIndex = (currentIndex + 1) % filteredThemes.length;
@@ -75,13 +75,39 @@ export const PreviewNavigation = ({
     if (!authed) document.dispatchEvent(new Event("nlLaunch"));
   };
 
-  const handleChange = (event: SelectChangeEvent<typeof selectHashtag>) => {
-    const {
-      target: { value },
-    } = event;
-    const hashtags = typeof value === "string" ? value.split(",") : value;
-    setSelectHashtag(hashtags);
-    onHashtags(hashtags);
+  const handleChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
+    const value = event.target.value as string[];
+    const newHashtagsOptions = [];
+    const newKindsOptions: number[] = [];
+
+    const selectedHashtags = value.filter((option) =>
+      hashtags.includes(option),
+    );
+
+    const selectedKinds = value
+      .filter((option) => prepareKindOptions.includes(Number(option)))
+      .map((el) => Number(el));
+
+    if (selectedKinds.length === 0) {
+      if (
+        selectedOptions.some((option) =>
+          prepareKindOptions.includes(Number(option)),
+        )
+      ) {
+        return;
+      } else {
+        newHashtagsOptions.push(...selectedHashtags);
+        newKindsOptions.push(...prepareKindOptions);
+      }
+    } else if (selectedKinds.length === prepareKindOptions.length) {
+      newHashtagsOptions.push(...selectedHashtags);
+      newKindsOptions.push(...prepareKindOptions);
+    } else {
+      newHashtagsOptions.push(...selectedHashtags);
+      newKindsOptions.push(...selectedKinds);
+    }
+
+    onContentSettings(newHashtagsOptions, newKindsOptions);
   };
 
   let avatar = "";
@@ -108,49 +134,66 @@ export const PreviewNavigation = ({
         <ArrowBackIcon />
       </StyledIconButton>
 
-      {authed && (
-        <Box
+      <Box
+        sx={{
+          width: {
+            xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
+            sm: "auto",
+          },
+          order: { xs: 0, sm: 1 },
+        }}
+      >
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          size="small"
+          value={selectedOptions}
+          onChange={handleChange}
+          MenuProps={MenuProps}
           sx={{
-            width: {
-              xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
-              sm: "auto",
-            },
-            order: { xs: 0, sm: 1 },
+            height: "42px",
+            width: { xs: `${authed ? "168px" : "100%"}`, sm: "168px" },
           }}
-        >
-          <Select
-            labelId="demo-multiple-checkbox-label"
-            id="demo-multiple-checkbox"
-            multiple
-            size="small"
-            value={selectHashtag}
-            onChange={handleChange}
-            MenuProps={MenuProps}
-            sx={{
-              height: "42px",
-              width: { xs: `${authed ? "168px" : "100%"}`, sm: "168px" },
-            }}
-            renderValue={(selected) => {
-              if (!selected.length) {
-                return "All hashtags";
+
+          renderValue={(selected) => {
+            if (!selected.length) {
+              return "All hashtags";
+            }
+
+            return selected.map(value => {
+              if(kinds[value]) {
+                return kinds[value]
               }
 
-              return selected.join(", ");
-            }}
-            displayEmpty
-          >
-            {hashtags.map((hashtag) => (
-              <MenuItem key={hashtag} value={hashtag}>
-                <Checkbox
-                  color="decorate"
-                  checked={selectHashtag.indexOf(hashtag) > -1}
-                />
-                <ListItemText primary={hashtag} />
-              </MenuItem>
-            ))}
-          </Select>
-        </Box>
-      )}
+              return value
+            }).join(', ')
+          }}
+          displayEmpty
+        >
+          <ListSubheader>Kinds</ListSubheader>
+          {prepareKindOptions.map((kind) => (
+            <MenuItem key={kind} value={kind}>
+              <Checkbox
+                color="decorate"
+                checked={selectedOptions.includes(kind)}
+              />
+              <ListItemText primary={kinds[kind]} />
+            </MenuItem>
+          ))}
+
+          <ListSubheader>Hashtags</ListSubheader>
+          {hashtags.map((hashtag) => (
+            <MenuItem key={hashtag} value={hashtag}>
+              <Checkbox
+                color="decorate"
+                checked={selectedOptions.includes(hashtag)}
+              />
+              <ListItemText primary={hashtag} />
+            </MenuItem>
+          ))}
+        </Select>
+      </Box>
       <Button
         sx={{ order: { xs: 1 } }}
         size="large"

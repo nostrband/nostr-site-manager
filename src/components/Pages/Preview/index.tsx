@@ -2,22 +2,25 @@
 import { StyledPreviewTestSite } from "@/components/Pages/Preview/styled";
 // import Image, { StaticImageData } from "next/image";
 import { PreviewNavigation } from "@/components/PreviewNavigation";
-import { useSearchParams, redirect } from "next/navigation";
+import { useSearchParams, redirect, useRouter } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
-  preparePreview,
+  loadPreviewSite,
   renderPreview,
   setPreviewSettings,
   setPreviewTheme,
+  storePreview,
 } from "@/services/nostr/themes";
-import { setHtml } from "libnostrsite";
 
 export const Preview = () => {
+  const router = useRouter();
+
   const params = useSearchParams();
   const tag = params.get("tag");
   const themeId = params.get("themeId");
+  const siteId = params.get("siteId");
   const theme = THEMES_PREVIEW.find((el) => el.id === themeId);
   const kinds = (params.get("kinds") || "")
     .split(",")
@@ -39,51 +42,26 @@ export const Preview = () => {
     if (authed) {
       setPreviewTheme(themeId);
 
-      setPreviewSettings({
-        admin: userPubkey,
-        // FIXME DEBUG
-        contributors: [
-          "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411",
-        ], //[userPubkey],
-        kinds,
-        hashtags,
-      });
-
-      async function render(path: string) {
-        const html = await renderPreview(path);
-        const iframe = iframeRef.current;
-        if (!iframe) throw new Error("No iframe");
-        iframe.src = "/preview.html?" + Math.random();
-        iframe.onload = async () => {
-          const cw = iframe.contentWindow!;
-          await setHtml(html, cw.document, cw);
-
-          // // @ts-ignore
-          // frame.style.opacity = "1";
-
-          const links = cw.document.querySelectorAll("a");
-          console.log("links", links);
-          for (const l of links) {
-            if (!l.href) continue;
-            try {
-              const url = new URL(l.href, document.location.href);
-              if (url.origin === document.location.origin) {
-                l.addEventListener("click", async (e: Event) => {
-                  e.preventDefault();
-                  console.log("clicked", e.target, url.pathname);
-                  render(url.pathname);
-                });
-              }
-            } catch {}
-          }
-        };
+      let promise;
+      if (siteId) {
+        promise = loadPreviewSite(siteId);
+      } else {
+        promise = Promise.resolve(setPreviewSettings({
+          admin: userPubkey,
+          // FIXME DEBUG
+          contributors: [
+            "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411",
+          ], //[userPubkey],
+          kinds,
+          hashtags,
+        }));  
       }
 
-      preparePreview().then(() => render("/"));
-    } else {
+      promise.then(() => renderPreview(iframeRef.current!));
+    } else if (!siteId) {
       iframeRef.current!.src = theme.url;
     }
-  }, [authed, kinds, hashtags, themeId, iframeRef]);
+  }, [authed, kinds, hashtags, themeId, siteId, iframeRef]);
 
   if (!themeId || !theme) {
     return redirect("/");
@@ -91,6 +69,21 @@ export const Preview = () => {
 
   const onHashtags = async (hashtags: string[]) => {
     setHashtags(hashtags);
+  };
+
+  const onUseTheme = async () => {
+    const siteId = await storePreview();
+    router.push(`/design?themeId=${themeId}&siteId=${siteId}`);
+  };
+
+  const onChangeTheme = async (id: string) => {
+    await storePreview();
+
+    const newParams = new URLSearchParams(params);
+
+    newParams.set("themeId", id);
+
+    router.push(`?${newParams.toString()}`);
   };
 
   return (
@@ -105,7 +98,7 @@ export const Preview = () => {
         {/* <Image src={theme?.preview as StaticImageData} alt="test site" /> */}
       </StyledPreviewTestSite>
 
-      <PreviewNavigation onHashtags={onHashtags} />
+      <PreviewNavigation onChangeTheme={onChangeTheme} onHashtags={onHashtags} onUseTheme={onUseTheme} />
     </>
   );
 };

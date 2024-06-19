@@ -25,35 +25,42 @@ const MenuProps = {
   },
 };
 
-const hashtags = ["#cooking", "#photography", "#nostr", "#travel", "#grownostr"];
+const hashtags = [
+  "#cooking",
+  "#photography",
+  "#nostr",
+  "#travel",
+  "#grownostr",
+];
 
-export const PreviewNavigation = ({ onHashtags }: { onHashtags: (hastags: string[]) => void }) => {
+export const PreviewNavigation = ({
+  onHashtags,
+  onUseTheme,
+  onChangeTheme,
+}: {
+  onHashtags: (hastags: string[]) => void;
+  onUseTheme: () => void;
+  onChangeTheme: (id: string) => void;
+}) => {
   const [selectHashtag, setSelectHashtag] = useState<string[]>([]);
   const authed = useContext(AuthContext);
 
-  const router = useRouter();
   const params = useSearchParams();
   const tag = params.get("tag");
   const themeId = params.get("themeId");
-  const filteredThemes = tag
-    ? THEMES_PREVIEW.filter((theme) => theme.tag === tag)
-    : THEMES_PREVIEW;
+  const siteId = params.get("siteId");
+  const filteredThemes =
+    !siteId && tag
+      ? THEMES_PREVIEW.filter((theme) => theme.tag === tag)
+      : THEMES_PREVIEW;
   let currentIndex = filteredThemes.findIndex((el) => el.id === themeId);
   let currentTheme = filteredThemes[currentIndex];
-
-  const updateQueryParams = (id: string) => {
-    const newParams = new URLSearchParams(params);
-
-    newParams.set("themeId", id);
-
-    router.push(`?${newParams.toString()}`);
-  };
 
   const handleNext = () => {
     currentIndex = (currentIndex + 1) % filteredThemes.length;
     currentTheme = filteredThemes[currentIndex];
 
-    updateQueryParams(currentTheme.id);
+    onChangeTheme(currentTheme.id);
   };
 
   const handlePrev = () => {
@@ -61,16 +68,11 @@ export const PreviewNavigation = ({ onHashtags }: { onHashtags: (hastags: string
       (currentIndex - 1 + filteredThemes.length) % filteredThemes.length;
     currentTheme = filteredThemes[currentIndex];
 
-    updateQueryParams(currentTheme.id);
+    onChangeTheme(currentTheme.id);
   };
 
   const handleLogin = () => {
-    if (!authed)
-      document.dispatchEvent(new Event('nlLaunch'));
-  };
-
-  const handleNavigateToDesign = () => {
-    router.push(`/design?themeId=${themeId}`);
+    if (!authed) document.dispatchEvent(new Event("nlLaunch"));
   };
 
   const handleChange = (event: SelectChangeEvent<typeof selectHashtag>) => {
@@ -106,47 +108,49 @@ export const PreviewNavigation = ({ onHashtags }: { onHashtags: (hastags: string
         <ArrowBackIcon />
       </StyledIconButton>
 
-      <Box
-        sx={{
-          width: {
-            xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
-            sm: "auto",
-          },
-          order: { xs: 0, sm: 1 },
-        }}
-      >
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          multiple
-          size="small"
-          value={selectHashtag}
-          onChange={handleChange}
-          MenuProps={MenuProps}
+      {authed && (
+        <Box
           sx={{
-            height: "42px",
-            width: { xs: `${authed ? "168px" : "100%"}`, sm: "168px" },
+            width: {
+              xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
+              sm: "auto",
+            },
+            order: { xs: 0, sm: 1 },
           }}
-          renderValue={(selected) => {
-            if (!selected.length) {
-              return "All hashtags";
-            }
-
-            return selected.join(", ");
-          }}
-          displayEmpty
         >
-          {hashtags.map((hashtag) => (
-            <MenuItem key={hashtag} value={hashtag}>
-              <Checkbox
-                color="decorate"
-                checked={selectHashtag.indexOf(hashtag) > -1}
-              />
-              <ListItemText primary={hashtag} />
-            </MenuItem>
-          ))}
-        </Select>
-      </Box>
+          <Select
+            labelId="demo-multiple-checkbox-label"
+            id="demo-multiple-checkbox"
+            multiple
+            size="small"
+            value={selectHashtag}
+            onChange={handleChange}
+            MenuProps={MenuProps}
+            sx={{
+              height: "42px",
+              width: { xs: `${authed ? "168px" : "100%"}`, sm: "168px" },
+            }}
+            renderValue={(selected) => {
+              if (!selected.length) {
+                return "All hashtags";
+              }
+
+              return selected.join(", ");
+            }}
+            displayEmpty
+          >
+            {hashtags.map((hashtag) => (
+              <MenuItem key={hashtag} value={hashtag}>
+                <Checkbox
+                  color="decorate"
+                  checked={selectHashtag.indexOf(hashtag) > -1}
+                />
+                <ListItemText primary={hashtag} />
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+      )}
       <Button
         sx={{ order: { xs: 1 } }}
         size="large"
@@ -154,7 +158,7 @@ export const PreviewNavigation = ({ onHashtags }: { onHashtags: (hastags: string
         color="decorate"
         onClick={() => {
           if (authed) {
-            handleNavigateToDesign();
+            onUseTheme();
           } else {
             handleLogin();
           }

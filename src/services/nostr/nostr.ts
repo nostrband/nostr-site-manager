@@ -27,10 +27,20 @@ export let userPubkey: string = "";
 export const userRelays: string[] = [];
 export let userProfile: NDKEvent | null = null;
 
-export function stv(e: NostrEvent, name: string, value: string) {
+export function srm(e: NDKEvent | NostrEvent, name: string) {
+  e.tags = e.tags.filter((t) => t.length < 2 || t[0] !== name);
+}
+
+export function stv(e: NDKEvent | NostrEvent, name: string, value: string) {
   const t = e.tags.find((t) => t.length >= 2 && t[0] === name);
   if (t) t[1] = value;
   else e.tags.push([name, value]);
+}
+
+export function stag(e: NDKEvent | NostrEvent, tag: string[]) {
+  const i = e.tags.findIndex((t) => t.length >= 2 && t[0] === tag[0]);
+  if (i < 0) e.tags.push(tag);
+  else e.tags[i] = tag;
 }
 
 export function eventAddr(e: NDKEvent) {

@@ -2,7 +2,7 @@
 import { StyledPreviewTestSite } from "@/components/Pages/Preview/styled";
 import Image, { StaticImageData } from "next/image";
 import CloseIcon from "@mui/icons-material/Close";
-import { useSearchParams, redirect } from "next/navigation";
+import { useSearchParams, redirect, useRouter } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
 import TuneIcon from "@mui/icons-material/Tune";
 import {
@@ -16,7 +16,7 @@ import {
   InputLabel,
   OutlinedInput,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   StyledBottomActions,
   StyledButtonOpenSetting,
@@ -38,9 +38,18 @@ import { MuiColorInput } from "mui-color-input";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import { AuthContext } from "@/services/nostr/nostr";
+import {
+  getPreviewSiteUrl,
+  loadPreviewSite,
+  publishSite,
+  renderPreview,
+  setPreviewTheme,
+  storePreview,
+  updateSite,
+} from "@/services/nostr/themes";
 
-const initialDesignValue: {
-  id: string;
+interface DesignValues {
   name: string;
   shortName: string;
   description: string;
@@ -51,41 +60,47 @@ const initialDesignValue: {
     primary: { title: string; link: string; id: string }[];
     secondary: { title: string; link: string; id: string }[];
   };
-  hashtags: string[];
-  kinds: string[];
   accentColor: string;
-} = {
-  id: "",
+  // hashtags: string[];
+  // kinds: string[];
+}
+
+const initialDesignValue: DesignValues = {
   name: "",
   shortName: "",
   description: "",
-  icon: "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-  banner:
-    "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-  logo: "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
+  icon: "",
+  banner: "",
+  logo: "",
   navigation: {
     primary: [],
     secondary: [],
   },
-  hashtags: [],
-  kinds: [],
   accentColor: "#ececec",
+  // hashtags: [],
+  // kinds: [],
 };
 
-const hashtags = [
-  "#cooking",
-  "#photography",
-  "#nostr",
-  "#travel",
-  "#grownostr",
-];
+// const hashtags = [
+//   "#cooking",
+//   "#photography",
+//   "#nostr",
+//   "#travel",
+//   "#grownostr",
+// ];
 
-const kinds = ["kind 1", "kind 2", "kind 3", "kind 4", "kind 5"];
+// const kinds = ["Notes", "Long notes"];
 
 export const Design = () => {
+  const router = useRouter();
+  const authed = useContext(AuthContext);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+
   const params = useSearchParams();
+  const siteId = params.get("siteId");
   const themeId = params.get("themeId");
-  const previewImg = THEMES_PREVIEW.find((el) => el.id === themeId);
+  const theme = THEMES_PREVIEW.find((el) => el.id === themeId);
+  // const previewImg = THEMES_PREVIEW.find((el) => el.id === themeId);
   const [isOpenSettings, setOpenSettings] = useState(true);
   const [activeTab, setActiveTab] = useState("1");
 
@@ -98,14 +113,62 @@ export const Design = () => {
     submitForm().then();
   };
 
-  const { values, submitForm, handleChange, setFieldValue, handleBlur } =
-    useFormik({
-      initialValues: initialDesignValue,
-      validationSchema: validationSchemaMakePrivateSite,
-      onSubmit: async (values) => {
-        alert(JSON.stringify(values, null, 2));
-      },
-    });
+  const handleSwitchTheme = async () => {
+    setOpenSettings(false);
+    await submitForm();
+    router.push(`/preview?themeId=${themeId}&siteId=${siteId}`);
+  };
+
+  const handlePublish = async () => {
+    setOpenSettings(false);
+    await submitForm();
+
+    console.log("publishing site");
+    await publishSite();
+
+    console.log("Published");
+
+    window.open(getPreviewSiteUrl(), '_blank');
+
+    // FIXME go to /publishing?siteId and let it call 'publish'
+    //    router.push(`/preview?themeId=${themeId}&siteId=${siteId}`);
+  };
+
+  const {
+    values,
+    setValues,
+    submitForm,
+    handleChange,
+    setFieldValue,
+    handleBlur,
+  } = useFormik({
+    initialValues: initialDesignValue,
+    validationSchema: validationSchemaMakePrivateSite,
+    onSubmit: async (values) => {
+      // alert(JSON.stringify(values, null, 2));
+
+      console.log("publishing updated site");
+      updateSite({
+        accent_color: values.accentColor,
+        name: values.shortName,
+        cover_image: values.banner,
+        description: values.description,
+        icon: values.icon,
+        logo: values.logo,
+        title: values.name,
+        navigation: values.navigation.primary.map((n) => ({
+          label: n.title,
+          url: n.link,
+        })),
+      });
+
+      // publish and render in parallel
+      renderPreview(iframeRef.current!);
+
+      // make sure submit awaits for publish
+      return storePreview();
+    },
+  });
 
   const handleChangeNavigation = (input: {
     id: string;
@@ -141,20 +204,64 @@ export const Design = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id,
+      (item) => item.id !== input.id
     );
 
     setFieldValue("navigation", navigation);
   };
 
-  if (!themeId) {
+  useEffect(() => {
+    if (!authed || !themeId || !theme || !siteId) return;
+
+    if (authed) {
+      setPreviewTheme(themeId);
+
+      loadPreviewSite(siteId).then((info) => {
+        renderPreview(iframeRef.current!);
+
+        const values: DesignValues = {
+          accentColor: info.accent_color || "",
+          banner: info.cover_image || "",
+          description: info.description || "",
+          icon: info.icon || "",
+          logo: info.logo || "",
+          name: info.title || "",
+          shortName: info.name || "",
+          // hashtags: info.include_tags
+          //   ? info.include_tags.filter((t) => t.tag === "t").map((t) => t.value)
+          //   : [],
+          // kinds: info.include_kinds || [],
+          navigation: {
+            primary: info.navigation
+              ? info.navigation.map((n) => ({
+                  title: n.label,
+                  link: n.url,
+                  id: n.url,
+                }))
+              : [],
+            secondary: [],
+          },
+        };
+        console.log("info", info, "values", values);
+        setValues(values, false);
+      });
+    }
+  }, [authed, themeId, theme, siteId, iframeRef]);
+
+  if (!themeId || !siteId) {
     return redirect("/");
   }
 
   return (
     <>
       <StyledPreviewTestSite>
-        <Image src={previewImg?.preview as StaticImageData} alt="test site" />
+        <iframe
+          ref={iframeRef}
+          frameBorder={0}
+          width={"100%"}
+          height={"100%"}
+        ></iframe>
+        {/* <Image src={previewImg?.preview as StaticImageData} alt="test site" /> */}
       </StyledPreviewTestSite>
 
       <StyledButtonOpenSetting
@@ -185,12 +292,26 @@ export const Design = () => {
 
           <StyledFormControl>
             <StyledLabel htmlFor="shortName">Short name</StyledLabel>
-            <StyledTextField size="small" fullWidth id="shortName" />
+            <StyledTextField
+              size="small"
+              fullWidth
+              id="shortName"
+              onChange={handleChange}
+              value={values.shortName}
+              onBlur={handleBlur}
+            />
           </StyledFormControl>
 
           <StyledFormControl>
             <StyledLabel htmlFor="name">Name</StyledLabel>
-            <StyledTextField size="small" fullWidth id="name" />
+            <StyledTextField
+              size="small"
+              fullWidth
+              id="name"
+              onChange={handleChange}
+              value={values.name}
+              onBlur={handleBlur}
+            />
           </StyledFormControl>
 
           <StyledFormControl>
@@ -201,6 +322,9 @@ export const Design = () => {
               id="description"
               multiline
               rows={4}
+              onChange={handleChange}
+              value={values.description}
+              onBlur={handleBlur}
             />
           </StyledFormControl>
 
@@ -216,7 +340,7 @@ export const Design = () => {
               onBlur={handleBlur}
             />
             <StyledImgPreview>
-              <img alt="Icon url" src={values.icon} />
+              {values.icon && <img alt="Icon url" src={values.icon} />}
             </StyledImgPreview>
           </StyledFormControl>
 
@@ -232,7 +356,7 @@ export const Design = () => {
               onBlur={handleBlur}
             />
             <StyledImgPreview>
-              <img alt="Logo url" src={values.icon} />
+              {values.logo && <img alt="Logo url" src={values.logo} />}
             </StyledImgPreview>
           </StyledFormControl>
 
@@ -248,7 +372,7 @@ export const Design = () => {
               onBlur={handleBlur}
             />
             <StyledBannerPreview>
-              <img alt="Banner url" src={values.banner} />
+              {values.banner && <img alt="Banner url" src={values.banner} />}
             </StyledBannerPreview>
           </StyledFormControl>
 
@@ -261,7 +385,7 @@ export const Design = () => {
               onChange={(value) => setFieldValue("accentColor", value)}
             />
           </StyledFormControl>
-
+          {/* 
           <StyledFormControl>
             <StyledLabel htmlFor="hashtags">Hashtags</StyledLabel>
             <Select
@@ -316,153 +440,153 @@ export const Design = () => {
                 </MenuItem>
               ))}
             </Select>
+          </StyledFormControl> */}
+
+          <StyledFormControl>
+            <StyledLabel>Navigation</StyledLabel>
+            <TabContext value={activeTab}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList onChange={(_, value) => setActiveTab(value)}>
+                  <Tab label="Primary" value="1" />
+                  <Tab label="Secondary" value="2" />
+                </TabList>
+              </Box>
+              <TabPanel value="1">
+                {values.navigation &&
+                  values.navigation.primary.map((el) => {
+                    return (
+                      <StyledItemNavigation key={el.id}>
+                        <FormControl fullWidth size="small">
+                          <InputLabel htmlFor="title">Title link</InputLabel>
+                          <OutlinedInput
+                            id="title"
+                            name="title"
+                            label="Title link"
+                            onChange={(e) =>
+                              handleChangeNavigation({
+                                id: el.id,
+                                field: "title",
+                                type: "primary",
+                                value: e.target.value,
+                              })
+                            }
+                            value={el.title}
+                          />
+                        </FormControl>
+                        <FormControl fullWidth size="small">
+                          <InputLabel htmlFor="link">Link</InputLabel>
+                          <OutlinedInput
+                            id="link"
+                            name="link"
+                            label="Link"
+                            onChange={(e) =>
+                              handleChangeNavigation({
+                                id: el.id,
+                                field: "link",
+                                type: "primary",
+                                value: e.target.value,
+                              })
+                            }
+                            value={el.link}
+                          />
+                        </FormControl>
+
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          color="error"
+                          onClick={() =>
+                            handleRemoveLinkNavigation({
+                              id: el.id,
+                              type: "primary",
+                            })
+                          }
+                        >
+                          Remove
+                        </Button>
+                      </StyledItemNavigation>
+                    );
+                  })}
+
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => handleAddLinkNavigation("primary")}
+                >
+                  Add
+                </Button>
+              </TabPanel>
+              <TabPanel value="2">
+                {values.navigation &&
+                  values.navigation.secondary.map((el) => {
+                    return (
+                      <StyledItemNavigation key={el.id}>
+                        <FormControl fullWidth size="small">
+                          <InputLabel htmlFor="title">Title link</InputLabel>
+                          <OutlinedInput
+                            id="title"
+                            name="title"
+                            label="Title link"
+                            onChange={(e) =>
+                              handleChangeNavigation({
+                                id: el.id,
+                                field: "title",
+                                type: "secondary",
+                                value: e.target.value,
+                              })
+                            }
+                            value={el.title}
+                          />
+                        </FormControl>
+                        <FormControl fullWidth size="small">
+                          <InputLabel htmlFor="link">Link</InputLabel>
+                          <OutlinedInput
+                            id="link"
+                            name="link"
+                            label="Link"
+                            onChange={(e) =>
+                              handleChangeNavigation({
+                                id: el.id,
+                                field: "link",
+                                type: "secondary",
+                                value: e.target.value,
+                              })
+                            }
+                            value={el.link}
+                          />
+                        </FormControl>
+
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          color="error"
+                          onClick={() =>
+                            handleRemoveLinkNavigation({
+                              id: el.id,
+                              type: "secondary",
+                            })
+                          }
+                        >
+                          Remove
+                        </Button>
+                      </StyledItemNavigation>
+                    );
+                  })}
+
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => handleAddLinkNavigation("secondary")}
+                >
+                  Add
+                </Button>
+              </TabPanel>
+            </TabContext>
           </StyledFormControl>
-
-        <StyledFormControl>
-          <StyledLabel>Navigation</StyledLabel>
-          <TabContext value={activeTab}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList onChange={(_, value) => setActiveTab(value)}>
-                <Tab label="Primary" value="1" />
-                <Tab label="Secondary" value="2" />
-              </TabList>
-            </Box>
-            <TabPanel value="1">
-              {values.navigation &&
-                values.navigation.primary.map((el) => {
-                  return (
-                    <StyledItemNavigation key={el.id}>
-                      <FormControl fullWidth size="small">
-                        <InputLabel htmlFor="title">Title link</InputLabel>
-                        <OutlinedInput
-                          id="title"
-                          name="title"
-                          label="Title link"
-                          onChange={(e) =>
-                            handleChangeNavigation({
-                              id: el.id,
-                              field: "title",
-                              type: "primary",
-                              value: e.target.value,
-                            })
-                          }
-                          value={el.title}
-                        />
-                      </FormControl>
-                      <FormControl fullWidth size="small">
-                        <InputLabel htmlFor="link">Link</InputLabel>
-                        <OutlinedInput
-                          id="link"
-                          name="link"
-                          label="Link"
-                          onChange={(e) =>
-                            handleChangeNavigation({
-                              id: el.id,
-                              field: "link",
-                              type: "primary",
-                              value: e.target.value,
-                            })
-                          }
-                          value={el.link}
-                        />
-                      </FormControl>
-
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        color="error"
-                        onClick={() =>
-                          handleRemoveLinkNavigation({
-                            id: el.id,
-                            type: "primary",
-                          })
-                        }
-                      >
-                        Remove
-                      </Button>
-                    </StyledItemNavigation>
-                  );
-                })}
-
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={() => handleAddLinkNavigation("primary")}
-              >
-                Add
-              </Button>
-            </TabPanel>
-            <TabPanel value="2">
-              {values.navigation &&
-                values.navigation.secondary.map((el) => {
-                  return (
-                    <StyledItemNavigation key={el.id}>
-                      <FormControl fullWidth size="small">
-                        <InputLabel htmlFor="title">Title link</InputLabel>
-                        <OutlinedInput
-                          id="title"
-                          name="title"
-                          label="Title link"
-                          onChange={(e) =>
-                            handleChangeNavigation({
-                              id: el.id,
-                              field: "title",
-                              type: "secondary",
-                              value: e.target.value,
-                            })
-                          }
-                          value={el.title}
-                        />
-                      </FormControl>
-                      <FormControl fullWidth size="small">
-                        <InputLabel htmlFor="link">Link</InputLabel>
-                        <OutlinedInput
-                          id="link"
-                          name="link"
-                          label="Link"
-                          onChange={(e) =>
-                            handleChangeNavigation({
-                              id: el.id,
-                              field: "link",
-                              type: "secondary",
-                              value: e.target.value,
-                            })
-                          }
-                          value={el.link}
-                        />
-                      </FormControl>
-
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        color="error"
-                        onClick={() =>
-                          handleRemoveLinkNavigation({
-                            id: el.id,
-                            type: "secondary",
-                          })
-                        }
-                      >
-                        Remove
-                      </Button>
-                    </StyledItemNavigation>
-                  );
-                })}
-
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={() => handleAddLinkNavigation("secondary")}
-              >
-                Add
-              </Button>
-            </TabPanel>
-          </TabContext>
-        </StyledFormControl>
         </StyledWrapper>
         <StyledBottomActions>
           <Button
-            onClick={handleCloseSettings}
+            onClick={handleSwitchTheme}
             variant="contained"
             fullWidth
             size="medium"
@@ -478,6 +602,17 @@ export const Design = () => {
             color="decorate"
           >
             Save
+          </Button>
+        </StyledBottomActions>
+        <StyledBottomActions>
+          <Button
+            onClick={handlePublish}
+            variant="contained"
+            fullWidth
+            size="medium"
+            color="decorate"
+          >
+            Publish
           </Button>
         </StyledBottomActions>
       </Drawer>

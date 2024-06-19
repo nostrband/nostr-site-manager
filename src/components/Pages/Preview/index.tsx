@@ -5,7 +5,7 @@ import { PreviewNavigation } from "@/components/PreviewNavigation";
 import { useSearchParams, redirect } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   preparePreview,
   renderPreview,
@@ -13,6 +13,8 @@ import {
   setPreviewTheme,
 } from "@/services/nostr/themes";
 import { setHtml } from "libnostrsite";
+import { Box } from "@mui/material";
+import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 
 export const Preview = () => {
   const params = useSearchParams();
@@ -27,10 +29,11 @@ export const Preview = () => {
     kinds.push(
       tag === "photography" || tag === "magazine" || tag === "podcast"
         ? 1
-        : 30023
+        : 30023,
     );
   const authed = useContext(AuthContext);
   const [hashtags, setHashtags] = useState<string[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   useEffect(() => {
@@ -49,6 +52,7 @@ export const Preview = () => {
         hashtags,
       });
 
+      // setLoading(true)
       async function render(path: string) {
         const html = await renderPreview(path);
         const iframe = iframeRef.current;
@@ -63,6 +67,7 @@ export const Preview = () => {
 
           const links = cw.document.querySelectorAll("a");
           console.log("links", links);
+          // setLoading(false)
           for (const l of links) {
             if (!l.href) continue;
             try {
@@ -79,7 +84,7 @@ export const Preview = () => {
         };
       }
 
-      preparePreview().then(() => render("/"));
+      preparePreview().then(() => render("/")); //.finally(() => setLoading(false));
     } else {
       iframeRef.current!.src = theme.url;
     }
@@ -89,12 +94,31 @@ export const Preview = () => {
     return redirect("/");
   }
 
-  const onHashtags = async (hashtags: string[]) => {
-    setHashtags(hashtags);
+  const onContentSettings = async (hashtagsAndKinds: string[]) => {
+    setHashtags(hashtagsAndKinds);
   };
 
   return (
     <>
+      {isLoading && (
+        <Box
+          sx={{
+            position: "absolute",
+            zIndex: 99,
+            background: "#fff",
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <SpinerWrap>
+            <SpinerCircularProgress />
+          </SpinerWrap>
+        </Box>
+      )}
+
       <StyledPreviewTestSite>
         <iframe
           ref={iframeRef}
@@ -105,7 +129,7 @@ export const Preview = () => {
         {/* <Image src={theme?.preview as StaticImageData} alt="test site" /> */}
       </StyledPreviewTestSite>
 
-      <PreviewNavigation onHashtags={onHashtags} />
+      <PreviewNavigation onContentSettings={onContentSettings} />
     </>
   );
 };

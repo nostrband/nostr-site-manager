@@ -51,7 +51,7 @@ import digestDemo from "../../public/images/preview-theme/tony-demo.npub.pro.png
 // import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
 // import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 
-export const NPUB_PRO_DOMAIN = 'npub.pro';
+export const NPUB_PRO_DOMAIN = "npub.pro";
 export const NPUB_PRO_API = "https://api.npubpro.com";
 
 export const SIDEBAR_WIDTH = 280;

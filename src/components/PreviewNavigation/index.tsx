@@ -1,4 +1,4 @@
-import { Avatar, Box, Button } from "@mui/material";
+import {Avatar, Box, Button, ListSubheader} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useContext, useState } from "react";
@@ -25,10 +25,25 @@ const MenuProps = {
   },
 };
 
-const hashtags = ["#cooking", "#photography", "#nostr", "#travel", "#grownostr"];
+const hashtags = [
+  "#cooking",
+  "#photography",
+  "#nostr",
+  "#travel",
+  "#grownostr",
+];
 
-export const PreviewNavigation = ({ onHashtags }: { onHashtags: (hastags: string[]) => void }) => {
-  const [selectHashtag, setSelectHashtag] = useState<string[]>([]);
+const kinds = [
+  "short notes",
+  "long notes",
+];
+
+export const PreviewNavigation = ({
+                                    onContentSettings,
+}: {
+  onContentSettings: (hastags: string[]) => void;
+}) => {
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const authed = useContext(AuthContext);
 
   const router = useRouter();
@@ -65,21 +80,34 @@ export const PreviewNavigation = ({ onHashtags }: { onHashtags: (hastags: string
   };
 
   const handleLogin = () => {
-    if (!authed)
-      document.dispatchEvent(new Event('nlLaunch'));
+    if (!authed) document.dispatchEvent(new Event("nlLaunch"));
   };
 
   const handleNavigateToDesign = () => {
     router.push(`/design?themeId=${themeId}`);
   };
 
-  const handleChange = (event: SelectChangeEvent<typeof selectHashtag>) => {
-    const {
-      target: { value },
-    } = event;
-    const hashtags = typeof value === "string" ? value.split(",") : value;
-    setSelectHashtag(hashtags);
-    onHashtags(hashtags);
+  const handleChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
+    const value = event.target.value as string[];
+    const newSelectedOptions = [];
+
+    const selectedHashtags = value.filter((option) => hashtags.includes(option));
+    const selectedKinds = value.filter((option) => kinds.includes(option));
+
+    if (selectedKinds.length === 0) {
+      if (selectedOptions.some(option => kinds.includes(option))) {
+        return;
+      } else {
+        newSelectedOptions.push(...selectedHashtags, ...kinds);
+      }
+    } else if (selectedKinds.length === kinds.length) {
+      newSelectedOptions.push(...selectedHashtags, ...kinds);
+    } else {
+      newSelectedOptions.push(...selectedHashtags, ...selectedKinds);
+    }
+
+    setSelectedOptions(newSelectedOptions)
+    onContentSettings(newSelectedOptions);
   };
 
   let avatar = "";
@@ -120,7 +148,7 @@ export const PreviewNavigation = ({ onHashtags }: { onHashtags: (hastags: string
           id="demo-multiple-checkbox"
           multiple
           size="small"
-          value={selectHashtag}
+          value={selectedOptions}
           onChange={handleChange}
           MenuProps={MenuProps}
           sx={{
@@ -136,11 +164,23 @@ export const PreviewNavigation = ({ onHashtags }: { onHashtags: (hastags: string
           }}
           displayEmpty
         >
+          <ListSubheader>Kinds</ListSubheader>
+          {kinds.map((kind) => (
+              <MenuItem key={kind} value={kind}>
+                <Checkbox
+                    color="decorate"
+                    checked={selectedOptions.includes(kind)}
+                />
+                <ListItemText primary={kind} />
+              </MenuItem>
+          ))}
+
+          <ListSubheader>Hashtags</ListSubheader>
           {hashtags.map((hashtag) => (
             <MenuItem key={hashtag} value={hashtag}>
               <Checkbox
                 color="decorate"
-                checked={selectHashtag.indexOf(hashtag) > -1}
+                checked={selectedOptions.includes(hashtag)}
               />
               <ListItemText primary={hashtag} />
             </MenuItem>

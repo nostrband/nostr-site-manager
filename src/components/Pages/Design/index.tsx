@@ -80,7 +80,8 @@ const hashtags = [
   "#grownostr",
 ];
 
-const kinds = ["kind 1", "kind 2", "kind 3", "kind 4", "kind 5"];
+const kinds = [  "short notes",
+  "long notes",];
 
 export const Design = () => {
   const params = useSearchParams();
@@ -318,147 +319,147 @@ export const Design = () => {
             </Select>
           </StyledFormControl>
 
-        <StyledFormControl>
-          <StyledLabel>Navigation</StyledLabel>
-          <TabContext value={activeTab}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList onChange={(_, value) => setActiveTab(value)}>
-                <Tab label="Primary" value="1" />
-                <Tab label="Secondary" value="2" />
-              </TabList>
-            </Box>
-            <TabPanel value="1">
-              {values.navigation &&
-                values.navigation.primary.map((el) => {
-                  return (
-                    <StyledItemNavigation key={el.id}>
-                      <FormControl fullWidth size="small">
-                        <InputLabel htmlFor="title">Title link</InputLabel>
-                        <OutlinedInput
-                          id="title"
-                          name="title"
-                          label="Title link"
-                          onChange={(e) =>
-                            handleChangeNavigation({
+          <StyledFormControl>
+            <StyledLabel>Navigation</StyledLabel>
+            <TabContext value={activeTab}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList onChange={(_, value) => setActiveTab(value)}>
+                  <Tab label="Primary" value="1" />
+                  <Tab label="Secondary" value="2" />
+                </TabList>
+              </Box>
+              <TabPanel value="1">
+                {values.navigation &&
+                  values.navigation.primary.map((el) => {
+                    return (
+                      <StyledItemNavigation key={el.id}>
+                        <FormControl fullWidth size="small">
+                          <InputLabel htmlFor="title">Title link</InputLabel>
+                          <OutlinedInput
+                            id="title"
+                            name="title"
+                            label="Title link"
+                            onChange={(e) =>
+                              handleChangeNavigation({
+                                id: el.id,
+                                field: "title",
+                                type: "primary",
+                                value: e.target.value,
+                              })
+                            }
+                            value={el.title}
+                          />
+                        </FormControl>
+                        <FormControl fullWidth size="small">
+                          <InputLabel htmlFor="link">Link</InputLabel>
+                          <OutlinedInput
+                            id="link"
+                            name="link"
+                            label="Link"
+                            onChange={(e) =>
+                              handleChangeNavigation({
+                                id: el.id,
+                                field: "link",
+                                type: "primary",
+                                value: e.target.value,
+                              })
+                            }
+                            value={el.link}
+                          />
+                        </FormControl>
+
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          color="error"
+                          onClick={() =>
+                            handleRemoveLinkNavigation({
                               id: el.id,
-                              field: "title",
                               type: "primary",
-                              value: e.target.value,
                             })
                           }
-                          value={el.title}
-                        />
-                      </FormControl>
-                      <FormControl fullWidth size="small">
-                        <InputLabel htmlFor="link">Link</InputLabel>
-                        <OutlinedInput
-                          id="link"
-                          name="link"
-                          label="Link"
-                          onChange={(e) =>
-                            handleChangeNavigation({
-                              id: el.id,
-                              field: "link",
-                              type: "primary",
-                              value: e.target.value,
-                            })
-                          }
-                          value={el.link}
-                        />
-                      </FormControl>
+                        >
+                          Remove
+                        </Button>
+                      </StyledItemNavigation>
+                    );
+                  })}
 
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        color="error"
-                        onClick={() =>
-                          handleRemoveLinkNavigation({
-                            id: el.id,
-                            type: "primary",
-                          })
-                        }
-                      >
-                        Remove
-                      </Button>
-                    </StyledItemNavigation>
-                  );
-                })}
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => handleAddLinkNavigation("primary")}
+                >
+                  Add
+                </Button>
+              </TabPanel>
+              <TabPanel value="2">
+                {values.navigation &&
+                  values.navigation.secondary.map((el) => {
+                    return (
+                      <StyledItemNavigation key={el.id}>
+                        <FormControl fullWidth size="small">
+                          <InputLabel htmlFor="title">Title link</InputLabel>
+                          <OutlinedInput
+                            id="title"
+                            name="title"
+                            label="Title link"
+                            onChange={(e) =>
+                              handleChangeNavigation({
+                                id: el.id,
+                                field: "title",
+                                type: "secondary",
+                                value: e.target.value,
+                              })
+                            }
+                            value={el.title}
+                          />
+                        </FormControl>
+                        <FormControl fullWidth size="small">
+                          <InputLabel htmlFor="link">Link</InputLabel>
+                          <OutlinedInput
+                            id="link"
+                            name="link"
+                            label="Link"
+                            onChange={(e) =>
+                              handleChangeNavigation({
+                                id: el.id,
+                                field: "link",
+                                type: "secondary",
+                                value: e.target.value,
+                              })
+                            }
+                            value={el.link}
+                          />
+                        </FormControl>
 
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={() => handleAddLinkNavigation("primary")}
-              >
-                Add
-              </Button>
-            </TabPanel>
-            <TabPanel value="2">
-              {values.navigation &&
-                values.navigation.secondary.map((el) => {
-                  return (
-                    <StyledItemNavigation key={el.id}>
-                      <FormControl fullWidth size="small">
-                        <InputLabel htmlFor="title">Title link</InputLabel>
-                        <OutlinedInput
-                          id="title"
-                          name="title"
-                          label="Title link"
-                          onChange={(e) =>
-                            handleChangeNavigation({
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          color="error"
+                          onClick={() =>
+                            handleRemoveLinkNavigation({
                               id: el.id,
-                              field: "title",
                               type: "secondary",
-                              value: e.target.value,
                             })
                           }
-                          value={el.title}
-                        />
-                      </FormControl>
-                      <FormControl fullWidth size="small">
-                        <InputLabel htmlFor="link">Link</InputLabel>
-                        <OutlinedInput
-                          id="link"
-                          name="link"
-                          label="Link"
-                          onChange={(e) =>
-                            handleChangeNavigation({
-                              id: el.id,
-                              field: "link",
-                              type: "secondary",
-                              value: e.target.value,
-                            })
-                          }
-                          value={el.link}
-                        />
-                      </FormControl>
+                        >
+                          Remove
+                        </Button>
+                      </StyledItemNavigation>
+                    );
+                  })}
 
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        color="error"
-                        onClick={() =>
-                          handleRemoveLinkNavigation({
-                            id: el.id,
-                            type: "secondary",
-                          })
-                        }
-                      >
-                        Remove
-                      </Button>
-                    </StyledItemNavigation>
-                  );
-                })}
-
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={() => handleAddLinkNavigation("secondary")}
-              >
-                Add
-              </Button>
-            </TabPanel>
-          </TabContext>
-        </StyledFormControl>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => handleAddLinkNavigation("secondary")}
+                >
+                  Add
+                </Button>
+              </TabPanel>
+            </TabContext>
+          </StyledFormControl>
         </StyledWrapper>
         <StyledBottomActions>
           <Button

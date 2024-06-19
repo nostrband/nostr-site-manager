@@ -1,12 +1,7 @@
-import NDK, {
-  NDKEvent,
-  NostrEvent,
-} from "@nostr-dev-kit/ndk";
-import {
-  fetchOutboxRelays, fetchProfile, tv,
-} from "libnostrsite";
+import NDK, { NDKEvent, NostrEvent } from "@nostr-dev-kit/ndk";
+import { fetchOutboxRelays, fetchProfile, tv } from "libnostrsite";
 import { nip19 } from "nostr-tools";
-import { createContext } from 'react';
+import { createContext } from "react";
 
 export const AuthContext = createContext<boolean>(false);
 export const SITE_RELAY = "wss://relay.npubpro.com";
@@ -16,7 +11,7 @@ export const DEFAULT_RELAYS = [
   "wss://purplepag.es",
   SITE_RELAY,
 ];
-const onAuths: ((type: string) => Promise<void>)[] = []
+const onAuths: ((type: string) => Promise<void>)[] = [];
 
 export let ndk: NDK = new NDK({
   explicitRelayUrls: DEFAULT_RELAYS,
@@ -82,10 +77,9 @@ export async function onAuth(e: any) {
     console.log("pubkey relays", userRelays);
 
     userProfile = await fetchProfile(ndk, userPubkey);
-
   } else {
     userPubkey = "";
-    userRelays.length = 0; 
+    userRelays.length = 0;
     userProfile = null;
   }
 

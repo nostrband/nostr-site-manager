@@ -1,6 +1,5 @@
 "use client";
 import { StyledPreviewTestSite } from "@/components/Pages/Preview/styled";
-import Image, { StaticImageData } from "next/image";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSearchParams, redirect, useRouter } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
@@ -9,7 +8,6 @@ import {
   Fab,
   Drawer,
   Button,
-  Select,
   Box,
   Tab,
   FormControl,
@@ -31,9 +29,6 @@ import {
 } from "@/components/Pages/Design/styled";
 import { useFormik } from "formik";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
-import MenuItem from "@mui/material/MenuItem";
-import Checkbox from "@mui/material/Checkbox";
-import ListItemText from "@mui/material/ListItemText";
 import { MuiColorInput } from "mui-color-input";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";

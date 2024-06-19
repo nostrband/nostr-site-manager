@@ -77,7 +77,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   if (!globalThis.document) return;
   
   const addrs = THEMES_PREVIEW.map((t) => t.id).map(
-    (n) => nip19.decode(n).data as nip19.AddressPointer
+    (n) => nip19.decode(n).data as nip19.AddressPointer,
   );
 
   const themeFilter = {
@@ -89,7 +89,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const themeEvents = await ndk.fetchEvents(
     themeFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
   );
 
   themes.push(...themeEvents);
@@ -103,7 +103,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const packageEvents = await ndk.fetchEvents(
     packageFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
   );
 
   themePackages.push(...packageEvents);
@@ -156,7 +156,7 @@ async function fetchAuthed({
       "in",
       Date.now() - start,
       "ms",
-      minedEvent
+      minedEvent,
     );
     authEvent = new NDKEvent(ndk, minedEvent);
   }

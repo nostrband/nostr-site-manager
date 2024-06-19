@@ -5,7 +5,7 @@ import { PreviewNavigation } from "@/components/PreviewNavigation";
 import { useSearchParams, redirect, useRouter } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   loadPreviewSite,
   renderPreview,
@@ -13,6 +13,8 @@ import {
   setPreviewTheme,
   storePreview,
 } from "@/services/nostr/themes";
+import { Box } from "@mui/material";
+import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 
 export const Preview = () => {
   const router = useRouter();
@@ -30,10 +32,11 @@ export const Preview = () => {
     kinds.push(
       tag === "photography" || tag === "magazine" || tag === "podcast"
         ? 1
-        : 30023
+        : 30023,
     );
   const authed = useContext(AuthContext);
   const [hashtags, setHashtags] = useState<string[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   useEffect(() => {
@@ -54,7 +57,7 @@ export const Preview = () => {
           ], //[userPubkey],
           kinds,
           hashtags,
-        }));  
+        }));
       }
 
       promise.then(() => renderPreview(iframeRef.current!));
@@ -88,6 +91,25 @@ export const Preview = () => {
 
   return (
     <>
+      {isLoading && (
+        <Box
+          sx={{
+            position: "absolute",
+            zIndex: 99,
+            background: "#fff",
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <SpinerWrap>
+            <SpinerCircularProgress />
+          </SpinerWrap>
+        </Box>
+      )}
+
       <StyledPreviewTestSite>
         <iframe
           ref={iframeRef}

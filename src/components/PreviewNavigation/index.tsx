@@ -1,4 +1,4 @@
-import { Avatar, Box, Button } from "@mui/material";
+import {Avatar, Box, Button, ListSubheader} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useContext, useState } from "react";
@@ -10,7 +10,7 @@ import {
   StyledIconButton,
   StyledWrapper,
 } from "@/components/PreviewNavigation/styled";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
 import { AuthContext, userProfile, userPubkey } from "@/services/nostr/nostr";
 
@@ -33,6 +33,11 @@ const hashtags = [
   "#grownostr",
 ];
 
+const kinds = [
+    "short notes",
+    "long notes",
+];
+
 export const PreviewNavigation = ({
   onHashtags,
   onUseTheme,
@@ -42,7 +47,7 @@ export const PreviewNavigation = ({
   onUseTheme: () => void;
   onChangeTheme: (id: string) => void;
 }) => {
-  const [selectHashtag, setSelectHashtag] = useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const authed = useContext(AuthContext);
 
   const params = useSearchParams();
@@ -75,13 +80,27 @@ export const PreviewNavigation = ({
     if (!authed) document.dispatchEvent(new Event("nlLaunch"));
   };
 
-  const handleChange = (event: SelectChangeEvent<typeof selectHashtag>) => {
-    const {
-      target: { value },
-    } = event;
-    const hashtags = typeof value === "string" ? value.split(",") : value;
-    setSelectHashtag(hashtags);
-    onHashtags(hashtags);
+  const handleChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
+    const value = event.target.value as string[];
+    const newSelectedOptions = [];
+
+    const selectedHashtags = value.filter((option) => hashtags.includes(option));
+    const selectedKinds = value.filter((option) => kinds.includes(option));
+
+    if (selectedKinds.length === 0) {
+      if (selectedOptions.some(option => kinds.includes(option))) {
+        return;
+      } else {
+        newSelectedOptions.push(...selectedHashtags, ...kinds);
+      }
+    } else if (selectedKinds.length === kinds.length) {
+      newSelectedOptions.push(...selectedHashtags, ...kinds);
+    } else {
+      newSelectedOptions.push(...selectedHashtags, ...selectedKinds);
+    }
+
+    setSelectedOptions(newSelectedOptions)
+      onHashtags(newSelectedOptions);
   };
 
   let avatar = "";
@@ -108,49 +127,59 @@ export const PreviewNavigation = ({
         <ArrowBackIcon />
       </StyledIconButton>
 
-      {authed && (
-        <Box
+      <Box
+        sx={{
+          width: {
+            xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
+            sm: "auto",
+          },
+          order: { xs: 0, sm: 1 },
+        }}
+      >
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          size="small"
+          value={selectedOptions}
+          onChange={handleChange}
+          MenuProps={MenuProps}
           sx={{
-            width: {
-              xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
-              sm: "auto",
-            },
-            order: { xs: 0, sm: 1 },
+            height: "42px",
+            width: { xs: `${authed ? "168px" : "100%"}`, sm: "168px" },
           }}
-        >
-          <Select
-            labelId="demo-multiple-checkbox-label"
-            id="demo-multiple-checkbox"
-            multiple
-            size="small"
-            value={selectHashtag}
-            onChange={handleChange}
-            MenuProps={MenuProps}
-            sx={{
-              height: "42px",
-              width: { xs: `${authed ? "168px" : "100%"}`, sm: "168px" },
-            }}
-            renderValue={(selected) => {
-              if (!selected.length) {
-                return "All hashtags";
-              }
+          renderValue={(selected) => {
+            if (!selected.length) {
+              return "All hashtags";
+            }
 
-              return selected.join(", ");
-            }}
-            displayEmpty
-          >
-            {hashtags.map((hashtag) => (
-              <MenuItem key={hashtag} value={hashtag}>
+            return selected.join(", ");
+          }}
+          displayEmpty
+        >
+          <ListSubheader>Kinds</ListSubheader>
+          {kinds.map((kind) => (
+              <MenuItem key={kind} value={kind}>
                 <Checkbox
-                  color="decorate"
-                  checked={selectHashtag.indexOf(hashtag) > -1}
+                    color="decorate"
+                    checked={selectedOptions.includes(kind)}
                 />
-                <ListItemText primary={hashtag} />
+                <ListItemText primary={kind} />
               </MenuItem>
-            ))}
-          </Select>
-        </Box>
-      )}
+          ))}
+
+          <ListSubheader>Hashtags</ListSubheader>
+          {hashtags.map((hashtag) => (
+            <MenuItem key={hashtag} value={hashtag}>
+              <Checkbox
+                color="decorate"
+                checked={selectedOptions.includes(hashtag)}
+              />
+              <ListItemText primary={hashtag} />
+            </MenuItem>
+          ))}
+        </Select>
+      </Box>
       <Button
         sx={{ order: { xs: 1 } }}
         size="large"

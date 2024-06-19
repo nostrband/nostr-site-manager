@@ -1,130 +1,22 @@
-// import { authed } from "@/modules/auth/nostr-login";
-import NDK, {
+import {
   NDKEvent,
   NDKNip07Signer,
   NDKRelaySet,
   NostrEvent,
 } from "@nostr-dev-kit/ndk";
 import { ReturnSettingsSiteDataType } from "../sites.service";
-import { authed } from "@/components/Layout/AppWrapper";
 import {
   NostrParser,
   Site,
   SiteAddr,
-  fetchOutboxRelays,
   tv,
 } from "libnostrsite";
+import { SITE_RELAY, addOnAuth, ndk, userPubkey, userRelays, stv } from "./nostr";
 
 const KIND_SITE = 30512;
 
-const SITE_RELAY = "wss://relay.npubpro.com";
-const DEFAULT_RELAYS = [
-  "wss://nos.lol",
-  "wss://relay.damus.io",
-  "wss://purplepag.es",
-  SITE_RELAY,
-];
-let ndkUserPubkey: string = "";
-let ndk: NDK | undefined;
-const relays: string[] = [];
 const sites: Site[] = [];
 const parser = new NostrParser("http://localhost/");
-
-async function ensureNdk(pubkey: string) {
-  if (ndkUserPubkey && ndkUserPubkey !== pubkey) {
-    for (const r of ndk!.pool.relays.values()) {
-      r.disconnect();
-    }
-
-    sites.length = 0;
-    relays.length = 0;
-  }
-
-  ndkUserPubkey = pubkey;
-  ndk = new NDK({
-    explicitRelayUrls: DEFAULT_RELAYS,
-  });
-  ndk.connect();
-}
-
-// function parseSite(e: NDKEvent) {
-//   const id = nip19.naddrEncode({
-//     identifier: tv(e, "d") || "",
-//     kind: KIND_SITE,
-//     pubkey: e.pubkey,
-//     relays: [],
-//   });
-
-//   // @ts-ignore
-//   const settings: ReturnSettingsSiteDataType = {
-//     id,
-//     event: e.rawEvent(),
-
-//     name: tv(e, "d"),
-
-//     url: new URL(tv(e, "r")).pathname,
-
-//     // contributor_pubkeys: tags(e, "p").map((t) => t[1]),
-//     // include_tags: tags(event, "include", 3).map((t) => ({
-//     //   tag: t[1],
-//     //   value: t[2],
-//     // })),
-//     // include_all: !!tags(event, "include", 2).find((t) => t[1] === "*"),
-//     // include_manual: !!tags(event, "include", 2).find((t) => t[1] === "?"),
-//     // include_kinds: tags(event, "kind").map((t) => t[1]),
-//     // include_relays: tags(event, "relay").map((t) => t[1]),
-
-//     // engine: tv(event, "x") || undefined,
-//     // themes: tags(event, "y").map((t) => t[1]),
-//     // plugins: tags(event, "z").map((t) => t[1]),
-
-//     title: tv(e, "title"),
-//     timezone: { name: "UTC", label: "UTC" },
-//     description: tv(e, "summary"),
-//     logo: tv(e, "logo"),
-//     icon: tv(e, "icon"),
-//     image: tv(e, "image"),
-//     language: tv(e, "lang"),
-
-//     // navigation: tags(event, "nav", 3).map((t) => ({
-//     //   label: t[2],
-//     //   url: t[1],
-//     // })),
-//     // secondary_navigation: [],
-//     metaTitle: tv(e, "meta_title"),
-//     metaDescription: tv(e, "meta_description"),
-//     ogImage: tv(e, "og_image"),
-//     ogTitle: tv(e, "og_title"),
-//     ogDescription: tv(e, "og_description"),
-//     xImage: tv(e, "twitter_image"),
-//     xTitle: tv(e, "twitter_title"),
-//     xDescription: tv(e, "twitter_description"),
-
-//     // extensions: tags(event, "x", 5).map((x) => ({
-//     //   event_id: x[1],
-//     //   relay: x[2],
-//     //   package_hash: x[3],
-//     //   petname: x[4],
-//     // })),
-
-//     // config: new Map(),
-//     // custom: new Map(),
-//     fTitle: "",
-//     fDescription: "",
-//     socialAccountFaceBook: "",
-//     socialAccountX: "",
-//     isPrivate: false,
-//     password: "",
-//   };
-
-//   return settings;
-// }
-
-function stv(e: NostrEvent, name: string, value: string) {
-  const t = e.tags.find((t) => t.length >= 2 && t[0] === name);
-  if (t) t[1] = value;
-  else e.tags.push([name, value]);
-}
 
 export async function editSite(data: ReturnSettingsSiteDataType) {
   const index = sites.findIndex((s) => s.id === data.id);
@@ -169,7 +61,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   await ne.sign(signer);
 
   const r = await ne.publish(
-    NDKRelaySet.fromRelayUrls([...relays, SITE_RELAY], ndk!)
+    NDKRelaySet.fromRelayUrls([...userRelays, SITE_RELAY], ndk)
   );
   if (!r.size) {
     throw new Error("Failed to publish to relays");
@@ -227,33 +119,24 @@ function parseSite(ne: NostrEvent) {
   const addr: SiteAddr = {
     name: tv(e, "d") || "",
     pubkey: e.pubkey,
-    relays,
+    relays: userRelays,
   };
   return parser.parseSite(addr, e);
 }
 
 export async function fetchSites() {
-  console.log("fetchSites", authed);
-  if (!authed) throw new Error("Auth please");
+  console.log("fetchSites", userPubkey);
+  if (!userPubkey) throw new Error("Auth please");
 
-  const pubkey = await window.nostr!.getPublicKey();
-  console.log("pubkey", pubkey);
-  await ensureNdk(pubkey);
   if (!sites.length) {
-    if (!ndk) throw new Error("No ndk");
-
-    const outboxRelays = await fetchOutboxRelays(ndk!, [pubkey]);
-    relays.push(...outboxRelays);
-    console.log("pubkey relays", relays);
-
-    const events = await ndk!.fetchEvents(
+    const events = await ndk.fetchEvents(
       {
         // @ts-ignore
         kinds: [KIND_SITE],
-        authors: [pubkey],
+        authors: [userPubkey],
       },
       { groupable: false },
-      NDKRelaySet.fromRelayUrls(relays, ndk!)
+      NDKRelaySet.fromRelayUrls(userRelays, ndk)
     );
     console.log("site events", events);
 
@@ -264,3 +147,8 @@ export async function fetchSites() {
 
   return convertSites(sites);
 }
+
+addOnAuth(async (type: string) => {
+  // clear sites on logout
+  if (type === "logout") sites.length = 0;
+})

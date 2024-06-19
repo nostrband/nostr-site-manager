@@ -1,10 +1,9 @@
 "use client";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { SnackbarProvider } from "notistack";
 import { styled } from "@mui/material/styles";
 import Script from "next/script";
-
-export let authed = false;
+import { AuthContext, onAuth } from "@/services/nostr/nostr";
 
 const BodyWrapper = styled("body")({
   height: "100%",
@@ -12,20 +11,24 @@ const BodyWrapper = styled("body")({
 });
 
 export const AppWrapper = ({ children }: { children: ReactNode }) => {
+  const [authed, setAuthed] = useState(false);
+
   useEffect(() => {
-    document.addEventListener("nlAuth", (e: any) => {
-      console.log("nlAuth", e);
-      authed = e.detail.type !== "logout";
+    document.addEventListener("nlAuth", async (e: any) => {
+      setAuthed(await onAuth(e));
     });
   }, []);
 
   return (
-    <BodyWrapper>
-      <SnackbarProvider>{children}</SnackbarProvider>
-      <Script
-        data-perms="sign_event:30512,sign_event:512,sign_event:30513,sign_event:30514"
-        src="https://www.unpkg.com/nostr-login@latest/dist/unpkg.js"
-      />
-    </BodyWrapper>
+    <AuthContext.Provider value={authed}>
+      <BodyWrapper>
+        <SnackbarProvider>{children}</SnackbarProvider>
+        <Script
+          data-perms="sign_event:30512,sign_event:512,sign_event:30513,sign_event:30514"
+          data-no-banner="true"
+          src="https://www.unpkg.com/nostr-login@latest/dist/unpkg.js"
+        />
+      </BodyWrapper>
+    </AuthContext.Provider>
   );
 };

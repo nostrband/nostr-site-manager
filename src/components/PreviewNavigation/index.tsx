@@ -1,7 +1,7 @@
 import { Avatar, Box, Button } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -12,6 +12,7 @@ import {
 } from "@/components/PreviewNavigation/styled";
 import { useRouter, useSearchParams } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
+import { AuthContext } from "@/services/nostr/nostr";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -24,11 +25,11 @@ const MenuProps = {
   },
 };
 
-const themes = ["#cooking", "#photography", "#nostr", "#travel", "#grownostr"];
+const hashtags = ["#cooking", "#photography", "#nostr", "#travel", "#grownostr"];
 
-export const PreviewNavigation = () => {
-  const [selectTheme, setSelectTheme] = useState<string[]>([]);
-  const [isLogin, setIsLogin] = useState(false);
+export const PreviewNavigation = ({ onHashtags }: { onHashtags: (hastags: string[]) => void }) => {
+  const [selectHashtag, setSelectHashtag] = useState<string[]>([]);
+  const authed = useContext(AuthContext);
 
   const router = useRouter();
   const params = useSearchParams();
@@ -64,18 +65,21 @@ export const PreviewNavigation = () => {
   };
 
   const handleLogin = () => {
-    setIsLogin((prev) => !prev);
+    if (!authed)
+      document.dispatchEvent(new Event('nlLaunch'));
   };
 
   const handleNavigateToDesign = () => {
     router.push(`/design?themeId=${themeId}`);
   };
 
-  const handleChange = (event: SelectChangeEvent<typeof selectTheme>) => {
+  const handleChange = (event: SelectChangeEvent<typeof selectHashtag>) => {
     const {
       target: { value },
     } = event;
-    setSelectTheme(typeof value === "string" ? value.split(",") : value);
+    const hashtags = typeof value === "string" ? value.split(",") : value;
+    setSelectHashtag(hashtags);
+    onHashtags(hashtags);
   };
 
   return (
@@ -92,7 +96,7 @@ export const PreviewNavigation = () => {
       <Box
         sx={{
           width: {
-            xs: `${isLogin ? "calc(100% - 53px)" : "100%"}`,
+            xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
             sm: "auto",
           },
           order: { xs: 0, sm: 1 },
@@ -103,12 +107,12 @@ export const PreviewNavigation = () => {
           id="demo-multiple-checkbox"
           multiple
           size="small"
-          value={selectTheme}
+          value={selectHashtag}
           onChange={handleChange}
           MenuProps={MenuProps}
           sx={{
             height: "42px",
-            width: { xs: `${isLogin ? "168px" : "100%"}`, sm: "168px" },
+            width: { xs: `${authed ? "168px" : "100%"}`, sm: "168px" },
           }}
           renderValue={(selected) => {
             if (!selected.length) {
@@ -119,13 +123,13 @@ export const PreviewNavigation = () => {
           }}
           displayEmpty
         >
-          {themes.map((theme) => (
-            <MenuItem key={theme} value={theme}>
+          {hashtags.map((hashtag) => (
+            <MenuItem key={hashtag} value={hashtag}>
               <Checkbox
                 color="decorate"
-                checked={selectTheme.indexOf(theme) > -1}
+                checked={selectHashtag.indexOf(hashtag) > -1}
               />
-              <ListItemText primary={theme} />
+              <ListItemText primary={hashtag} />
             </MenuItem>
           ))}
         </Select>
@@ -136,7 +140,7 @@ export const PreviewNavigation = () => {
         variant="contained"
         color="decorate"
         onClick={() => {
-          if (isLogin) {
+          if (authed) {
             handleNavigateToDesign();
           } else {
             handleLogin();
@@ -145,7 +149,7 @@ export const PreviewNavigation = () => {
       >
         Use theme
       </Button>
-      {isLogin && (
+      {authed && (
         <Avatar
           alt="Remy Sharp"
           src="https://mui.com/static/images/avatar/1.jpg"

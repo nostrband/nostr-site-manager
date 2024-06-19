@@ -117,7 +117,7 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
 function parseSite(ne: NostrEvent) {
   const e = new NDKEvent(ndk, ne);
   const addr: SiteAddr = {
-    name: tv(e, "d") || "",
+    identifier: tv(e, "d") || "",
     pubkey: e.pubkey,
     relays: userRelays,
   };

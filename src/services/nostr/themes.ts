@@ -12,6 +12,7 @@ import {
   prepareSite,
   prepareSiteByContent,
   setHtml,
+  slugify,
   tv,
 } from "libnostrsite";
 import {
@@ -75,7 +76,7 @@ const INDEX_URL = "https://cdn.npubpro.com/index.js";
 // preload themes asap
 const prefetchThemesPromise = (async function prefetchThemes() {
   if (!globalThis.document) return;
-  
+
   const addrs = THEMES_PREVIEW.map((t) => t.id).map(
     (n) => nip19.decode(n).data as nip19.AddressPointer
   );
@@ -244,7 +245,7 @@ async function setSite(s: NDKEvent) {
   // site name
   const identifier = tv(site, "d") || "";
   addr = {
-    name: identifier,
+    identifier,
     pubkey: site.pubkey,
     relays: [],
   };
@@ -291,6 +292,10 @@ async function prepareUpdateSite() {
         name: tv(theme, "title") || "",
       },
     });
+
+    // FIXME assign proper 'd' tag:
+    // - if contrib === admin -> leave it as is
+    // - otherwise
 
     // fake origin for now
     stv(event, "r", document.location.origin);
@@ -475,7 +480,7 @@ export async function loadPreviewSite(siteId: string) {
           // @ts-ignore
           kinds: [KIND_SITE],
           authors: [addr.pubkey],
-          "#d": [addr.name],
+          "#d": [addr.identifier],
         },
         { groupable: false },
         NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
@@ -518,7 +523,7 @@ export async function publishSite() {
   if (!site || !addr) throw new Error("No site");
 
   const naddr = nip19.naddrEncode({
-    identifier: addr.name,
+    identifier: addr.identifier,
     kind: KIND_SITE,
     pubkey: addr.pubkey,
     relays: [SITE_RELAY, ...userRelays],
@@ -526,7 +531,8 @@ export async function publishSite() {
 
   // need to assign a domain?
   if (!tv(site, "r")) {
-    const requestedDomain = addr.name;
+    const info = parser.parseSite(addr, site);
+    const requestedDomain = slugify(info.name);
     console.log("naddr", naddr);
     console.log("requesting domain", requestedDomain);
     const reserve = await fetchWithSession(

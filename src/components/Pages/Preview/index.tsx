@@ -33,11 +33,9 @@ export const Preview = () => {
   const [hashtags, setHashtags] = useState<string[]>([]);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
-  if (!themeId || !theme) {
-    return redirect("/");
-  }
-
   useEffect(() => {
+    if (!themeId || !theme) return;
+
     if (authed) {
       setPreviewTheme(themeId);
 
@@ -86,6 +84,10 @@ export const Preview = () => {
       iframeRef.current!.src = theme.url;
     }
   }, [authed, kinds, hashtags, themeId, iframeRef]);
+
+  if (!themeId || !theme) {
+    return redirect("/");
+  }
 
   const onHashtags = async (hashtags: string[]) => {
     setHashtags(hashtags);

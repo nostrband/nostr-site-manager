@@ -43,10 +43,11 @@ export const Preview = () => {
     getKinds.push(
       tag === "photography" || tag === "magazine" || tag === "podcast"
         ? 1
-        : 30023,
+        : 30023
     );
 
-  const [hashtagsSelected, setHashtags] = useState<string[]>([]);
+  // const [hashtags, setHashtags] = useState<string[]>([]);
+  const [hashtagsSelected, setHashtagsSelected] = useState<string[]>([]);
   const [kindsSelected, setKinds] = useState(getKinds);
   const authed = useContext(AuthContext);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -57,6 +58,7 @@ export const Preview = () => {
 
     if (authed) {
       setPreviewTheme(themeId);
+      setLoading(true);
 
       let promise;
       if (siteId) {
@@ -71,11 +73,14 @@ export const Preview = () => {
             ], //[userPubkey],
             kinds: kindsSelected,
             hashtags: hashtagsSelected,
-          }),
+          })
         );
       }
 
-      promise.then(() => renderPreview(iframeRef.current!));
+      promise.then(async () => {
+        await renderPreview(iframeRef.current!);
+        setTimeout(() => setLoading(false), 500);
+      });
     } else if (!siteId) {
       iframeRef.current!.src = theme.url;
     }
@@ -86,7 +91,7 @@ export const Preview = () => {
   }
 
   const onContentSettings = async (hashtags: string[], kinds: number[]) => {
-    setHashtags(hashtags);
+    setHashtagsSelected(hashtags);
     setKinds(kinds);
   };
 

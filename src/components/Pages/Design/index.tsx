@@ -123,7 +123,7 @@ export const Design = () => {
 
     console.log("Published");
 
-    window.open(getPreviewSiteUrl(), '_blank');
+    window.open(getPreviewSiteUrl(), "_blank");
 
     // FIXME go to /publishing?siteId and let it call 'publish'
     //    router.push(`/preview?themeId=${themeId}&siteId=${siteId}`);
@@ -199,7 +199,7 @@ export const Design = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id
+      (item) => item.id !== input.id,
     );
 
     setFieldValue("navigation", navigation);

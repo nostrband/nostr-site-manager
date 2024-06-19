@@ -75,7 +75,7 @@ const INDEX_URL = "https://cdn.npubpro.com/index.js";
 // preload themes asap
 const prefetchThemesPromise = (async function prefetchThemes() {
   if (!globalThis.document) return;
-  
+
   const addrs = THEMES_PREVIEW.map((t) => t.id).map(
     (n) => nip19.decode(n).data as nip19.AddressPointer,
   );
@@ -320,7 +320,7 @@ async function prepareUpdateSite() {
 
     // kinds
     srm(site, "kind");
-    for (const k of settings.kinds) site.tags.push(["kind", k+""]);
+    for (const k of settings.kinds) site.tags.push(["kind", k + ""]);
 
     // hashtags
     srm(site, "include");
@@ -448,7 +448,7 @@ async function publishPreview() {
 
   // publish
   await site.publish(
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk),
   );
 
   // return naddr
@@ -478,7 +478,7 @@ export async function loadPreviewSite(siteId: string) {
           "#d": [addr.name],
         },
         { groupable: false },
-        NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
+        NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk),
       );
       console.log("loaded site event", siteId, event);
       if (!event) throw new Error("No site");
@@ -530,7 +530,7 @@ export async function publishSite() {
     console.log("naddr", naddr);
     console.log("requesting domain", requestedDomain);
     const reserve = await fetchWithSession(
-      `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`
+      `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
     ).then((r) => r.json());
     console.log(Date.now(), "got domain", reserve);
 
@@ -555,7 +555,7 @@ export async function publishSite() {
     const u = new URL(url);
     if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
       const reply = await fetchWithSession(
-        `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`
+        `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`,
       ).then((r) => r.json());
       console.log(Date.now(), "deployed", reply);
     }

@@ -81,7 +81,7 @@ export const PreviewNavigation = ({
     const newKindsOptions: number[] = [];
 
     const selectedHashtags = value.filter((option) =>
-      hashtags.includes(option)
+      hashtags.includes(option),
     );
 
     const selectedKinds = value
@@ -91,7 +91,7 @@ export const PreviewNavigation = ({
     if (selectedKinds.length === 0) {
       if (
         selectedOptions.some((option) =>
-          prepareKindOptions.includes(Number(option))
+          prepareKindOptions.includes(Number(option)),
         )
       ) {
         return;
@@ -182,7 +182,7 @@ export const PreviewNavigation = ({
 
                 return value;
               })
-              .filter(s => !!s)
+              .filter((s) => !!s)
               .join(", ");
           }}
           displayEmpty

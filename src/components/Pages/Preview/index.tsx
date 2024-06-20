@@ -51,9 +51,9 @@ export const Preview = () => {
   //   );
 
   // FIXME default for testing
-  const [contributor, setContributor] = useState<string>(
+  const [contributor] = useState<string>(
     "4657dfe8965be8980a93072bcfb5e59a65124406db0f819215ee78ba47934b3e",
-//    "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411"
+    //    "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411"
   );
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [hashtagsSelected, setHashtagsSelected] = useState<

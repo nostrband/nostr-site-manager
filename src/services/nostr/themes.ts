@@ -9,7 +9,6 @@ import {
   Site,
   SiteAddr,
   getProfileSlug,
-  getTopHashtags,
   parseAddr,
   prepareSite,
   prepareSiteByContent,
@@ -32,7 +31,7 @@ import { nip19 } from "nostr-tools";
 import { NPUB_PRO_API, NPUB_PRO_DOMAIN, THEMES_PREVIEW } from "@/consts";
 import { MIN_POW, minePow } from "./pow";
 import { sha256 } from "@noble/hashes/sha256";
-import { bytesToHex, hexToBytes, utf8ToBytes } from "@noble/hashes/utils";
+import { bytesToHex } from "@noble/hashes/utils";
 import { isEqual, omit } from "lodash";
 
 export interface PreviewSettings {
@@ -83,7 +82,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   if (!globalThis.document) return;
 
   const addrs = THEMES_PREVIEW.map((t) => t.id).map(
-    (n) => nip19.decode(n).data as nip19.AddressPointer
+    (n) => nip19.decode(n).data as nip19.AddressPointer,
   );
 
   const themeFilter = {
@@ -95,7 +94,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const themeEvents = await ndk.fetchEvents(
     themeFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
   );
 
   themes.push(...themeEvents);
@@ -109,7 +108,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const packageEvents = await ndk.fetchEvents(
     packageFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
   );
 
   themePackages.push(...packageEvents);
@@ -241,7 +240,7 @@ async function fetchAuthed({
       "in",
       Date.now() - start,
       "ms",
-      minedEvent
+      minedEvent,
     );
     authEvent = new NDKEvent(ndk, minedEvent);
   }
@@ -365,13 +364,13 @@ async function loadSite() {
     {
       groupable: false,
     },
-    NDKRelaySet.fromRelayUrls(userRelays.slice(0, 3), ndk)
+    NDKRelaySet.fromRelayUrls(userRelays.slice(0, 3), ndk),
   );
 
   const topTags = new Map<string, number>();
   for (const t of [...events]
     .map((e) =>
-      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1])
+      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1]),
     )
     .flat()) {
     let c = topTags.get(t) || 0;
@@ -396,14 +395,13 @@ function setSiteTheme(theme: NDKEvent) {
 }
 
 function getThemePackage() {
-
   const theme = themes.find((t) => eventId(t) === settings!.themeId);
   console.log("theme", theme, "id", settings!.themeId, "themes", themes);
   if (!theme) throw new Error("No theme");
-  
+
   const pkg = themePackages.find((p) => p.id === tv(theme, "e"));
   if (!pkg) throw new Error("No theme package");
-  
+
   return pkg;
 }
 
@@ -419,13 +417,14 @@ async function preparePreviewSite() {
     : undefined;
 
   // new site?
-  if (!site) { // || (!site.id && !settings.design)) {
+  if (!site) {
+    // || (!site.id && !settings.design)) {
     // start from zero, prepare site event from input settings,
     // fill everything with defaults
     const event = await prepareSite(ndk, settings.admin, {
       contributorPubkeys: settings.contributors,
       kinds: settings.kinds,
-      hashtags
+      hashtags,
     });
 
     // reset renderer, init store, etc
@@ -569,7 +568,7 @@ async function renderPreviewHtml(path: string = "/") {
 
 export async function renderPreview(
   iframe: HTMLIFrameElement,
-  path: string = "/"
+  path: string = "/",
 ) {
   if (!iframe) throw new Error("No iframe");
   const html = await renderPreviewHtml(path);
@@ -629,7 +628,7 @@ async function publishPreview() {
 
   // publish
   await site.publish(
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk),
   );
 
   // return naddr
@@ -668,7 +667,7 @@ async function fetchPreviewSite() {
         "#d": [addr.identifier],
       },
       { groupable: false },
-      NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
+      NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk),
     );
     console.log("loaded site event", siteId, event);
     if (!event) throw new Error("No site");
@@ -726,7 +725,7 @@ export async function publishPreviewSite() {
     console.log("naddr", naddr);
     console.log("requesting domain", requestedDomain);
     const reserve = await fetchWithSession(
-      `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`
+      `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
     ).then((r) => r.json());
     console.log(Date.now(), "got domain", reserve);
 
@@ -751,7 +750,7 @@ export async function publishPreviewSite() {
     const u = new URL(url);
     if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
       const reply = await fetchWithSession(
-        `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`
+        `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`,
       ).then((r) => r.json());
       console.log(Date.now(), "deployed", reply);
     }

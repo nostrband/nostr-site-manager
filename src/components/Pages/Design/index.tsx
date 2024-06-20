@@ -2,7 +2,6 @@
 import { StyledPreviewTestSite } from "@/components/Pages/Preview/styled";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSearchParams, redirect, useRouter } from "next/navigation";
-import { THEMES_PREVIEW } from "@/consts";
 import TuneIcon from "@mui/icons-material/Tune";
 import {
   Fab,
@@ -37,9 +36,7 @@ import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 import {
   Mutex,
   getPreviewSiteInfo,
-  getPreviewSiteUrl,
   getPreviewThemeName,
-  publishPreviewSite,
   renderPreview,
   setPreviewSettings,
   updatePreviewSite,
@@ -119,14 +116,15 @@ export const Design = () => {
 
   const handlePublish = async () => {
     setOpenSettings(false);
-    await submitForm();
+    router.push(`/publishing?siteId=${siteId}`);
+    // await submitForm();
+    //
+    // console.log("publishing site");
+    // await publishPreviewSite();
+    //
+    // console.log("Published");
 
-    console.log("publishing site");
-    await publishPreviewSite();
-
-    console.log("Published");
-
-    window.open(getPreviewSiteUrl(), "_blank");
+    // window.open(getPreviewSiteUrl(), "_blank");
 
     // FIXME go to /publishing?siteId and let it call 'publish'
     //    router.push(`/preview?themeId=${themeId}&siteId=${siteId}`);
@@ -214,7 +212,7 @@ export const Design = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id
+      (item) => item.id !== input.id,
     );
 
     isDirty = true;
@@ -230,7 +228,7 @@ export const Design = () => {
           admin: userPubkey,
           themeId,
           siteId,
-          design: true
+          design: true,
         });
 
         if (updated) {

@@ -16,6 +16,7 @@ import {
 } from "@/services/nostr/themes";
 import { Box } from "@mui/material";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
+import { SpinnerCustom } from "@/components/SpinnerCustom";
 
 // const hashtags = [
 //   "#cooking",
@@ -159,7 +160,7 @@ export const Preview = () => {
           }}
         >
           <SpinerWrap>
-            <SpinerCircularProgress />
+            <SpinnerCustom />
           </SpinerWrap>
         </Box>
       )}

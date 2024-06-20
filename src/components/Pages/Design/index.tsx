@@ -41,6 +41,8 @@ import {
   setPreviewSettings,
   updatePreviewSite,
 } from "@/services/nostr/themes";
+import { SpinerWrap } from "@/components/Spiner";
+import { SpinnerCustom } from "@/components/SpinnerCustom";
 
 interface DesignValues {
   name: string;
@@ -98,6 +100,7 @@ export const Design = () => {
   // const previewImg = THEMES_PREVIEW.find((el) => el.id === themeId);
   const [isOpenSettings, setOpenSettings] = useState(true);
   const [activeTab, setActiveTab] = useState("1");
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const handleOpenSettings = () => {
     setOpenSettings(true);
@@ -224,6 +227,7 @@ export const Design = () => {
 
     if (authed) {
       mutex.run(async () => {
+        setLoading(true);
         const updated = await setPreviewSettings({
           admin: userPubkey,
           themeId,
@@ -262,6 +266,7 @@ export const Design = () => {
 
           // render
           await renderPreview(iframeRef.current!);
+          setLoading(false);
         }
       });
     }
@@ -273,6 +278,24 @@ export const Design = () => {
 
   return (
     <>
+      {isLoading && (
+        <Box
+          sx={{
+            position: "absolute",
+            zIndex: 99,
+            background: "#fff",
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <SpinerWrap>
+            <SpinnerCustom />
+          </SpinerWrap>
+        </Box>
+      )}
       <StyledPreviewTestSite>
         <iframe
           ref={iframeRef}
@@ -293,7 +316,7 @@ export const Design = () => {
 
       <Drawer
         anchor="right"
-        open={isOpenSettings}
+        open={isLoading ? false : isOpenSettings}
         onClose={handleCloseSettings}
       >
         <StyledWrapper>

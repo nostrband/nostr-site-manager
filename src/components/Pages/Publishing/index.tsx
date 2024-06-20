@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { SpinnerIcon } from "@/components/Pages/Publishing/components/SpinnerIcon";
+import { SpinnerPublishing } from "@/components/Pages/Publishing/components/SpinnerPublishing";
 import {
   StyledDescription,
   StyledTitle,
@@ -34,7 +34,7 @@ export const Publishing = () => {
   }, []);
   return (
     <StyledWrap>
-      <SpinnerIcon isDone={isPublishing} />
+      <SpinnerPublishing isDone={isPublishing} />
       <StyledTitle variant="h4">{title}</StyledTitle>
       <StyledDescription variant="body1">{description}</StyledDescription>
       {!isPublishing && (

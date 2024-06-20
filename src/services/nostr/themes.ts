@@ -6,7 +6,9 @@ import {
   NostrParser,
   NostrSiteRenderer,
   NostrStore,
+  Site,
   SiteAddr,
+  getProfileSlug,
   getTopHashtags,
   parseAddr,
   prepareSite,
@@ -22,6 +24,7 @@ import {
   srm,
   stag,
   stv,
+  userProfile,
   userPubkey,
   userRelays,
 } from "./nostr";
@@ -30,17 +33,20 @@ import { NPUB_PRO_API, NPUB_PRO_DOMAIN, THEMES_PREVIEW } from "@/consts";
 import { MIN_POW, minePow } from "./pow";
 import { sha256 } from "@noble/hashes/sha256";
 import { bytesToHex, hexToBytes, utf8ToBytes } from "@noble/hashes/utils";
-import { isEqual } from "lodash";
+import { isEqual, omit } from "lodash";
 
 export interface PreviewSettings {
+  themeId: string;
+  siteId?: string;
   domain?: string;
   admin: string;
-  contributors: string[];
-  kinds: number[];
-  hashtags: string[];
+  contributors?: string[];
+  kinds?: number[];
+  hashtags?: string[];
+  design?: boolean;
 }
 
-export interface UpdateSiteInfo {
+export interface DesignSettings {
   name: string;
   title: string;
   description: string;
@@ -55,19 +61,18 @@ let token = "";
 const themes: NDKEvent[] = [];
 const themePackages: NDKEvent[] = [];
 let settings: PreviewSettings | undefined;
-let themeId: string = "";
+let designSettings: DesignSettings | undefined;
 
 const parser = new NostrParser();
 const assetFetcher = new DefaultAssetFetcher();
+const previewCache = new Map<string, string>();
 
 // current site + renderer
 let addr: SiteAddr | undefined;
 let site: NDKEvent | undefined;
 let store: NostrStore | undefined;
 let renderer: NostrSiteRenderer | undefined;
-
-let preparePromise: any = undefined;
-let prepareState: "empty" | "stale" | "ready" = "empty";
+let tags: string[] | undefined;
 
 // FIXME remove take from libnostrsite
 const KIND_THEME = 30514;
@@ -78,7 +83,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   if (!globalThis.document) return;
 
   const addrs = THEMES_PREVIEW.map((t) => t.id).map(
-    (n) => nip19.decode(n).data as nip19.AddressPointer,
+    (n) => nip19.decode(n).data as nip19.AddressPointer
   );
 
   const themeFilter = {
@@ -90,7 +95,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const themeEvents = await ndk.fetchEvents(
     themeFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
   );
 
   themes.push(...themeEvents);
@@ -104,21 +109,100 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const packageEvents = await ndk.fetchEvents(
     packageFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
   );
 
   themePackages.push(...packageEvents);
   console.log("prefetched packages", themePackages);
 })();
 
-export function setPreviewSettings(newSettings: PreviewSettings) {
-  if (!isEqual(settings, newSettings)) prepareState = "stale";
-  settings = newSettings;
-  console.log("set settings", settings);
+// https://stackoverflow.com/a/51086893
+export class Mutex {
+  private current: Promise<void> = Promise.resolve();
+  lock = (): Promise<() => void> => {
+    let _resolve: () => void;
+    const p = new Promise<void>((resolve) => {
+      _resolve = () => resolve();
+    });
+    // Caller gets a promise that resolves when the current outstanding
+    // lock resolves
+    const rv = this.current.then(() => _resolve);
+    // Don't allow the next request until the new promise is done
+    this.current = p;
+    // Return the new promise
+    return rv;
+  };
+
+  async run(cb: () => Promise<any>) {
+    const unlock = await this.lock();
+    try {
+      return await cb();
+    } finally {
+      unlock();
+    }
+  }
 }
 
-export function setPreviewTheme(id: string) {
-  themeId = id;
+export async function setPreviewSettings(ns: PreviewSettings) {
+  let updated = !isEqual(omit(settings, ["themeId"]), omit(ns, "themeId"));
+
+  let newContribs = !site;
+  if (updated && site) {
+    const info = getPreviewSiteInfo();
+    newContribs = !isEqual(ns.contributors, info.contributor_pubkeys);
+    const hashtags = getPreviewHashtags();
+    const newHashtags = ns.hashtags || [];
+    const newKinds = ns.kinds || [];
+    // console.log(
+    //   "set settings compare",
+    //   newContribs,
+    //   { ...ns },
+    //   {
+    //     admin: site.pubkey,
+    //     contr: info.contributor_pubkeys,
+    //     hashtags,
+    //     kinds: info.include_kinds,
+    //     siteId: eventId(site),
+    //   }
+    // );
+    if (
+      ns.admin === site.pubkey &&
+      isEqual(ns.contributors, info.contributor_pubkeys) &&
+      isEqual(newHashtags, hashtags) &&
+      isEqual(newKinds, getPreviewKinds()) &&
+      // same site or unpublished site
+      (ns.siteId === eventId(site) || !site.id)
+    ) {
+      updated = false;
+    }
+  }
+
+  const newTheme = ns.themeId !== settings?.themeId;
+
+  // make sure all is up to date, including new theme
+  settings = ns;
+
+  // reset tags store if needed before preparing the site
+  if (newContribs) tags = undefined;
+
+  if (updated) {
+    console.log("updated settings", settings);
+
+    // make sure themes are ready
+    await prefetchThemesPromise;
+
+    // load existing site if specified
+    if (settings.siteId) await fetchPreviewSite();
+
+    // set the provided settings to the site object
+    await preparePreviewSite();
+
+    // reset cache
+    previewCache.clear();
+  }
+
+  // need rerender?
+  return updated || newTheme;
 }
 
 async function fetchAuthed({
@@ -157,7 +241,7 @@ async function fetchAuthed({
       "in",
       Date.now() - start,
       "ms",
-      minedEvent,
+      minedEvent
     );
     authEvent = new NDKEvent(ndk, minedEvent);
   }
@@ -236,7 +320,9 @@ async function fetchWithSession(url: string) {
   }
 }
 
-async function setSite(s: NDKEvent) {
+function setSite(s: NDKEvent) {
+  if (s.pubkey !== settings!.admin) throw new Error("Not your site");
+
   site = s;
 
   // reset it
@@ -249,13 +335,52 @@ async function setSite(s: NDKEvent) {
     pubkey: site.pubkey,
     relays: [],
   };
+}
 
+async function loadSite() {
   // to figure out the hashtags and navigation we have to load the
   // site posts first, this is kinda ugly and slow but easier to reuse
   // the fetching logic this way
-  const info = await parser.parseSite(addr, site);
+  const info = getPreviewSiteInfo();
   store = new NostrStore("preview", ndk, info, parser);
   await store.load(50);
+
+  console.log("tagsStore", tags);
+  if (tags) return;
+
+  console.log("loading tags");
+  const events = await ndk.fetchEvents(
+    [
+      {
+        authors: info.contributor_pubkeys,
+        kinds: [1],
+        limit: 50,
+      },
+      {
+        authors: info.contributor_pubkeys,
+        kinds: [30023],
+        limit: 50,
+      },
+    ],
+    {
+      groupable: false,
+    },
+    NDKRelaySet.fromRelayUrls(userRelays.slice(0, 3), ndk)
+  );
+
+  const topTags = new Map<string, number>();
+  for (const t of [...events]
+    .map((e) =>
+      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1])
+    )
+    .flat()) {
+    let c = topTags.get(t) || 0;
+    c++;
+    topTags.set(t, c);
+  }
+  tags = [...topTags.entries()].sort((a, b) => b[1] - a[1]).map((t) => t[0]);
+
+  console.log("loaded tags", tags);
 }
 
 function setSiteTheme(theme: NDKEvent) {
@@ -270,38 +395,69 @@ function setSiteTheme(theme: NDKEvent) {
   ]);
 }
 
-async function prepareUpdateSite() {
-  if (!settings) throw new Error("No settings");
-  if (!themeId) throw new Error("No theme id");
+function getThemePackage() {
 
-  const theme = themes.find((t) => eventId(t) === themeId);
+  const theme = themes.find((t) => eventId(t) === settings!.themeId);
+  console.log("theme", theme, "id", settings!.themeId, "themes", themes);
   if (!theme) throw new Error("No theme");
+  
+  const pkg = themePackages.find((p) => p.id === tv(theme, "e"));
+  if (!pkg) throw new Error("No theme package");
+  
+  return pkg;
+}
+
+async function preparePreviewSite() {
+  if (!settings) throw new Error("No settings");
+  if (!settings.themeId) throw new Error("No theme id");
+
+  const pkg = getThemePackage();
+
+  // cut '#'
+  const hashtags = settings.hashtags
+    ? settings.hashtags.map((h) => h.slice(1))
+    : undefined;
 
   // new site?
-  if (!site || !site.id) {
+  if (!site) { // || (!site.id && !settings.design)) {
     // start from zero, prepare site event from input settings,
     // fill everything with defaults
     const event = await prepareSite(ndk, settings.admin, {
       contributorPubkeys: settings.contributors,
       kinds: settings.kinds,
-      hashtags: settings.hashtags,
-      theme: {
-        id: theme.id,
-        hash: tv(theme, "x") || "",
-        relay: SITE_RELAY,
-        name: tv(theme, "title") || "",
-      },
+      hashtags
     });
 
-    // FIXME assign proper 'd' tag:
-    // - if contrib === admin -> leave it as is
-    // - otherwise
+    // reset renderer, init store, etc
+    setSite(new NDKEvent(ndk, event));
+    if (!site) throw new Error("No site");
+
+    // set current theme
+    setSiteTheme(pkg);
+
+    // load posts to init from content
+    await loadSite();
 
     // fake origin for now
-    stv(event, "r", document.location.origin);
+    stv(site!, "r", document.location.origin);
 
-    // reset renderer, init store, etc
-    await setSite(new NDKEvent(ndk, event));
+    // admin not contributor?
+    if (
+      settings.contributors &&
+      settings.contributors.length > 0 &&
+      !settings.contributors.includes(settings.admin)
+    ) {
+      const contribSlug = tv(site, "d");
+      let slug = contribSlug + "-1";
+      if (userProfile) {
+        const adminSlug = getProfileSlug(userProfile);
+        if (adminSlug) slug = contribSlug + "-" + adminSlug;
+      }
+
+      // update the slug
+      stv(site, "d", slug);
+      console.log("site slug", slug);
+    }
 
     // fill in hashtags etc
     await prepareSiteByContent(site!, store!);
@@ -315,56 +471,71 @@ async function prepareUpdateSite() {
     if (site.pubkey !== userPubkey) throw new Error("Not your site");
 
     // theme
-    setSiteTheme(theme);
+    setSiteTheme(pkg);
 
     // admin doesn't change
 
     // p-tags
-    srm(site, "p");
-    for (const p of settings.contributors) site.tags.push(["p", p]);
+    if (settings.contributors) {
+      srm(site, "p");
+      for (const p of settings.contributors) site.tags.push(["p", p]);
+    }
 
     // kinds
-    srm(site, "kind");
-    for (const k of settings.kinds) site.tags.push(["kind", k + ""]);
+    if (settings.kinds) {
+      srm(site, "kind");
+      for (const k of settings.kinds) site.tags.push(["kind", k + ""]);
+    }
 
     // hashtags
-    srm(site, "include");
-    for (const t of settings.hashtags) site.tags.push(["include", "t", t]);
-    if (!settings.hashtags.length) stv(site, "include", "*");
+    if (hashtags) {
+      srm(site, "include");
+      for (const t of hashtags) site.tags.push(["include", "t", t]);
+      if (!hashtags.length) stv(site, "include", "*");
+    }
+
+    // set it
+    setSite(site);
+
+    // load posts
+    await loadSite();
 
     console.log("updated site event", site);
   }
+
+  // save local copy
+  await storePreview();
 }
 
-async function preparePreview() {
-  // make sure themes are ready
-  await prefetchThemesPromise;
+// export async function preparePreview() {
+//   // make sure themes are ready
+//   await prefetchThemesPromise;
 
-  // mutex
-  if (preparePromise) await preparePromise;
+//   // mutex
+//   if (preparePromise) await preparePromise;
 
-  // prepare
-  console.log("prepareState", prepareState);
-  if (prepareState === "stale") {
-    preparePromise = prepareUpdateSite().then(() => {
-      prepareState = "ready";
-      console.log("prepareState", prepareState);
-    });
-  }
+//   // prepare
+//   console.log("prepareState", prepareState);
+//   if (prepareState === "stale") {
+//     preparePromise = prepareUpdateSite().then(() => {
+//       prepareState = "ready";
+//       console.log("prepareState", prepareState);
+//     });
+//   }
 
-  return preparePromise;
-}
+//   return preparePromise;
+// }
 
 async function renderPreviewHtml(path: string = "/") {
-  console.log("render", path);
-  if (!addr || !site || !store) throw new Error("No site");
+  console.log("render preview", path);
+  if (!addr || !site || !store || !settings) throw new Error("No site");
 
-  const theme = themes.find((t) => eventId(t) === themeId);
-  console.log("theme", theme, "id", themeId, "themes", themes);
-  if (!theme) throw new Error("No theme");
+  if (path === "/") {
+    const result = previewCache.get(settings.themeId);
+    if (result) return result;
+  }
 
-  const pkg = themePackages.find((p) => p.id === tv(theme, "e"));
-  if (!pkg) throw new Error("No theme package");
+  const pkg = getThemePackage();
 
   const parsedTheme = await parser.parseTheme(pkg);
   console.log("parsedTheme", parsedTheme);
@@ -392,60 +563,65 @@ async function renderPreviewHtml(path: string = "/") {
   }
 
   const { result } = await renderer.render(path);
+  if (path === "/") previewCache.set(settings.themeId, result);
   return result;
 }
 
-async function renderPath(iframe: HTMLIFrameElement, path: string) {
+export async function renderPreview(
+  iframe: HTMLIFrameElement,
+  path: string = "/"
+) {
   if (!iframe) throw new Error("No iframe");
   const html = await renderPreviewHtml(path);
-  iframe.src = "/preview.html?" + Math.random();
-  iframe.onload = async () => {
-    const cw = iframe.contentWindow!;
-    await setHtml(html, cw.document, cw);
 
-    // // @ts-ignore
-    // frame.style.opacity = "1";
+  return new Promise<void>((ok) => {
+    iframe.src = "/preview.html?" + Math.random();
+    iframe.onload = async () => {
+      const cw = iframe.contentWindow!;
+      await setHtml(html, cw.document, cw);
 
-    const links = cw.document.querySelectorAll("a");
-    console.log("links", links);
-    for (const l of links) {
-      if (!l.href) continue;
-      try {
-        const url = new URL(l.href, document.location.href);
-        if (url.origin === document.location.origin) {
-          l.addEventListener("click", async (e: Event) => {
-            e.preventDefault();
-            console.log("clicked", e.target, url.pathname);
-            renderPath(iframe, url.pathname);
-          });
-        }
-      } catch {}
-    }
-  };
+      // resolve
+      ok();
+
+      // set link handlers to simulate navigation
+      const links = cw.document.querySelectorAll("a");
+      // console.log("links", links);
+      for (const l of links) {
+        if (!l.href) continue;
+        try {
+          const url = new URL(l.href, document.location.href);
+          if (url.origin === document.location.origin) {
+            l.addEventListener("click", async (e: Event) => {
+              e.preventDefault();
+              console.log("clicked", e.target, url.pathname);
+              renderPreview(iframe, url.pathname);
+            });
+          }
+        } catch {}
+      }
+    };
+  });
 }
 
-export async function renderPreview(iframe: HTMLIFrameElement) {
-  await preparePreview();
-  await renderPath(iframe, "/");
-}
-
-export async function storePreview() {
+async function storePreview() {
   if (!site) throw new Error("No site");
+
+  // update timestamp to make sure this draft is 'newer'
+  // than existing site on relays
+  site.created_at = Math.floor(Date.now() / 1000);
+
   window.localStorage.setItem(eventId(site), JSON.stringify(site.rawEvent()));
+
+  console.log("stored preview");
+
   return eventId(site);
 }
 
 async function publishPreview() {
-  if (!site) throw new Error("No site");
+  if (!site || !settings) throw new Error("No site");
 
   // set the chosen theme
-  const theme = themes.find((t) => eventId(t) === themeId);
-  console.log("theme", theme, "id", themeId, "themes", themes);
-  if (!theme) throw new Error("No theme");
-
-  const pkg = themePackages.find((p) => p.id === tv(theme, "e"));
-  if (!pkg) throw new Error("No theme package");
-
+  const pkg = getThemePackage();
   setSiteTheme(pkg);
 
   // sign it
@@ -453,73 +629,87 @@ async function publishPreview() {
 
   // publish
   await site.publish(
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk)
   );
 
   // return naddr
   return eventId(site);
 }
 
-export async function loadPreviewSite(siteId: string) {
-  if (!site || eventId(site) !== siteId) {
-    const localSite = window.localStorage.getItem(siteId);
-    if (localSite) {
-      try {
-        console.log("localSite", localSite);
-        await setSite(new NDKEvent(ndk, JSON.parse(localSite)));
-      } catch {
-        console.warn("Bad site in local store", siteId);
-      }
-    }
+async function fetchPreviewSite() {
+  if (!settings || !settings.siteId) throw new Error("No site id");
+  const siteId = settings.siteId;
 
-    if (!site) {
-      const addr = parseAddr(siteId);
-      console.log("loading site addr", addr);
-      const event = await ndk.fetchEvent(
-        {
-          // @ts-ignore
-          kinds: [KIND_SITE],
-          authors: [addr.pubkey],
-          "#d": [addr.identifier],
-        },
-        { groupable: false },
-        NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk),
-      );
-      console.log("loaded site event", siteId, event);
-      if (!event) throw new Error("No site");
+  // already loaded?
+  if (site && eventId(site) === siteId) return;
 
-      await setSite(event);
+  const localSite = window.localStorage.getItem(siteId);
+  if (localSite) {
+    try {
+      console.log("localSite", localSite);
+      setSite(new NDKEvent(ndk, JSON.parse(localSite)));
+    } catch {
+      console.warn("Bad site in local store", siteId);
     }
   }
 
-  return parser.parseSite(addr!, site!);
+  // FIXME even if we have site in localstore,
+  // we need to load from network, if network has newer version
+  // then we should discard the local one
+
+  if (!site) {
+    const addr = parseAddr(siteId);
+    console.log("loading site addr", addr);
+    const event = await ndk.fetchEvent(
+      {
+        // @ts-ignore
+        kinds: [KIND_SITE],
+        authors: [addr.pubkey],
+        "#d": [addr.identifier],
+      },
+      { groupable: false },
+      NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
+    );
+    console.log("loaded site event", siteId, event);
+    if (!event) throw new Error("No site");
+
+    setSite(event);
+  }
 }
 
-export function updateSite(info: UpdateSiteInfo) {
+export async function updatePreviewSite(ds: DesignSettings) {
   if (!site) throw new Error("No site");
+  if (isEqual(ds, designSettings)) return false;
 
+  designSettings = ds;
   const e = site.rawEvent();
-  // FIXME wtf??? change d tag creates a new event!
-  stv(e, "title", info.title);
-  stv(e, "summary", info.description);
-  stv(e, "logo", info.logo);
-  stv(e, "icon", info.icon);
-  stv(e, "image", info.cover_image);
-  stv(e, "color", info.accent_color);
+  stv(e, "name", ds.name);
+  stv(e, "title", ds.title);
+  stv(e, "summary", ds.description);
+  stv(e, "logo", ds.logo);
+  stv(e, "icon", ds.icon);
+  stv(e, "image", ds.cover_image);
+  stv(e, "color", ds.accent_color);
 
   srm(e, "nav");
-  for (const n of info.navigation) e.tags.push(["nav", n.url, n.label]);
+  for (const n of ds.navigation) e.tags.push(["nav", n.url, n.label]);
 
   // update
   site.tags = e.tags;
-  // reset
-  site.created_at = 0;
 
   // reset renderer
   renderer = undefined;
+
+  // reset cache
+  previewCache.clear();
+
+  // put to local store
+  await storePreview();
+
+  return true;
 }
 
-export async function publishSite() {
+export async function publishPreviewSite() {
   if (!site || !addr) throw new Error("No site");
 
   const naddr = nip19.naddrEncode({
@@ -531,12 +721,12 @@ export async function publishSite() {
 
   // need to assign a domain?
   if (!tv(site, "r")) {
-    const info = parser.parseSite(addr, site);
+    const info = getPreviewSiteInfo();
     const requestedDomain = slugify(info.name);
     console.log("naddr", naddr);
     console.log("requesting domain", requestedDomain);
     const reserve = await fetchWithSession(
-      `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
+      `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`
     ).then((r) => r.json());
     console.log(Date.now(), "got domain", reserve);
 
@@ -561,7 +751,7 @@ export async function publishSite() {
     const u = new URL(url);
     if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
       const reply = await fetchWithSession(
-        `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`,
+        `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`
       ).then((r) => r.json());
       console.log(Date.now(), "deployed", reply);
     }
@@ -574,7 +764,39 @@ export function getPreviewSiteUrl() {
   return tv(site!, "r") || "";
 }
 
-export async function getSiteHashtags() {
-  if (!store) throw new Error("No site");
-  return getTopHashtags(store);
+export async function getPreviewTopHashtags() {
+  if (!tags) throw new Error("No site");
+  return tags.map((t) => "#" + t);
+}
+
+export function getPreviewSiteId() {
+  if (!site) throw new Error("No site");
+  return eventId(site);
+}
+
+export function getPreviewSiteInfo() {
+  if (!addr || !site) throw new Error("No site");
+  return parser.parseSite(addr, site);
+}
+
+function getPreviewHashtagNames(info: Site) {
+  if (!info.include_tags) return [];
+  return info.include_tags.filter((t) => t.tag === "t").map((t) => t.value);
+}
+
+export function getPreviewHashtags() {
+  const info = getPreviewSiteInfo();
+  return getPreviewHashtagNames(info).map((t) => "#" + t);
+}
+
+export function getPreviewKinds() {
+  const info = getPreviewSiteInfo();
+  if (!info.include_kinds || !info.include_kinds.length) return [1, 30023];
+  return info.include_kinds.map((k) => parseInt(k));
+}
+
+export function getPreviewThemeName() {
+  if (!settings || !settings.themeId) return "";
+  const pkg = getThemePackage();
+  return tv(pkg, "title") + " v." + tv(pkg, "version");
 }

@@ -12,6 +12,7 @@ export const StyledBottomActions = styled(Box)(() => ({
   gap: "8px",
   borderTop: "1px solid #EAEAEA",
   background: "#fff",
+  zIndex: 5,
 }));
 
 export const StyledButtonOpenSetting = styled(Fab)(() => ({

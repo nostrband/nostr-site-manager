@@ -33,15 +33,16 @@ import { MuiColorInput } from "mui-color-input";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { AuthContext } from "@/services/nostr/nostr";
+import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 import {
+  Mutex,
+  getPreviewSiteInfo,
   getPreviewSiteUrl,
-  loadPreviewSite,
-  publishSite,
+  getPreviewThemeName,
+  publishPreviewSite,
   renderPreview,
-  setPreviewTheme,
-  storePreview,
-  updateSite,
+  setPreviewSettings,
+  updatePreviewSite,
 } from "@/services/nostr/themes";
 
 interface DesignValues {
@@ -86,6 +87,8 @@ const initialDesignValue: DesignValues = {
 
 // const kinds = ["Notes", "Long notes"];
 
+const mutex = new Mutex();
+
 export const Design = () => {
   const router = useRouter();
   const authed = useContext(AuthContext);
@@ -94,7 +97,7 @@ export const Design = () => {
   const params = useSearchParams();
   const siteId = params.get("siteId");
   const themeId = params.get("themeId");
-  const theme = THEMES_PREVIEW.find((el) => el.id === themeId);
+  // const theme = THEMES_PREVIEW.find((el) => el.id === themeId);
   // const previewImg = THEMES_PREVIEW.find((el) => el.id === themeId);
   const [isOpenSettings, setOpenSettings] = useState(true);
   const [activeTab, setActiveTab] = useState("1");
@@ -119,7 +122,7 @@ export const Design = () => {
     await submitForm();
 
     console.log("publishing site");
-    await publishSite();
+    await publishPreviewSite();
 
     console.log("Published");
 
@@ -129,21 +132,10 @@ export const Design = () => {
     //    router.push(`/preview?themeId=${themeId}&siteId=${siteId}`);
   };
 
-  const {
-    values,
-    setValues,
-    submitForm,
-    handleChange,
-    setFieldValue,
-    handleBlur,
-  } = useFormik({
-    initialValues: initialDesignValue,
-    validationSchema: validationSchemaMakePrivateSite,
-    onSubmit: async (values) => {
-      // alert(JSON.stringify(values, null, 2));
-
-      console.log("publishing updated site");
-      updateSite({
+  const onSubmit = async (values: DesignValues) => {
+    mutex.run(async () => {
+      console.log("submit values", values);
+      const updated = await updatePreviewSite({
         accent_color: values.accentColor,
         name: values.shortName,
         cover_image: values.banner,
@@ -156,14 +148,35 @@ export const Design = () => {
           url: n.link,
         })),
       });
+      console.log("updating design settings ", updated);
 
-      // publish and render in parallel
-      renderPreview(iframeRef.current!);
+      // render
+      if (updated) await renderPreview(iframeRef.current!);
+    });
+  };
 
-      // make sure submit awaits for publish
-      return storePreview();
+  let isDirty = false;
+
+  const {
+    values,
+    setValues,
+    submitForm,
+    handleChange,
+    setFieldValue,
+    handleBlur,
+  } = useFormik({
+    initialValues: initialDesignValue,
+    validationSchema: validationSchemaMakePrivateSite,
+    validateOnChange: false,
+    validate: async (values: DesignValues) => {
+      return onSubmit(values);
     },
+    onSubmit,
   });
+
+  const onBlur = (e: any) => {
+    handleBlur(e);
+  };
 
   const handleChangeNavigation = (input: {
     id: string;
@@ -179,10 +192,12 @@ export const Design = () => {
       item[input.field] = input.value;
     }
 
+    isDirty = true;
     setFieldValue("navigation", navigation);
   };
 
   const handleAddLinkNavigation = (type: "primary" | "secondary") => {
+    isDirty = true;
     setFieldValue("navigation", {
       ...values.navigation,
       [type]: [
@@ -199,49 +214,60 @@ export const Design = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id,
+      (item) => item.id !== input.id
     );
 
+    isDirty = true;
     setFieldValue("navigation", navigation);
   };
 
   useEffect(() => {
-    if (!authed || !themeId || !theme || !siteId) return;
+    if (!authed || !themeId || !siteId) return;
 
     if (authed) {
-      setPreviewTheme(themeId);
+      mutex.run(async () => {
+        const updated = await setPreviewSettings({
+          admin: userPubkey,
+          themeId,
+          siteId,
+          design: true
+        });
 
-      loadPreviewSite(siteId).then((info) => {
-        renderPreview(iframeRef.current!);
+        if (updated) {
+          // init settings sidebar
+          const info = getPreviewSiteInfo();
+          const values: DesignValues = {
+            accentColor: info.accent_color || "",
+            banner: info.cover_image || "",
+            description: info.description || "",
+            icon: info.icon || "",
+            logo: info.logo || "",
+            name: info.title || "",
+            shortName: info.name || "",
+            // hashtags: info.include_tags
+            //   ? info.include_tags.filter((t) => t.tag === "t").map((t) => t.value)
+            //   : [],
+            // kinds: info.include_kinds || [],
+            navigation: {
+              primary: info.navigation
+                ? info.navigation.map((n) => ({
+                    title: n.label,
+                    link: n.url,
+                    id: n.url,
+                  }))
+                : [],
+              secondary: [],
+            },
+          };
+          console.log("info", info, "values", values);
+          setValues(values, false);
 
-        const values: DesignValues = {
-          accentColor: info.accent_color || "",
-          banner: info.cover_image || "",
-          description: info.description || "",
-          icon: info.icon || "",
-          logo: info.logo || "",
-          name: info.title || "",
-          shortName: info.name || "",
-          // hashtags: info.include_tags
-          //   ? info.include_tags.filter((t) => t.tag === "t").map((t) => t.value)
-          //   : [],
-          // kinds: info.include_kinds || [],
-          navigation: {
-            primary: info.navigation
-              ? info.navigation.map((n) => ({
-                  title: n.label,
-                  link: n.url,
-                  id: n.url,
-                }))
-              : [],
-            secondary: [],
-          },
-        };
-        console.log("info", info, "values", values);
-        setValues(values, false);
+          // render
+          await renderPreview(iframeRef.current!);
+        }
       });
     }
-  }, [authed, themeId, theme, siteId, iframeRef]);
+  }, [authed, themeId, siteId, iframeRef, setValues]);
 
   if (!themeId || !siteId) {
     return redirect("/");
@@ -261,7 +287,7 @@ export const Design = () => {
 
       <StyledButtonOpenSetting
         onClick={handleOpenSettings}
-        color="primary"
+        color="decorate"
         aria-label="open"
       >
         <TuneIcon />
@@ -286,6 +312,25 @@ export const Design = () => {
           </StyledTitle>
 
           <StyledFormControl>
+            <StyledLabel htmlFor="theme">Theme</StyledLabel>
+            <StyledTextField
+              size="small"
+              fullWidth
+              id="theme"
+              value={getPreviewThemeName()}
+            />
+            <Button
+              onClick={handleSwitchTheme}
+              variant="contained"
+              fullWidth
+              size="medium"
+              color="darkInfo"
+            >
+              Switch theme
+            </Button>
+          </StyledFormControl>
+
+          <StyledFormControl>
             <StyledLabel htmlFor="shortName">Short name</StyledLabel>
             <StyledTextField
               size="small"
@@ -293,7 +338,7 @@ export const Design = () => {
               id="shortName"
               onChange={handleChange}
               value={values.shortName}
-              onBlur={handleBlur}
+              onBlur={onBlur}
             />
           </StyledFormControl>
 
@@ -305,7 +350,7 @@ export const Design = () => {
               id="name"
               onChange={handleChange}
               value={values.name}
-              onBlur={handleBlur}
+              onBlur={onBlur}
             />
           </StyledFormControl>
 
@@ -319,7 +364,7 @@ export const Design = () => {
               rows={4}
               onChange={handleChange}
               value={values.description}
-              onBlur={handleBlur}
+              onBlur={onBlur}
             />
           </StyledFormControl>
 
@@ -332,7 +377,7 @@ export const Design = () => {
               fullWidth
               onChange={handleChange}
               value={values.icon}
-              onBlur={handleBlur}
+              onBlur={onBlur}
             />
             <StyledImgPreview>
               {values.icon && <img alt="Icon url" src={values.icon} />}
@@ -348,7 +393,7 @@ export const Design = () => {
               fullWidth
               onChange={handleChange}
               value={values.logo}
-              onBlur={handleBlur}
+              onBlur={onBlur}
             />
             <StyledImgPreview>
               {values.logo && <img alt="Logo url" src={values.logo} />}
@@ -364,7 +409,7 @@ export const Design = () => {
               fullWidth
               onChange={handleChange}
               value={values.banner}
-              onBlur={handleBlur}
+              onBlur={onBlur}
             />
             <StyledBannerPreview>
               {values.banner && <img alt="Banner url" src={values.banner} />}
@@ -377,6 +422,7 @@ export const Design = () => {
               fullWidth
               format="hex"
               value={values.accentColor}
+              onBlur={onBlur}
               onChange={(value) => setFieldValue("accentColor", value)}
             />
           </StyledFormControl>
@@ -457,6 +503,7 @@ export const Design = () => {
                             id="title"
                             name="title"
                             label="Title link"
+                            onBlur={onBlur}
                             onChange={(e) =>
                               handleChangeNavigation({
                                 id: el.id,
@@ -474,6 +521,7 @@ export const Design = () => {
                             id="link"
                             name="link"
                             label="Link"
+                            onBlur={onBlur}
                             onChange={(e) =>
                               handleChangeNavigation({
                                 id: el.id,
@@ -522,6 +570,7 @@ export const Design = () => {
                             id="title"
                             name="title"
                             label="Title link"
+                            onBlur={onBlur}
                             onChange={(e) =>
                               handleChangeNavigation({
                                 id: el.id,
@@ -539,6 +588,7 @@ export const Design = () => {
                             id="link"
                             name="link"
                             label="Link"
+                            onBlur={onBlur}
                             onChange={(e) =>
                               handleChangeNavigation({
                                 id: el.id,
@@ -581,25 +631,14 @@ export const Design = () => {
         </StyledWrapper>
         <StyledBottomActions>
           <Button
-            onClick={handleSwitchTheme}
+            onClick={handleCloseSettings}
             variant="contained"
             fullWidth
             size="medium"
             color="darkInfo"
           >
-            Switch theme
+            Preview
           </Button>
-          <Button
-            onClick={handleCloseSettings}
-            variant="contained"
-            fullWidth
-            size="medium"
-            color="decorate"
-          >
-            Save
-          </Button>
-        </StyledBottomActions>
-        <StyledBottomActions>
           <Button
             onClick={handlePublish}
             variant="contained"

@@ -81,7 +81,7 @@ export const PreviewNavigation = ({
     const newKindsOptions: number[] = [];
 
     const selectedHashtags = value.filter((option) =>
-      hashtags.includes(option),
+      hashtags.includes(option)
     );
 
     const selectedKinds = value
@@ -91,7 +91,7 @@ export const PreviewNavigation = ({
     if (selectedKinds.length === 0) {
       if (
         selectedOptions.some((option) =>
-          prepareKindOptions.includes(Number(option)),
+          prepareKindOptions.includes(Number(option))
         )
       ) {
         return;
@@ -153,21 +153,37 @@ export const PreviewNavigation = ({
           MenuProps={MenuProps}
           sx={{
             height: "42px",
-            width: { xs: `${authed ? "168px" : "100%"}`, sm: "168px" },
+            width: { xs: `${authed ? "208px" : "100%"}`, sm: "208px" },
           }}
-
           renderValue={(selected) => {
             if (!selected.length) {
-              return "All hashtags";
+              return "All notes";
             }
 
-            return selected.map(value => {
-              if(kinds[value]) {
-                return kinds[value]
-              }
+            const kindsNames = selected
+              .map((value) => {
+                // @ts-ignore
+                if (kinds[value]) {
+                  // @ts-ignore
+                  return kinds[value];
+                }
 
-              return value
-            }).join(', ')
+                return "";
+              })
+              .filter((s) => !!s)
+              .join(", ");
+
+            return [kindsNames, ...selected]
+              .map((value) => {
+                // @ts-ignore
+                if (kinds[value]) {
+                  return "";
+                }
+
+                return value;
+              })
+              .filter(s => !!s)
+              .join(", ");
           }}
           displayEmpty
         >

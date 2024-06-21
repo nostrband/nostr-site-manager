@@ -37,7 +37,6 @@ export interface PreviewSettings {
   themeId: string;
   siteId?: string;
   domain?: string;
-  admin: string;
   contributors?: string[];
   kinds?: number[];
   hashtags?: string[];
@@ -164,14 +163,12 @@ export async function setPreviewSettings(ns: PreviewSettings) {
     //   "set settings compare",
     //   newContribs,
     //   {
-    //     admin: ns.admin,
     //     contr: newContributors,
     //     hashtags: newHashtags,
     //     kinds: newKinds,
     //     siteId: ns.siteId,
     //   },
     //   {
-    //     admin: site.pubkey,
     //     contr: info.contributor_pubkeys,
     //     hashtags,
     //     kinds,
@@ -179,7 +176,6 @@ export async function setPreviewSettings(ns: PreviewSettings) {
     //   }
     // );
     if (
-      ns.admin === site.pubkey &&
       isEqual(newContributors, info.contributor_pubkeys) &&
       isEqual(newHashtags, hashtags) &&
       isEqual(newKinds, kinds) &&
@@ -334,7 +330,7 @@ async function fetchWithSession(url: string) {
 }
 
 function setSite(s: NDKEvent) {
-  if (s.pubkey !== settings!.admin) throw new Error("Not your site");
+  if (s.pubkey !== userPubkey) throw new Error("Not your site");
 
   site = s;
 
@@ -431,10 +427,10 @@ async function preparePreviewSite() {
     : undefined;
 
   // new site?
-  if (!site || (!site.id && !settings.design)) {
+  if (!site || !settings.siteId) {//|| (!site.id && !settings.design)) {
     // start from zero, prepare site event from input settings,
     // fill everything with defaults
-    const event = await prepareSite(ndk, settings.admin, {
+    const event = await prepareSite(ndk, userPubkey, {
       contributorPubkeys: settings.contributors,
       kinds: settings.kinds,
       hashtags,
@@ -444,7 +440,7 @@ async function preparePreviewSite() {
     if (
       settings.contributors &&
       settings.contributors.length > 0 &&
-      !settings.contributors.includes(settings.admin)
+      !settings.contributors.includes(userPubkey)
     ) {
       const contribSlug = tv(event, "d");
       let slug = contribSlug + "-1";

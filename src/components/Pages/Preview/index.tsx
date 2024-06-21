@@ -13,6 +13,7 @@ import {
   getPreviewHashtags,
   getPreviewKinds,
   Mutex,
+  getPreviewSiteInfo,
 } from "@/services/nostr/themes";
 import { Box } from "@mui/material";
 import { SpinerWrap } from "@/components/Spiner";
@@ -53,8 +54,8 @@ export const Preview = () => {
   //   );
 
   // FIXME default for testing
-  const [contributor, setContributor] = useState<string>(
-    userPubkey
+  const [contributor, setContributor] = useState<string | undefined>(
+    siteId ? undefined : userPubkey
     // "4657dfe8965be8980a93072bcfb5e59a65124406db0f819215ee78ba47934b3e",
     //    "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411"
   );
@@ -72,7 +73,8 @@ export const Preview = () => {
   }, []);
 
   useEffect(() => {
-    if (authed && !contributor) setContributor(userPubkey);
+    // init contributor if we're not loading a site
+    if (authed && !contributor && !siteId) setContributor(userPubkey);
   }, [authed]);
 
   useEffect(() => {
@@ -87,14 +89,17 @@ export const Preview = () => {
         const updated = await setPreviewSettings({
           siteId: siteId || undefined,
           themeId,
-          admin: userPubkey,
-          contributors: contributor ? [contributor] : [userPubkey],
+          contributors: contributor ? [contributor] : undefined,
           kinds: kindsSelected,
           hashtags: hashtagsSelected,
         });
 
         if (updated || mounted) {
           mounted = false;
+
+          const info = getPreviewSiteInfo();
+          console.log("info", info);
+          setContributor(info.contributor_pubkeys?.[0] || info.admin_pubkey);
 
           // set possible hashtags
           setHashtags(await getPreviewTopHashtags());
@@ -130,6 +135,7 @@ export const Preview = () => {
     setKinds,
     setHashtagsSelected,
     setLoading,
+    setContributor,
   ]);
 
   if (!themeId || !theme) {
@@ -191,7 +197,7 @@ export const Preview = () => {
       </StyledPreviewTestSite>
 
       <PreviewNavigation
-        author={contributor}
+        author={contributor || userPubkey}
         onChangeTheme={onChangeTheme}
         kindsSelected={kindsSelected || []}
         hashtagsSelected={hashtagsSelected || []}

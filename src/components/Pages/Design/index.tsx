@@ -240,12 +240,11 @@ export const Design = () => {
   }, []);
 
   useEffect(() => {
-    if (!themeId || !siteId) return;
+    if (!themeId || !siteId || !authed) return;
 
     mutex.run(async () => {
       setLoading(true);
       const updated = await setPreviewSettings({
-        admin: userPubkey,
         themeId,
         siteId,
         design: true,

@@ -66,7 +66,6 @@ export const Publishing = () => {
       const start = Date.now();
       console.log("publishing site");
       await setPreviewSettings({
-        admin: userPubkey,
         themeId,
         siteId,
         design: true,

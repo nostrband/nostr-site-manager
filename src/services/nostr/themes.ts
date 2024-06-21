@@ -136,40 +136,52 @@ export class Mutex {
   async run(cb: () => Promise<any>) {
     const unlock = await this.lock();
     try {
-      return await cb();
-    } finally {
+      const r = await cb();
+      unlock();
+      return r;
+    } catch {
       unlock();
     }
   }
 }
 
 export async function setPreviewSettings(ns: PreviewSettings) {
-  let updated = !isEqual(omit(settings, ["themeId"]), omit(ns, "themeId"));
+  let updated = !isEqual(
+    omit(settings, ["themeId", "design"]), 
+    omit(ns, "themeId", "design"));
 
   let newContribs = !site;
   if (updated && site) {
     const info = getPreviewSiteInfo();
-    newContribs = !isEqual(ns.contributors, info.contributor_pubkeys);
     const hashtags = getPreviewHashtags();
-    const newHashtags = ns.hashtags || [];
-    const newKinds = ns.kinds || [];
+    const kinds = getPreviewKinds();
+    const newContributors = ns.contributors || info.contributor_pubkeys;
+    const newHashtags = ns.hashtags || hashtags;
+    const newKinds = ns.kinds || kinds;
+    newContribs = !isEqual(newContributors, info.contributor_pubkeys);
     // console.log(
     //   "set settings compare",
     //   newContribs,
-    //   { ...ns },
+    //   {
+    //     admin: ns.admin,
+    //     contr: newContributors,
+    //     hashtags: newHashtags,
+    //     kinds: newKinds,
+    //     siteId: ns.siteId,
+    //   },
     //   {
     //     admin: site.pubkey,
     //     contr: info.contributor_pubkeys,
     //     hashtags,
-    //     kinds: info.include_kinds,
+    //     kinds,
     //     siteId: eventId(site),
     //   }
     // );
     if (
       ns.admin === site.pubkey &&
-      isEqual(ns.contributors, info.contributor_pubkeys) &&
+      isEqual(newContributors, info.contributor_pubkeys) &&
       isEqual(newHashtags, hashtags) &&
-      isEqual(newKinds, getPreviewKinds()) &&
+      isEqual(newKinds, kinds) &&
       // same site or unpublished site
       (ns.siteId === eventId(site) || !site.id)
     ) {
@@ -192,7 +204,7 @@ export async function setPreviewSettings(ns: PreviewSettings) {
     await prefetchThemesPromise;
 
     // load existing site if specified
-    if (settings.siteId) await fetchPreviewSite();
+    if (settings.siteId) await fetchSite();
 
     // set the provided settings to the site object
     await preparePreviewSite();
@@ -396,14 +408,13 @@ function setSiteTheme(theme: NDKEvent) {
 }
 
 function getThemePackage() {
-
   const theme = themes.find((t) => eventId(t) === settings!.themeId);
   console.log("theme", theme, "id", settings!.themeId, "themes", themes);
   if (!theme) throw new Error("No theme");
-  
+
   const pkg = themePackages.find((p) => p.id === tv(theme, "e"));
   if (!pkg) throw new Error("No theme package");
-  
+
   return pkg;
 }
 
@@ -419,13 +430,14 @@ async function preparePreviewSite() {
     : undefined;
 
   // new site?
-  if (!site) { // || (!site.id && !settings.design)) {
+  if (!site) {
+    // || (!site.id && !settings.design)) {
     // start from zero, prepare site event from input settings,
     // fill everything with defaults
     const event = await prepareSite(ndk, settings.admin, {
       contributorPubkeys: settings.contributors,
       kinds: settings.kinds,
-      hashtags
+      hashtags,
     });
 
     // reset renderer, init store, etc
@@ -636,45 +648,48 @@ async function publishPreview() {
   return eventId(site);
 }
 
-async function fetchPreviewSite() {
+async function fetchSite() {
   if (!settings || !settings.siteId) throw new Error("No site id");
   const siteId = settings.siteId;
 
   // already loaded?
   if (site && eventId(site) === siteId) return;
 
+  // get local draft
   const localSite = window.localStorage.getItem(siteId);
+  let fetchedSite = null;
   if (localSite) {
     try {
       console.log("localSite", localSite);
-      setSite(new NDKEvent(ndk, JSON.parse(localSite)));
+      fetchedSite = new NDKEvent(ndk, JSON.parse(localSite));
     } catch {
       console.warn("Bad site in local store", siteId);
     }
   }
 
-  // FIXME even if we have site in localstore,
-  // we need to load from network, if network has newer version
-  // then we should discard the local one
+  // fetch remote event
+  const addr = parseAddr(siteId);
+  console.log("loading site addr", addr);
+  const event = await ndk.fetchEvent(
+    {
+      // @ts-ignore
+      kinds: [KIND_SITE],
+      authors: [addr.pubkey],
+      "#d": [addr.identifier],
+    },
+    { groupable: false },
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
+  );
+  console.log("loaded site event", siteId, event);
 
-  if (!site) {
-    const addr = parseAddr(siteId);
-    console.log("loading site addr", addr);
-    const event = await ndk.fetchEvent(
-      {
-        // @ts-ignore
-        kinds: [KIND_SITE],
-        authors: [addr.pubkey],
-        "#d": [addr.identifier],
-      },
-      { groupable: false },
-      NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
-    );
-    console.log("loaded site event", siteId, event);
-    if (!event) throw new Error("No site");
-
-    setSite(event);
+  // discard draft if fetched is newer
+  if (event && (!fetchedSite || fetchedSite.created_at! < event.created_at!)) {
+    fetchedSite = event;
+    console.log("loaded site is newer than draft");
   }
+
+  if (!fetchedSite) throw new Error("No site");
+  setSite(fetchedSite);
 }
 
 export async function updatePreviewSite(ds: DesignSettings) {
@@ -720,9 +735,9 @@ export async function publishPreviewSite() {
   });
 
   // need to assign a domain?
-  if (!tv(site, "r")) {
-    const info = getPreviewSiteInfo();
-    const requestedDomain = slugify(info.name);
+  if (!site.id) {
+    //tv(site, "r")) {
+    const requestedDomain = tv(site, "d");
     console.log("naddr", naddr);
     console.log("requesting domain", requestedDomain);
     const reserve = await fetchWithSession(

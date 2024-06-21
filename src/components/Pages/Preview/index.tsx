@@ -31,6 +31,7 @@ const kinds: { [key: number]: string } = {
 };
 
 const mutex = new Mutex();
+let mounted = false;
 
 export const Preview = () => {
   const router = useRouter();
@@ -64,6 +65,10 @@ export const Preview = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
+  useEffect(() => { 
+    mounted = true;
+  }, [])
+
   useEffect(() => {
     if (!themeId || !theme) return;
 
@@ -82,8 +87,10 @@ export const Preview = () => {
           hashtags: hashtagsSelected,
         });
 
-        console.log("site updated", updated);
-        if (updated) {
+        if (updated || mounted) {
+
+          mounted = false;
+
           // set possible hashtags
           setHashtags(await getPreviewTopHashtags());
 

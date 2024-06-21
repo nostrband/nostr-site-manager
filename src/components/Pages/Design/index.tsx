@@ -89,6 +89,8 @@ const initialDesignValue: DesignValues = {
 
 const mutex = new Mutex();
 
+let mounted = false;
+
 export const Design = () => {
   const router = useRouter();
   const authed = useContext(AuthContext);
@@ -133,7 +135,8 @@ export const Design = () => {
   };
 
   const onSubmit = async (values: DesignValues) => {
-    mutex.run(async () => {
+    await mutex.run(async () => {
+      const start = Date.now();
       console.log("submit values", values);
       const updated = await updatePreviewSite({
         accent_color: values.accentColor,
@@ -151,7 +154,10 @@ export const Design = () => {
       console.log("updating design settings ", updated);
 
       // render
-      if (updated) await renderPreview(iframeRef.current!);
+      if (updated) {
+        await renderPreview(iframeRef.current!);
+        console.log("updated preview in", Date.now() - start);
+      }
     });
   };
 
@@ -222,6 +228,10 @@ export const Design = () => {
   };
 
   useEffect(() => {
+    mounted = true;
+  }, []);
+
+  useEffect(() => {
     if (!authed || !themeId || !siteId) return;
 
     if (authed) {
@@ -233,7 +243,9 @@ export const Design = () => {
           design: true
         });
 
-        if (updated) {
+        if (updated || mounted) {
+          mounted = false;
+
           // init settings sidebar
           const info = getPreviewSiteInfo();
           const values: DesignValues = {

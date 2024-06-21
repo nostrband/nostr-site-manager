@@ -19,13 +19,13 @@ export const HeaderOnboarding = () => {
           <b>L O G O</b>
         </Typography>
 
-        <Button
+        {/* <Button
           onClick={handleNavigateToAdmin}
           color="decorate"
           variant="contained"
         >
           My sites
-        </Button>
+        </Button> */}
       </StyledHeaderContainer>
     </StyledHeaderOnboarding>
   );

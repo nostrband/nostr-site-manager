@@ -147,9 +147,10 @@ export const PreviewNavigation = ({
     setOpenModalAuthor(true);
   };
 
-  const handleAuthor = (pubkey: string) => {
+  const handleAuthor = (pubkey: string | any) => {
     setOpenModalAuthor(false);
-    onContentSettings(pubkey, hashtagsSelected, kindsSelected);
+    const cancel = typeof pubkey !== "string"
+    onContentSettings(cancel ? author : pubkey, hashtagsSelected, kindsSelected);
   };
 
   return (

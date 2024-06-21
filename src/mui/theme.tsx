@@ -1,7 +1,7 @@
 "use client";
-import { Inter } from "next/font/google";
 import { createTheme } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
+import { Source_Serif_4, Inter } from "@next/font/google";
 
 declare module "@mui/material/styles" {
   interface Palette {
@@ -12,6 +12,8 @@ declare module "@mui/material/styles" {
     textColorDanger: Palette["primary"];
     buttonSidebarBackground: Palette["primary"];
     buttonSidebarActive: Palette["primary"];
+    lightInfo: Palette["primary"];
+    darkInfo: Palette["primary"];
   }
 
   interface PaletteOptions {
@@ -22,6 +24,8 @@ declare module "@mui/material/styles" {
     textColorDanger?: Palette["primary"];
     buttonSidebarBackground?: Palette["primary"];
     buttonSidebarActive?: Palette["primary"];
+    lightInfo?: Palette["primary"];
+    darkInfo?: Palette["primary"];
   }
 }
 
@@ -48,6 +52,20 @@ declare module "@mui/material/Button" {
     textColor: true;
     buttonSidebarBackground: true;
     buttonSidebarActive: true;
+    decorate: true;
+    lightInfo: true;
+    darkInfo: true;
+  }
+}
+
+declare module "@mui/material/Checkbox" {
+  interface CheckboxPropsColorOverrides {
+    textColor: true;
+    buttonSidebarBackground: true;
+    buttonSidebarActive: true;
+    decorate: true;
+    lightInfo: true;
+    darkInfo: true;
   }
 }
 
@@ -57,8 +75,20 @@ declare module "@mui/material/IconButton" {
   }
 }
 
-export const font = Inter({
-  //   weight: ['300', '400', '500', '700'],
+declare module "@mui/material/Fab" {
+  interface FabPropsColorOverrides {
+    decorate: true;
+  }
+}
+
+export const sourceSerif4 = Source_Serif_4({
+  weight: ["600"],
+  subsets: ["cyrillic"],
+  display: "swap",
+  fallback: ["Helvetica", "Arial", "sans-serif"],
+});
+
+const inter = Inter({
   subsets: ["cyrillic"],
   display: "swap",
   fallback: ["Helvetica", "Arial", "sans-serif"],
@@ -117,13 +147,25 @@ const theme = createTheme({
     },
     decorate: {
       light: "#fff",
-      main: "#E0F54A",
-      dark: "#000",
-      contrastText: "#000",
+      main: "#FF3ED9",
+      dark: "#c62fa9",
+      contrastText: "#fff",
+    },
+    lightInfo: {
+      light: "#fff",
+      main: "#B8B2B7",
+      dark: "#A5A1A4",
+      contrastText: "#fff",
+    },
+    darkInfo: {
+      light: "#fff",
+      main: "#988F97",
+      dark: "#7c747b",
+      contrastText: "#fff",
     },
   },
   typography: {
-    fontFamily: font.style.fontFamily,
+    fontFamily: inter.style.fontFamily,
   },
   shape: {
     borderRadius: 8,
@@ -148,8 +190,50 @@ const theme = createTheme({
       },
     },
     MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+      },
       defaultProps: {
         disableElevation: true,
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          "& .Mui-disabled": {
+            color: "#000 !important",
+            WebkitTextFillColor: "#000 !important",
+          },
+        },
+      },
+    },
+    MuiFab: {
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
+          "&:hover": {
+            boxShadow: "none",
+          },
+          "&:active": {
+            boxShadow: "none",
+          },
+          "&:focus": {
+            boxShadow: "none",
+          },
+        },
+      },
+    },
+
+    MuiContainer: {
+      styleOverrides: {
+        maxWidthLg: {
+          maxWidth: "1344px",
+          "@media (min-width: 1200px)": {
+            maxWidth: "1344px",
+          },
+        },
       },
     },
   },

@@ -1,21 +1,65 @@
-import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 import WebTwoToneIcon from "@mui/icons-material/WebTwoTone";
 import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
 import TitleTwoToneIcon from "@mui/icons-material/TitleTwoTone";
-import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
-// import ContactPageTwoToneIcon from "@mui/icons-material/ContactPageTwoTone";
-import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
-import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
-import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
-import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
 import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
-import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
+import GridOnTwoToneIcon from "@mui/icons-material/GridOnTwoTone";
+import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
+import AltRouteTwoToneIcon from "@mui/icons-material/AltRouteTwoTone";
+import BrushTwoToneIcon from "@mui/icons-material/BrushTwoTone";
+import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
+import LinkTwoToneIcon from "@mui/icons-material/LinkTwoTone";
+import ImageTwoToneIcon from "@mui/icons-material/ImageTwoTone";
+import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
+import img1 from "../../public/images/preview-theme/1.png";
+import img2 from "../../public/images/preview-theme/2.png";
+import img3 from "../../public/images/preview-theme/3.png";
+import img4 from "../../public/images/preview-theme/4.png";
+import img5 from "../../public/images/preview-theme/5.png";
+import img6 from "../../public/images/preview-theme/6.png";
+import img7 from "../../public/images/preview-theme/7.png";
+import img8 from "../../public/images/preview-theme/8.png";
+import img9 from "../../public/images/preview-theme/9.png";
+import img10 from "../../public/images/preview-theme/10.png";
+import img11 from "../../public/images/preview-theme/11.png";
+import img12 from "../../public/images/preview-theme/12.png";
 
+import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
+import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
+import tasteDemo from "../../public/images/preview-theme/enki-demo.npub.pro.png";
+import episodeDemo from "../../public/images/preview-theme/episode-demo.npub.pro.png";
+import fizzyDemo from "../../public/images/preview-theme/essential-demo.npub.pro.png";
+import journalDemo from "../../public/images/preview-theme/fiatjaf-demo.npub.pro.png";
+import dawnDemo from "../../public/images/preview-theme/hodlbod-demo.npub.pro.png";
+import edgeDemo from "../../public/images/preview-theme/inkblotart-demo.npub.pro.png";
+import massivelyDemo from "../../public/images/preview-theme/isolabell-demo.npub.pro.png";
+import altoDemo from "../../public/images/preview-theme/jackmallers-demo.npub.pro.png";
+import soloDemo from "../../public/images/preview-theme/karnage-demo.npub.pro.png";
+import dopeDemo from "../../public/images/preview-theme/lectio-demo.npub.pro.png";
+import attilaDemo from "../../public/images/preview-theme/lynalden-demo.npub.pro.png";
+import londonDemo from "../../public/images/preview-theme/malos10-demo.npub.pro.png";
+import simplyDemo from "../../public/images/preview-theme/nogood-demo.npub.pro.png";
+import pawayDemo from "../../public/images/preview-theme/onyx-demo.npub.pro.png";
+import bulletinDemo from "../../public/images/preview-theme/rabble-demo.npub.pro.png";
+import editionDemo from "../../public/images/preview-theme/alanbwt-demo.npub.pro.png";
+import digestDemo from "../../public/images/preview-theme/tony-demo.npub.pro.png";
+
+// import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
+// import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
+// import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
+// import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
+// import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
+// import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
+// import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
+
+export const NPUB_PRO_DOMAIN = "npub.pro";
+export const NPUB_PRO_API = "https://api.npubpro.com";
+
+export const SIDEBAR_WIDTH = 280;
 export const NAV_CONFIG = [
   {
     title: "Dashboard",
     path: "dashboard",
-    icon: <HomeTwoToneIcon />,
+    icon: <GridOnTwoToneIcon />,
   },
   {
     title: "View site",
@@ -38,7 +82,13 @@ export const HASH_CONFIG = {
   FACEBOOK_CARD: "facebook-card",
   SOCIAL_ACCOUNTS: "social-accounts",
   PRIVATE: "private",
-  STAFF: "staff",
+  CONTRIBUTORS: "contributors",
+  DESIGN_BRANDING: "design-branding",
+  NAVIGATION: "navigation",
+  RECOMMENDATION: "recommendation",
+  URL: "url",
+  ICON: "icon",
+  IMAGE: "image",
 };
 
 export const SETTINGS_CONFIG = [
@@ -50,46 +100,81 @@ export const SETTINGS_CONFIG = [
         path: HASH_CONFIG.TITLE_DESCRIPTION,
         icon: <TitleTwoToneIcon />,
       },
-      {
-        title: "Timezone",
-        path: HASH_CONFIG.TIMEZONE,
-        icon: <AccessTimeTwoToneIcon />,
-      },
-      {
-        title: "Publication language",
-        path: HASH_CONFIG.LANGUAGE,
-        icon: <TranslateTwoToneIcon />,
-      },
+      // {
+      //   title: "Timezone",
+      //   path: HASH_CONFIG.TIMEZONE,
+      //   icon: <AccessTimeTwoToneIcon />,
+      // },
+      // {
+      //   title: "Publication language",
+      //   path: HASH_CONFIG.LANGUAGE,
+      //   icon: <TranslateTwoToneIcon />,
+      // },
       {
         title: "Meta data",
         path: HASH_CONFIG.META_DATA,
         icon: <LineWeightTwoToneIcon />,
       },
-      {
-        title: "X card",
-        path: HASH_CONFIG.X_CARD,
-        icon: <CloseTwoToneIcon />,
-      },
-      {
-        title: "Facebook card",
-        path: HASH_CONFIG.FACEBOOK_CARD,
-        icon: <FacebookTwoToneIcon />,
-      },
-      {
-        title: "Social accounts",
-        path: HASH_CONFIG.SOCIAL_ACCOUNTS,
-        icon: <ThumbUpTwoToneIcon />,
-      },
-      {
-        title: "Make this site private",
-        path: HASH_CONFIG.PRIVATE,
-        icon: <LockTwoToneIcon />,
-      },
       // {
-      //   title: "Staff",
-      //   path: HASH_CONFIG.STAFF,
-      //   icon: <ContactPageTwoToneIcon />,
+      //   title: "X card",
+      //   path: HASH_CONFIG.X_CARD,
+      //   icon: <CloseTwoToneIcon />,
       // },
+      // {
+      //   title: "Facebook card",
+      //   path: HASH_CONFIG.FACEBOOK_CARD,
+      //   icon: <FacebookTwoToneIcon />,
+      // },
+      // {
+      //   title: "Social accounts",
+      //   path: HASH_CONFIG.SOCIAL_ACCOUNTS,
+      //   icon: <ThumbUpTwoToneIcon />,
+      // },
+      {
+        title: "Contributors",
+        path: HASH_CONFIG.CONTRIBUTORS,
+        icon: <AccountCircleTwoToneIcon />,
+      },
+    ],
+  },
+  {
+    title: "Site",
+    sublist: [
+      {
+        title: "Design & Branding",
+        path: HASH_CONFIG.DESIGN_BRANDING,
+        icon: <BrushTwoToneIcon />,
+      },
+      {
+        title: "Icon",
+        path: HASH_CONFIG.ICON,
+        icon: <AppsTwoToneIcon />,
+      },
+      {
+        title: "Image",
+        path: HASH_CONFIG.IMAGE,
+        icon: <ImageTwoToneIcon />,
+      },
+      {
+        title: "URL",
+        path: HASH_CONFIG.URL,
+        icon: <LinkTwoToneIcon />,
+      },
+      {
+        title: "Navigation",
+        path: HASH_CONFIG.NAVIGATION,
+        icon: <AltRouteTwoToneIcon />,
+      },
+    ],
+  },
+  {
+    title: "Growth",
+    sublist: [
+      {
+        title: "Recommendation",
+        path: HASH_CONFIG.RECOMMENDATION,
+        icon: <FavoriteTwoToneIcon />,
+      },
     ],
   },
 ];
@@ -358,5 +443,149 @@ export const TIMEZONE_LIST = [
   {
     name: "Pacific/Kwajalein",
     label: "(GMT +12:00) International Date Line West",
+  },
+];
+
+export enum TYPES_THEMES_TAG {
+  BLOG = "blog",
+  PODCAST = "podcast",
+  PHOTOGRAPHY = "photography",
+  RECIPES = "recipes",
+  MAGAZINE = "magazine",
+}
+
+export const THEMES_PREVIEW = [
+  {
+    id: "naddr1qqrxcmmwv3hkuq3qpr4du5xl28dy5sh4msz9uddnwxgzupkk4qzjzklv84edc6ruevzqxpqqqpmnye00ces",
+    tag: "photography",
+    name: "London",
+    url: "https://malos10-demo.npub.pro",
+    preview: londonDemo,
+  },
+  {
+    id: "naddr1qqzxgcthdcpzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxgsugqzh",
+    tag: "blog",
+    name: "Dawn",
+    url: "https://hodlbod-demo.npub.pro",
+    preview: dawnDemo,
+  },
+  {
+    id: "naddr1qqzhgctnw3jsygqgat09ph63mf9y9awuq30rtvm3jqhqd44gq5s4hmpawtwxslxtqspsgqqqwueqj9k6nd",
+    tag: "recipes",
+    name: "Taste",
+    url: "https://enki-demo.npub.pro",
+    preview: tasteDemo,
+  },
+  {
+    id: "naddr1qqz8wctkv5pzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg06yarz",
+    tag: "podcast",
+    name: "Wave",
+    url: "https://cd-demo.npub.pro",
+    preview: waveDemo,
+  },
+  {
+    id: "naddr1qqz8yatz0ypzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg05vddj",
+    tag: "magazine",
+    name: "Ruby",
+    url: "https://croxroadnews-demo.npub.pro",
+    preview: rubyDemo,
+  },
+  {
+    id: "naddr1qqrk5mm4wfhxzmqzyqyw4hjsmaga5jjz7hwqgh34kdceqtsx665q2g2mas7h9hrg0n9sgqcyqqq8wvsh25luq",
+    tag: "blog",
+    name: "Journal",
+    url: "https://fiatjaf-demo.npub.pro",
+    preview: journalDemo,
+  },
+  {
+    id: "naddr1qqzx2er8v5pzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg7zn273",
+    tag: "photography",
+    name: "Edge",
+    url: "https://inkblotart-demo.npub.pro",
+    preview: edgeDemo,
+  },
+  {
+    id: "naddr1qqz8xmmvdupzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg3zdu5d",
+    tag: "blog",
+    name: "Solo",
+    url: "https://karnage-demo.npub.pro",
+    preview: soloDemo,
+  },
+  {
+    id: "naddr1qqyk6ctnwd5hvetv0ypzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg65mffq",
+    tag: "blog",
+    name: "Massively",
+    url: "https://isolabell-demo.npub.pro",
+    preview: massivelyDemo,
+  },
+  {
+    id: "naddr1qqrk2urfwdhkgegzyqyw4hjsmaga5jjz7hwqgh34kdceqtsx665q2g2mas7h9hrg0n9sgqcyqqq8wvs4lzhhz",
+    tag: "podcast",
+    name: "Episode",
+    url: "https://episode-demo.npub.pro",
+    preview: episodeDemo,
+  },
+  {
+    id: "naddr1qqrxg6t8v4ehgq3qpr4du5xl28dy5sh4msz9uddnwxgzupkk4qzjzklv84edc6ruevzqxpqqqpmnytfk8l9",
+    tag: "blog",
+    name: "Digest",
+    url: "https://tony-demo.npub.pro",
+    preview: digestDemo,
+  },
+  {
+    id: "naddr1qqzhqcthv9usygqgat09ph63mf9y9awuq30rtvm3jqhqd44gq5s4hmpawtwxslxtqspsgqqqwueqavz5au",
+    tag: "photography",
+    name: "Paway",
+    url: "https://onyx-demo.npub.pro",
+    preview: pawayDemo,
+  },
+  {
+    id: "naddr1qqzxzmr5dupzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg3rvw8e",
+    tag: "blog",
+    name: "Alto",
+    url: "https://jackmallers-demo.npub.pro",
+    preview: altoDemo,
+  },
+  {
+    id: "naddr1qqrk2erfw35k7mszyqyw4hjsmaga5jjz7hwqgh34kdceqtsx665q2g2mas7h9hrg0n9sgqcyqqq8wvspgnlqu",
+    tag: "blog",
+    name: "Edition",
+    url: "https://alanbwt-demo.npub.pro",
+    preview: editionDemo,
+  },
+  {
+    id: "naddr1qqyxyatvd3jhg6twqgsq36k72r04rkj2gt6acpz7xkehrypwqmt2spfpt0kr6ukudp7vkpqrqsqqqaejtrgtuy",
+    tag: "blog",
+    name: "Bulletin",
+    url: "https://rabble-demo.npub.pro",
+    preview: bulletinDemo,
+  },
+  {
+    id: "naddr1qqr8x6tdwpk8jq3qpr4du5xl28dy5sh4msz9uddnwxgzupkk4qzjzklv84edc6ruevzqxpqqqpmnyykmacn",
+    tag: "magazine",
+    name: "Simply",
+    url: "https://nogood-demo.npub.pro",
+    preview: simplyDemo,
+  },
+  {
+    id: "naddr1qqzkv6t60fusygqgat09ph63mf9y9awuq30rtvm3jqhqd44gq5s4hmpawtwxslxtqspsgqqqwueqkvrjjk",
+    tag: "recipes",
+    name: "Fizzy",
+    url: "https://essential-demo.npub.pro",
+    preview: fizzyDemo,
+  },
+  {
+    id: "naddr1qqzxgmmsv5pzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxgvagq2d",
+    tag: "blog",
+    name: "Dope",
+    url: "https://lectio-demo.npub.pro",
+    preview: dopeDemo,
+  },
+  {
+    id: "naddr1qqrxzar5d9kxzq3qpr4du5xl28dy5sh4msz9uddnwxgzupkk4qzjzklv84edc6ruevzqxpqqqpmny6ltg6d",
+    tag: "blog",
+    name: "Attila",
+    url: "https://lynalden-demo.npub.pro",
+    preview: attilaDemo,
   },
 ];

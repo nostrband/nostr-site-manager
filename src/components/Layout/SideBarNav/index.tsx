@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import { usePathname, useRouter, useParams } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
@@ -16,29 +15,42 @@ import {
 } from "./styled";
 import { ListSitesDropdown } from "@/components/ListSitesDropdown";
 import { NavSettings } from "@/components/Layout/SideBarNav/components/NavSettings";
-import { NAV_CONFIG } from "@/consts";
+import { NAV_CONFIG, SIDEBAR_WIDTH } from "@/consts";
+import { useFirstPathElement } from "@/hooks/useFirstPathElement";
+import { useEffect, useState } from "react";
 
-const NAV_WIDTH = 280;
+interface ISideBarNav {
+  isOpen: boolean;
+  handleClose: () => void;
+}
 
-export const SideBarNav = ({ openNav = true }) => {
+export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
   const pathname = usePathname();
+  const pathAdmin = useFirstPathElement();
   const params = useParams();
   const router = useRouter();
   const isDesktop = useResponsive("up", "lg");
+  const [isLogin, setLogin] = useState(false);
 
   const handleGoTo = (path: string) => {
     router.push(path);
   };
 
-  const isSettings = pathname === `/${params.id}/settings`;
+  const isSettings = pathname === `${pathAdmin}/${params.id}/settings`;
   const isParamsID = Boolean(params.id);
+
+  useEffect(() => {
+    if (localStorage.getItem("__nostrlogin_nip46")) {
+      setLogin(true);
+    }
+  }, []);
 
   const renderContent = (
     <StyledSieBarContent>
       <StyledSieBarElements>
         {isSettings ? (
           <StyledSieBarButton
-            onClick={() => router.push(`/${params.id}/dashboard`)}
+            onClick={() => router.push(`${pathAdmin}/${params.id}/dashboard`)}
             size="large"
             fullWidth
             variant="text"
@@ -58,7 +70,7 @@ export const SideBarNav = ({ openNav = true }) => {
             <NavSettings />
           ) : (
             NAV_CONFIG.map(({ title, path: slug, icon }) => {
-              const path = `/${params.id}/${slug}`;
+              const path = `${pathAdmin}/${params.id}/${slug}`;
 
               return (
                 <ListItem key={title}>
@@ -83,21 +95,27 @@ export const SideBarNav = ({ openNav = true }) => {
       )}
 
       {!isSettings && (
-        <StyledSideBarBottom>
-          <IconButton aria-label="profile" size="large">
-            <AccountCircleTwoToneIcon fontSize="inherit" />
-          </IconButton>
+        <>
+          {isLogin && (
+            <StyledSideBarBottom>
+              <IconButton aria-label="profile" size="large">
+                <AccountCircleTwoToneIcon fontSize="inherit" />
+              </IconButton>
 
-          {isParamsID && (
-            <IconButton
-              onClick={() => handleGoTo(`/${params.id}/settings`)}
-              aria-label="settings"
-              size="large"
-            >
-              <SettingsTwoToneIcon fontSize="inherit" />
-            </IconButton>
+              {isParamsID && (
+                <IconButton
+                  onClick={() =>
+                    handleGoTo(`${pathAdmin}/${params.id}/settings`)
+                  }
+                  aria-label="settings"
+                  size="large"
+                >
+                  <SettingsTwoToneIcon fontSize="inherit" />
+                </IconButton>
+              )}
+            </StyledSideBarBottom>
           )}
-        </StyledSideBarBottom>
+        </>
       )}
     </StyledSieBarContent>
   );
@@ -106,7 +124,7 @@ export const SideBarNav = ({ openNav = true }) => {
     <Box
       sx={{
         flexShrink: { lg: 0 },
-        width: { lg: NAV_WIDTH },
+        width: { lg: SIDEBAR_WIDTH },
       }}
     >
       {isDesktop ? (
@@ -115,7 +133,7 @@ export const SideBarNav = ({ openNav = true }) => {
           variant="permanent"
           PaperProps={{
             sx: {
-              width: NAV_WIDTH,
+              width: SIDEBAR_WIDTH,
             },
           }}
         >
@@ -123,13 +141,13 @@ export const SideBarNav = ({ openNav = true }) => {
         </StyledSieBarDrawer>
       ) : (
         <StyledSieBarDrawer
-          open={openNav}
-          //   onClose={onCloseNav}
+          open={isOpen}
+          onClose={handleClose}
           ModalProps={{
             keepMounted: true,
           }}
           PaperProps={{
-            sx: { width: NAV_WIDTH },
+            sx: { width: SIDEBAR_WIDTH },
           }}
         >
           {renderContent}

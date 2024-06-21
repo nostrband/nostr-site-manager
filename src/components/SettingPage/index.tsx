@@ -1,24 +1,28 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import _ from "lodash";
 import { Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { useParams } from "next/navigation";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { useFormik } from "formik";
-import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { TitleDescription } from "@/components/SettingPage/components/TitleDescription";
-import { Timezone } from "@/components/SettingPage/components/Timezone";
-import { Language } from "@/components/SettingPage/components/Language";
 import { MetaData } from "@/components/SettingPage/components/MetaData";
-import { XCard } from "@/components/SettingPage/components/XCard";
-import { FCard } from "@/components/SettingPage/components/FCard";
-import { SocialAccounts } from "@/components/SettingPage/components/SocialAccounts";
-import { Private } from "@/components/SettingPage/components/Private";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
+import { Contributors } from "@/components/SettingPage/components/Contributors";
+import { DesignBranding } from "@/components/SettingPage/components/DesignBranding";
+import { Recommendation } from "@/components/SettingPage/components/Recommendation";
+import { Icon } from "@/components/SettingPage/components/Icon";
+import { ImageBanner } from "@/components/SettingPage/components/Image";
+import { URL } from "@/components/SettingPage/components/URL";
+import { Navigation } from "@/components/SettingPage/components/Navigation";
+import { editSite } from "@/services/nostr/api";
+import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 
-const initialSettingValue = {
+const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
+  name: "",
   title: "",
   description: "",
   timezone: {
@@ -28,14 +32,24 @@ const initialSettingValue = {
   language: "",
   metaDescription: "",
   metaTitle: "",
+  ogDescription: "",
+  ogTitle: "",
+  ogImage: "",
   xTitle: "",
   xDescription: "",
+  xImage: "",
   fTitle: "",
   fDescription: "",
   socialAccountFaceBook: "",
   socialAccountX: "",
-  isPrivate: false,
-  password: "",
+  icon: "",
+  image: "",
+  logo: "",
+  url: "",
+  navigation: {
+    primary: [],
+    secondary: [],
+  },
 };
 
 export const SettingPage = () => {
@@ -60,72 +74,19 @@ export const SettingPage = () => {
     setFieldValue,
     handleBlur,
     setValues,
-    touched,
-    errors,
   } = useFormik({
     initialValues: initialSettingValue,
     validationSchema: validationSchemaMakePrivateSite,
     onSubmit: async (values) => {
-      // maybe send all  data ?
-      // const changedData: Partial<ReturnSettingsSiteDataType> = {};
-      //
-      // for (const key in values) {
-      //   const keySetting = key as keyof ReturnSettingsSiteDataType;
-      //
-      //   if (
-      //     values.hasOwnProperty(key) &&
-      //     values[keySetting] !== initialData[keySetting]
-      //   ) {
-      //     changedData[keySetting] = values[keySetting];
-      //   }
-      // }
-
-      function isObject(obj: any): obj is Object {
-        return obj !== null && typeof obj === "object";
-      }
-
-      function deepCompareAndCollectChanges<T>(
-        initial: T,
-        current: T,
-      ): Partial<T> {
-        const changes: Partial<T> = {};
-
-        for (const key in current) {
-          // @ts-ignore
-          if (current.hasOwnProperty(key)) {
-            const initialVal = initial[key];
-            const currentVal = current[key];
-
-            if (isObject(initialVal) && isObject(currentVal)) {
-              const nestedChanges = deepCompareAndCollectChanges(
-                initialVal,
-                currentVal,
-              );
-              if (Object.keys(nestedChanges).length > 0) {
-                changes[key] = nestedChanges as any;
-              }
-            } else if (currentVal !== initialVal) {
-              changes[key] = currentVal;
-            }
-          }
-        }
-
-        return changes;
-      }
-
-      const changedData: Partial<ReturnSettingsSiteDataType> =
-        deepCompareAndCollectChanges(initialData, values);
-
-      if (Object.keys(changedData).length) {
+      if (!_.isEqual(values, initialData)) {
         setIsLoading(true);
-        setTimeout(() => {
-          setInitialData((prev) => ({
-            ...prev,
-            ...changedData,
-          }));
 
-          console.log({ changedData });
+        setInitialData(() => values);
 
+        console.log({ values });
+
+        try {
+          await editSite(values);
           enqueueSnackbar("Edit data success!", {
             autoHideDuration: 3000,
             variant: "success",
@@ -134,31 +95,60 @@ export const SettingPage = () => {
               vertical: "bottom",
             },
           });
-
+        } catch (e: any) {
+          enqueueSnackbar("Error: " + e.toString(), {
+            autoHideDuration: 3000,
+            variant: "error",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "bottom",
+            },
+          });
+        } finally {
           setIsLoading(false);
-        }, 1500);
+        }
       }
     },
   });
 
-  const handleChangeTimezone = (
-    value: {
-      name: string;
-      label: string;
-    } | null,
-  ) => {
-    if (value) {
-      setFieldValue("timezone", value);
-    } else {
-      setFieldValue("timezone", {
-        name: "",
-        label: "",
-      });
+  const handleChangeNavigation = (input: {
+    id: string;
+    type: "primary" | "secondary";
+    field: "title" | "link";
+    value: string;
+  }) => {
+    const navigation = values.navigation;
+
+    const item = navigation[input.type].find((item) => item.id === input.id);
+
+    if (item) {
+      item[input.field] = input.value;
     }
+
+    setFieldValue("navigation", navigation);
   };
 
-  const handleChangePrivate = (value: boolean) => {
-    setFieldValue("isPrivate", value);
+  const handleAddLinkNavigation = (type: "primary" | "secondary") => {
+    setFieldValue("navigation", {
+      ...values.navigation,
+      [type]: [
+        ...values.navigation[type],
+        { title: "", link: "", id: Date.now() },
+      ],
+    });
+  };
+
+  const handleRemoveLinkNavigation = (input: {
+    id: string;
+    type: "primary" | "secondary";
+  }) => {
+    const navigation = values.navigation;
+
+    navigation[input.type] = navigation[input.type].filter(
+      (item) => item.id !== input.id,
+    );
+
+    setFieldValue("navigation", navigation);
   };
 
   useEffect(() => {
@@ -181,6 +171,7 @@ export const SettingPage = () => {
       <Typography variant="h4" sx={{ fontWeight: "bold" }}>
         General settings
       </Typography>
+
       <TitleDescription
         title={values.title}
         description={values.description}
@@ -189,19 +180,7 @@ export const SettingPage = () => {
         submitForm={submitForm}
         isLoading={isLoading}
       />
-      <Timezone
-        timezone={values.timezone}
-        submitForm={submitForm}
-        isLoading={isLoading}
-        handleChangeTimezone={handleChangeTimezone}
-      />
-      <Language
-        language={values.language}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
+
       <MetaData
         title={values.metaTitle}
         description={values.metaDescription}
@@ -210,41 +189,53 @@ export const SettingPage = () => {
         submitForm={submitForm}
         isLoading={isLoading}
       />
-      <XCard
-        title={values.xTitle}
-        description={values.xDescription}
+
+      <Contributors />
+
+      <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
+        Site
+      </Typography>
+
+      <DesignBranding />
+
+      <Icon
+        icon={values.icon}
         handleBlur={handleBlur}
         handleChange={handleChange}
         submitForm={submitForm}
         isLoading={isLoading}
       />
-      <FCard
-        title={values.fTitle}
-        description={values.fDescription}
+
+      <ImageBanner
+        image={values.image}
         handleBlur={handleBlur}
         handleChange={handleChange}
         submitForm={submitForm}
         isLoading={isLoading}
       />
-      <SocialAccounts
-        socialAccountFaceBook={values.socialAccountFaceBook}
-        socialAccountX={values.socialAccountX}
+
+      <URL
+        url={values.url}
         handleBlur={handleBlur}
         handleChange={handleChange}
         submitForm={submitForm}
         isLoading={isLoading}
       />
-      <Private
-        handleChangePrivate={handleChangePrivate}
-        isPrivate={values.isPrivate}
-        password={values.password}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
+
+      <Navigation
+        navigation={values.navigation}
+        handleChangeNavigation={handleChangeNavigation}
         submitForm={submitForm}
         isLoading={isLoading}
-        touched={touched}
-        errors={errors}
+        handleAddLinkNavigation={handleAddLinkNavigation}
+        handleRemoveLinkNavigation={handleRemoveLinkNavigation}
       />
+
+      <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
+        Growth
+      </Typography>
+
+      <Recommendation />
     </>
   );
 };

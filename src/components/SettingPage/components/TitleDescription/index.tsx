@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   StyledFormControl,
   StyledHeadSettingBlock,
@@ -25,6 +25,18 @@ export const TitleDescription = ({
   isLoading,
 }: ITitleDescription) => {
   const [isEdit, handleAction] = useEditSettingMode(submitForm);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isDisabled, setDisabled] = useState(false);
+  const handleClick = () => {
+    handleAction().then();
+    setDisabled((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (inputRef.current && isDisabled) {
+      inputRef.current.focus();
+    }
+  }, [isDisabled]);
 
   return (
     <StyledSettingCol id={HASH_CONFIG.TITLE_DESCRIPTION}>
@@ -35,7 +47,7 @@ export const TitleDescription = ({
           <SaveButton
             isEdit={isEdit}
             isLoading={isLoading}
-            handleAction={handleAction}
+            handleAction={handleClick}
           />
         </StyledHeadSettingBlock>
 
@@ -46,6 +58,7 @@ export const TitleDescription = ({
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
           <InputLabel htmlFor="title">Title</InputLabel>
           <OutlinedInput
+            inputRef={inputRef}
             id="title"
             name="title"
             label="Title"
@@ -61,6 +74,8 @@ export const TitleDescription = ({
             id="description"
             name="description"
             label="Description"
+            multiline
+            rows={5}
             onChange={handleChange}
             value={description}
             onBlur={handleBlur}

@@ -148,7 +148,7 @@ export class Mutex {
 export async function setPreviewSettings(ns: PreviewSettings) {
   let updated = !isEqual(
     omit(settings, ["themeId", "design"]),
-    omit(ns, "themeId", "design"),
+    omit(ns, "themeId", "design")
   );
 
   let newContribs = !site;
@@ -612,7 +612,10 @@ export async function renderPreview(
         if (!l.href) continue;
         try {
           const url = new URL(l.href, document.location.href);
-          if (url.origin === document.location.origin) {
+          if (
+            url.origin === document.location.origin ||
+            url.origin === "http://localhost"
+          ) {
             l.addEventListener("click", async (e: Event) => {
               e.preventDefault();
               console.log("clicked", e.target, url.pathname);
@@ -656,7 +659,7 @@ async function publishPreview() {
   );
   console.log(
     "published site event to",
-    [...r].map((r) => r.url),
+    [...r].map((r) => r.url)
   );
 
   // return naddr
@@ -693,7 +696,7 @@ async function fetchSite() {
       "#d": [addr.identifier],
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
   );
   console.log("loaded site event", siteId, event);
 

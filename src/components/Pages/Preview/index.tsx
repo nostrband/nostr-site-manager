@@ -108,7 +108,7 @@ export const Preview = () => {
           console.log("updated preview in", Date.now() - start);
 
           // FIXME remove when we fix slow css issues
-          //          setTimeout(() => setLoading(false), 1000);
+          // setTimeout(() => setLoading(false), 1000);
           setLoading(false);
         } else {
           setLoading(false);

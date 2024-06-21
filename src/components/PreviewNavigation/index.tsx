@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, ListSubheader } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -14,6 +14,8 @@ import { useSearchParams } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
 import { AuthContext, userProfile, userPubkey } from "@/services/nostr/nostr";
 import { ModalAuthor } from "@/components/ModalAuthor";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
+import { fetchProfiles } from "@/services/nostr/api";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -34,16 +36,23 @@ export const PreviewNavigation = ({
   onChangeTheme,
   kinds,
   hashtags,
+  author,
 }: {
-  onContentSettings: (hastags: string[], kinds: number[]) => void;
+  onContentSettings: (
+    author: string,
+    hastags: string[],
+    kinds: number[]
+  ) => void;
   onUseTheme: () => void;
   onChangeTheme: (id: string) => void;
   hashtagsSelected: string[];
   kindsSelected: number[];
   kinds: { [key: number]: string };
   hashtags: string[];
+  author: string;
 }) => {
   const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
+  const [profile, setProfile] = useState<NDKEvent | undefined>(undefined);
   const authed = useContext(AuthContext);
   const params = useSearchParams();
   const tag = params.get("tag");
@@ -57,6 +66,15 @@ export const PreviewNavigation = ({
   let currentTheme = filteredThemes[currentIndex];
   const selectedOptions = [...hashtagsSelected, ...kindsSelected];
   const prepareKindOptions = Object.keys(kinds).map((el) => Number(el));
+
+  useEffect(() => {
+    console.log("fetch author", author);
+    fetchProfiles([author])
+      .then((ps) => {
+        if (ps.length) setProfile(ps[0]);
+      })
+      .catch(() => {});
+  }, [author, setProfile]);
 
   const handleNext = () => {
     currentIndex = (currentIndex + 1) % filteredThemes.length;
@@ -83,7 +101,7 @@ export const PreviewNavigation = ({
     const newKindsOptions: number[] = [];
 
     const selectedHashtags = value.filter((option) =>
-      hashtags.includes(option),
+      hashtags.includes(option)
     );
 
     const selectedKinds = value
@@ -93,7 +111,7 @@ export const PreviewNavigation = ({
     if (selectedKinds.length === 0) {
       if (
         selectedOptions.some((option) =>
-          prepareKindOptions.includes(Number(option)),
+          prepareKindOptions.includes(Number(option))
         )
       ) {
         return;
@@ -109,16 +127,16 @@ export const PreviewNavigation = ({
       newKindsOptions.push(...selectedKinds);
     }
 
-    onContentSettings(newHashtagsOptions, newKindsOptions);
+    onContentSettings(author, newHashtagsOptions, newKindsOptions);
   };
 
   let avatar = "";
   let username = "";
   if (authed) {
-    username = userPubkey;
-    if (userProfile) {
+    username = author;
+    if (profile) {
       try {
-        const meta = JSON.parse(userProfile.content);
+        const meta = JSON.parse(profile.content);
         username = meta.display_name || meta.name || username;
         avatar = meta.picture || "";
       } catch {}
@@ -129,8 +147,9 @@ export const PreviewNavigation = ({
     setOpenModalAuthor(true);
   };
 
-  const handleClose = () => {
+  const handleAuthor = (pubkey: string) => {
     setOpenModalAuthor(false);
+    onContentSettings(pubkey, hashtagsSelected, kindsSelected);
   };
 
   return (
@@ -253,7 +272,11 @@ export const PreviewNavigation = ({
           <ArrowForwardIcon />
         </StyledIconButton>
       </StyledWrapper>
-      <ModalAuthor isOpen={isOpenModalAuthor} handleClose={handleClose} />
+      <ModalAuthor
+        pubkey={author}
+        isOpen={isOpenModalAuthor}
+        handleClose={handleAuthor}
+      />
     </>
   );
 };

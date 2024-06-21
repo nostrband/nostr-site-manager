@@ -5,7 +5,14 @@ import {
   NostrEvent,
 } from "@nostr-dev-kit/ndk";
 import { ReturnSettingsSiteDataType } from "../sites.service";
-import { NostrParser, Site, SiteAddr, tv } from "libnostrsite";
+import {
+  KIND_PROFILE,
+  NostrParser,
+  OUTBOX_RELAYS,
+  Site,
+  SiteAddr,
+  tv,
+} from "libnostrsite";
 import {
   SITE_RELAY,
   addOnAuth,
@@ -13,6 +20,7 @@ import {
   userPubkey,
   userRelays,
   stv,
+  SEARCH_RELAYS,
 } from "./nostr";
 
 const KIND_SITE = 30512;
@@ -63,7 +71,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   await ne.sign(signer);
 
   const r = await ne.publish(
-    NDKRelaySet.fromRelayUrls([...userRelays, SITE_RELAY], ndk),
+    NDKRelaySet.fromRelayUrls([...userRelays, SITE_RELAY], ndk)
   );
   if (!r.size) {
     throw new Error("Failed to publish to relays");
@@ -140,7 +148,7 @@ export async function fetchSites() {
         authors: [userPubkey],
       },
       { groupable: false },
-      NDKRelaySet.fromRelayUrls(userRelays, ndk!),
+      NDKRelaySet.fromRelayUrls(userRelays, ndk!)
     );
     console.log("site events", events);
 
@@ -156,3 +164,60 @@ addOnAuth(async (type: string) => {
   // clear sites on logout
   if (type === "logout") sites.length = 0;
 });
+
+const profileCache = new Map<string, NDKEvent | null>();
+
+export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
+  const res = [];
+  const req = [];
+  for (const p of pubkeys) {
+    const c = profileCache.get(p);
+    if (c === undefined) {
+      req.push(p);
+    } else if (c !== null) {
+      res.push(c);
+    }
+  }
+
+  if (!req.length) return res;
+
+  const events = await ndk.fetchEvents(
+    {
+      kinds: [KIND_PROFILE],
+      authors: req,
+    },
+    { groupable: false },
+    NDKRelaySet.fromRelayUrls(OUTBOX_RELAYS, ndk)
+  );
+
+  for (const e of events) {
+    profileCache.set(e.pubkey, e);
+    res.push(e);
+  }
+
+  for (const p of req) {
+    if (!profileCache.get(p)) profileCache.set(p, null);
+  }
+
+  return res;
+}
+
+export async function searchProfiles(text: string): Promise<NDKEvent[]> {
+  const events = await ndk.fetchEvents(
+    {
+      kinds: [KIND_PROFILE],
+      search: text + " sort:popular",
+      limit: 3
+    },
+    {
+      groupable: false,
+    },
+    NDKRelaySet.fromRelayUrls(SEARCH_RELAYS, ndk)
+  );
+
+  for (const e of events) {
+    profileCache.set(e.pubkey, e);
+  }
+
+  return [...events];
+}

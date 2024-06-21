@@ -138,8 +138,9 @@ export class Mutex {
       const r = await cb();
       unlock();
       return r;
-    } catch {
+    } catch (e) {
       unlock();
+      throw e;
     }
   }
 }
@@ -430,8 +431,7 @@ async function preparePreviewSite() {
     : undefined;
 
   // new site?
-  if (!site) {
-    // || (!site.id && !settings.design)) {
+  if (!site || (!site.id && !settings.design)) {
     // start from zero, prepare site event from input settings,
     // fill everything with defaults
     const event = await prepareSite(ndk, settings.admin, {
@@ -799,9 +799,12 @@ export async function publishPreviewSite() {
         console.warn("Bad site url", url, e);
       }
     })();
-  } catch {}
-
-  publishing = "done";
+  } catch (e) {
+    console.log(e);
+    throw e;
+  } finally {
+    publishing = "done";
+  }
 }
 
 export function getPreviewSiteUrl() {

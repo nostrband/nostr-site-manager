@@ -19,6 +19,9 @@ import {
 import { debounce } from "lodash";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
+import { nip19 } from "nostr-tools";
+import { fetchProfiles, searchProfiles } from "@/services/nostr/api";
 
 const fakeData = [
   {
@@ -41,27 +44,57 @@ const fakeData = [
 
 export const ModalAuthor = ({
   isOpen,
+  pubkey,
   handleClose,
 }: {
   isOpen: boolean;
-  handleClose: () => void;
+  pubkey: string;
+  handleClose: (pubkey: string) => void;
 }) => {
   const [inputValue, setInputValue] = useState("");
-  const [options, setOptions] = useState<{ name: string; img: string }[]>([]);
+  const [options, setOptions] = useState<
+    { pubkey: string; name: string; img: string }[]
+  >([]);
   const [isLoading, setLoading] = useState(false);
-  const [author, setAuthor] = useState(fakeData[0]);
+  const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
+
+  useEffect(() => {
+    fetchProfiles([pubkey])
+      .then((p) => (p.length ? setAuthor(p[0]) : []))
+      .catch(() => setAuthor(undefined));
+  }, [pubkey]);
+
+  let meta = undefined;
+  if (author) {
+    try {
+      meta = JSON.parse(author.content);
+    } catch {}
+  }
 
   const fetchData = async (query: string) => {
     try {
       setLoading(true);
-      setTimeout(() => {
-        const response = [...fakeData].filter((option) =>
-          option.name.toLowerCase().includes(query.toLowerCase()),
-        );
-
-        setOptions(response);
-        setLoading(false);
-      }, 1000);
+      setOptions([]);
+      const profiles = await searchProfiles(query);
+      console.log("profiles", profiles);
+      const options = profiles
+        .map((e) => {
+          try {
+            const meta = JSON.parse(e.content);
+            return {
+              pubkey: e.pubkey,
+              name: meta?.display_name || meta?.name || e.pubkey,
+              img: meta?.picture || "",
+            };
+          } catch {
+            return undefined;
+          }
+        })
+        .filter((p) => !!p);
+      console.log("options", options);
+      setLoading(false);
+      // @ts-ignore
+      setOptions(options);
     } catch (error) {
       setLoading(false);
       console.error("Error fetching data:", error);
@@ -70,15 +103,18 @@ export const ModalAuthor = ({
 
   const handleChangeAuthor = (
     _: SyntheticEvent<Element, Event>,
-    author: { name: string; img: string } | string | null,
+    author: { pubkey: string; name: string; img: string } | string | null
   ) => {
     if (author !== null && typeof author !== "string") {
-      setAuthor(author);
-      handleClose();
+      handleClose(author.pubkey);
     }
   };
 
-  const debouncedFetchData = useMemo(() => debounce(fetchData, 500), []);
+  const handleCancel = () => {
+    handleClose(pubkey);
+  };
+
+  const debouncedFetchData = useMemo(() => debounce(fetchData, 300), []);
 
   useEffect(() => {
     if (inputValue) {
@@ -86,7 +122,11 @@ export const ModalAuthor = ({
     } else {
       setOptions([]);
     }
-  }, [inputValue, debouncedFetchData]);
+  }, [inputValue, debouncedFetchData, setOptions]);
+
+  const npub = nip19.npubEncode(pubkey).substring(0, 8) + "...";
+  const name = meta?.display_name || meta?.name || npub;
+  const img = meta?.picture || "";
 
   return (
     <StyledDialog
@@ -96,10 +136,10 @@ export const ModalAuthor = ({
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        <StyledTitle variant="h5">
+        <StyledTitle variant="body1">
           Author
           <Fab
-            onClick={handleClose}
+            onClick={handleCancel}
             size="small"
             color="primary"
             aria-label="close"
@@ -110,13 +150,9 @@ export const ModalAuthor = ({
       </DialogTitle>
       <StyledDialogContent>
         <StyledAuthor>
-          <Avatar
-            alt={author.name}
-            src={author.img}
-            sx={{ width: 43, height: 43 }}
-          />
+          <Avatar alt={name} src={img} sx={{ width: 43, height: 43 }} />
           <Typography variant="body2" component="div">
-            <b>{author.name}</b>
+            <b>{name}</b>
           </Typography>
         </StyledAuthor>
 
@@ -124,8 +160,10 @@ export const ModalAuthor = ({
           freeSolo
           disablePortal
           loading={isLoading}
+          loadingText={"Searching..."}
           options={options}
           onChange={handleChangeAuthor}
+          filterOptions={(options) => options}
           getOptionLabel={(option) =>
             typeof option === "string" ? option : option.name
           }

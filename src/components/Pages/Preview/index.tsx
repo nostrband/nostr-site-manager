@@ -53,7 +53,8 @@ export const Preview = () => {
   //   );
 
   // FIXME default for testing
-  const [contributor] = useState<string>(userPubkey
+  const [contributor, setContributor] = useState<string>(
+    userPubkey
     // "4657dfe8965be8980a93072bcfb5e59a65124406db0f819215ee78ba47934b3e",
     //    "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411"
   );
@@ -69,6 +70,10 @@ export const Preview = () => {
   useEffect(() => {
     mounted = true;
   }, []);
+
+  useEffect(() => {
+    if (authed && !contributor) setContributor(userPubkey);
+  }, [authed]);
 
   useEffect(() => {
     if (!themeId || !theme) return;
@@ -131,8 +136,13 @@ export const Preview = () => {
     return redirect("/");
   }
 
-  const onContentSettings = async (hashtags: string[], kinds: number[]) => {
-    console.log("onContentSettings", hashtags, kinds);
+  const onContentSettings = async (
+    author: string,
+    hashtags: string[],
+    kinds: number[]
+  ) => {
+    console.log("onContentSettings", author, hashtags, kinds);
+    setContributor(author);
     setHashtagsSelected(hashtags);
     setKinds(kinds);
   };
@@ -181,6 +191,7 @@ export const Preview = () => {
       </StyledPreviewTestSite>
 
       <PreviewNavigation
+        author={contributor}
         onChangeTheme={onChangeTheme}
         kindsSelected={kindsSelected || []}
         hashtagsSelected={hashtagsSelected || []}

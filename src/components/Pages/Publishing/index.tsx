@@ -92,7 +92,7 @@ export const Publishing = () => {
         <Button
           onClick={handleClick}
           color="decorate"
-          sie="large"
+          size="large"
           variant="contained"
         >
           Open website

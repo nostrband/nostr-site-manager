@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, ListSubheader } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -13,6 +13,7 @@ import {
 import { useSearchParams } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
 import { AuthContext, userProfile, userPubkey } from "@/services/nostr/nostr";
+import { ModalAuthor } from "@/components/ModalAuthor";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -42,6 +43,7 @@ export const PreviewNavigation = ({
   kinds: { [key: number]: string };
   hashtags: string[];
 }) => {
+  const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
   const authed = useContext(AuthContext);
   const params = useSearchParams();
   const tag = params.get("tag");
@@ -123,123 +125,135 @@ export const PreviewNavigation = ({
     }
   }
 
+  const handleOpen = () => {
+    setOpenModalAuthor(true);
+  };
+
+  const handleClose = () => {
+    setOpenModalAuthor(false);
+  };
+
   return (
-    <StyledWrapper>
-      <StyledIconButton
-        color="primary"
-        size="large"
-        onClick={handlePrev}
-        sx={{ order: { xs: 1 }, marginRight: "auto" }}
-      >
-        <ArrowBackIcon />
-      </StyledIconButton>
-
-      <Box
-        sx={{
-          width: {
-            xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
-            sm: "auto",
-          },
-          order: { xs: 0, sm: 1 },
-        }}
-      >
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          multiple
-          size="small"
-          value={selectedOptions}
-          onChange={handleChange}
-          MenuProps={MenuProps}
-          sx={{
-            height: "42px",
-            width: { xs: `${authed ? "208px" : "100%"}`, sm: "208px" },
-          }}
-          renderValue={(selected) => {
-            if (!selected.length) {
-              return "All notes";
-            }
-
-            const kindsNames = selected
-              .map((value) => {
-                // @ts-ignore
-                if (kinds[value]) {
-                  // @ts-ignore
-                  return kinds[value];
-                }
-
-                return "";
-              })
-              .filter((s) => !!s)
-              .join(", ");
-
-            return [kindsNames, ...selected]
-              .map((value) => {
-                // @ts-ignore
-                if (kinds[value]) {
-                  return "";
-                }
-
-                return value;
-              })
-              .filter((s) => !!s)
-              .join(", ");
-          }}
-          displayEmpty
+    <>
+      <StyledWrapper>
+        <StyledIconButton
+          color="primary"
+          size="large"
+          onClick={handlePrev}
+          sx={{ order: { xs: 1 }, marginRight: "auto" }}
         >
-          <ListSubheader>Kinds</ListSubheader>
-          {prepareKindOptions.map((kind) => (
-            <MenuItem key={kind} value={kind}>
-              <Checkbox
-                color="decorate"
-                checked={selectedOptions.includes(kind)}
-              />
-              <ListItemText primary={kinds[kind]} />
-            </MenuItem>
-          ))}
+          <ArrowBackIcon />
+        </StyledIconButton>
 
-          <ListSubheader>Hashtags</ListSubheader>
-          {hashtags.map((hashtag) => (
-            <MenuItem key={hashtag} value={hashtag}>
-              <Checkbox
-                color="decorate"
-                checked={selectedOptions.includes(hashtag)}
-              />
-              <ListItemText primary={hashtag} />
-            </MenuItem>
-          ))}
-        </Select>
-      </Box>
-      <Button
-        sx={{ order: { xs: 1 } }}
-        size="large"
-        variant="contained"
-        color="decorate"
-        onClick={() => {
-          if (authed) {
-            onUseTheme();
-          } else {
-            handleLogin();
-          }
-        }}
-      >
-        Use theme
-      </Button>
-      {authed && (
-        <Avatar
-          alt={username}
-          src={avatar}
-          sx={{ width: 43, height: 43, order: { xs: 0, sm: 1 } }}
-        />
-      )}
-      <StyledIconButton
-        onClick={handleNext}
-        color="primary"
-        size="large"
-        sx={{ order: { xs: 1 }, marginLeft: "auto" }}
-      >
-        <ArrowForwardIcon />
-      </StyledIconButton>
-    </StyledWrapper>
+        <Box
+          sx={{
+            width: {
+              xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
+              sm: "auto",
+            },
+            order: { xs: 0, sm: 1 },
+          }}
+        >
+          <Select
+            labelId="demo-multiple-checkbox-label"
+            id="demo-multiple-checkbox"
+            multiple
+            size="small"
+            value={selectedOptions}
+            onChange={handleChange}
+            MenuProps={MenuProps}
+            sx={{
+              height: "42px",
+              width: { xs: `${authed ? "208px" : "100%"}`, sm: "208px" },
+            }}
+            renderValue={(selected) => {
+              if (!selected.length) {
+                return "All notes";
+              }
+
+              const kindsNames = selected
+                .map((value) => {
+                  // @ts-ignore
+                  if (kinds[value]) {
+                    // @ts-ignore
+                    return kinds[value];
+                  }
+
+                  return "";
+                })
+                .filter((s) => !!s)
+                .join(", ");
+
+              return [kindsNames, ...selected]
+                .map((value) => {
+                  // @ts-ignore
+                  if (kinds[value]) {
+                    return "";
+                  }
+
+                  return value;
+                })
+                .filter((s) => !!s)
+                .join(", ");
+            }}
+            displayEmpty
+          >
+            <ListSubheader>Kinds</ListSubheader>
+            {prepareKindOptions.map((kind) => (
+              <MenuItem key={kind} value={kind}>
+                <Checkbox
+                  color="decorate"
+                  checked={selectedOptions.includes(kind)}
+                />
+                <ListItemText primary={kinds[kind]} />
+              </MenuItem>
+            ))}
+
+            <ListSubheader>Hashtags</ListSubheader>
+            {hashtags.map((hashtag) => (
+              <MenuItem key={hashtag} value={hashtag}>
+                <Checkbox
+                  color="decorate"
+                  checked={selectedOptions.includes(hashtag)}
+                />
+                <ListItemText primary={hashtag} />
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+        <Button
+          sx={{ order: { xs: 1 } }}
+          size="large"
+          variant="contained"
+          color="decorate"
+          onClick={() => {
+            if (authed) {
+              onUseTheme();
+            } else {
+              handleLogin();
+            }
+          }}
+        >
+          Use theme
+        </Button>
+        {authed && (
+          <Avatar
+            alt={username}
+            src={avatar}
+            sx={{ width: 43, height: 43, order: { xs: 0, sm: 1 } }}
+            onClick={handleOpen}
+          />
+        )}
+        <StyledIconButton
+          onClick={handleNext}
+          color="primary"
+          size="large"
+          sx={{ order: { xs: 1 }, marginLeft: "auto" }}
+        >
+          <ArrowForwardIcon />
+        </StyledIconButton>
+      </StyledWrapper>
+      <ModalAuthor isOpen={isOpenModalAuthor} handleClose={handleClose} />
+    </>
   );
 };

@@ -14,7 +14,7 @@ import { Contributors } from "@/components/SettingPage/components/Contributors";
 import { DesignBranding } from "@/components/SettingPage/components/DesignBranding";
 import { Recommendation } from "@/components/SettingPage/components/Recommendation";
 import { Icon } from "@/components/SettingPage/components/Icon";
-import { Image } from "@/components/SettingPage/components/Image";
+import { ImageBanner } from "@/components/SettingPage/components/Image";
 import { URL } from "@/components/SettingPage/components/URL";
 import { Navigation } from "@/components/SettingPage/components/Navigation";
 import { editSite } from "@/services/nostr/api";
@@ -206,7 +206,7 @@ export const SettingPage = () => {
         isLoading={isLoading}
       />
 
-      <Image
+      <ImageBanner
         image={values.image}
         handleBlur={handleBlur}
         handleChange={handleChange}

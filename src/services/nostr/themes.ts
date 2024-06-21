@@ -147,7 +147,7 @@ export class Mutex {
 export async function setPreviewSettings(ns: PreviewSettings) {
   let updated = !isEqual(
     omit(settings, ["themeId", "design"]),
-    omit(ns, "themeId", "design")
+    omit(ns, "themeId", "design"),
   );
 
   let newContribs = !site;
@@ -656,7 +656,7 @@ async function publishPreview() {
   );
   console.log(
     "published site event to",
-    [...r].map((r) => r.url)
+    [...r].map((r) => r.url),
   );
 
   // return naddr
@@ -693,7 +693,7 @@ async function fetchSite() {
       "#d": [addr.identifier],
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk),
   );
   console.log("loaded site event", siteId, event);
 

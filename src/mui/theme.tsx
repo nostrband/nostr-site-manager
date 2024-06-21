@@ -75,6 +75,12 @@ declare module "@mui/material/IconButton" {
   }
 }
 
+declare module "@mui/material/Fab" {
+  interface FabPropsColorOverrides {
+    decorate: true;
+  }
+}
+
 export const sourceSerif4 = Source_Serif_4({
   weight: ["600"],
   subsets: ["cyrillic"],

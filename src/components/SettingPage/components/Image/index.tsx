@@ -16,7 +16,7 @@ interface ITitleDescription extends IBaseSetting {
   image: string;
 }
 
-export const Image = ({
+export const ImageBanner = ({
   image,
   handleChange,
   handleBlur,
@@ -67,6 +67,7 @@ export const Image = ({
           />
         </StyledFormControl>
         <StyledImgPreview>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="Image url" src={image} />
         </StyledImgPreview>
       </StyledSettingBlock>

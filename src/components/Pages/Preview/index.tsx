@@ -15,7 +15,7 @@ import {
   Mutex,
 } from "@/services/nostr/themes";
 import { Box } from "@mui/material";
-import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
+import { SpinerWrap } from "@/components/Spiner";
 import { SpinnerCustom } from "@/components/SpinnerCustom";
 
 // const hashtags = [
@@ -66,9 +66,9 @@ export const Preview = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
-  useEffect(() => { 
+  useEffect(() => {
     mounted = true;
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (!themeId || !theme) return;
@@ -89,7 +89,6 @@ export const Preview = () => {
         });
 
         if (updated || mounted) {
-
           mounted = false;
 
           // set possible hashtags
@@ -175,7 +174,7 @@ export const Preview = () => {
       <StyledPreviewTestSite>
         <iframe
           ref={iframeRef}
-          frameBorder={0}
+          style={{ border: 0 }}
           width={"100%"}
           height={"100%"}
         ></iframe>

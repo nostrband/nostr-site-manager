@@ -150,7 +150,7 @@ export const Design = () => {
         setLoading(false);
       });
     },
-    [setLoading]
+    [setLoading],
   );
 
   const {
@@ -186,7 +186,7 @@ export const Design = () => {
     (e: any) => {
       handleBlur(e);
     },
-    [handleBlur]
+    [handleBlur],
   );
 
   const handleChangeNavigation = useCallback(
@@ -206,7 +206,7 @@ export const Design = () => {
 
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleAddLinkNavigation = useCallback(
@@ -219,7 +219,7 @@ export const Design = () => {
         ],
       });
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleRemoveLinkNavigation = useCallback(
@@ -227,12 +227,12 @@ export const Design = () => {
       const navigation = values.navigation;
 
       navigation[input.type] = navigation[input.type].filter(
-        (item) => item.id !== input.id
+        (item) => item.id !== input.id,
       );
 
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   useEffect(() => {
@@ -316,9 +316,9 @@ export const Design = () => {
       <StyledPreviewTestSite>
         <iframe
           ref={iframeRef}
-          frameBorder={0}
           width={"100%"}
           height={"100%"}
+          style={{ border: 0 }}
         ></iframe>
         {/* <Image src={previewImg?.preview as StaticImageData} alt="test site" /> */}
       </StyledPreviewTestSite>
@@ -418,6 +418,7 @@ export const Design = () => {
               onBlur={onBlur}
             />
             <StyledImgPreview>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               {values.icon && <img alt="Icon url" src={values.icon} />}
             </StyledImgPreview>
           </StyledFormControl>
@@ -434,6 +435,7 @@ export const Design = () => {
               onBlur={onBlur}
             />
             <StyledImgPreview>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               {values.logo && <img alt="Logo url" src={values.logo} />}
             </StyledImgPreview>
           </StyledFormControl>
@@ -450,6 +452,7 @@ export const Design = () => {
               onBlur={onBlur}
             />
             <StyledBannerPreview>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               {values.banner && <img alt="Banner url" src={values.banner} />}
             </StyledBannerPreview>
           </StyledFormControl>

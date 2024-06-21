@@ -146,8 +146,9 @@ export class Mutex {
 
 export async function setPreviewSettings(ns: PreviewSettings) {
   let updated = !isEqual(
-    omit(settings, ["themeId", "design"]), 
-    omit(ns, "themeId", "design"));
+    omit(settings, ["themeId", "design"]),
+    omit(ns, "themeId", "design"),
+  );
 
   let newContribs = !site;
   if (updated && site) {
@@ -518,7 +519,6 @@ async function preparePreviewSite() {
   await storePreview();
 }
 
-
 // export async function preparePreview() {
 //   // make sure themes are ready
 //   await prefetchThemesPromise;
@@ -644,7 +644,10 @@ async function publishPreview() {
   const r = await site.publish(
     NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk),
   );
-  console.log("published site event to", [...r].map(r => r.url));
+  console.log(
+    "published site event to",
+    [...r].map((r) => r.url),
+  );
 
   // return naddr
   return eventId(site);
@@ -680,7 +683,7 @@ async function fetchSite() {
       "#d": [addr.identifier],
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk),
   );
   console.log("loaded site event", siteId, event);
 
@@ -732,7 +735,6 @@ export async function publishPreviewSite() {
   if (publishing !== "publishing") return;
 
   try {
-
     await (async () => {
       const naddr = nip19.naddrEncode({
         identifier: addr.identifier,
@@ -741,7 +743,7 @@ export async function publishPreviewSite() {
         relays: [SITE_RELAY, ...userRelays],
       });
       console.log("publishing", naddr, site);
-    
+
       // need to assign a domain?
       if (!site.id) {
         //tv(site, "r")) {
@@ -752,24 +754,24 @@ export async function publishPreviewSite() {
           `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
         ).then((r) => r.json());
         console.log(Date.now(), "got domain", reserve);
-    
+
         const subdomain = reserve.domain.split("." + NPUB_PRO_DOMAIN)[0];
         console.log("received domain", subdomain);
         const origin = `https://${reserve.domain}/`;
         srm(site, "r");
         stv(site, "r", origin);
       }
-    
+
       // sign and publish the site event
       await publishPreview();
-    
+
       // erase from local cache
       window.localStorage.removeItem(eventId(site));
-    
+
       // deploy?
       const url = getPreviewSiteUrl();
       if (!url) return;
-    
+
       try {
         const u = new URL(url);
         if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
@@ -826,7 +828,7 @@ export function getPreviewThemeName() {
   if (!settings || !settings.themeId) return "";
   try {
     const pkg = getThemePackage();
-    return tv(pkg, "title") + " v." + tv(pkg, "version");  
+    return tv(pkg, "title") + " v." + tv(pkg, "version");
   } catch {
     return "";
   }

@@ -67,6 +67,7 @@ export const Icon = ({
           />
         </StyledFormControl>
         <StyledIconPreview>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="Icon url" src={icon} />
         </StyledIconPreview>
       </StyledSettingBlock>

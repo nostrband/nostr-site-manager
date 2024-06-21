@@ -2,7 +2,6 @@
 import {
   Autocomplete,
   Avatar,
-  DialogContent,
   DialogTitle,
   Fab,
   ListItem,

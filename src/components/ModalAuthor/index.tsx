@@ -2,41 +2,97 @@
 import {
   Autocomplete,
   Avatar,
-  Dialog,
   DialogContent,
   DialogTitle,
   Fab,
+  ListItem,
   TextField,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import React from "react";
-import { StyledAuthor, StyledTitle } from "@/components/ModalAuthor/styled";
+import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
+import {
+  StyledAuthor,
+  StyledTitle,
+  StyledDialog,
+  StyledDialogContent,
+} from "@/components/ModalAuthor/styled";
+import { debounce } from "lodash";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemText from "@mui/material/ListItemText";
 
-const authors = [
+const fakeData = [
   {
     name: "Mark Twen",
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt3ul-6qH-3cEAzaOPyBLyb6_kxOyIH-KBvA&s",
   },
   {
     name: "Pushkin",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt3ul-6qH-3cEAzaOPyBLyb6_kxOyIH-KBvA&s",
+    img: "https://i.guim.co.uk/img/media/cbeae20cc62776fbbdf46b367b1a9d5799eb7e27/0_342_3757_2254/master/3757.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=a63e9891be403d8894542cb477e5b611",
   },
   {
-    name: "Marco polo",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt3ul-6qH-3cEAzaOPyBLyb6_kxOyIH-KBvA&s",
+    name: "Marko polo",
+    img: "https://hips.hearstapps.com/hmg-prod/images/gettyimages-168967170.jpg?crop=0.608xw:0.506xh;0.192xw,0.170xh&resize=1200:*",
   },
   {
     name: "Kolumb",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt3ul-6qH-3cEAzaOPyBLyb6_kxOyIH-KBvA&s",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5aqGZJHnAwFP1dRQ1i-hDmGgQEuI4WgDy_g&s",
   },
 ];
 
-export const ModalAuthor = ({ isOpen }: { isOpen: boolean }) => {
+export const ModalAuthor = ({
+  isOpen,
+  handleClose,
+}: {
+  isOpen: boolean;
+  handleClose: () => void;
+}) => {
+  const [inputValue, setInputValue] = useState("");
+  const [options, setOptions] = useState<{ name: string; img: string }[]>([]);
+  const [isLoading, setLoading] = useState(false);
+  const [author, setAuthor] = useState(fakeData[0]);
+
+  const fetchData = async (query: string) => {
+    try {
+      setLoading(true);
+      setTimeout(() => {
+        const response = [...fakeData].filter((option) =>
+          option.name.toLowerCase().includes(query.toLowerCase()),
+        );
+
+        setOptions(response);
+        setLoading(false);
+      }, 1000);
+    } catch (error) {
+      setLoading(false);
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleChangeAuthor = (
+    _: SyntheticEvent<Element, Event>,
+    author: { name: string; img: string } | string | null,
+  ) => {
+    if (author !== null && typeof author !== "string") {
+      setAuthor(author);
+      handleClose();
+    }
+  };
+
+  const debouncedFetchData = useMemo(() => debounce(fetchData, 500), []);
+
+  useEffect(() => {
+    if (inputValue) {
+      debouncedFetchData(inputValue);
+    } else {
+      setOptions([]);
+    }
+  }, [inputValue, debouncedFetchData]);
+
   return (
-    <Dialog
+    <StyledDialog
       open={isOpen}
-      // onClose={handleClose}
+      onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -44,7 +100,7 @@ export const ModalAuthor = ({ isOpen }: { isOpen: boolean }) => {
         <StyledTitle variant="h5">
           Author
           <Fab
-            // onClick={handleCloseSettings}
+            onClick={handleClose}
             size="small"
             color="primary"
             aria-label="close"
@@ -53,27 +109,51 @@ export const ModalAuthor = ({ isOpen }: { isOpen: boolean }) => {
           </Fab>
         </StyledTitle>
       </DialogTitle>
-      <DialogContent sx={{ width: "300px" }}>
+      <StyledDialogContent>
         <StyledAuthor>
           <Avatar
-            alt="Mark Twen"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt3ul-6qH-3cEAzaOPyBLyb6_kxOyIH-KBvA&s"
+            alt={author.name}
+            src={author.img}
             sx={{ width: 43, height: 43 }}
           />
           <Typography variant="body2" component="div">
-            <b>Mark Twen</b>
+            <b>{author.name}</b>
           </Typography>
         </StyledAuthor>
 
+        <Typography variant="body1" component="div">
+          <b>Choose another author</b>
+        </Typography>
         <Autocomplete
+          freeSolo
           disablePortal
-          id="combo-box-demo"
-          value={authors[0]}
-          options={authors}
-          getOptionLabel={(option) => option.name}
-          renderInput={(params) => <TextField {...params} />}
+          loading={isLoading}
+          options={options}
+          onChange={handleChangeAuthor}
+          getOptionLabel={(option) =>
+            typeof option === "string" ? option : option.name
+          }
+          renderOption={(props, option) =>
+            typeof option === "string" ? (
+              option
+            ) : (
+              <ListItem {...props}>
+                <ListItemAvatar>
+                  <Avatar src={option.img} alt={option.name} />
+                </ListItemAvatar>
+                <ListItemText primary={option.name} />
+              </ListItem>
+            )
+          }
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              onChange={(event) => setInputValue(event.target.value)}
+            />
+          )}
         />
-      </DialogContent>
-    </Dialog>
+      </StyledDialogContent>
+    </StyledDialog>
   );
 };

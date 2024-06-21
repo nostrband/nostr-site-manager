@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, ListSubheader } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -13,7 +13,7 @@ import {
 import { useSearchParams } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
 import { AuthContext, userProfile, userPubkey } from "@/services/nostr/nostr";
-// import { ModalAuthor } from "@/components/ModalAuthor";
+import { ModalAuthor } from "@/components/ModalAuthor";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -43,6 +43,7 @@ export const PreviewNavigation = ({
   kinds: { [key: number]: string };
   hashtags: string[];
 }) => {
+  const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
   const authed = useContext(AuthContext);
   const params = useSearchParams();
   const tag = params.get("tag");
@@ -123,6 +124,14 @@ export const PreviewNavigation = ({
       } catch {}
     }
   }
+
+  const handleOpen = () => {
+    setOpenModalAuthor(true);
+  };
+
+  const handleClose = () => {
+    setOpenModalAuthor(false);
+  };
 
   return (
     <>
@@ -232,6 +241,7 @@ export const PreviewNavigation = ({
             alt={username}
             src={avatar}
             sx={{ width: 43, height: 43, order: { xs: 0, sm: 1 } }}
+            onClick={handleOpen}
           />
         )}
         <StyledIconButton
@@ -243,7 +253,7 @@ export const PreviewNavigation = ({
           <ArrowForwardIcon />
         </StyledIconButton>
       </StyledWrapper>
-      {/*<ModalAuthor isOpen={true} />*/}
+      <ModalAuthor isOpen={isOpenModalAuthor} handleClose={handleClose} />
     </>
   );
 };

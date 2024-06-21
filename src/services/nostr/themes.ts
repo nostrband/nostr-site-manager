@@ -82,7 +82,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   if (!globalThis.document) return;
 
   const addrs = THEMES_PREVIEW.map((t) => t.id).map(
-    (n) => nip19.decode(n).data as nip19.AddressPointer,
+    (n) => nip19.decode(n).data as nip19.AddressPointer
   );
 
   const themeFilter = {
@@ -94,7 +94,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const themeEvents = await ndk.fetchEvents(
     themeFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
   );
 
   themes.push(...themeEvents);
@@ -108,7 +108,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const packageEvents = await ndk.fetchEvents(
     packageFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
   );
 
   themePackages.push(...packageEvents);
@@ -146,8 +146,9 @@ export class Mutex {
 
 export async function setPreviewSettings(ns: PreviewSettings) {
   let updated = !isEqual(
-    omit(settings, ["themeId", "design"]), 
-    omit(ns, "themeId", "design"));
+    omit(settings, ["themeId", "design"]),
+    omit(ns, "themeId", "design")
+  );
 
   let newContribs = !site;
   if (updated && site) {
@@ -252,7 +253,7 @@ async function fetchAuthed({
       "in",
       Date.now() - start,
       "ms",
-      minedEvent,
+      minedEvent
     );
     authEvent = new NDKEvent(ndk, minedEvent);
   }
@@ -376,13 +377,13 @@ async function loadSite() {
     {
       groupable: false,
     },
-    NDKRelaySet.fromRelayUrls(userRelays.slice(0, 3), ndk),
+    NDKRelaySet.fromRelayUrls(userRelays.slice(0, 3), ndk)
   );
 
   const topTags = new Map<string, number>();
   for (const t of [...events]
     .map((e) =>
-      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1]),
+      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1])
     )
     .flat()) {
     let c = topTags.get(t) || 0;
@@ -439,6 +440,35 @@ async function preparePreviewSite() {
       hashtags,
     });
 
+    // admin not contributor?
+    if (
+      settings.contributors &&
+      settings.contributors.length > 0 &&
+      !settings.contributors.includes(settings.admin)
+    ) {
+      const contribSlug = tv(event, "d");
+      let slug = contribSlug + "-1";
+      if (userProfile) {
+        const adminSlug = getProfileSlug(userProfile);
+        if (adminSlug) slug = contribSlug + "-" + adminSlug;
+      }
+
+      // update the slug
+      stv(event, "d", slug);
+      console.log("site slug", slug);
+    }
+
+    // make sure d-tag is unique, use ':' as
+    // suffix separator so that we could parse it and extract
+    // the original d-tag to use as preferred domain name
+    const d_tag = tv(event, "d");
+    stv(
+      event,
+      "d",
+      // https://stackoverflow.com/a/8084248
+      d_tag + ":" + (Math.random() + 1).toString(36).substring(2, 5)
+    );
+
     // reset renderer, init store, etc
     setSite(new NDKEvent(ndk, event));
     if (!site) throw new Error("No site");
@@ -450,26 +480,7 @@ async function preparePreviewSite() {
     await loadSite();
 
     // fake origin for now
-    stv(site!, "r", document.location.origin);
-
-    // admin not contributor?
-    if (
-      settings.contributors &&
-      settings.contributors.length > 0 &&
-      !settings.contributors.includes(settings.admin)
-    ) {
-      const contribSlug = tv(site, "d");
-      let slug = contribSlug + "-1";
-      if (userProfile) {
-        const adminSlug = getProfileSlug(userProfile);
-        if (adminSlug) slug = contribSlug + "-" + adminSlug;
-      }
-
-      // update the slug
-      stv(site, "d", slug);
-      console.log("site slug", slug);
-    }
-
+    //    stv(site!, "r", document.location.origin);
     // fill in hashtags etc
     await prepareSiteByContent(site!, store!);
 
@@ -517,7 +528,6 @@ async function preparePreviewSite() {
   // save local copy
   await storePreview();
 }
-
 
 // export async function preparePreview() {
 //   // make sure themes are ready
@@ -581,7 +591,7 @@ async function renderPreviewHtml(path: string = "/") {
 
 export async function renderPreview(
   iframe: HTMLIFrameElement,
-  path: string = "/",
+  path: string = "/"
 ) {
   if (!iframe) throw new Error("No iframe");
   const html = await renderPreviewHtml(path);
@@ -642,9 +652,12 @@ async function publishPreview() {
 
   // publish
   const r = await site.publish(
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk)
   );
-  console.log("published site event to", [...r].map(r => r.url));
+  console.log(
+    "published site event to",
+    [...r].map((r) => r.url)
+  );
 
   // return naddr
   return eventId(site);
@@ -732,7 +745,6 @@ export async function publishPreviewSite() {
   if (publishing !== "publishing") return;
 
   try {
-
     await (async () => {
       const naddr = nip19.naddrEncode({
         identifier: addr.identifier,
@@ -741,42 +753,47 @@ export async function publishPreviewSite() {
         relays: [SITE_RELAY, ...userRelays],
       });
       console.log("publishing", naddr, site);
-    
+
       // need to assign a domain?
-      if (!site.id) {
-        //tv(site, "r")) {
-        const requestedDomain = tv(site, "d");
+      if (!tv(site, "r")) {
+        const requestedDomain = tv(site, "d")!.split(":")[0];
         console.log("naddr", naddr);
         console.log("requesting domain", requestedDomain);
-        const reserve = await fetchWithSession(
-          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
-        ).then((r) => r.json());
+        const reply = await fetchWithSession(
+          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`
+        );
+        if (reply.status !== 200)
+          throw new Error("Failed to reserve domain name");
+        const reserve = await reply.json();
         console.log(Date.now(), "got domain", reserve);
-    
+
         const subdomain = reserve.domain.split("." + NPUB_PRO_DOMAIN)[0];
         console.log("received domain", subdomain);
         const origin = `https://${reserve.domain}/`;
         srm(site, "r");
         stv(site, "r", origin);
       }
-    
+
       // sign and publish the site event
       await publishPreview();
-    
+
       // erase from local cache
       window.localStorage.removeItem(eventId(site));
-    
+
       // deploy?
       const url = getPreviewSiteUrl();
       if (!url) return;
-    
+
       try {
         const u = new URL(url);
         if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
           const reply = await fetchWithSession(
-            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`,
-          ).then((r) => r.json());
-          console.log(Date.now(), "deployed", reply);
+            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`
+          );
+          if (reply.status !== 200) throw new Error("Failed to deploy");
+
+          const r = await reply.json();
+          console.log(Date.now(), "deployed", r);
         }
       } catch (e) {
         console.warn("Bad site url", url, e);
@@ -826,7 +843,7 @@ export function getPreviewThemeName() {
   if (!settings || !settings.themeId) return "";
   try {
     const pkg = getThemePackage();
-    return tv(pkg, "title") + " v." + tv(pkg, "version");  
+    return tv(pkg, "title") + " v." + tv(pkg, "version");
   } catch {
     return "";
   }

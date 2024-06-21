@@ -120,9 +120,6 @@ export const ModalAuthor = ({
           </Typography>
         </StyledAuthor>
 
-        <Typography variant="body1" component="div">
-          <b>Choose another author</b>
-        </Typography>
         <Autocomplete
           freeSolo
           disablePortal
@@ -148,6 +145,7 @@ export const ModalAuthor = ({
             <TextField
               {...params}
               variant="outlined"
+              placeholder="Choose another author"
               onChange={(event) => setInputValue(event.target.value)}
             />
           )}

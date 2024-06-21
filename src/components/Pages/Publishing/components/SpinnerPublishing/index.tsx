@@ -1,7 +1,7 @@
 import { SpinnerCustom } from "@/components/SpinnerCustom";
 
-export const SpinnerPublishing = ({ isDone }: { isDone: boolean }) => {
-  if (isDone) {
+export const SpinnerPublishing = ({ isLoading }: { isLoading: boolean }) => {
+  if (isLoading) {
     return <SpinnerCustom />;
   }
 

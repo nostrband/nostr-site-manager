@@ -13,7 +13,13 @@ import {
   InputLabel,
   OutlinedInput,
 } from "@mui/material";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   StyledBottomActions,
   StyledButtonOpenSetting,
@@ -39,6 +45,7 @@ import {
   getPreviewThemeName,
   renderPreview,
   setPreviewSettings,
+  startPreviewPublish,
   updatePreviewSite,
 } from "@/services/nostr/themes";
 import { SpinerWrap } from "@/components/Spiner";
@@ -104,65 +111,47 @@ export const Design = () => {
   const [activeTab, setActiveTab] = useState("1");
   const [isLoading, setLoading] = useState<boolean>(false);
 
-  const handleOpenSettings = () => {
+  const handleOpenSettings = useCallback(() => {
     setOpenSettings(true);
-  };
+  }, [setOpenSettings]);
 
-  const handleCloseSettings = () => {
+  const handlePublish = useCallback(async () => {
     setOpenSettings(false);
-    submitForm().then();
-  };
+    startPreviewPublish();
+    router.push(`/publishing?themeId=${themeId}&siteId=${siteId}`);
+  }, [setOpenSettings, router]);
 
-  const handleSwitchTheme = async () => {
-    setOpenSettings(false);
-    await submitForm();
-    router.push(`/preview?themeId=${themeId}&siteId=${siteId}`);
-  };
+  const onSubmit = useCallback(
+    async (values: DesignValues) => {
+      await mutex.run(async () => {
+        const start = Date.now();
+        console.log("submit values", values);
+        setLoading(true);
+        const updated = await updatePreviewSite({
+          accent_color: values.accentColor,
+          name: values.shortName,
+          cover_image: values.banner,
+          description: values.description,
+          icon: values.icon,
+          logo: values.logo,
+          title: values.name,
+          navigation: values.navigation.primary.map((n) => ({
+            label: n.title,
+            url: n.link,
+          })),
+        });
+        console.log("updating design settings ", updated);
 
-  const handlePublish = async () => {
-    setOpenSettings(false);
-    router.push(`/publishing?siteId=${siteId}`);
-    // await submitForm();
-    //
-    // console.log("publishing site");
-    // await publishPreviewSite();
-    //
-    // console.log("Published");
-
-    // window.open(getPreviewSiteUrl(), "_blank");
-
-    // FIXME go to /publishing?siteId and let it call 'publish'
-    //    router.push(`/preview?themeId=${themeId}&siteId=${siteId}`);
-  };
-
-  const onSubmit = async (values: DesignValues) => {
-    await mutex.run(async () => {
-      const start = Date.now();
-      console.log("submit values", values);
-      const updated = await updatePreviewSite({
-        accent_color: values.accentColor,
-        name: values.shortName,
-        cover_image: values.banner,
-        description: values.description,
-        icon: values.icon,
-        logo: values.logo,
-        title: values.name,
-        navigation: values.navigation.primary.map((n) => ({
-          label: n.title,
-          url: n.link,
-        })),
+        // render
+        if (updated) {
+          await renderPreview(iframeRef.current!);
+          console.log("updated preview in", Date.now() - start);
+        }
+        setLoading(false);
       });
-      console.log("updating design settings ", updated);
-
-      // render
-      if (updated) {
-        await renderPreview(iframeRef.current!);
-        console.log("updated preview in", Date.now() - start);
-      }
-    });
-  };
-
-  let isDirty = false;
+    },
+    [setLoading]
+  );
 
   const {
     values,
@@ -181,108 +170,124 @@ export const Design = () => {
     onSubmit,
   });
 
-  const onBlur = (e: any) => {
-    handleBlur(e);
-  };
+  const handleCloseSettings = useCallback(() => {
+    setOpenSettings(false);
+    // no need to submit, we're submitting on blur
+  }, [setOpenSettings, submitForm]);
 
-  const handleChangeNavigation = (input: {
-    id: string;
-    type: "primary" | "secondary";
-    field: "title" | "link";
-    value: string;
-  }) => {
-    const navigation = values.navigation;
+  const handleSwitchTheme = useCallback(async () => {
+    setOpenSettings(false);
+    // we submit on blur
+    // await submitForm();
+    router.push(`/preview?themeId=${themeId}&siteId=${siteId}`);
+  }, [setOpenSettings, submitForm, router]);
 
-    const item = navigation[input.type].find((item) => item.id === input.id);
+  const onBlur = useCallback(
+    (e: any) => {
+      handleBlur(e);
+    },
+    [handleBlur]
+  );
 
-    if (item) {
-      item[input.field] = input.value;
-    }
+  const handleChangeNavigation = useCallback(
+    (input: {
+      id: string;
+      type: "primary" | "secondary";
+      field: "title" | "link";
+      value: string;
+    }) => {
+      const navigation = values.navigation;
 
-    isDirty = true;
-    setFieldValue("navigation", navigation);
-  };
+      const item = navigation[input.type].find((item) => item.id === input.id);
 
-  const handleAddLinkNavigation = (type: "primary" | "secondary") => {
-    isDirty = true;
-    setFieldValue("navigation", {
-      ...values.navigation,
-      [type]: [
-        ...values.navigation[type],
-        { title: "", link: "", id: Date.now() },
-      ],
-    });
-  };
+      if (item) {
+        item[input.field] = input.value;
+      }
 
-  const handleRemoveLinkNavigation = (input: {
-    id: string;
-    type: "primary" | "secondary";
-  }) => {
-    const navigation = values.navigation;
+      setFieldValue("navigation", navigation);
+    },
+    [setFieldValue]
+  );
 
-    navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id,
-    );
+  const handleAddLinkNavigation = useCallback(
+    (type: "primary" | "secondary") => {
+      setFieldValue("navigation", {
+        ...values.navigation,
+        [type]: [
+          ...values.navigation[type],
+          { title: "", link: "", id: Date.now() },
+        ],
+      });
+    },
+    [setFieldValue]
+  );
 
-    isDirty = true;
-    setFieldValue("navigation", navigation);
-  };
+  const handleRemoveLinkNavigation = useCallback(
+    (input: { id: string; type: "primary" | "secondary" }) => {
+      const navigation = values.navigation;
+
+      navigation[input.type] = navigation[input.type].filter(
+        (item) => item.id !== input.id
+      );
+
+      setFieldValue("navigation", navigation);
+    },
+    [setFieldValue]
+  );
 
   useEffect(() => {
     mounted = true;
   }, []);
 
   useEffect(() => {
-    if (!authed || !themeId || !siteId) return;
+    if (!themeId || !siteId) return;
 
-    if (authed) {
-      mutex.run(async () => {
-        setLoading(true);
-        const updated = await setPreviewSettings({
-          admin: userPubkey,
-          themeId,
-          siteId,
-          design: true,
-        });
-
-        if (updated || mounted) {
-          mounted = false;
-
-          // init settings sidebar
-          const info = getPreviewSiteInfo();
-          const values: DesignValues = {
-            accentColor: info.accent_color || "",
-            banner: info.cover_image || "",
-            description: info.description || "",
-            icon: info.icon || "",
-            logo: info.logo || "",
-            name: info.title || "",
-            shortName: info.name || "",
-            // hashtags: info.include_tags
-            //   ? info.include_tags.filter((t) => t.tag === "t").map((t) => t.value)
-            //   : [],
-            // kinds: info.include_kinds || [],
-            navigation: {
-              primary: info.navigation
-                ? info.navigation.map((n) => ({
-                    title: n.label,
-                    link: n.url,
-                    id: n.url,
-                  }))
-                : [],
-              secondary: [],
-            },
-          };
-          console.log("info", info, "values", values);
-          setValues(values, false);
-
-          // render
-          await renderPreview(iframeRef.current!);
-          setLoading(false);
-        }
+    mutex.run(async () => {
+      setLoading(true);
+      const updated = await setPreviewSettings({
+        admin: userPubkey,
+        themeId,
+        siteId,
+        design: true,
       });
-    }
-  }, [authed, themeId, siteId, iframeRef, setValues]);
+
+      if (updated || mounted) {
+        mounted = false;
+
+        // init settings sidebar
+        const info = getPreviewSiteInfo();
+        const values: DesignValues = {
+          accentColor: info.accent_color || "",
+          banner: info.cover_image || "",
+          description: info.description || "",
+          icon: info.icon || "",
+          logo: info.logo || "",
+          name: info.title || "",
+          shortName: info.name || "",
+          // hashtags: info.include_tags
+          //   ? info.include_tags.filter((t) => t.tag === "t").map((t) => t.value)
+          //   : [],
+          // kinds: info.include_kinds || [],
+          navigation: {
+            primary: info.navigation
+              ? info.navigation.map((n) => ({
+                  title: n.label,
+                  link: n.url,
+                  id: n.url,
+                }))
+              : [],
+            secondary: [],
+          },
+        };
+        console.log("info", info, "values", values);
+        setValues(values, false);
+
+        // render
+        await renderPreview(iframeRef.current!);
+      }
+      setLoading(false);
+    });
+  }, [authed, themeId, siteId, iframeRef, setValues, setLoading]);
 
   if (!themeId || !siteId) {
     return redirect("/");
@@ -328,7 +333,7 @@ export const Design = () => {
 
       <Drawer
         anchor="right"
-        open={isLoading ? false : isOpenSettings}
+        open={isOpenSettings}
         onClose={handleCloseSettings}
       >
         <StyledWrapper>

@@ -8,6 +8,7 @@ import {
   NostrStore,
   Site,
   SiteAddr,
+  eventId,
   getProfileSlug,
   parseAddr,
   prepareSite,
@@ -17,7 +18,6 @@ import {
 } from "libnostrsite";
 import {
   SITE_RELAY,
-  eventId,
   ndk,
   srm,
   stag,
@@ -71,6 +71,7 @@ let site: NDKEvent | undefined;
 let store: NostrStore | undefined;
 let renderer: NostrSiteRenderer | undefined;
 let tags: string[] | undefined;
+let publishing: "init" | "publishing" | "done" = "init";
 
 // FIXME remove take from libnostrsite
 const KIND_THEME = 30514;
@@ -407,7 +408,7 @@ function setSiteTheme(theme: NDKEvent) {
 
 function getThemePackage() {
   const theme = themes.find((t) => eventId(t) === settings!.themeId);
-  console.log("theme", theme, "id", settings!.themeId, "themes", themes);
+  // console.log("theme", theme, "id", settings!.themeId, "themes", themes);
   if (!theme) throw new Error("No theme");
 
   const pkg = themePackages.find((p) => p.id === tv(theme, "e"));
@@ -637,11 +638,13 @@ async function publishPreview() {
 
   // sign it
   await site.sign(new NDKNip07Signer());
+  console.log("signed site event", site);
 
   // publish
-  await site.publish(
+  const r = await site.publish(
     NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk),
   );
+  console.log("published site event to", [...r].map(r => r.url));
 
   // return naddr
   return eventId(site);
@@ -726,52 +729,62 @@ export async function updatePreviewSite(ds: DesignSettings) {
 export async function publishPreviewSite() {
   if (!site || !addr) throw new Error("No site");
 
-  const naddr = nip19.naddrEncode({
-    identifier: addr.identifier,
-    kind: KIND_SITE,
-    pubkey: addr.pubkey,
-    relays: [SITE_RELAY, ...userRelays],
-  });
-
-  // need to assign a domain?
-  if (!site.id) {
-    //tv(site, "r")) {
-    const requestedDomain = tv(site, "d");
-    console.log("naddr", naddr);
-    console.log("requesting domain", requestedDomain);
-    const reserve = await fetchWithSession(
-      `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
-    ).then((r) => r.json());
-    console.log(Date.now(), "got domain", reserve);
-
-    const subdomain = reserve.domain.split("." + NPUB_PRO_DOMAIN)[0];
-    console.log("received domain", subdomain);
-    const origin = `https://${reserve.domain}/`;
-    srm(site, "r");
-    stv(site, "r", origin);
-  }
-
-  // sign and publish the site event
-  await publishPreview();
-
-  // erase from local cache
-  window.localStorage.removeItem(eventId(site));
-
-  // deploy?
-  const url = getPreviewSiteUrl();
-  if (!url) return;
+  if (publishing !== "publishing") return;
 
   try {
-    const u = new URL(url);
-    if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
-      const reply = await fetchWithSession(
-        `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`,
-      ).then((r) => r.json());
-      console.log(Date.now(), "deployed", reply);
-    }
-  } catch (e) {
-    console.warn("Bad site url", url, e);
-  }
+
+    await (async () => {
+      const naddr = nip19.naddrEncode({
+        identifier: addr.identifier,
+        kind: KIND_SITE,
+        pubkey: addr.pubkey,
+        relays: [SITE_RELAY, ...userRelays],
+      });
+      console.log("publishing", naddr, site);
+    
+      // need to assign a domain?
+      if (!site.id) {
+        //tv(site, "r")) {
+        const requestedDomain = tv(site, "d");
+        console.log("naddr", naddr);
+        console.log("requesting domain", requestedDomain);
+        const reserve = await fetchWithSession(
+          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
+        ).then((r) => r.json());
+        console.log(Date.now(), "got domain", reserve);
+    
+        const subdomain = reserve.domain.split("." + NPUB_PRO_DOMAIN)[0];
+        console.log("received domain", subdomain);
+        const origin = `https://${reserve.domain}/`;
+        srm(site, "r");
+        stv(site, "r", origin);
+      }
+    
+      // sign and publish the site event
+      await publishPreview();
+    
+      // erase from local cache
+      window.localStorage.removeItem(eventId(site));
+    
+      // deploy?
+      const url = getPreviewSiteUrl();
+      if (!url) return;
+    
+      try {
+        const u = new URL(url);
+        if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
+          const reply = await fetchWithSession(
+            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`,
+          ).then((r) => r.json());
+          console.log(Date.now(), "deployed", reply);
+        }
+      } catch (e) {
+        console.warn("Bad site url", url, e);
+      }
+    })();
+  } catch {}
+
+  publishing = "done";
 }
 
 export function getPreviewSiteUrl() {
@@ -811,7 +824,18 @@ export function getPreviewKinds() {
 
 export function getPreviewThemeName() {
   if (!settings || !settings.themeId) return "";
-  const pkg = getThemePackage();
-  return tv(pkg, "title") + " v." + tv(pkg, "version");
+  try {
+    const pkg = getThemePackage();
+    return tv(pkg, "title") + " v." + tv(pkg, "version");  
+  } catch {
+    return "";
+  }
 }
 
+export function getPreviewPublishingState() {
+  return publishing;
+}
+
+export function startPreviewPublish() {
+  publishing = "publishing";
+}

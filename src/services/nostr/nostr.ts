@@ -38,29 +38,6 @@ export function stag(e: NDKEvent | NostrEvent, tag: string[]) {
   else e.tags[i] = tag;
 }
 
-export function eventAddr(e: NDKEvent) {
-  return {
-    identifier: tv(e, "d") || "",
-    pubkey: e.pubkey,
-    kind: e.kind || 0,
-  };
-}
-
-export function eventId(e: NDKEvent) {
-  if (
-    e.kind === 0 ||
-    e.kind === 3 ||
-    // @ts-ignore
-    (e.kind >= 10000 && e.kind < 20000) ||
-    // @ts-ignore
-    (e.kind >= 30000 && e.kind < 40000)
-  ) {
-    return nip19.naddrEncode(eventAddr(e));
-  } else {
-    return nip19.noteEncode(e.id);
-  }
-}
-
 export function addOnAuth(cb: (type: string) => Promise<void>) {
   onAuths.push(cb);
 }

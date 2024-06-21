@@ -24,7 +24,7 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
       <BodyWrapper>
         <SnackbarProvider>{children}</SnackbarProvider>
         <Script
-          data-perms="sign_event:30512,sign_event:512,sign_event:30513,sign_event:30514"
+          data-perms="sign_event:30512,sign_event:512,sign_event:30513,sign_event:30514,sign_event:27235"
           data-no-banner="true"
           src="https://www.unpkg.com/nostr-login@latest/dist/unpkg.js"
         />

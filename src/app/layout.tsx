@@ -5,8 +5,8 @@ import Providers from "@/utils/tanstack/providers.client";
 import { AuthContext } from "@/services/nostr/nostr";
 
 export const metadata = {
-  title: "Nostr Blog Admin",
-  description: "App for managment your blog",
+  title: "Npub.pro",
+  description: "",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

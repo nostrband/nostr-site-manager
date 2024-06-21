@@ -1,8 +1,8 @@
 import { DashboardWrapper } from "@/components/Layout/DashboardWrapper";
 
 export const metadata = {
-  title: "Nostr Blog Admin | Admin",
-  description: "App for managment your blog",
+  title: "Admin | Npub.pro",
+  description: "",
 };
 
 export default async function RootLayout({

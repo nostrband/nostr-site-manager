@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "Nostr Blog Admin | Login",
-  description: "App for managment your blog",
+  title: "Login | Npub.pro",
+  description: "",
 };
 
 export default function RootLayout({

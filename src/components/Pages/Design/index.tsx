@@ -523,7 +523,7 @@ export const Design = () => {
               ))}
             </Select>
           </StyledFormControl> */}
-
+{/* 
           <StyledFormControl>
             <StyledLabel>Navigation</StyledLabel>
             <TabContext value={activeTab}>
@@ -668,7 +668,7 @@ export const Design = () => {
                 </Button>
               </TabPanel>
             </TabContext>
-          </StyledFormControl>
+          </StyledFormControl> */}
         </StyledWrapper>
         <StyledBottomActions>
           <Button

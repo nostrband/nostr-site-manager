@@ -13,7 +13,7 @@ export const StyledWrapper = styled(Box)(({ theme }) => ({
   gap: 16,
   left: 0,
   width: "100%",
-  zIndex: 2,
+  zIndex: 100,
   background: "#fff",
   boxShadow: "0px -1px 16px 0px rgba(0, 0, 0, 0.1)",
   [theme.breakpoints.down("md")]: {

@@ -164,82 +164,84 @@ export const PreviewNavigation = ({
           <ArrowBackIcon />
         </StyledIconButton>
 
-        <Box
-          sx={{
-            width: {
-              xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
-              sm: "auto",
-            },
-            order: { xs: 0, sm: 1 },
-          }}
-        >
-          <Select
-            labelId="demo-multiple-checkbox-label"
-            id="demo-multiple-checkbox"
-            multiple
-            size="small"
-            value={selectedOptions}
-            onChange={handleChange}
-            MenuProps={MenuProps}
+        {authed && (
+          <Box
             sx={{
-              height: "42px",
-              width: { xs: `${authed ? "208px" : "100%"}`, sm: "208px" },
+              width: {
+                xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
+                sm: "auto",
+              },
+              order: { xs: 0, sm: 1 },
             }}
-            renderValue={(selected) => {
-              if (!selected.length) {
-                return "All notes";
-              }
-
-              const kindsNames = selected
-                .map((value) => {
-                  // @ts-ignore
-                  if (kinds[value]) {
-                    // @ts-ignore
-                    return kinds[value];
-                  }
-
-                  return "";
-                })
-                .filter((s) => !!s)
-                .join(", ");
-
-              return [kindsNames, ...selected]
-                .map((value) => {
-                  // @ts-ignore
-                  if (kinds[value]) {
-                    return "";
-                  }
-
-                  return value;
-                })
-                .filter((s) => !!s)
-                .join(", ");
-            }}
-            displayEmpty
           >
-            <ListSubheader>Kinds</ListSubheader>
-            {prepareKindOptions.map((kind) => (
-              <MenuItem key={kind} value={kind}>
-                <Checkbox
-                  color="decorate"
-                  checked={selectedOptions.includes(kind)}
-                />
-                <ListItemText primary={kinds[kind]} />
-              </MenuItem>
-            ))}
+            <Select
+              labelId="demo-multiple-checkbox-label"
+              id="demo-multiple-checkbox"
+              multiple
+              size="small"
+              value={selectedOptions}
+              onChange={handleChange}
+              MenuProps={MenuProps}
+              sx={{
+                height: "42px",
+                width: { xs: `${authed ? "208px" : "100%"}`, sm: "208px" },
+              }}
+              renderValue={(selected) => {
+                if (!selected.length) {
+                  return "All notes";
+                }
 
-            <ListSubheader>Hashtags</ListSubheader>
-            {hashtags.map((hashtag) => (
-              <MenuItem key={hashtag} value={hashtag}>
-                <Checkbox
-                  color="decorate"
-                  checked={selectedOptions.includes(hashtag)}
-                />
-                <ListItemText primary={hashtag} />
-              </MenuItem>
-            ))}
-          </Select>
-        </Box>
+                const kindsNames = selected
+                  .map((value) => {
+                    // @ts-ignore
+                    if (kinds[value]) {
+                      // @ts-ignore
+                      return kinds[value];
+                    }
+
+                    return "";
+                  })
+                  .filter((s) => !!s)
+                  .join(", ");
+
+                return [kindsNames, ...selected]
+                  .map((value) => {
+                    // @ts-ignore
+                    if (kinds[value]) {
+                      return "";
+                    }
+
+                    return value;
+                  })
+                  .filter((s) => !!s)
+                  .join(", ");
+              }}
+              displayEmpty
+            >
+              <ListSubheader>Kinds</ListSubheader>
+              {prepareKindOptions.map((kind) => (
+                <MenuItem key={kind} value={kind}>
+                  <Checkbox
+                    color="decorate"
+                    checked={selectedOptions.includes(kind)}
+                  />
+                  <ListItemText primary={kinds[kind]} />
+                </MenuItem>
+              ))}
+
+              <ListSubheader>Hashtags</ListSubheader>
+              {hashtags.map((hashtag) => (
+                <MenuItem key={hashtag} value={hashtag}>
+                  <Checkbox
+                    color="decorate"
+                    checked={selectedOptions.includes(hashtag)}
+                  />
+                  <ListItemText primary={hashtag} />
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+        )}
         <Button
           sx={{ order: { xs: 1 } }}
           size="large"
@@ -253,7 +255,7 @@ export const PreviewNavigation = ({
             }
           }}
         >
-          Use theme
+          {authed ? "Use theme" : "Login to continue"}
         </Button>
         {authed && (
           <Avatar

@@ -367,7 +367,7 @@ export const Design = () => {
             </Button>
           </StyledFormControl>
 
-          <StyledFormControl>
+          {/* <StyledFormControl>
             <StyledLabel htmlFor="shortName">Short name</StyledLabel>
             <StyledTextField
               size="small"
@@ -377,10 +377,10 @@ export const Design = () => {
               value={values.shortName}
               onBlur={onBlur}
             />
-          </StyledFormControl>
+          </StyledFormControl> */}
 
           <StyledFormControl>
-            <StyledLabel htmlFor="name">Name</StyledLabel>
+            <StyledLabel htmlFor="name">Title</StyledLabel>
             <StyledTextField
               size="small"
               fullWidth

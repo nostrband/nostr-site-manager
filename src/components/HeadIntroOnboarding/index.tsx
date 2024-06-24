@@ -19,11 +19,11 @@ export const HeadIntroOnboarding = () => {
       </StyledTypographyTitle>
 
       <StyledTypographySubtitle variant="subtitle1">
-        Easy to set up. Self-hostable. Just works.
+        Easy setup. Self-hostable. Just works.
       </StyledTypographySubtitle>
 
       <Button variant="contained" color="decorate" href="#themes-onboarding">
-        Choose a theme to start
+        Pick a theme to start
       </Button>
     </StyledContainerIntro>
   );

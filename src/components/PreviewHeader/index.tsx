@@ -3,7 +3,7 @@ import { StyledWrapper } from "@/components/PreviewHeader/styled";
 import {OutlinedInput, Select, Typography} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useRouter, useSearchParams } from "next/navigation";
-import { TYPES_THEMES_TAG } from "@/consts";
+import { THEMES_PREVIEW, TYPES_THEMES_TAG } from "@/consts";
 
 export const PreviewHeader = ({
   themeName,
@@ -17,8 +17,14 @@ export const PreviewHeader = ({
   const tag = params.get("tag") || "";
 
   const handleChange = (value: string) => {
+    const filteredThemeIds = (value
+      ? THEMES_PREVIEW.filter((t) => t.tag === value)
+      : THEMES_PREVIEW).map(t => t.id);
+    const newThemeId = filteredThemeIds.includes(themeId) ? themeId : filteredThemeIds[0];
+    console.log("newThemeId", newThemeId, filteredThemeIds.length);
+
     router.push(
-      `/preview?themeId=${themeId}${value !== tag ? `&tag=${value}` : ""}`,
+      `/preview?themeId=${newThemeId}${value !== "" ? `&tag=${value}` : ""}`,
     );
   };
 
@@ -36,14 +42,14 @@ export const PreviewHeader = ({
           input={<OutlinedInput />}
           renderValue={(selected) => {
             if (selected === "") {
-              return <em>Choice a tag</em>;
+              return "All themes";
             }
 
             return selected;
           }}
         >
-          <MenuItem disabled value="">
-            <em>Choice a tag</em>
+          <MenuItem onClick={() => handleChange("")} key="" value="">
+            All themes
           </MenuItem>
           {options.map((el) => (
             <MenuItem onClick={() => handleChange(el)} key={el} value={el}>

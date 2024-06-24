@@ -16,6 +16,7 @@ import { AuthContext, userProfile, userPubkey } from "@/services/nostr/nostr";
 import { ModalAuthor } from "@/components/ModalAuthor";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
+import { prefetchThemes } from "@/services/nostr/themes";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -66,6 +67,11 @@ export const PreviewNavigation = ({
   let currentTheme = filteredThemes[currentIndex];
   const selectedOptions = [...hashtagsSelected, ...kindsSelected];
   const prepareKindOptions = Object.keys(kinds).map((el) => Number(el));
+
+  prefetchThemes([
+    filteredThemes[(currentIndex + 1) % filteredThemes.length].id,
+    filteredThemes[currentIndex > 0 ? currentIndex - 1 : filteredThemes.length - 1].id,
+  ]);
 
   useEffect(() => {
     console.log("fetch author", author);

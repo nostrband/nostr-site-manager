@@ -8,6 +8,7 @@ import {
   NostrStore,
   Site,
   SiteAddr,
+  Theme,
   eventId,
   getProfileSlug,
   parseAddr,
@@ -57,6 +58,7 @@ export interface DesignSettings {
 let token = "";
 const themes: NDKEvent[] = [];
 const themePackages: NDKEvent[] = [];
+const parsedThemes: Map<string, Theme> = new Map();
 let settings: PreviewSettings | undefined;
 let designSettings: DesignSettings | undefined;
 
@@ -404,8 +406,10 @@ function setSiteTheme(theme: NDKEvent) {
   ]);
 }
 
-function getThemePackage() {
-  const theme = themes.find((t) => eventId(t) === settings!.themeId);
+function getThemePackage(id = '') {
+  id = id || settings!.themeId;
+
+  const theme = themes.find((t) => eventId(t) === id);
   // console.log("theme", theme, "id", settings!.themeId, "themes", themes);
   if (!theme) throw new Error("No theme");
 
@@ -544,8 +548,20 @@ async function preparePreviewSite() {
 //   return preparePromise;
 // }
 
+async function getParsedTheme(id = '') {
+  id = id || settings!.themeId;
+
+  const c = parsedThemes.get(id);
+  if (c) return c;
+
+  const pkg = getThemePackage(id);
+  const p = await parser.parseTheme(pkg);
+  parsedThemes.set(id, p);
+  return p;
+}
+
 async function renderPreviewHtml(path: string = "/") {
-  console.log("render preview", path);
+  console.log(Date.now(), "render preview", path);
   if (!addr || !site || !store || !settings) throw new Error("No site");
 
   if (path === "/") {
@@ -553,9 +569,7 @@ async function renderPreviewHtml(path: string = "/") {
     if (result) return result;
   }
 
-  const pkg = getThemePackage();
-
-  const parsedTheme = await parser.parseTheme(pkg);
+  const parsedTheme = await getParsedTheme();
   console.log("parsedTheme", parsedTheme);
 
   if (!renderer) {
@@ -857,4 +871,13 @@ export function getPreviewPublishingState() {
 
 export function startPreviewPublish() {
   publishing = "publishing";
+}
+
+export async function prefetchThemes(ids: string[]) {
+  await prefetchThemesPromise;
+  for (const id of ids) {
+    const theme = await getParsedTheme(id);
+    assetFetcher.addTheme(theme);
+  }
+  assetFetcher.load();
 }

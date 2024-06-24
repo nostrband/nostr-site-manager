@@ -6,11 +6,14 @@ import {
 } from "@nostr-dev-kit/ndk";
 import { ReturnSettingsSiteDataType } from "../sites.service";
 import {
+  KIND_PACKAGE,
   KIND_PROFILE,
+  KIND_THEME,
   NostrParser,
   OUTBOX_RELAYS,
   Site,
   SiteAddr,
+  Theme,
   tv,
 } from "libnostrsite";
 import {
@@ -21,11 +24,14 @@ import {
   userRelays,
   stv,
   SEARCH_RELAYS,
+  srm,
 } from "./nostr";
+import { nip19 } from "nostr-tools";
 
 const KIND_SITE = 30512;
 
 const sites: Site[] = [];
+const packageThemes = new Map<string, string>();
 const parser = new NostrParser("http://localhost/");
 
 export async function editSite(data: ReturnSettingsSiteDataType) {
@@ -34,8 +40,8 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   const s = sites[index];
 
   const e = s.event;
-  stv(e, "d", data.name);
-  stv(e, "name", data.title);
+  stv(e, "name", data.name);
+  stv(e, "title", data.title);
   stv(e, "summary", data.description);
   stv(e, "r", data.url);
   stv(e, "icon", data.icon);
@@ -52,10 +58,17 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   stv(e, "twitter_image", data.xImage);
 
   // remove nav
-  e.tags = e.tags.filter((t) => t.length < 2 || t[0] !== "nav");
+  srm(e, "nav");
   // write nav back
   for (const n of data.navigation.primary) {
     e.tags.push(["nav", n.link, n.title]);
+  }
+
+  // remove p
+  srm(e, "p");
+  // write p back
+  for (const p of data.contributors) {
+    e.tags.push(["p", p]);
   }
 
   const ne = new NDKEvent(ndk, {
@@ -84,6 +97,9 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
 function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
   return sites.map((s) => ({
     id: s.id,
+    themeId: packageThemes.get(s.extensions?.[0].event_id || "") || '',
+    themeName: s.extensions?.[0].petname || "",
+    contributors: s.contributor_pubkeys,
     name: s.name,
     title: s.title || "",
     description: s.description || "",
@@ -124,6 +140,30 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
   }));
 }
 
+async function fetchSiteThemes() {
+  const events = await ndk.fetchEvents(
+    {
+      // @ts-ignore
+      kinds: [KIND_PACKAGE],
+      ids: sites
+        .map((s) => s.extensions?.[0].event_id || "")
+        .filter((id) => !!id),
+    },
+    { groupable: false },
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk!)
+  );
+
+  for (const e of events) {
+    const a = tv(e, 'a') || '';
+    const naddr = nip19.naddrEncode({
+      kind: parseInt(a.split(':')[0]),
+      pubkey: a.split(':')[1],
+      identifier: a.split(':')[2]
+    });
+    packageThemes.set(e.id, naddr);
+  }
+}
+
 function parseSite(ne: NostrEvent) {
   const e = new NDKEvent(ndk, ne);
   const addr: SiteAddr = {
@@ -155,6 +195,8 @@ export async function fetchSites() {
     for (const e of events.values()) {
       sites.push(parseSite(e.rawEvent()));
     }
+
+    await fetchSiteThemes();
   }
 
   return convertSites(sites);
@@ -207,7 +249,7 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
     {
       kinds: [KIND_PROFILE],
       search: text + " sort:popular",
-      limit: 3
+      limit: 3,
     },
     {
       groupable: false,

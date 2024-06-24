@@ -40,6 +40,9 @@ export async function GET(req: NextRequest) {
         logo: "",
         ogTitle: "",
         xImage: "",
+        themeName: "",
+        themePackageId: "",
+        contributors: []
       };
     },
   );

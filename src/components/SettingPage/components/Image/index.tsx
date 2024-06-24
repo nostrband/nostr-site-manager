@@ -51,7 +51,7 @@ export const ImageBanner = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Banner for site
+          Website cover image
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">

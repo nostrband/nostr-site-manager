@@ -10,6 +10,7 @@ import useResponsive from "@/hooks/useResponsive";
 import { useListSites } from "@/hooks/useListSites";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { ReturnSitesDataType } from "@/services/sites.service";
+import { Button } from "@mui/material";
 
 export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const isDesktop = useResponsive("up", "lg");
@@ -52,12 +53,20 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
     setOpen(false);
   };
 
+  const login = async () => {
+    // @ts-ignore
+    await window.nostr!.getPublicKey();
+    window.location.reload();
+  }
+
   return (
     <MainWrapper>
       <SideBarNav handleClose={handleClose} isOpen={isOpen} />
       <MainContent isDesktop={isDesktop}>
         <Header handleOpen={handleOpen} />
-        <PageWrapper>{isLogin ? children : "Please login"}</PageWrapper>
+        <PageWrapper>{isLogin ? children : (
+          <Button onClick={login}>Login</Button>
+        )}</PageWrapper>
       </MainContent>
     </MainWrapper>
   );

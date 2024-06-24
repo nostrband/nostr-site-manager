@@ -40,7 +40,7 @@ export const URL = ({
     <StyledSettingCol id={HASH_CONFIG.URL}>
       <StyledSettingBlock>
         <StyledHeadSettingBlock>
-          <Typography variant="h6">URL</Typography>
+          <Typography variant="h6">Website address</Typography>
 
           <SaveButton
             isEdit={isEdit}
@@ -49,9 +49,9 @@ export const URL = ({
           />
         </StyledHeadSettingBlock>
 
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          Url for site
-        </Typography>
+        {/* <Typography variant="body2" sx={{ mb: 1 }}>
+          Website address 
+        </Typography> */}
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
           <InputLabel htmlFor="url">URL</InputLabel>

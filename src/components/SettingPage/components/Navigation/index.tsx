@@ -71,14 +71,14 @@ export const Navigation = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 3 }}>
-          Navigation for primary & secondary links site
+          Primary & secondary site navigation
         </Typography>
 
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList onChange={handleChange} aria-label="lab API tabs example">
               <Tab label="Primary" value="1" />
-              <Tab label="Secondary" value="2" />
+              {/* <Tab label="Secondary" value="2" /> */}
             </TabList>
           </Box>
           <TabPanel value="1">

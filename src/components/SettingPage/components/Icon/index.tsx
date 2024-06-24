@@ -51,7 +51,7 @@ export const Icon = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Icon for site
+          Website icon
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">

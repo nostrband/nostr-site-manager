@@ -22,6 +22,9 @@ import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
+  themeId: "",
+  themeName: "",
+  contributors: [],
   name: "",
   title: "",
   description: "",
@@ -172,6 +175,14 @@ export const SettingPage = () => {
         General settings
       </Typography>
 
+      <URL
+        url={values.url}
+        handleBlur={handleBlur}
+        handleChange={handleChange}
+        submitForm={submitForm}
+        isLoading={isLoading}
+      />
+
       <TitleDescription
         title={values.title}
         description={values.description}
@@ -181,22 +192,26 @@ export const SettingPage = () => {
         isLoading={isLoading}
       />
 
-      <MetaData
+      {/* <MetaData
         title={values.metaTitle}
         description={values.metaDescription}
         handleBlur={handleBlur}
         handleChange={handleChange}
         submitForm={submitForm}
         isLoading={isLoading}
-      />
+      /> */}
 
       <Contributors />
 
       <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
-        Site
+        Design
       </Typography>
 
-      <DesignBranding />
+      <DesignBranding 
+        siteId={values.id}
+        themeName={values.themeName}
+        themeId={values.themeId}
+      />
 
       <Icon
         icon={values.icon}
@@ -208,14 +223,6 @@ export const SettingPage = () => {
 
       <ImageBanner
         image={values.image}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
-
-      <URL
-        url={values.url}
         handleBlur={handleBlur}
         handleChange={handleChange}
         submitForm={submitForm}

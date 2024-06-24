@@ -12,6 +12,8 @@ export type ReturnSitesDataType = {
 
 export type ReturnSettingsSiteDataType = {
   id: string;
+  themeId: string;
+  themeName: string;
   name: string;
   title: string;
   description: string;
@@ -38,6 +40,8 @@ export type ReturnSettingsSiteDataType = {
   socialAccountX: string;
 
   event?: NostrEvent;
+
+  contributors: string[];
 
   navigation: {
     primary: { title: string; link: string; id: string }[];

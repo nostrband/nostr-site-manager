@@ -88,7 +88,7 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
         </List>
       )}
 
-      {!isSettings && (
+      {/* {!isSettings && (
         <>
           {isLogin && (
             <StyledSideBarBottom>
@@ -98,7 +98,7 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
             </StyledSideBarBottom>
           )}
         </>
-      )}
+      )} */}
     </StyledSieBarContent>
   );
 

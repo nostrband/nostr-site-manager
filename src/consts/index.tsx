@@ -1,7 +1,7 @@
 // import WebTwoToneIcon from "@mui/icons-material/WebTwoTone";
 // import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
 import TitleTwoToneIcon from "@mui/icons-material/TitleTwoTone";
-import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
+// import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
 import GridOnTwoToneIcon from "@mui/icons-material/GridOnTwoTone";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import AltRouteTwoToneIcon from "@mui/icons-material/AltRouteTwoTone";
@@ -90,6 +90,11 @@ export const SETTINGS_CONFIG = [
     title: "General settings",
     sublist: [
       {
+        title: "Website address",
+        path: HASH_CONFIG.URL,
+        icon: <LinkTwoToneIcon />,
+      },
+      {
         title: "Title & Description",
         path: HASH_CONFIG.TITLE_DESCRIPTION,
         icon: <TitleTwoToneIcon />,
@@ -104,11 +109,11 @@ export const SETTINGS_CONFIG = [
       //   path: HASH_CONFIG.LANGUAGE,
       //   icon: <TranslateTwoToneIcon />,
       // },
-      {
-        title: "Meta data",
-        path: HASH_CONFIG.META_DATA,
-        icon: <LineWeightTwoToneIcon />,
-      },
+      // {
+      //   title: "Meta data",
+      //   path: HASH_CONFIG.META_DATA,
+      //   icon: <LineWeightTwoToneIcon />,
+      // },
       // {
       //   title: "X card",
       //   path: HASH_CONFIG.X_CARD,
@@ -132,10 +137,10 @@ export const SETTINGS_CONFIG = [
     ],
   },
   {
-    title: "Site",
+    title: "Design",
     sublist: [
       {
-        title: "Design & Branding",
+        title: "Theme",
         path: HASH_CONFIG.DESIGN_BRANDING,
         icon: <BrushTwoToneIcon />,
       },
@@ -150,11 +155,6 @@ export const SETTINGS_CONFIG = [
         icon: <ImageTwoToneIcon />,
       },
       {
-        title: "URL",
-        path: HASH_CONFIG.URL,
-        icon: <LinkTwoToneIcon />,
-      },
-      {
         title: "Navigation",
         path: HASH_CONFIG.NAVIGATION,
         icon: <AltRouteTwoToneIcon />,
@@ -165,7 +165,7 @@ export const SETTINGS_CONFIG = [
     title: "Growth",
     sublist: [
       {
-        title: "Recommendation",
+        title: "Recommendations",
         path: HASH_CONFIG.RECOMMENDATION,
         icon: <FavoriteTwoToneIcon />,
       },

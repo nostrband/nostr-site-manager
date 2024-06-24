@@ -396,13 +396,17 @@ async function loadSite() {
 
 function setSiteTheme(theme: NDKEvent) {
   if (!site || !theme) throw new Error("Bad params");
+  const title = tv(theme, "title") || "";
+  const version = tv(theme, "version") || "";
+  const name = title + (version ? " v."+version : "");
+
   srm(site, "x");
   stag(site, [
     "x",
     theme.id,
     SITE_RELAY,
-    tv(theme, "x") || "",
-    tv(theme, "title") || "",
+    tv(theme, "x") || "", // package hash
+    name,
   ]);
 }
 

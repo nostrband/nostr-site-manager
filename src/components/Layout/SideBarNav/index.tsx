@@ -1,16 +1,14 @@
 import Link from "next/link";
 import { usePathname, useRouter, useParams } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
-import { Box, Divider, List, ListItem } from "@mui/material";
+import { Box, Divider, Drawer, List, ListItem } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
-import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import KeyboardArrowLeftTwoToneIcon from "@mui/icons-material/KeyboardArrowLeftTwoTone";
 import {
   StyledSideBarBottom,
   StyledSieBarButton,
   StyledSieBarContent,
-  StyledSieBarDrawer,
   StyledSieBarElements,
 } from "./styled";
 import { ListSitesDropdown } from "@/components/ListSitesDropdown";
@@ -31,10 +29,6 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
   const router = useRouter();
   const isDesktop = useResponsive("up", "lg");
   const [isLogin, setLogin] = useState(false);
-
-  const handleGoTo = (path: string) => {
-    router.push(path);
-  };
 
   const isSettings = pathname === `${pathAdmin}/${params.id}/settings`;
   const isParamsID = Boolean(params.id);
@@ -101,18 +95,6 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
               <IconButton aria-label="profile" size="large">
                 <AccountCircleTwoToneIcon fontSize="inherit" />
               </IconButton>
-
-              {isParamsID && (
-                <IconButton
-                  onClick={() =>
-                    handleGoTo(`${pathAdmin}/${params.id}/settings`)
-                  }
-                  aria-label="settings"
-                  size="large"
-                >
-                  <SettingsTwoToneIcon fontSize="inherit" />
-                </IconButton>
-              )}
             </StyledSideBarBottom>
           )}
         </>
@@ -128,8 +110,9 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
       }}
     >
       {isDesktop ? (
-        <StyledSieBarDrawer
+        <Drawer
           open
+          anchor="right"
           variant="permanent"
           PaperProps={{
             sx: {
@@ -138,10 +121,11 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
           }}
         >
           {renderContent}
-        </StyledSieBarDrawer>
+        </Drawer>
       ) : (
-        <StyledSieBarDrawer
+        <Drawer
           open={isOpen}
+          anchor="right"
           onClose={handleClose}
           ModalProps={{
             keepMounted: true,
@@ -151,7 +135,7 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
           }}
         >
           {renderContent}
-        </StyledSieBarDrawer>
+        </Drawer>
       )}
     </Box>
   );

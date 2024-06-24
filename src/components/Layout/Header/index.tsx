@@ -1,8 +1,7 @@
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import Toolbar from "@mui/material/Toolbar";
 import MenuTwoToneIcon from "@mui/icons-material/MenuTwoTone";
-import { StyledAppBar } from "@/components/Layout/Header/styled";
+import { StyledAppBar, StyledToolbar } from "@/components/Layout/Header/styled";
 import useResponsive from "@/hooks/useResponsive";
 
 interface IHeader {
@@ -18,17 +17,17 @@ export const Header = ({ handleOpen }: IHeader) => {
 
   return (
     <StyledAppBar isDesktop={isDesktop}>
-      <Toolbar>
+      <StyledToolbar>
         <IconButton
           color="inherit"
           aria-label="open drawer"
-          edge="start"
+          edge="end"
           onClick={handleOpen}
         >
           <MenuTwoToneIcon />
         </IconButton>
         <Box></Box>
-      </Toolbar>
+      </StyledToolbar>
     </StyledAppBar>
   );
 };

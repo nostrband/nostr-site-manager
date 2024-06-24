@@ -18,6 +18,7 @@ import {
 import { Box } from "@mui/material";
 import { SpinerWrap } from "@/components/Spiner";
 import { SpinnerCustom } from "@/components/SpinnerCustom";
+import { PreviewHeader } from "@/components/PreviewHeader";
 
 // const hashtags = [
 //   "#cooking",
@@ -55,7 +56,7 @@ export const Preview = () => {
 
   // FIXME default for testing
   const [contributor, setContributor] = useState<string | undefined>(
-    siteId ? undefined : userPubkey
+    siteId ? undefined : userPubkey,
     // "4657dfe8965be8980a93072bcfb5e59a65124406db0f819215ee78ba47934b3e",
     //    "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411"
   );
@@ -145,7 +146,7 @@ export const Preview = () => {
   const onContentSettings = async (
     author: string,
     hashtags: string[],
-    kinds: number[]
+    kinds: number[],
   ) => {
     console.log("onContentSettings", author, hashtags, kinds);
     setContributor(author);
@@ -186,6 +187,8 @@ export const Preview = () => {
           </SpinerWrap>
         </Box>
       )}
+
+      <PreviewHeader themeId={themeId} themeName={theme.name} />
 
       <StyledPreviewTestSite>
         <iframe

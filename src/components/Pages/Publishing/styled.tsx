@@ -9,6 +9,7 @@ export const StyledWrap = styled(Box)(() => ({
   flexDirection: "column",
   width: "100%",
   height: "100%",
+  padding: 15,
 }));
 
 export const StyledTitle = styled(Typography)(() => ({
@@ -16,6 +17,7 @@ export const StyledTitle = styled(Typography)(() => ({
   fontSize: 24,
   marginTop: 16,
   marginBottom: 16,
+  textAlign: "center",
 }));
 
 export const StyledDescription = styled(Typography)(({ theme }) => ({

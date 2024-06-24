@@ -97,3 +97,13 @@ export const StyledItemNavigation = styled(Box)({
   flexDirection: "column",
   borderBottom: "1px solid #ececec",
 });
+
+export const StyledPreviewTestSite = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  height: "100%",
+  position: "relative",
+  overflow: "hidden",
+}));

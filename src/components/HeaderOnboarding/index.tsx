@@ -3,14 +3,14 @@ import {
   StyledHeaderContainer,
   StyledHeaderOnboarding,
 } from "@/components/HeaderOnboarding/styled";
-import { Button, Typography } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { Typography } from "@mui/material";
+// import { useRouter } from "next/navigation";
 
 export const HeaderOnboarding = () => {
-  const router = useRouter();
-  const handleNavigateToAdmin = () => {
-    router.push("/admin");
-  };
+  // const router = useRouter();
+  // const handleNavigateToAdmin = () => {
+  //   router.push("/admin");
+  // };
 
   return (
     <StyledHeaderOnboarding>

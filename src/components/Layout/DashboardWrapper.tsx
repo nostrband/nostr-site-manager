@@ -57,17 +57,17 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
     // @ts-ignore
     await window.nostr!.getPublicKey();
     window.location.reload();
-  }
+  };
 
   return (
     <MainWrapper>
-      <SideBarNav handleClose={handleClose} isOpen={isOpen} />
       <MainContent isDesktop={isDesktop}>
         <Header handleOpen={handleOpen} />
-        <PageWrapper>{isLogin ? children : (
-          <Button onClick={login}>Login</Button>
-        )}</PageWrapper>
+        <PageWrapper>
+          {isLogin ? children : <Button onClick={login}>Login</Button>}
+        </PageWrapper>
       </MainContent>
+      <SideBarNav handleClose={handleClose} isOpen={isOpen} />
     </MainWrapper>
   );
 };

@@ -12,7 +12,7 @@ import {
 } from "@/components/PreviewNavigation/styled";
 import { useSearchParams } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
-import { AuthContext, userProfile, userPubkey } from "@/services/nostr/nostr";
+import { AuthContext } from "@/services/nostr/nostr";
 import { ModalAuthor } from "@/components/ModalAuthor";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
@@ -42,7 +42,7 @@ export const PreviewNavigation = ({
   onContentSettings: (
     author: string,
     hastags: string[],
-    kinds: number[]
+    kinds: number[],
   ) => void;
   onUseTheme: () => void;
   onChangeTheme: (id: string) => void;
@@ -70,7 +70,9 @@ export const PreviewNavigation = ({
 
   prefetchThemes([
     filteredThemes[(currentIndex + 1) % filteredThemes.length].id,
-    filteredThemes[currentIndex > 0 ? currentIndex - 1 : filteredThemes.length - 1].id,
+    filteredThemes[
+      currentIndex > 0 ? currentIndex - 1 : filteredThemes.length - 1
+    ].id,
   ]);
 
   useEffect(() => {
@@ -107,7 +109,7 @@ export const PreviewNavigation = ({
     const newKindsOptions: number[] = [];
 
     const selectedHashtags = value.filter((option) =>
-      hashtags.includes(option)
+      hashtags.includes(option),
     );
 
     const selectedKinds = value
@@ -117,7 +119,7 @@ export const PreviewNavigation = ({
     if (selectedKinds.length === 0) {
       if (
         selectedOptions.some((option) =>
-          prepareKindOptions.includes(Number(option))
+          prepareKindOptions.includes(Number(option)),
         )
       ) {
         return;
@@ -155,8 +157,12 @@ export const PreviewNavigation = ({
 
   const handleAuthor = (pubkey: string | any) => {
     setOpenModalAuthor(false);
-    const cancel = typeof pubkey !== "string"
-    onContentSettings(cancel ? author : pubkey, hashtagsSelected, kindsSelected);
+    const cancel = typeof pubkey !== "string";
+    onContentSettings(
+      cancel ? author : pubkey,
+      hashtagsSelected,
+      kindsSelected,
+    );
   };
 
   return (
@@ -268,7 +274,12 @@ export const PreviewNavigation = ({
           <Avatar
             alt={username}
             src={avatar}
-            sx={{ width: 43, height: 43, order: { xs: 0, sm: 1 } }}
+            sx={{
+              width: 43,
+              height: 43,
+              cursor: "pointer",
+              order: { xs: 0, sm: 1 },
+            }}
             onClick={handleOpen}
           />
         )}

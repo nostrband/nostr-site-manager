@@ -83,7 +83,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   if (!globalThis.document) return;
 
   const addrs = THEMES_PREVIEW.map((t) => t.id).map(
-    (n) => nip19.decode(n).data as nip19.AddressPointer
+    (n) => nip19.decode(n).data as nip19.AddressPointer,
   );
 
   const themeFilter = {
@@ -95,7 +95,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const themeEvents = await ndk.fetchEvents(
     themeFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
   );
 
   themes.push(...themeEvents);
@@ -109,7 +109,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const packageEvents = await ndk.fetchEvents(
     packageFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
   );
 
   themePackages.push(...packageEvents);
@@ -149,7 +149,7 @@ export class Mutex {
 export async function setPreviewSettings(ns: PreviewSettings) {
   let updated = !isEqual(
     omit(settings, ["themeId", "design"]),
-    omit(ns, "themeId", "design")
+    omit(ns, "themeId", "design"),
   );
 
   let newContribs = !site;
@@ -252,7 +252,7 @@ async function fetchAuthed({
       "in",
       Date.now() - start,
       "ms",
-      minedEvent
+      minedEvent,
     );
     authEvent = new NDKEvent(ndk, minedEvent);
   }
@@ -376,13 +376,13 @@ async function loadSite() {
     {
       groupable: false,
     },
-    NDKRelaySet.fromRelayUrls(userRelays.slice(0, 3), ndk)
+    NDKRelaySet.fromRelayUrls(userRelays.slice(0, 3), ndk),
   );
 
   const topTags = new Map<string, number>();
   for (const t of [...events]
     .map((e) =>
-      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1])
+      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1]),
     )
     .flat()) {
     let c = topTags.get(t) || 0;
@@ -406,7 +406,7 @@ function setSiteTheme(theme: NDKEvent) {
   ]);
 }
 
-function getThemePackage(id = '') {
+function getThemePackage(id = "") {
   id = id || settings!.themeId;
 
   const theme = themes.find((t) => eventId(t) === id);
@@ -431,7 +431,8 @@ async function preparePreviewSite() {
     : undefined;
 
   // new site?
-  if (!site || !settings.siteId) {//|| (!site.id && !settings.design)) {
+  if (!site || !settings.siteId) {
+    //|| (!site.id && !settings.design)) {
     // start from zero, prepare site event from input settings,
     // fill everything with defaults
     const event = await prepareSite(ndk, userPubkey, {
@@ -466,7 +467,7 @@ async function preparePreviewSite() {
       event,
       "d",
       // https://stackoverflow.com/a/8084248
-      d_tag + ":" + (Math.random() + 1).toString(36).substring(2, 5)
+      d_tag + ":" + (Math.random() + 1).toString(36).substring(2, 5),
     );
 
     // reset renderer, init store, etc
@@ -548,7 +549,7 @@ async function preparePreviewSite() {
 //   return preparePromise;
 // }
 
-async function getParsedTheme(id = '') {
+async function getParsedTheme(id = "") {
   id = id || settings!.themeId;
 
   const c = parsedThemes.get(id);
@@ -601,7 +602,7 @@ async function renderPreviewHtml(path: string = "/") {
 
 export async function renderPreview(
   iframe: HTMLIFrameElement,
-  path: string = "/"
+  path: string = "/",
 ) {
   if (!iframe) throw new Error("No iframe");
   const html = await renderPreviewHtml(path);
@@ -665,11 +666,11 @@ async function publishPreview() {
 
   // publish
   const r = await site.publish(
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk),
   );
   console.log(
     "published site event to",
-    [...r].map((r) => r.url)
+    [...r].map((r) => r.url),
   );
 
   // return naddr
@@ -706,7 +707,7 @@ async function fetchSite() {
       "#d": [addr.identifier],
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk),
   );
   console.log("loaded site event", siteId, event);
 
@@ -773,7 +774,7 @@ export async function publishPreviewSite() {
         console.log("naddr", naddr);
         console.log("requesting domain", requestedDomain);
         const reply = await fetchWithSession(
-          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`
+          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
         );
         if (reply.status !== 200)
           throw new Error("Failed to reserve domain name");
@@ -801,7 +802,7 @@ export async function publishPreviewSite() {
         const u = new URL(url);
         if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
           const reply = await fetchWithSession(
-            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`
+            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`,
           );
           if (reply.status !== 200) throw new Error("Failed to deploy");
 

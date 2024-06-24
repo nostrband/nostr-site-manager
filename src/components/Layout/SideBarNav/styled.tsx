@@ -1,6 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Button, Drawer } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 export const StyledSieBarContent = styled(Box)(() => ({
   height: "100%",
@@ -32,10 +32,4 @@ export const StyledSideBarBottom = styled(Box)(() => ({
 
 export const StyledSieBarElements = styled(Box)(() => ({
   padding: "32px 16px",
-}));
-
-export const StyledSieBarDrawer = styled(Drawer)(() => ({
-  // "& .MuiPaper-root": {
-  //   background: theme.palette.primary.main,
-  // },
 }));

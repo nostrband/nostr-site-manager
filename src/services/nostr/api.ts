@@ -71,7 +71,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   await ne.sign(signer);
 
   const r = await ne.publish(
-    NDKRelaySet.fromRelayUrls([...userRelays, SITE_RELAY], ndk)
+    NDKRelaySet.fromRelayUrls([...userRelays, SITE_RELAY], ndk),
   );
   if (!r.size) {
     throw new Error("Failed to publish to relays");
@@ -148,7 +148,7 @@ export async function fetchSites() {
         authors: [userPubkey],
       },
       { groupable: false },
-      NDKRelaySet.fromRelayUrls(userRelays, ndk!)
+      NDKRelaySet.fromRelayUrls(userRelays, ndk!),
     );
     console.log("site events", events);
 
@@ -187,7 +187,7 @@ export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
       authors: req,
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls(OUTBOX_RELAYS, ndk)
+    NDKRelaySet.fromRelayUrls(OUTBOX_RELAYS, ndk),
   );
 
   for (const e of events) {
@@ -207,12 +207,12 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
     {
       kinds: [KIND_PROFILE],
       search: text + " sort:popular",
-      limit: 3
+      limit: 3,
     },
     {
       groupable: false,
     },
-    NDKRelaySet.fromRelayUrls(SEARCH_RELAYS, ndk)
+    NDKRelaySet.fromRelayUrls(SEARCH_RELAYS, ndk),
   );
 
   for (const e of events) {

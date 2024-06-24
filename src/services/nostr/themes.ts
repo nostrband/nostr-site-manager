@@ -885,3 +885,10 @@ export async function prefetchThemes(ids: string[]) {
   }
   assetFetcher.load();
 }
+
+export async function checkNpubProDomain(domain: string, naddr: string) {
+  const reply = await fetchWithSession(
+    `${NPUB_PRO_API}/check?domain=${domain}&site=${naddr}`
+  );
+  return reply.status === 200;
+}

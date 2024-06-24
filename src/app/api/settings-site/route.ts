@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
         ogTitle: "",
         xImage: "",
         themeName: "",
-        themePackageId: "",
+        themeId: "",
         contributors: []
       };
     },

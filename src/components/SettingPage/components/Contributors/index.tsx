@@ -1,6 +1,7 @@
 import React from "react";
 import {
   StyledComingSoonProfile,
+  StyledComingSoonTitle,
   StyledHeadSettingBlock,
   StyledSettingBlock,
   StyledSettingCol,
@@ -33,9 +34,9 @@ export const Contributors = () => {
         </StyledAutorProfile>
 
         <StyledComingSoonProfile>
-          <Typography variant="h2">
+          <StyledComingSoonTitle variant="h2">
             <b>Coming soon</b>
-          </Typography>
+          </StyledComingSoonTitle>
         </StyledComingSoonProfile>
       </StyledSettingBlock>
     </StyledSettingCol>

@@ -5,6 +5,7 @@ import {
   StyledTypographySubtitle,
   StyledTypographyTitle,
 } from "@/components/HeadIntroOnboarding/styled";
+import { Button } from "@mui/material";
 
 export const HeadIntroOnboarding = () => {
   return (
@@ -18,8 +19,12 @@ export const HeadIntroOnboarding = () => {
       </StyledTypographyTitle>
 
       <StyledTypographySubtitle variant="subtitle1">
-        Easy to set up. Self-hostable. Just works.
+        Easy setup. Self-hostable. Just works.
       </StyledTypographySubtitle>
+
+      <Button variant="contained" color="decorate" href="#themes-onboarding">
+        Pick a theme to start
+      </Button>
     </StyledContainerIntro>
   );
 };

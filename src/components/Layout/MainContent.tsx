@@ -25,6 +25,6 @@ export const MainContent = styled(
   flexGrow: 1,
   overflow: "auto",
   minHeight: "100%",
-  padding: 32,
+  padding: isDesktop ? 32 : 15,
   paddingTop: isDesktop ? 32 : 64,
 }));

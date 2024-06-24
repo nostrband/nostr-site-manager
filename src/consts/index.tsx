@@ -1,8 +1,7 @@
-import WebTwoToneIcon from "@mui/icons-material/WebTwoTone";
-import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
-import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
+// import WebTwoToneIcon from "@mui/icons-material/WebTwoTone";
+// import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
 import TitleTwoToneIcon from "@mui/icons-material/TitleTwoTone";
-import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
+// import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
 import GridOnTwoToneIcon from "@mui/icons-material/GridOnTwoTone";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import AltRouteTwoToneIcon from "@mui/icons-material/AltRouteTwoTone";
@@ -11,18 +10,7 @@ import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import LinkTwoToneIcon from "@mui/icons-material/LinkTwoTone";
 import ImageTwoToneIcon from "@mui/icons-material/ImageTwoTone";
 import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
-import img1 from "../../public/images/preview-theme/1.png";
-import img2 from "../../public/images/preview-theme/2.png";
-import img3 from "../../public/images/preview-theme/3.png";
-import img4 from "../../public/images/preview-theme/4.png";
-import img5 from "../../public/images/preview-theme/5.png";
-import img6 from "../../public/images/preview-theme/6.png";
-import img7 from "../../public/images/preview-theme/7.png";
-import img8 from "../../public/images/preview-theme/8.png";
-import img9 from "../../public/images/preview-theme/9.png";
-import img10 from "../../public/images/preview-theme/10.png";
-import img11 from "../../public/images/preview-theme/11.png";
-import img12 from "../../public/images/preview-theme/12.png";
+import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
@@ -68,20 +56,15 @@ export const NAV_CONFIG = [
   //   icon: <WebTwoToneIcon />,
   // },
   // {
-  //   title: "Design & theme",
-  //   path: "design",
-  //   icon: <WebTwoToneIcon />,
+  //   title: "Explore",
+  //   path: "explore",
+  //   icon: <LanguageTwoToneIcon />,
   // },
   {
     title: "Settings",
     path: "settings",
     icon: <SettingsTwoToneIcon />,
   },
-  // {
-  //   title: "Explore",
-  //   path: "explore",
-  //   icon: <LanguageTwoToneIcon />,
-  // },
 ];
 
 export const HASH_CONFIG = {

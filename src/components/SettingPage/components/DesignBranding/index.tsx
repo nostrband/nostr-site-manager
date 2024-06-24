@@ -7,7 +7,7 @@ import {
 import { Typography } from "@mui/material";
 import { HASH_CONFIG } from "@/consts";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useRouter } from "next/router";
+
 export const DesignBranding = ({
   siteId,
   themeName,

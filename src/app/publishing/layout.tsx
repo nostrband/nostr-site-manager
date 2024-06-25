@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "Nostr Blog | Publishing",
-  description: "App for managment your site",
+  title: "Npub.pro | Publishing",
+  description: "",
 };
 
 export default async function PublishingLayout({

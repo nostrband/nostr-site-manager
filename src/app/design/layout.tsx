@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "Nostr Blog | Design",
-  description: "App for managment your site",
+  title: "Npub.pro | Design",
+  description: "",
 };
 
 export default async function DesignLayout({

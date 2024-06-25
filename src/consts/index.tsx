@@ -31,6 +31,9 @@ import pawayDemo from "../../public/images/preview-theme/onyx-demo.npub.pro.png"
 import bulletinDemo from "../../public/images/preview-theme/rabble-demo.npub.pro.png";
 import editionDemo from "../../public/images/preview-theme/alanbwt-demo.npub.pro.png";
 import digestDemo from "../../public/images/preview-theme/tony-demo.npub.pro.png";
+import microSimplyDemo from "../../public/images/preview-theme/corndalorian-npub-pro.npub.pro.png";
+import microRubyDemo from "../../public/images/preview-theme/m-t-npub-pro.npub.pro.png";
+import lieblingDemo from "../../public/images/preview-theme/laeserin-npub-pro.npub.pro.png";
 
 // import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
 // import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
@@ -441,6 +444,7 @@ export const TIMEZONE_LIST = [
 ];
 
 export enum TYPES_THEMES_TAG {
+  MICROBLOG = "microblog",
   BLOG = "blog",
   PODCAST = "podcast",
   PHOTOGRAPHY = "photography",
@@ -471,11 +475,32 @@ export const THEMES_PREVIEW = [
     preview: tasteDemo,
   },
   {
+    id: "naddr1qq9x66trwfhj6un4vfusygqgat09ph63mf9y9awuq30rtvm3jqhqd44gq5s4hmpawtwxslxtqspsgqqqwueq49c2sl",
+    tag: "microblog",
+    name: "Micro-ruby",
+    url: "https://m-t-npub-pro.npub.pro/",
+    preview: microRubyDemo,
+  },
+  {
     id: "naddr1qqz8wctkv5pzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg06yarz",
     tag: "podcast",
     name: "Wave",
     url: "https://cd-demo.npub.pro",
     preview: waveDemo,
+  },
+  {
+    id: "naddr1qqxx66trwfhj6umfd4cxc7gzyqyw4hjsmaga5jjz7hwqgh34kdceqtsx665q2g2mas7h9hrg0n9sgqcyqqq8wvsequ5f9",
+    tag: "microblog",
+    name: "Micro-simply",
+    url: "https://corndalorian-npub-pro.npub.pro/",
+    preview: microSimplyDemo,
+  },
+  {
+    id: "naddr1qqyxc6t9vfkxjmn8qgsq36k72r04rkj2gt6acpz7xkehrypwqmt2spfpt0kr6ukudp7vkpqrqsqqqaej4xaw0c",
+    tag: "blog",
+    name: "Liebling",
+    url: "https://laeserin-npub-pro.npub.pro/",
+    preview: lieblingDemo,
   },
   {
     id: "naddr1qqz8yatz0ypzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg05vddj",

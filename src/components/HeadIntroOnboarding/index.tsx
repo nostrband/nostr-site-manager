@@ -22,8 +22,13 @@ export const HeadIntroOnboarding = () => {
         Easy setup. Self-hostable. Just works.
       </StyledTypographySubtitle>
 
-      <Button variant="contained" color="decorate" href="#themes-onboarding">
-        Pick a theme to start
+      <Button
+        size="large"
+        variant="contained"
+        color="decorate"
+        href="#themes-onboarding"
+      >
+        <b>Pick a theme to start</b>
       </Button>
     </StyledContainerIntro>
   );

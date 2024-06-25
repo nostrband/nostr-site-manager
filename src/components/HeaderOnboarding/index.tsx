@@ -3,14 +3,17 @@ import {
   StyledHeaderContainer,
   StyledHeaderOnboarding,
 } from "@/components/HeaderOnboarding/styled";
-import { Typography } from "@mui/material";
-// import { useRouter } from "next/navigation";
+import { Typography, Button } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import { AuthContext } from "@/services/nostr/nostr";
 
 export const HeaderOnboarding = () => {
-  // const router = useRouter();
-  // const handleNavigateToAdmin = () => {
-  //   router.push("/admin");
-  // };
+  const router = useRouter();
+  const authed = useContext(AuthContext);
+  const handleNavigateToAdmin = () => {
+    router.push("/admin");
+  };
 
   return (
     <StyledHeaderOnboarding>
@@ -19,13 +22,15 @@ export const HeaderOnboarding = () => {
           <b>L O G O</b>
         </Typography>
 
-        {/* <Button
-          onClick={handleNavigateToAdmin}
-          color="decorate"
-          variant="contained"
-        >
-          My sites
-        </Button> */}
+        {authed && (
+          <Button
+            onClick={handleNavigateToAdmin}
+            color="decorate"
+            variant="contained"
+          >
+            My sites
+          </Button>
+        )}
       </StyledHeaderContainer>
     </StyledHeaderOnboarding>
   );

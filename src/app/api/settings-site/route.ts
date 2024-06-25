@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
         xImage: "",
         themeName: "",
         themeId: "",
-        contributors: []
+        contributors: [],
       };
     },
   );

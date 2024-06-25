@@ -1,6 +1,9 @@
 // import WebTwoToneIcon from "@mui/icons-material/WebTwoTone";
 // import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
 import TitleTwoToneIcon from "@mui/icons-material/TitleTwoTone";
+import ColorizeTwoToneIcon from "@mui/icons-material/ColorizeTwoTone";
+import SegmentTwoToneIcon from "@mui/icons-material/SegmentTwoTone";
+import TagIcon from "@mui/icons-material/Tag";
 // import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
 import GridOnTwoToneIcon from "@mui/icons-material/GridOnTwoTone";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
@@ -83,6 +86,9 @@ export const HASH_CONFIG = {
   URL: "url",
   ICON: "icon",
   IMAGE: "image",
+  HASHTAGS: "hashtags",
+  KINDS: "kinds",
+  ACCENT_COLOR: "accent-color",
 };
 
 export const SETTINGS_CONFIG = [
@@ -134,6 +140,16 @@ export const SETTINGS_CONFIG = [
         path: HASH_CONFIG.CONTRIBUTORS,
         icon: <AccountCircleTwoToneIcon />,
       },
+      {
+        title: "Hashtags",
+        path: HASH_CONFIG.HASHTAGS,
+        icon: <TagIcon />,
+      },
+      {
+        title: "Kinds",
+        path: HASH_CONFIG.KINDS,
+        icon: <SegmentTwoToneIcon />,
+      },
     ],
   },
   {
@@ -143,6 +159,11 @@ export const SETTINGS_CONFIG = [
         title: "Theme",
         path: HASH_CONFIG.DESIGN_BRANDING,
         icon: <BrushTwoToneIcon />,
+      },
+      {
+        title: "Accent color",
+        path: HASH_CONFIG.ACCENT_COLOR,
+        icon: <ColorizeTwoToneIcon />,
       },
       {
         title: "Icon",

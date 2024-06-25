@@ -97,7 +97,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
 function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
   return sites.map((s) => ({
     id: s.id,
-    themeId: packageThemes.get(s.extensions?.[0].event_id || "") || '',
+    themeId: packageThemes.get(s.extensions?.[0].event_id || "") || "",
     themeName: s.extensions?.[0].petname || "",
     contributors: s.contributor_pubkeys,
     name: s.name,
@@ -150,15 +150,15 @@ async function fetchSiteThemes() {
         .filter((id) => !!id),
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk!)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk!),
   );
 
   for (const e of events) {
-    const a = tv(e, 'a') || '';
+    const a = tv(e, "a") || "";
     const naddr = nip19.naddrEncode({
-      kind: parseInt(a.split(':')[0]),
-      pubkey: a.split(':')[1],
-      identifier: a.split(':')[2]
+      kind: parseInt(a.split(":")[0]),
+      pubkey: a.split(":")[1],
+      identifier: a.split(":")[2],
     });
     packageThemes.set(e.id, naddr);
   }

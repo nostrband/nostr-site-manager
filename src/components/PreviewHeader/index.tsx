@@ -1,6 +1,6 @@
 "use client";
 import { StyledWrapper } from "@/components/PreviewHeader/styled";
-import {OutlinedInput, Select, Typography} from "@mui/material";
+import { OutlinedInput, Select, Typography } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useRouter, useSearchParams } from "next/navigation";
 import { THEMES_PREVIEW, TYPES_THEMES_TAG } from "@/consts";
@@ -17,10 +17,12 @@ export const PreviewHeader = ({
   const tag = params.get("tag") || "";
 
   const handleChange = (value: string) => {
-    const filteredThemeIds = (value
-      ? THEMES_PREVIEW.filter((t) => t.tag === value)
-      : THEMES_PREVIEW).map(t => t.id);
-    const newThemeId = filteredThemeIds.includes(themeId) ? themeId : filteredThemeIds[0];
+    const filteredThemeIds = (
+      value ? THEMES_PREVIEW.filter((t) => t.tag === value) : THEMES_PREVIEW
+    ).map((t) => t.id);
+    const newThemeId = filteredThemeIds.includes(themeId)
+      ? themeId
+      : filteredThemeIds[0];
     console.log("newThemeId", newThemeId, filteredThemeIds.length);
 
     router.push(
@@ -33,14 +35,16 @@ export const PreviewHeader = ({
   return (
     <>
       <StyledWrapper>
-        <Typography variant="body1">Theme: <b>{themeName}</b></Typography>
+        <Typography variant="body1">
+          Theme: <b>{themeName}</b>
+        </Typography>
 
         <Select
           displayEmpty
           value={tag}
           size="small"
           input={<OutlinedInput />}
-          renderValue={(selected) => {
+          renderValue={(selected: string) => {
             if (selected === "") {
               return "All themes";
             }

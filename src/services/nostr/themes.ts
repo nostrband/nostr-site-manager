@@ -118,32 +118,66 @@ const prefetchThemesPromise = (async function prefetchThemes() {
 })();
 
 // https://stackoverflow.com/a/51086893
-export class Mutex {
-  private current: Promise<void> = Promise.resolve();
-  lock = (): Promise<() => void> => {
-    let _resolve: () => void;
-    const p = new Promise<void>((resolve) => {
-      _resolve = () => resolve();
-    });
-    // Caller gets a promise that resolves when the current outstanding
-    // lock resolves
-    const rv = this.current.then(() => _resolve);
-    // Don't allow the next request until the new promise is done
-    this.current = p;
-    // Return the new promise
-    return rv;
-  };
+// export class Mutex {
+//   private current: Promise<void> = Promise.resolve();
+//   lock = (): Promise<() => void> => {
+//     let _resolve: () => void;
+//     const p = new Promise<void>((resolve) => {
+//       _resolve = () => resolve();
+//     });
+//     // Caller gets a promise that resolves when the current outstanding
+//     // lock resolves
+//     const rv = this.current.then(() => _resolve);
+//     // Don't allow the next request until the new promise is done
+//     this.current = p;
+//     // Return the new promise
+//     return rv;
+//   };
 
-  async run(cb: () => Promise<any>) {
-    const unlock = await this.lock();
+//   async run(cb: () => Promise<any>) {
+//     const unlock = await this.lock();
+//     try {
+//       const r = await cb();
+//       unlock();
+//       return r;
+//     } catch (e) {
+//       unlock();
+//       throw e;
+//     }
+//   }
+// }
+
+type MutexEntry = {
+  cb: () => Promise<any>;
+  ok: (r: any) => void;
+  err: (r: any) => void;
+};
+
+export class Mutex {
+  private queue: MutexEntry[] = [];
+  private running = false;
+
+  private async execute() {
+    const { cb, ok, err } = this.queue.shift()!;
+    this.running = true;
     try {
-      const r = await cb();
-      unlock();
-      return r;
+      ok(await cb());
     } catch (e) {
-      unlock();
-      throw e;
+      err(e);
     }
+    this.running = false;
+    if (this.queue.length > 0) this.execute();
+  }
+
+  public hasPending() {
+    return this.queue.length > 0;
+  }
+
+  public async run(cb: () => Promise<any>) {
+    return new Promise(async (ok, err) => {
+      this.queue.push({ cb, ok, err });
+      if (!this.running && this.queue.length === 1) this.execute();
+    });
   }
 }
 
@@ -385,7 +419,9 @@ export async function fetchTopHashtags(pubkeys: string[]) {
     c++;
     topTags.set(t, c);
   }
-  const tags = [...topTags.entries()].sort((a, b) => b[1] - a[1]).map((t) => t[0]);
+  const tags = [...topTags.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map((t) => t[0]);
   console.log("loaded tags", tags);
   return tags;
 }

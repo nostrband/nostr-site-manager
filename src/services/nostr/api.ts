@@ -100,6 +100,9 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
     themeId: packageThemes.get(s.extensions?.[0].event_id || "") || "",
     themeName: s.extensions?.[0].petname || "",
     contributors: s.contributor_pubkeys,
+    hashtags: s.include_tags?.filter(t => t.tag === 't').map(t => "#"+t.value) || [],
+    kinds: s.include_kinds?.map(k => parseInt(k)) || [1],
+    accentColor: s.accent_color || "",
     name: s.name,
     title: s.title || "",
     description: s.description || "",
@@ -122,10 +125,6 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
     fDescription: "",
     socialAccountFaceBook: "",
     socialAccountX: "",
-
-    hashtags: [],
-    kinds: [],
-    accentColor: "",
     navigation: {
       primary:
         s.navigation?.map((n) => ({

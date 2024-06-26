@@ -14,15 +14,17 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
-import { getPreviewTopHashtags } from "@/services/nostr/themes";
+import { fetchTopHashtags, getPreviewTopHashtags } from "@/services/nostr/themes";
 
 interface ITitleDescription extends IBaseSetting {
   selectedHashtags: string[];
+  contributors: string[];
   handleChangeHashtags: (value: string | string[]) => void;
 }
 
 export const Hashtags = ({
   handleChangeHashtags,
+  contributors,
   selectedHashtags,
   submitForm,
   isLoading,
@@ -43,16 +45,16 @@ export const Hashtags = ({
 
   const getHashtags = useCallback(async () => {
     // const dataHashtags = await getPreviewTopHashtags();
-    const dataHashtags = [
-      "#cooking",
-      "#photography",
-      "#nostr",
-      "#travel",
-      "#grownostr",
-    ];
-
-    setHashtags(dataHashtags);
-  }, []);
+    // const dataHashtags = [
+    //   "#cooking",
+    //   "#photography",
+    //   "#nostr",
+    //   "#travel",
+    //   "#grownostr",
+    // ];
+    const hts = await fetchTopHashtags(contributors);
+    setHashtags(hts);
+  }, [setHashtags, contributors]);
 
   useEffect(() => {
     getHashtags().then();
@@ -72,7 +74,7 @@ export const Hashtags = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          List hashtags for choice
+          Hashtags of published posts
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">

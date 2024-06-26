@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  StyledComingSoonProfile,
-  StyledComingSoonTitle,
   StyledHeadSettingBlock,
   StyledSettingBlock,
   StyledSettingCol,
@@ -10,22 +8,19 @@ import { Box, Button, Typography } from "@mui/material";
 import { HASH_CONFIG } from "@/consts";
 import Avatar from "@mui/material/Avatar";
 import { StyledAutorProfile } from "@/components/SettingPage/components/Contributors/styled";
-import { NDKEvent } from "@nostr-dev-kit/ndk/dist";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
-import { userPubkey } from "@/services/nostr/nostr";
-import { useParams, useSearchParams } from "next/navigation";
 import { nip19 } from "nostr-tools";
 import { ModalAuthor } from "@/components/ModalAuthor";
-import LoadingButton from "@mui/lab/LoadingButton";
 
-export const Contributors = ({ siteId }) => {
+export const Contributors = ({ contributors, handleChangeContributors }: {
+  contributors: string[];
+  handleChangeContributors: (pubkeys: string[]) => void;
+}) => {
   const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
   const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
-  const [contributor, setContributor] = useState<string | undefined>(
-    siteId ? undefined : userPubkey,
-  );
 
-  const pubkey = contributor || userPubkey;
+  const pubkey = contributors?.[0] || '';
 
   let meta = undefined;
   if (author) {
@@ -34,23 +29,24 @@ export const Contributors = ({ siteId }) => {
     } catch {}
   }
 
-  const npub = nip19.npubEncode(pubkey).substring(0, 8) + "...";
+  const npub = pubkey ? nip19.npubEncode(pubkey).substring(0, 8) + "..." : "";
   const name = meta?.display_name || meta?.name || npub;
   const nip05 = meta?.nip05 || meta?.name || npub;
   const img = meta?.picture || "";
 
   const handleAuthor = (pubkey: string | any) => {
     setOpenModalAuthor(false);
-    setContributor(pubkey);
+    handleChangeContributors([pubkey]);
   };
   const handleOpenModalAuthor = () => {
     setOpenModalAuthor(true);
   };
 
   useEffect(() => {
-    fetchProfiles([pubkey])
-      .then((p) => (p.length ? setAuthor(p[0]) : []))
-      .catch(() => setAuthor(undefined));
+    if (pubkey)
+      fetchProfiles([pubkey])
+        .then((p) => (p.length ? setAuthor(p[0]) : []))
+        .catch(() => setAuthor(undefined));
   }, [pubkey]);
 
   return (

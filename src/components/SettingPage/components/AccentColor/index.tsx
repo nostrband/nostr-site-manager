@@ -42,7 +42,7 @@ export const AccentColor = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Choice color for accent elements
+          Accent color for theme and PWA
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">

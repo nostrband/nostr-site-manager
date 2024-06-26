@@ -151,6 +151,10 @@ export const SettingPage = () => {
     setFieldValue("hashtags", value);
   };
 
+  const handleChangeContributors = (pubkeys: string[]) => {
+    setFieldValue("contributors", pubkeys);
+  };
+
   const handleChangeKinds = (value: number | number[]) => {
     setFieldValue("kinds", value);
   };
@@ -176,6 +180,7 @@ export const SettingPage = () => {
     if (data) {
       setValues(data);
       setInitialData(data);
+      console.log("initial values", data);
     }
   }, [setValues, data]);
 
@@ -219,9 +224,14 @@ export const SettingPage = () => {
         isLoading={isLoading}
       /> */}
 
-      <Contributors siteId={siteId} />
+      <Contributors 
+        handleChangeContributors={handleChangeContributors}
+        contributors={values.contributors} 
+      />
+
       <Hashtags
         handleChangeHashtags={handleChangeHashtags}
+        contributors={values.contributors}
         selectedHashtags={values.hashtags}
         submitForm={submitForm}
         isLoading={isLoading}

@@ -69,7 +69,7 @@ export const Kinds = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          List Kinds for choice
+          Published event kinds
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">

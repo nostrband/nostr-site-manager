@@ -43,6 +43,9 @@ export async function GET(req: NextRequest) {
         themeName: "",
         themeId: "",
         contributors: [],
+        hashtags: [],
+        kinds: [],
+        accentColor: "",
       };
     },
   );

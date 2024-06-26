@@ -69,7 +69,7 @@ export const getSettingsSite = async (
   try {
     const site = (await fetchSites()).find((s) => s.id === id)!;
     console.log("site", site);
-    return { ...site, hashtags: [], kinds: [], accentColor: "#ececec" }; // FIXME remove, add empty hashtags for test and accentColor
+    return { ...site }; // FIXME remove, add empty hashtags for test and accentColor
     // const res: AxiosResponse<any> = await ApiClient.get(
     //   `/settings-site?id=${id}`,
     // );

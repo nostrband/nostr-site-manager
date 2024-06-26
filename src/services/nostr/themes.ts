@@ -10,6 +10,7 @@ import {
   SiteAddr,
   Theme,
   eventId,
+  fetchOutboxRelays,
   getProfileSlug,
   parseAddr,
   prepareSite,
@@ -83,7 +84,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   if (!globalThis.document) return;
 
   const addrs = THEMES_PREVIEW.map((t) => t.id).map(
-    (n) => nip19.decode(n).data as nip19.AddressPointer,
+    (n) => nip19.decode(n).data as nip19.AddressPointer
   );
 
   const themeFilter = {
@@ -95,7 +96,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const themeEvents = await ndk.fetchEvents(
     themeFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
   );
 
   themes.push(...themeEvents);
@@ -109,7 +110,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const packageEvents = await ndk.fetchEvents(
     packageFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
   );
 
   themePackages.push(...packageEvents);
@@ -149,7 +150,7 @@ export class Mutex {
 export async function setPreviewSettings(ns: PreviewSettings) {
   let updated = !isEqual(
     omit(settings, ["themeId", "design"]),
-    omit(ns, "themeId", "design"),
+    omit(ns, "themeId", "design")
   );
 
   let newContribs = !site;
@@ -252,7 +253,7 @@ async function fetchAuthed({
       "in",
       Date.now() - start,
       "ms",
-      minedEvent,
+      minedEvent
     );
     authEvent = new NDKEvent(ndk, minedEvent);
   }
@@ -348,6 +349,47 @@ function setSite(s: NDKEvent) {
   };
 }
 
+export async function fetchTopHashtags(pubkeys: string[]) {
+  const relays =
+    pubkeys.length === 1 && pubkeys[0] === userPubkey
+      ? userRelays.slice(0, 3)
+      : await fetchOutboxRelays(ndk, pubkeys);
+
+  console.log("loading tags");
+  const events = await ndk.fetchEvents(
+    [
+      {
+        authors: pubkeys,
+        kinds: [1],
+        limit: 50,
+      },
+      {
+        authors: pubkeys,
+        kinds: [30023],
+        limit: 50,
+      },
+    ],
+    {
+      groupable: false,
+    },
+    NDKRelaySet.fromRelayUrls(relays, ndk)
+  );
+
+  const topTags = new Map<string, number>();
+  for (const t of [...events]
+    .map((e) =>
+      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1])
+    )
+    .flat()) {
+    let c = topTags.get(t) || 0;
+    c++;
+    topTags.set(t, c);
+  }
+  const tags = [...topTags.entries()].sort((a, b) => b[1] - a[1]).map((t) => t[0]);
+  console.log("loaded tags", tags);
+  return tags;
+}
+
 async function loadSite() {
   // to figure out the hashtags and navigation we have to load the
   // site posts first, this is kinda ugly and slow but easier to reuse
@@ -356,42 +398,9 @@ async function loadSite() {
   store = new NostrStore("preview", ndk, info, parser);
   await store.load(50);
 
-  console.log("tagsStore", tags);
   if (tags) return;
 
-  console.log("loading tags");
-  const events = await ndk.fetchEvents(
-    [
-      {
-        authors: info.contributor_pubkeys,
-        kinds: [1],
-        limit: 50,
-      },
-      {
-        authors: info.contributor_pubkeys,
-        kinds: [30023],
-        limit: 50,
-      },
-    ],
-    {
-      groupable: false,
-    },
-    NDKRelaySet.fromRelayUrls(userRelays.slice(0, 3), ndk),
-  );
-
-  const topTags = new Map<string, number>();
-  for (const t of [...events]
-    .map((e) =>
-      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1]),
-    )
-    .flat()) {
-    let c = topTags.get(t) || 0;
-    c++;
-    topTags.set(t, c);
-  }
-  tags = [...topTags.entries()].sort((a, b) => b[1] - a[1]).map((t) => t[0]);
-
-  console.log("loaded tags", tags);
+  tags = await fetchTopHashtags(info.contributor_pubkeys);
 }
 
 function setSiteTheme(theme: NDKEvent) {
@@ -471,7 +480,7 @@ async function preparePreviewSite() {
       event,
       "d",
       // https://stackoverflow.com/a/8084248
-      d_tag + ":" + (Math.random() + 1).toString(36).substring(2, 5),
+      d_tag + ":" + (Math.random() + 1).toString(36).substring(2, 5)
     );
 
     // reset renderer, init store, etc
@@ -606,7 +615,7 @@ async function renderPreviewHtml(path: string = "/") {
 
 export async function renderPreview(
   iframe: HTMLIFrameElement,
-  path: string = "/",
+  path: string = "/"
 ) {
   if (!iframe) throw new Error("No iframe");
   const html = await renderPreviewHtml(path);
@@ -670,11 +679,11 @@ async function publishPreview() {
 
   // publish
   const r = await site.publish(
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk)
   );
   console.log(
     "published site event to",
-    [...r].map((r) => r.url),
+    [...r].map((r) => r.url)
   );
 
   // return naddr
@@ -711,7 +720,7 @@ async function fetchSite() {
       "#d": [addr.identifier],
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
   );
   console.log("loaded site event", siteId, event);
 
@@ -778,7 +787,7 @@ export async function publishPreviewSite() {
         console.log("naddr", naddr);
         console.log("requesting domain", requestedDomain);
         const reply = await fetchWithSession(
-          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
+          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`
         );
         if (reply.status !== 200)
           throw new Error("Failed to reserve domain name");
@@ -806,7 +815,7 @@ export async function publishPreviewSite() {
         const u = new URL(url);
         if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
           const reply = await fetchWithSession(
-            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`,
+            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`
           );
           if (reply.status !== 200) throw new Error("Failed to deploy");
 

@@ -29,8 +29,16 @@ export const ThemesOnboarding = () => {
     activeTag === tag ? "decorate" : "lightInfo";
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" id="themes-onboarding">
       <StyledButtonGroup>
+      <StyledButton
+          color={getColor(TYPES_THEMES_TAG.MICROBLOG)}
+          variant="contained"
+          onClick={() => handleChoise(TYPES_THEMES_TAG.MICROBLOG)}
+        >
+          Microblog
+        </StyledButton>
+
         <StyledButton
           color={getColor(TYPES_THEMES_TAG.BLOG)}
           variant="contained"

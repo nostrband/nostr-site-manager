@@ -6,6 +6,7 @@ import {
   Box,
   FormControl,
   FormControlProps,
+  Typography,
 } from "@mui/material";
 
 export const StyledList = styled((props: ListProps) => {
@@ -16,17 +17,23 @@ export const StyledList = styled((props: ListProps) => {
   margin: "auto",
 });
 
-export const StyledHeadSettingBlock = styled(Box)(() => ({
+export const StyledHeadSettingBlock = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "start",
   marginBottom: 16,
+  [theme.breakpoints.down("lg")]: {
+    marginBottom: 8,
+  },
 }));
 
-export const StyledSettingBlock = styled(Box)(() => ({
+export const StyledSettingBlock = styled(Box)(({ theme }) => ({
   padding: 30,
   border: "1px solid #dfdfdf",
   borderRadius: "10px",
+  [theme.breakpoints.down("lg")]: {
+    padding: 10,
+  },
 }));
 
 export const StyledSettingCol = styled(Box)(() => ({
@@ -41,9 +48,12 @@ export const StyledFormControl = styled((props: FormControlProps) => {
   maxWidth: 300,
 });
 
-export const StyledComingSoonProfile = styled(Box)(() => ({
+export const StyledComingSoonProfile = styled(Box)(({ theme }) => ({
   display: "flex",
   height: 150,
+  [theme.breakpoints.down("lg")]: {
+    height: 90,
+  },
   marginTop: 20,
   width: "100%",
   gap: 20,
@@ -66,5 +76,11 @@ export const StyledComingSoonProfile = styled(Box)(() => ({
     bottom: 0,
     border: "inherit",
     borderImage: "inherit",
+  },
+}));
+
+export const StyledComingSoonTitle = styled(Typography)(({ theme }) => ({
+  [theme.breakpoints.down("lg")]: {
+    fontSize: 30,
   },
 }));

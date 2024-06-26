@@ -65,4 +65,3 @@ export async function onAuth(e: any) {
 
   return authed;
 }
-

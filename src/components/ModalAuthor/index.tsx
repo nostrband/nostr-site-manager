@@ -23,25 +23,6 @@ import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { nip19 } from "nostr-tools";
 import { fetchProfiles, searchProfiles } from "@/services/nostr/api";
 
-const fakeData = [
-  {
-    name: "Mark Twen",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt3ul-6qH-3cEAzaOPyBLyb6_kxOyIH-KBvA&s",
-  },
-  {
-    name: "Pushkin",
-    img: "https://i.guim.co.uk/img/media/cbeae20cc62776fbbdf46b367b1a9d5799eb7e27/0_342_3757_2254/master/3757.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=a63e9891be403d8894542cb477e5b611",
-  },
-  {
-    name: "Marko polo",
-    img: "https://hips.hearstapps.com/hmg-prod/images/gettyimages-168967170.jpg?crop=0.608xw:0.506xh;0.192xw,0.170xh&resize=1200:*",
-  },
-  {
-    name: "Kolumb",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5aqGZJHnAwFP1dRQ1i-hDmGgQEuI4WgDy_g&s",
-  },
-];
-
 export const ModalAuthor = ({
   isOpen,
   pubkey,
@@ -103,7 +84,7 @@ export const ModalAuthor = ({
 
   const handleChangeAuthor = (
     _: SyntheticEvent<Element, Event>,
-    author: { pubkey: string; name: string; img: string } | string | null
+    author: { pubkey: string; name: string; img: string } | string | null,
   ) => {
     if (author !== null && typeof author !== "string") {
       handleClose(author.pubkey);
@@ -135,7 +116,7 @@ export const ModalAuthor = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
+      <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
           Author
           <Fab
@@ -171,7 +152,7 @@ export const ModalAuthor = ({
             typeof option === "string" ? (
               option
             ) : (
-              <ListItem {...props}>
+              <ListItem {...props} key={option.pubkey}>
                 <ListItemAvatar>
                   <Avatar src={option.img} alt={option.name} />
                 </ListItemAvatar>

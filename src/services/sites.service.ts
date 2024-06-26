@@ -47,6 +47,21 @@ export type ReturnSettingsSiteDataType = {
     primary: { title: string; link: string; id: string }[];
     secondary: { title: string; link: string; id: string }[];
   };
+
+  // config: {
+  //   posts_per_page: number;
+  // }
+
+  // custom: {
+
+  // }
+
+  // custom_options: {
+  //   name: string;
+  //   type: string;
+  //   default: string;
+  //   options: string[];
+  // }[];
 };
 
 export const getSites = async (): Promise<ReturnSitesDataType[]> => {

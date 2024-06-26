@@ -1,8 +1,7 @@
-import WebTwoToneIcon from "@mui/icons-material/WebTwoTone";
-import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
-import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
+// import WebTwoToneIcon from "@mui/icons-material/WebTwoTone";
+// import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
 import TitleTwoToneIcon from "@mui/icons-material/TitleTwoTone";
-import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
+// import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
 import GridOnTwoToneIcon from "@mui/icons-material/GridOnTwoTone";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import AltRouteTwoToneIcon from "@mui/icons-material/AltRouteTwoTone";
@@ -11,18 +10,7 @@ import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import LinkTwoToneIcon from "@mui/icons-material/LinkTwoTone";
 import ImageTwoToneIcon from "@mui/icons-material/ImageTwoTone";
 import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
-import img1 from "../../public/images/preview-theme/1.png";
-import img2 from "../../public/images/preview-theme/2.png";
-import img3 from "../../public/images/preview-theme/3.png";
-import img4 from "../../public/images/preview-theme/4.png";
-import img5 from "../../public/images/preview-theme/5.png";
-import img6 from "../../public/images/preview-theme/6.png";
-import img7 from "../../public/images/preview-theme/7.png";
-import img8 from "../../public/images/preview-theme/8.png";
-import img9 from "../../public/images/preview-theme/9.png";
-import img10 from "../../public/images/preview-theme/10.png";
-import img11 from "../../public/images/preview-theme/11.png";
-import img12 from "../../public/images/preview-theme/12.png";
+import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
@@ -43,6 +31,9 @@ import pawayDemo from "../../public/images/preview-theme/onyx-demo.npub.pro.png"
 import bulletinDemo from "../../public/images/preview-theme/rabble-demo.npub.pro.png";
 import editionDemo from "../../public/images/preview-theme/alanbwt-demo.npub.pro.png";
 import digestDemo from "../../public/images/preview-theme/tony-demo.npub.pro.png";
+import microSimplyDemo from "../../public/images/preview-theme/corndalorian-npub-pro.npub.pro.png";
+import microRubyDemo from "../../public/images/preview-theme/m-t-npub-pro.npub.pro.png";
+import lieblingDemo from "../../public/images/preview-theme/laeserin-npub-pro.npub.pro.png";
 
 // import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
 // import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
@@ -68,20 +59,15 @@ export const NAV_CONFIG = [
   //   icon: <WebTwoToneIcon />,
   // },
   // {
-  //   title: "Design & theme",
-  //   path: "design",
-  //   icon: <WebTwoToneIcon />,
+  //   title: "Explore",
+  //   path: "explore",
+  //   icon: <LanguageTwoToneIcon />,
   // },
   {
     title: "Settings",
     path: "settings",
     icon: <SettingsTwoToneIcon />,
   },
-  // {
-  //   title: "Explore",
-  //   path: "explore",
-  //   icon: <LanguageTwoToneIcon />,
-  // },
 ];
 
 export const HASH_CONFIG = {
@@ -458,6 +444,7 @@ export const TIMEZONE_LIST = [
 ];
 
 export enum TYPES_THEMES_TAG {
+  MICROBLOG = "microblog",
   BLOG = "blog",
   PODCAST = "podcast",
   PHOTOGRAPHY = "photography",
@@ -488,11 +475,32 @@ export const THEMES_PREVIEW = [
     preview: tasteDemo,
   },
   {
+    id: "naddr1qq9x66trwfhj6un4vfusygqgat09ph63mf9y9awuq30rtvm3jqhqd44gq5s4hmpawtwxslxtqspsgqqqwueq49c2sl",
+    tag: "microblog",
+    name: "Micro-ruby",
+    url: "https://m-t-npub-pro.npub.pro/",
+    preview: microRubyDemo,
+  },
+  {
     id: "naddr1qqz8wctkv5pzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg06yarz",
     tag: "podcast",
     name: "Wave",
     url: "https://cd-demo.npub.pro",
     preview: waveDemo,
+  },
+  {
+    id: "naddr1qqxx66trwfhj6umfd4cxc7gzyqyw4hjsmaga5jjz7hwqgh34kdceqtsx665q2g2mas7h9hrg0n9sgqcyqqq8wvsequ5f9",
+    tag: "microblog",
+    name: "Micro-simply",
+    url: "https://corndalorian-npub-pro.npub.pro/",
+    preview: microSimplyDemo,
+  },
+  {
+    id: "naddr1qqyxc6t9vfkxjmn8qgsq36k72r04rkj2gt6acpz7xkehrypwqmt2spfpt0kr6ukudp7vkpqrqsqqqaej4xaw0c",
+    tag: "blog",
+    name: "Liebling",
+    url: "https://laeserin-npub-pro.npub.pro/",
+    preview: lieblingDemo,
   },
   {
     id: "naddr1qqz8yatz0ypzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg05vddj",

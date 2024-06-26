@@ -53,6 +53,9 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
     primary: [],
     secondary: [],
   },
+  // config: {
+  //   posts_per_page: 0,
+  // }
 };
 
 export const SettingPage = () => {

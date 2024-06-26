@@ -19,6 +19,9 @@ import { URL } from "@/components/SettingPage/components/URL";
 import { Navigation } from "@/components/SettingPage/components/Navigation";
 import { editSite } from "@/services/nostr/api";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
+import { Hashtags } from "@/components/SettingPage/components/Hashtags";
+import { AccentColor } from "@/components/SettingPage/components/AccentColor";
+import { Kinds } from "@/components/SettingPage/components/Kinds";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -53,9 +56,9 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
     primary: [],
     secondary: [],
   },
-  // config: {
-  //   posts_per_page: 0,
-  // }
+  hashtags: [],
+  kinds: [],
+  accentColor: "",
 };
 
 export const SettingPage = () => {
@@ -144,6 +147,22 @@ export const SettingPage = () => {
     });
   };
 
+  const handleChangeHashtags = (value: string | string[]) => {
+    setFieldValue("hashtags", value);
+  };
+
+  const handleChangeContributors = (pubkeys: string[]) => {
+    setFieldValue("contributors", pubkeys);
+  };
+
+  const handleChangeKinds = (value: number | number[]) => {
+    setFieldValue("kinds", value);
+  };
+
+  const handleChangeColor = (color: string) => {
+    setFieldValue("accentColor", color);
+  };
+
   const handleRemoveLinkNavigation = (input: {
     id: string;
     type: "primary" | "secondary";
@@ -161,16 +180,17 @@ export const SettingPage = () => {
     if (data) {
       setValues(data);
       setInitialData(data);
+      console.log("initial values", data);
     }
   }, [setValues, data]);
 
-  if (isLoadingSetting || isFetching) {
-    return (
-      <SpinerWrap>
-        <SpinerCircularProgress />
-      </SpinerWrap>
-    );
-  }
+  // if (isLoadingSetting || isFetching) {
+  //   return (
+  //     <SpinerWrap>
+  //       <SpinerCircularProgress />
+  //     </SpinerWrap>
+  //   );
+  // }
 
   return (
     <>
@@ -204,16 +224,41 @@ export const SettingPage = () => {
         isLoading={isLoading}
       /> */}
 
-      <Contributors />
+      <Contributors 
+        handleChangeContributors={handleChangeContributors}
+        contributors={values.contributors} 
+      />
+
+      <Hashtags
+        handleChangeHashtags={handleChangeHashtags}
+        contributors={values.contributors}
+        selectedHashtags={values.hashtags}
+        submitForm={submitForm}
+        isLoading={isLoading}
+      />
+
+      <Kinds
+        handleChangeKinds={handleChangeKinds}
+        selectedKinds={values.kinds}
+        submitForm={submitForm}
+        isLoading={isLoading}
+      />
 
       <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
         Design
       </Typography>
 
-      <DesignBranding 
+      <DesignBranding
         siteId={values.id}
         themeName={values.themeName}
         themeId={values.themeId}
+      />
+
+      <AccentColor
+        handleChangeColor={handleChangeColor}
+        color={values.accentColor}
+        submitForm={submitForm}
+        isLoading={isLoading}
       />
 
       <Icon

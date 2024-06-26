@@ -2,12 +2,7 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { useSearchParams, redirect, useRouter } from "next/navigation";
 import TuneIcon from "@mui/icons-material/Tune";
-import {
-  Fab,
-  Drawer,
-  Button,
-  Box,
-} from "@mui/material";
+import { Fab, Drawer, Button, Box } from "@mui/material";
 import React, {
   useCallback,
   useContext,

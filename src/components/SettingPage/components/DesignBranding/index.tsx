@@ -18,10 +18,10 @@ export const DesignBranding = ({
   themeId: string;
 }) => {
   // FIXME use router
-//  const router = useRouter();
+  //  const router = useRouter();
 
   const switchTheme = () => {
-//    console.log(`/preview?siteId=${siteId}&themeId=${themeId}`);
+    //    console.log(`/preview?siteId=${siteId}&themeId=${themeId}`);
     window.open(`/preview?siteId=${siteId}&themeId=${themeId}`);
   };
 

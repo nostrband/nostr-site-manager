@@ -123,6 +123,9 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
     socialAccountFaceBook: "",
     socialAccountX: "",
 
+    hashtags: [],
+    kinds: [],
+    accentColor: "",
     navigation: {
       primary:
         s.navigation?.map((n) => ({

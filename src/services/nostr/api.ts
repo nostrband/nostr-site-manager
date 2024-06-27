@@ -12,7 +12,6 @@ import {
   OUTBOX_RELAYS,
   Site,
   SiteAddr,
-  eventId,
   tv,
 } from "libnostrsite";
 import {
@@ -24,20 +23,50 @@ import {
   SEARCH_RELAYS,
   srm,
   publishSite,
+  fetchWithSession,
 } from "./nostr";
 import { nip19 } from "nostr-tools";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
+import { NPUB_PRO_API, NPUB_PRO_DOMAIN } from "@/consts";
 
 const KIND_SITE = 30512;
 
 const sites: Site[] = [];
 const packageThemes = new Map<string, string>();
 const parser = new NostrParser("http://localhost/");
+let sitesPromise: Promise<void> | undefined = undefined;
 
 export async function editSite(data: ReturnSettingsSiteDataType) {
   const index = sites.findIndex((s) => s.id === data.id);
   if (index < 0) throw new Error("Unknown site");
   const s = sites[index];
+
+  const oldUrl = tv(s.event, "r");
+
+  // need to re-deploy?
+  let domain = "";
+  let oldDomain = "";
+  try {
+    const u = new URL(data.url);
+    if (!u.pathname.endsWith("/")) throw new Error("Path must end with /");
+    if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
+      const sub = u.hostname.split("." + NPUB_PRO_DOMAIN)[0];
+      if (!sub || sub.includes(".")) throw new Error("Bad sub domain");
+      if (u.search) throw new Error("No query string allowed");
+      if (u.pathname !== "/")
+        throw new Error("Only / path allowed on " + NPUB_PRO_DOMAIN);
+      domain = sub;
+    }
+    if (oldUrl) {
+      const ou = new URL(oldUrl);
+      if (ou.hostname.endsWith("." + NPUB_PRO_DOMAIN))
+        oldDomain = ou.hostname.split("." + NPUB_PRO_DOMAIN)[0];
+      if (oldDomain === domain) oldDomain = "";
+    }
+  } catch (e) {
+    console.log("url error", data.url, e);
+    throw e;
+  }
 
   const e = s.event;
   stv(e, "name", data.name);
@@ -71,7 +100,38 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
     e.tags.push(["p", p]);
   }
 
-  await publishSite(new NDKEvent(ndk, e), [...userRelays, SITE_RELAY]);
+  const relays = [...userRelays, SITE_RELAY];
+  const naddr = nip19.naddrEncode({
+    identifier: tv(e, "d") || "",
+    pubkey: e.pubkey,
+    kind: e.kind || KIND_SITE,
+    relays,
+  });
+
+  // ensure new domain is reserved
+  if (domain && domain !== oldDomain) {
+    const reply = await fetchWithSession(
+      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`
+    );
+    if (reply.status !== 200) throw new Error("Failed to reserve");
+    const r = await reply.json();
+    console.log(Date.now(), "reserved", r);
+  }
+
+  // publish new site event
+  await publishSite(new NDKEvent(ndk, e), relays);
+
+  // redeploy if domain changed, also release the old domain
+  if (oldDomain && oldDomain !== domain) {
+    const reply = await fetchWithSession(
+      // from=oldDomain - delete the old site after 7 days
+      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`
+    );
+    if (reply.status !== 200) throw new Error("Failed to deploy");
+
+    const r = await reply.json();
+    console.log(Date.now(), "deployed", r);
+  }
 
   // parse updated site back
   sites[index] = parseSite(e);
@@ -167,36 +227,46 @@ export async function fetchSites() {
   console.log("fetchSites", userPubkey);
   if (!userPubkey) throw new Error("Auth please");
 
+  if (sitesPromise) await sitesPromise;
+
   if (!sites.length) {
-    const events = await ndk.fetchEvents(
-      [
-        // owned
-        {
-          // @ts-ignore
-          kinds: [KIND_SITE],
-          authors: [userPubkey],
-        },
-        // delegated
-        {
-          authors: [SERVER_PUBKEY],
-          // @ts-ignore
-          kinds: [KIND_SITE],
-          "#u": [userPubkey],
-        },
-      ],
-      { groupable: false },
-      NDKRelaySet.fromRelayUrls(userRelays, ndk!)
-    );
-    console.log("site events", events);
 
-    // sort by timestamp desc
-    const array = [...events.values()].sort(
-      (a, b) => b.created_at! - a.created_at!
-    );
+    sitesPromise = new Promise<void>(async (ok) => {
+      const events = await ndk.fetchEvents(
+        [
+          // owned
+          {
+            // @ts-ignore
+            kinds: [KIND_SITE],
+            authors: [userPubkey],
+          },
+          // delegated
+          {
+            authors: [SERVER_PUBKEY],
+            // @ts-ignore
+            kinds: [KIND_SITE],
+            "#u": [userPubkey],
+          },
+        ],
+        { groupable: false },
+        NDKRelaySet.fromRelayUrls(userRelays, ndk!)
+      );
+      console.log("site events", events);
+  
+      // sort by timestamp desc
+      const array = [...events.values()].sort(
+        (a, b) => b.created_at! - a.created_at!
+      );
+  
+      sites.push(...array.map((e) => parseSite(e.rawEvent())));
+  
+      await fetchSiteThemes();
 
-    sites.push(...array.map((e) => parseSite(e.rawEvent())));
+      ok();
+    });
 
-    await fetchSiteThemes();
+    await sitesPromise;
+    console.log("sites", sites);
   }
 
   return convertSites(sites);

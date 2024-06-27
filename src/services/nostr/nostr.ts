@@ -34,6 +34,10 @@ export let userProfile: NDKEvent | null = null;
 export let userIsDelegated = false;
 export let userToken = "";
 
+try {
+  userToken = window.localStorage.getItem("token") || "";
+} catch {}
+
 export function srm(e: NDKEvent | NostrEvent, name: string) {
   e.tags = e.tags.filter((t) => t.length < 2 || t[0] !== name);
 }
@@ -54,14 +58,20 @@ export function addOnAuth(cb: (type: string) => Promise<void>) {
   onAuths.push(cb);
 }
 
+function setUserToken(token: string) {
+  userToken = token;
+  try {
+    window.localStorage.setItem('token', userToken);
+  } catch {}
+}
+
 export async function onAuth(e: any) {
   console.log("nlAuth", e);
   const authed = e.detail.type !== "logout";
   if (authed) {
-    userToken = "";
     userIsDelegated = e.detail.method === "otp";
     if (userIsDelegated) {
-      userToken = JSON.parse(e.detail.otpData).token;
+      setUserToken(JSON.parse(e.detail.otpData).token);
     }
 
     userPubkey = await window.nostr!.getPublicKey();
@@ -152,7 +162,7 @@ async function getSessionToken() {
       if (r.status === 200) {
         const data = await r.json();
         console.log("got session token", data);
-        userToken = data.token;
+        setUserToken(data.token);
         // done!
         return;
       } else if (r.status === 403) {

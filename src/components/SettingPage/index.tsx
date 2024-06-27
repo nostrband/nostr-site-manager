@@ -5,23 +5,21 @@ import { Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { useParams } from "next/navigation";
-import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { useFormik } from "formik";
 import { TitleDescription } from "@/components/SettingPage/components/TitleDescription";
-import { MetaData } from "@/components/SettingPage/components/MetaData";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
 import { Contributors } from "@/components/SettingPage/components/Contributors";
 import { DesignBranding } from "@/components/SettingPage/components/DesignBranding";
 import { Recommendation } from "@/components/SettingPage/components/Recommendation";
 import { Icon } from "@/components/SettingPage/components/Icon";
 import { ImageBanner } from "@/components/SettingPage/components/Image";
-import { URL } from "@/components/SettingPage/components/URL";
 import { Navigation } from "@/components/SettingPage/components/Navigation";
 import { editSite } from "@/services/nostr/api";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { Hashtags } from "@/components/SettingPage/components/Hashtags";
 import { AccentColor } from "@/components/SettingPage/components/AccentColor";
 import { Kinds } from "@/components/SettingPage/components/Kinds";
+import { WebsiteAddress } from "./components/WebsiteAddress";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -198,8 +196,9 @@ export const SettingPage = () => {
         General settings
       </Typography>
 
-      <URL
+      <WebsiteAddress
         url={values.url}
+        siteId={values.id}
         handleBlur={handleBlur}
         handleChange={handleChange}
         submitForm={submitForm}

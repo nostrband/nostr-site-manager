@@ -15,15 +15,18 @@ import {
 import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { HASH_CONFIG, NPUB_PRO_DOMAIN } from "@/consts";
 import { debounce } from "lodash";
+import { checkNpubProDomain } from "@/services/nostr/themes";
 
 interface ITitleDescription extends IBaseSetting {
   url: string;
+  siteId: string;
 }
 
-export const URL = ({
+export const WebsiteAddress = ({
   url,
+  siteId,
   handleChange,
   handleBlur,
   submitForm,
@@ -36,23 +39,52 @@ export const URL = ({
   const [isFetchAddress, setFetchAddress] = useState(false);
 
   const handleClick = () => {
+    if (error) return;
     handleAction().then();
     setDisabled((prev) => !prev);
   };
 
-  const checkUrlExists = debounce((url: string) => {
+  const checkUrlExists = debounce(async (newUrl: string) => {
     setError(null);
+    let newDomain = "";
+    let oldDomain = "";
+    try {
+      const u = new URL(newUrl);
+      newDomain = u.hostname;
+      if (u.search) throw new Error("Only path is allowed");
+      if (!u.pathname.endsWith("/")) throw new Error("Must end with /");
+      if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN) && u.pathname !== "/")
+        throw new Error("Only / path is allowed on " + NPUB_PRO_DOMAIN);
+    } catch (e: any) {
+      console.log("Bad url", e);
+      setError(e.toString());
+      return;
+    }
+
+    try {
+      const u = new URL(url);
+      oldDomain = u.hostname;
+    } catch {}
+
+    if (newDomain === oldDomain || !newDomain.endsWith("." + NPUB_PRO_DOMAIN))
+      return;
+
+    const sub = newDomain.split("." + NPUB_PRO_DOMAIN)[0];
+    if (!sub || sub.includes(".")) {
+      setError("Bad sub domain");
+      return;
+    }
+
     setFetchAddress(true);
-    setTimeout(() => {
-      if (true) {
-        // Replace with actual condition or mock
-        setError("This URL already exists.");
-      } else {
-        setError(null);
-      }
-      setFetchAddress(false);
-    }, 2000);
-  }, 300);
+    const ok = await checkNpubProDomain(sub, siteId);
+    setFetchAddress(false);
+
+    if (!ok) {
+      setError("This domain is already taken.");
+    } else {
+      setError(null);
+    }
+  }, 500);
 
   useEffect(() => {
     if (inputRef.current && isDisabled) {
@@ -62,7 +94,6 @@ export const URL = ({
 
   const handleChangeWithDebounce = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-
     if (handleChange) {
       handleChange(event);
     }

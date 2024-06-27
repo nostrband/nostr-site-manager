@@ -8,16 +8,14 @@ import { ReturnSettingsSiteDataType } from "../sites.service";
 import {
   KIND_PACKAGE,
   KIND_PROFILE,
-  KIND_THEME,
   NostrParser,
   OUTBOX_RELAYS,
   Site,
   SiteAddr,
-  Theme,
+  eventId,
   tv,
 } from "libnostrsite";
 import {
-  SITE_RELAY,
   addOnAuth,
   ndk,
   userPubkey,
@@ -25,8 +23,10 @@ import {
   stv,
   SEARCH_RELAYS,
   srm,
+  publishSite,
 } from "./nostr";
 import { nip19 } from "nostr-tools";
+import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 
 const KIND_SITE = 30512;
 
@@ -71,24 +71,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
     e.tags.push(["p", p]);
   }
 
-  const ne = new NDKEvent(ndk, {
-    ...e,
-    // force update
-    created_at: Math.floor(Date.now() / 1000),
-    // reset
-    id: undefined,
-  });
-  console.log("edited site event", ne.rawEvent());
-
-  const signer = new NDKNip07Signer();
-  await ne.sign(signer);
-
-  const r = await ne.publish(
-    NDKRelaySet.fromRelayUrls([...userRelays, SITE_RELAY], ndk),
-  );
-  if (!r.size) {
-    throw new Error("Failed to publish to relays");
-  }
+  await publishSite(new NDKEvent(ndk, e), [...userRelays, SITE_RELAY]);
 
   // parse updated site back
   sites[index] = parseSite(e);
@@ -100,8 +83,10 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
     themeId: packageThemes.get(s.extensions?.[0].event_id || "") || "",
     themeName: s.extensions?.[0].petname || "",
     contributors: s.contributor_pubkeys,
-    hashtags: s.include_tags?.filter(t => t.tag === 't').map(t => "#"+t.value) || [],
-    kinds: s.include_kinds?.map(k => parseInt(k)) || [1],
+    hashtags:
+      s.include_tags?.filter((t) => t.tag === "t").map((t) => "#" + t.value) ||
+      [],
+    kinds: s.include_kinds?.map((k) => parseInt(k)) || [1],
     accentColor: s.accent_color || "",
     name: s.name,
     title: s.title || "",
@@ -152,7 +137,7 @@ async function fetchSiteThemes() {
         .filter((id) => !!id),
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk!),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk!)
   );
 
   for (const e of events) {
@@ -184,19 +169,32 @@ export async function fetchSites() {
 
   if (!sites.length) {
     const events = await ndk.fetchEvents(
-      {
-        // @ts-ignore
-        kinds: [KIND_SITE],
-        authors: [userPubkey],
-      },
+      [
+        // owned
+        {
+          // @ts-ignore
+          kinds: [KIND_SITE],
+          authors: [userPubkey],
+        },
+        // delegated
+        {
+          authors: [SERVER_PUBKEY],
+          // @ts-ignore
+          kinds: [KIND_SITE],
+          "#u": [userPubkey],
+        },
+      ],
       { groupable: false },
-      NDKRelaySet.fromRelayUrls(userRelays, ndk!),
+      NDKRelaySet.fromRelayUrls(userRelays, ndk!)
     );
     console.log("site events", events);
 
-    for (const e of events.values()) {
-      sites.push(parseSite(e.rawEvent()));
-    }
+    // sort by timestamp desc
+    const array = [...events.values()].sort(
+      (a, b) => b.created_at! - a.created_at!
+    );
+
+    sites.push(...array.map((e) => parseSite(e.rawEvent())));
 
     await fetchSiteThemes();
   }
@@ -231,7 +229,7 @@ export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
       authors: req,
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls(OUTBOX_RELAYS, ndk),
+    NDKRelaySet.fromRelayUrls(OUTBOX_RELAYS, ndk)
   );
 
   for (const e of events) {
@@ -256,7 +254,7 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
     {
       groupable: false,
     },
-    NDKRelaySet.fromRelayUrls(SEARCH_RELAYS, ndk),
+    NDKRelaySet.fromRelayUrls(SEARCH_RELAYS, ndk)
   );
 
   for (const e of events) {

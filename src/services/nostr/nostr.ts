@@ -1,7 +1,12 @@
-import NDK, { NDKEvent, NDKNip07Signer, NDKRelaySet, NostrEvent } from "@nostr-dev-kit/ndk";
+import NDK, {
+  NDKEvent,
+  NDKNip07Signer,
+  NDKRelaySet,
+  NostrEvent,
+} from "@nostr-dev-kit/ndk";
 import { eventId, fetchOutboxRelays, fetchProfile } from "libnostrsite";
 import { createContext } from "react";
-import { SITE_RELAY } from "./consts";
+import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { sha256 } from "@noble/hashes/sha256";
 import { bytesToHex } from "@noble/hashes/utils";
 import { MIN_POW, minePow } from "./pow";
@@ -210,8 +215,15 @@ export async function fetchWithSession(
   }
 }
 
-export async function publishSite(site: NDKEvent, relays: string[]): Promise<NostrEvent> {
-  if (userIsDelegated) {
+export async function publishSite(
+  site: NDKEvent,
+  relays: string[]
+): Promise<NostrEvent> {
+  // if we're signed in with OTP 
+  // or if we're editing delegated site
+  if (userIsDelegated || site.pubkey === SERVER_PUBKEY) {
+    if (site.pubkey !== SERVER_PUBKEY)
+      throw new Error("Cannot edit site signed by your keys in delegated mode");
     const reply = await fetchWithSession(
       `${NPUB_PRO_API}/site?relays=${relays.join(",")}`,
       site.rawEvent()
@@ -220,7 +232,8 @@ export async function publishSite(site: NDKEvent, relays: string[]): Promise<Nos
 
     const data = await reply.json();
     console.log("signed by server site event", data.event);
-    if (eventId(data.event) !== eventId(site)) throw new Error("Changed site id");
+    if (eventId(data.event) !== eventId(site))
+      throw new Error("Changed site id");
 
     return data.event;
   } else {

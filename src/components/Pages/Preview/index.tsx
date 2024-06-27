@@ -57,7 +57,7 @@ export const Preview = () => {
 
   // FIXME default for testing
   const [contributor, setContributor] = useState<string | undefined>(
-    siteId ? undefined : userPubkey
+    siteId ? undefined : userPubkey,
     // "4657dfe8965be8980a93072bcfb5e59a65124406db0f819215ee78ba47934b3e",
     //    "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411"
   );
@@ -108,7 +108,7 @@ export const Preview = () => {
           const newKindsSelected = getPreviewKinds();
 
           // if we don't check for equality then
-          // we might cause infinite loop if user 
+          // we might cause infinite loop if user
           // makes several changes in a sequence
           if (!isEqual(newContributor, contributor))
             setContributor(newContributor);
@@ -153,7 +153,7 @@ export const Preview = () => {
   const onContentSettings = async (
     author: string,
     hashtags: string[],
-    kinds: number[]
+    kinds: number[],
   ) => {
     console.log("onContentSettings", author, hashtags, kinds);
     setContributor(author);

@@ -23,7 +23,7 @@ export const AccentColor = ({
   submitForm,
   isLoading,
 }: ITitleDescription) => {
-  const [isEdit, handleAction] = useEditSettingMode(submitForm);
+  const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
   const handleClick = () => {
     handleAction().then();
   };

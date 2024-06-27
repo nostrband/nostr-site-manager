@@ -1,18 +1,19 @@
 "use client";
 import {
   StyledContainerIntro,
-  StyledTypographyCaption,
+  StyledLogo,
   StyledTypographySubtitle,
   StyledTypographyTitle,
 } from "@/components/HeadIntroOnboarding/styled";
 import { Button } from "@mui/material";
+import { Logo } from "@/components/Logo";
 
 export const HeadIntroOnboarding = () => {
   return (
     <StyledContainerIntro maxWidth="lg">
-      <StyledTypographyCaption variant="caption" display="block">
-        npub.pro
-      </StyledTypographyCaption>
+      <StyledLogo>
+        <Logo />
+      </StyledLogo>
 
       <StyledTypographyTitle variant="h1">
         Create a beautiful nostr-based website in seconds

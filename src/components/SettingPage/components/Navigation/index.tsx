@@ -50,7 +50,7 @@ export const Navigation = ({
   isLoading,
   handleRemoveLinkNavigation,
 }: ITitleDescription) => {
-  const [isEdit, handleAction] = useEditSettingMode(submitForm);
+  const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
   const [value, setValue] = useState("1");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {

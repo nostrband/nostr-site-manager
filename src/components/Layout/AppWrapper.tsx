@@ -8,6 +8,7 @@ import { AuthContext, onAuth } from "@/services/nostr/nostr";
 const BodyWrapper = styled("body")({
   height: "100%",
   lineHeight: "initial",
+  color: "initial",
 });
 
 export const AppWrapper = ({ children }: { children: ReactNode }) => {

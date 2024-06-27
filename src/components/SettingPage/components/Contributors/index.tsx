@@ -4,7 +4,7 @@ import {
   StyledSettingBlock,
   StyledSettingCol,
 } from "@/components/SettingPage/styled";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { HASH_CONFIG } from "@/consts";
 import Avatar from "@mui/material/Avatar";
 import { StyledAutorProfile } from "@/components/SettingPage/components/Contributors/styled";
@@ -12,15 +12,27 @@ import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
 import { nip19 } from "nostr-tools";
 import { ModalAuthor } from "@/components/ModalAuthor";
+import { SaveButton } from "@/components/SettingPage/components/SaveButton";
+import { IBaseSetting } from "@/types/setting.types";
+import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 
-export const Contributors = ({ contributors, handleChangeContributors }: {
+interface IContributors extends IBaseSetting {
   contributors: string[];
   handleChangeContributors: (pubkeys: string[]) => void;
-}) => {
+}
+
+export const Contributors = ({
+  contributors,
+  handleChangeContributors,
+  isLoading,
+  submitForm,
+}: IContributors) => {
+  const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
+
   const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
   const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
 
-  const pubkey = contributors?.[0] || '';
+  const pubkey = contributors?.[0] || "";
 
   let meta = undefined;
   if (author) {
@@ -34,12 +46,17 @@ export const Contributors = ({ contributors, handleChangeContributors }: {
   const nip05 = meta?.nip05 || meta?.name || npub;
   const img = meta?.picture || "";
 
-  const handleAuthor = (pubkey: string | any) => {
+  const handleAuthor = (pubkeyAuthor: string | any) => {
     setOpenModalAuthor(false);
-    handleChangeContributors([pubkey]);
+    handleChangeContributors([pubkeyAuthor]);
   };
-  const handleOpenModalAuthor = () => {
-    setOpenModalAuthor(true);
+
+  const handleClick = async () => {
+    await handleAction();
+
+    if (!isEdit) {
+      setOpenModalAuthor(true);
+    }
   };
 
   useEffect(() => {
@@ -56,14 +73,12 @@ export const Contributors = ({ contributors, handleChangeContributors }: {
           <StyledHeadSettingBlock>
             <Typography variant="h6">Contributors</Typography>
 
-            <Button
-              color="info"
-              variant="outlined"
-              size="small"
-              onClick={handleOpenModalAuthor}
-            >
-              Change author
-            </Button>
+            <SaveButton
+              isEdit={isEdit}
+              isLoading={isLoading}
+              handleAction={handleClick}
+              text="Change author"
+            />
           </StyledHeadSettingBlock>
 
           <StyledAutorProfile>

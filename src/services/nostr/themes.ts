@@ -19,7 +19,6 @@ import {
   tv,
 } from "libnostrsite";
 import {
-  SITE_RELAY,
   ndk,
   srm,
   stag,
@@ -34,6 +33,7 @@ import { MIN_POW, minePow } from "./pow";
 import { sha256 } from "@noble/hashes/sha256";
 import { bytesToHex } from "@noble/hashes/utils";
 import { isEqual, omit } from "lodash";
+import { SITE_RELAY } from "./consts";
 
 export interface PreviewSettings {
   themeId: string;

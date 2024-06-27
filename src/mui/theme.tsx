@@ -1,7 +1,8 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
-import { Source_Serif_4, Inter } from "@next/font/google";
+import { Inter } from "@next/font/google";
+import localFont from "next/font/local";
 
 declare module "@mui/material/styles" {
   interface Palette {
@@ -38,6 +39,7 @@ declare module "@mui/material/AppBar" {
 declare module "@mui/material/Chip" {
   interface ChipPropsColorOverrides {
     decorate: true;
+    primary: true;
   }
 }
 
@@ -55,6 +57,7 @@ declare module "@mui/material/Button" {
     decorate: true;
     lightInfo: true;
     darkInfo: true;
+    primary: true;
   }
 }
 
@@ -66,38 +69,65 @@ declare module "@mui/material/Checkbox" {
     decorate: true;
     lightInfo: true;
     darkInfo: true;
+    primary: true;
   }
 }
 
 declare module "@mui/material/IconButton" {
   interface IconButtonPropsColorOverrides {
     textColorDanger: true;
+    primary: true;
   }
 }
 
 declare module "@mui/material/Fab" {
   interface FabPropsColorOverrides {
     decorate: true;
+    primary: true;
   }
 }
 
-export const sourceSerif4 = Source_Serif_4({
-  weight: ["600"],
-  subsets: ["cyrillic"],
+export const InterDisplay = localFont({
+  src: [
+    {
+      path: "../../public/fonts/InterDisplay-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
   display: "swap",
-  fallback: ["Helvetica", "Arial", "sans-serif"],
 });
 
-const inter = Inter({
-  subsets: ["cyrillic"],
+const InterVariable = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Inter-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Inter-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Inter-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Inter-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
   display: "swap",
-  fallback: ["Helvetica", "Arial", "sans-serif"],
 });
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#1A1C1E",
+      main: "#292C34",
     },
     secondary: {
       main: "#424754",
@@ -116,32 +146,32 @@ const theme = createTheme({
       main: "#F5F5F5",
     },
     buttonSidebarBackground: {
-      light: "#2f313a",
+      light: "#292C34",
       main: "#f8f8f8",
       dark: "#f4f0f0",
-      contrastText: "#2f313a",
+      contrastText: "#292C34",
     },
     buttonSidebarActive: {
-      light: "#2f313a",
+      light: "#292C34",
       main: "#f8f8f8",
       dark: "#f4f0f0",
-      contrastText: "#2f313a",
+      contrastText: "#292C34",
     },
     appBar: {
       light: "#fff",
       main: "#fff",
-      dark: "#000",
-      contrastText: "#000",
+      dark: "#292C34",
+      contrastText: "#292C34",
     },
     textColor: {
       light: "#fff",
-      main: "#1A1C1E",
+      main: "#292C34",
       dark: "#2f313a",
       contrastText: "#fff",
     },
     textColorDanger: {
       light: "#f5bdbd",
-      main: "#1A1C1E",
+      main: "#292C34",
       dark: "#302a2a",
       contrastText: "#b34040",
     },
@@ -165,7 +195,16 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: inter.style.fontFamily,
+    fontFamily: InterVariable.style.fontFamily,
+    allVariants: {
+      color: "#292C34",
+    },
+    body1: {
+      color: "#292C34",
+    },
+    body2: {
+      color: "#292C34",
+    },
   },
   shape: {
     borderRadius: 8,

@@ -1,7 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 export const useEditSettingMode = (
   submitForm: () => Promise<void>,
+  isLoading: boolean = false,
 ): [boolean, () => Promise<void>] => {
   const [isEdit, setIsEdit] = useState(false);
 
@@ -13,6 +14,12 @@ export const useEditSettingMode = (
       setIsEdit(true);
     }
   }, [isEdit, submitForm]);
+
+  useEffect(() => {
+    if (isLoading) {
+      setIsEdit(false);
+    }
+  }, [isLoading]);
 
   return [isEdit, handleAction];
 };

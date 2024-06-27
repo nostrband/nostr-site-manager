@@ -11,5 +11,5 @@ export const StyledHeaderOnboarding = styled(Box)(() => ({
 export const StyledHeaderContainer = styled(Container)(() => ({
   display: "flex",
   alignItems: "center",
-  justifyContent: "space-between",
+  justifyContent: "end",
 }));

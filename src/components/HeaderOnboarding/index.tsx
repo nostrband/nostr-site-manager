@@ -18,10 +18,6 @@ export const HeaderOnboarding = () => {
   return (
     <StyledHeaderOnboarding>
       <StyledHeaderContainer maxWidth="lg">
-        <Typography variant="body1">
-          <b>L O G O</b>
-        </Typography>
-
         {authed && (
           <Button
             onClick={handleNavigateToAdmin}

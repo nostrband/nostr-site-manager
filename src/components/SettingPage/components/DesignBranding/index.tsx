@@ -31,7 +31,7 @@ export const DesignBranding = ({
         <StyledHeadSettingBlock>
           <Typography variant="h6">Theme</Typography>
           <LoadingButton
-            color="info"
+            color="decorate"
             variant="outlined"
             size="small"
             onClick={switchTheme}

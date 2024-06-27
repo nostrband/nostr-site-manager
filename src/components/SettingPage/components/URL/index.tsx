@@ -5,25 +5,31 @@ import {
   StyledSettingBlock,
   StyledSettingCol,
 } from "@/components/SettingPage/styled";
-import { InputLabel, OutlinedInput, Typography, CircularProgress, InputAdornment } from "@mui/material";
+import {
+  InputLabel,
+  OutlinedInput,
+  Typography,
+  CircularProgress,
+  InputAdornment,
+} from "@mui/material";
 import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
-import {debounce} from 'lodash';
+import { debounce } from "lodash";
 
 interface ITitleDescription extends IBaseSetting {
   url: string;
 }
 
 export const URL = ({
-                      url,
-                      handleChange,
-                      handleBlur,
-                      submitForm,
-                      isLoading,
-                    }: ITitleDescription) => {
-  const [isEdit, handleAction] = useEditSettingMode(submitForm);
+  url,
+  handleChange,
+  handleBlur,
+  submitForm,
+  isLoading,
+}: ITitleDescription) => {
+  const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setDisabled] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,14 +42,15 @@ export const URL = ({
 
   const checkUrlExists = debounce((url: string) => {
     setError(null);
-    setFetchAddress(true)
+    setFetchAddress(true);
     setTimeout(() => {
-      if (true) { // Replace with actual condition or mock
+      if (true) {
+        // Replace with actual condition or mock
         setError("This URL already exists.");
       } else {
         setError(null);
       }
-      setFetchAddress(false)
+      setFetchAddress(false);
     }, 2000);
   }, 300);
 
@@ -64,40 +71,40 @@ export const URL = ({
   };
 
   return (
-      <StyledSettingCol id={HASH_CONFIG.URL}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">Website address</Typography>
+    <StyledSettingCol id={HASH_CONFIG.URL}>
+      <StyledSettingBlock>
+        <StyledHeadSettingBlock>
+          <Typography variant="h6">Website address</Typography>
 
-            <SaveButton
-                isEdit={isEdit}
-                isLoading={isLoading}
-                handleAction={handleClick}
-            />
-          </StyledHeadSettingBlock>
+          <SaveButton
+            isEdit={isEdit}
+            isLoading={isLoading}
+            handleAction={handleClick}
+          />
+        </StyledHeadSettingBlock>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
-            <InputLabel htmlFor="url">URL</InputLabel>
-            <OutlinedInput
-                inputRef={inputRef}
-                id="url"
-                name="url"
-                label="URL"
-                onChange={handleChangeWithDebounce}
-                value={url}
-                onBlur={handleBlur}
-                error={!!error}
-                endAdornment={
-                  isFetchAddress ? (
-                      <InputAdornment position="end">
-                        <CircularProgress size={20} />
-                      </InputAdornment>
-                  ) : null
-                }
-            />
-            {error && <Typography color="error">{error}</Typography>}
-          </StyledFormControl>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+        <StyledFormControl disabled={!isEdit} fullWidth size="small">
+          <InputLabel htmlFor="url">URL</InputLabel>
+          <OutlinedInput
+            inputRef={inputRef}
+            id="url"
+            name="url"
+            label="URL"
+            onChange={handleChangeWithDebounce}
+            value={url}
+            onBlur={handleBlur}
+            error={!!error}
+            endAdornment={
+              isFetchAddress ? (
+                <InputAdornment position="end">
+                  <CircularProgress size={20} />
+                </InputAdornment>
+              ) : null
+            }
+          />
+          {error && <Typography color="error">{error}</Typography>}
+        </StyledFormControl>
+      </StyledSettingBlock>
+    </StyledSettingCol>
   );
 };

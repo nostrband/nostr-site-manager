@@ -14,7 +14,10 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
-import { fetchTopHashtags, getPreviewTopHashtags } from "@/services/nostr/themes";
+import {
+  fetchTopHashtags,
+  getPreviewTopHashtags,
+} from "@/services/nostr/themes";
 
 interface ITitleDescription extends IBaseSetting {
   selectedHashtags: string[];
@@ -29,7 +32,7 @@ export const Hashtags = ({
   submitForm,
   isLoading,
 }: ITitleDescription) => {
-  const [isEdit, handleAction] = useEditSettingMode(submitForm);
+  const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
   const [hashtags, setHashtags] = useState<string[]>([]);
 
   const handleChange = (event: SelectChangeEvent<typeof hashtags>) => {

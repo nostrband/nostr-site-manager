@@ -224,9 +224,11 @@ export const SettingPage = () => {
         isLoading={isLoading}
       /> */}
 
-      <Contributors 
+      <Contributors
         handleChangeContributors={handleChangeContributors}
-        contributors={values.contributors} 
+        contributors={values.contributors}
+        submitForm={submitForm}
+        isLoading={isLoading}
       />
 
       <Hashtags

@@ -56,7 +56,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const login = async () => {
     // @ts-ignore
     await window.nostr!.getPublicKey();
-    window.location.reload();
+    // window.location.reload();
   };
 
   return (

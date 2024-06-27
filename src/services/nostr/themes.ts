@@ -1,4 +1,4 @@
-import NDK, { NDKEvent, NDKNip07Signer, NDKRelaySet } from "@nostr-dev-kit/ndk";
+import { NDKEvent, NDKNip07Signer, NDKRelaySet, NostrEvent } from "@nostr-dev-kit/ndk";
 import {
   DefaultAssetFetcher,
   KIND_PACKAGE,
@@ -19,21 +19,23 @@ import {
   tv,
 } from "libnostrsite";
 import {
-  SITE_RELAY,
+  fetchWithSession,
   ndk,
+  publishSite,
   srm,
   stag,
   stv,
+  userIsDelegated,
   userProfile,
   userPubkey,
   userRelays,
 } from "./nostr";
 import { nip19 } from "nostr-tools";
 import { NPUB_PRO_API, NPUB_PRO_DOMAIN, THEMES_PREVIEW } from "@/consts";
-import { MIN_POW, minePow } from "./pow";
-import { sha256 } from "@noble/hashes/sha256";
 import { bytesToHex } from "@noble/hashes/utils";
 import { isEqual, omit } from "lodash";
+import { randomBytes } from "crypto";
+import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 
 export interface PreviewSettings {
   themeId: string;
@@ -55,6 +57,9 @@ export interface DesignSettings {
   logo: string;
   navigation: { label: string; url: string }[];
 }
+
+const serverPubkey = SERVER_PUBKEY;
+if (!serverPubkey) throw new Error("No server pubkey");
 
 let token = "";
 const themes: NDKEvent[] = [];
@@ -251,123 +256,19 @@ export async function setPreviewSettings(ns: PreviewSettings) {
   return updated || newTheme;
 }
 
-async function fetchAuthed({
-  ndk,
-  url,
-  method = "GET",
-  body = undefined,
-  pow = 0,
-}: {
-  ndk: NDK;
-  url: string;
-  method?: string;
-  body?: string;
-  pow?: number;
-}) {
-  let authEvent = new NDKEvent(ndk, {
-    pubkey: userPubkey,
-    kind: 27235,
-    created_at: Math.floor(Date.now() / 1000),
-    content: "",
-    tags: [
-      ["u", url],
-      ["method", method],
-    ],
-  });
-  if (body) authEvent.tags.push(["payload", bytesToHex(sha256(body))]);
-
-  // generate pow on auth event
-  if (pow) {
-    const start = Date.now();
-    const powEvent = authEvent.rawEvent();
-    const minedEvent = minePow(powEvent, pow);
-    console.log(
-      "mined pow of",
-      pow,
-      "in",
-      Date.now() - start,
-      "ms",
-      minedEvent
-    );
-    authEvent = new NDKEvent(ndk, minedEvent);
-  }
-
-  authEvent.sig = await authEvent.sign(new NDKNip07Signer());
-  console.log("signed", JSON.stringify(authEvent.rawEvent()));
-
-  const auth = btoa(JSON.stringify(authEvent.rawEvent()));
-
-  return await fetch(url, {
-    method,
-    credentials: "include",
-    headers: {
-      Authorization: `Nostr ${auth}`,
-    },
-    body,
-  });
-}
-
-async function getSessionToken() {
-  let pow = MIN_POW;
-  do {
-    try {
-      const r = await fetchAuthed({
-        ndk,
-        url: `${NPUB_PRO_API}/auth?npub=${nip19.npubEncode(userPubkey)}`,
-        pow,
-      });
-
-      if (r.status === 200) {
-        const data = await r.json();
-        console.log("got session token", data);
-        token = data.token;
-        // done!
-        return;
-      } else if (r.status === 403) {
-        const rep = await r.json();
-        console.log("need more pow", rep);
-        pow = rep.minPow;
-      } else {
-        throw new Error("Bad reply " + r.status);
-      }
-    } catch (e) {
-      console.log("Error", e);
-      break;
-    }
-  } while (pow < MIN_POW + 5);
-
-  throw new Error("Failed to get session token");
-}
-
-async function fetchWithSession(url: string) {
-  try {
-    const fetchIt = async () => {
-      return await fetch(url, {
-        headers: {
-          "X-NpubPro-Token": token,
-        },
-      });
-    };
-
-    const r = await fetchIt();
-
-    if (r.status === 200) return r;
-    if (r.status === 401) {
-      // ensure we're authed
-      await getSessionToken();
-      // retry
-      return fetchIt();
-    } else {
-      return r;
-    }
-  } catch (e) {
-    console.log("fetch error", e);
-    throw e;
+function checkYourSite(s: NDKEvent | NostrEvent) {
+  if (userIsDelegated) {
+    if (s.pubkey === userPubkey)
+      throw new Error("Cannot edit your site in delegated mode");
+    if (s.pubkey !== serverPubkey || tv(s, "u") !== userPubkey)
+      throw new Error("Not your site");
+  } else {
+    if (s.pubkey !== userPubkey) throw new Error("Not your site");
   }
 }
 
 function setSite(s: NDKEvent) {
-  if (s.pubkey !== userPubkey) throw new Error("Not your site");
+  checkYourSite(s);
 
   site = s;
 
@@ -497,7 +398,7 @@ async function preparePreviewSite() {
       !settings.contributors.includes(userPubkey)
     ) {
       const contribSlug = tv(event, "d");
-      let slug = contribSlug + "-1";
+      let slug = contribSlug + "-" + userPubkey.substring(0, 4);
       if (userProfile) {
         const adminSlug = getProfileSlug(userProfile);
         if (adminSlug) slug = contribSlug + "-" + adminSlug;
@@ -510,14 +411,20 @@ async function preparePreviewSite() {
 
     // make sure d-tag is unique, use ':' as
     // suffix separator so that we could parse it and extract
-    // the original d-tag to use as preferred domain name
+    // the original d-tag to use as preferred domain name,
+    // use longer random suffix for delegated sites
     const d_tag = tv(event, "d");
     stv(
       event,
       "d",
-      // https://stackoverflow.com/a/8084248
-      d_tag + ":" + (Math.random() + 1).toString(36).substring(2, 5)
+      d_tag + ":" + bytesToHex(randomBytes(userIsDelegated ? 8 : 3))
     );
+
+    if (userIsDelegated) {
+      // set admin as owner, server as event author
+      stv(event, "u", userPubkey);
+      event.pubkey = serverPubkey!;
+    }
 
     // reset renderer, init store, etc
     setSite(new NDKEvent(ndk, event));
@@ -540,7 +447,8 @@ async function preparePreviewSite() {
     // for existing sites that have already been published
     // we only update the input settings
 
-    if (site.pubkey !== userPubkey) throw new Error("Not your site");
+    // ensure we actually can edit this site
+    checkYourSite(site);
 
     // theme
     setSiteTheme(pkg);
@@ -709,21 +617,36 @@ async function publishPreview() {
   const pkg = getThemePackage();
   setSiteTheme(pkg);
 
-  // sign it
-  await site.sign(new NDKNip07Signer());
-  console.log("signed site event", site);
+  const event = await publishSite(site, [SITE_RELAY, ...userRelays]);
 
-  // publish
-  const r = await site.publish(
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk)
-  );
-  console.log(
-    "published site event to",
-    [...r].map((r) => r.url)
-  );
+  // if (userIsDelegated) {
+  //   const reply = await fetchWithSession(
+  //     `${NPUB_PRO_API}/site?relays=${relays.join(",")}`,
+  //     site.rawEvent()
+  //   );
+  //   if (reply.status !== 200) throw new Error("Failed to publish event");
+
+  //   const data = await reply.json();
+  //   const event = new NDKEvent(ndk, data.event);
+  //   console.log("signed by server site event", data.event);
+  //   if (eventId(event) !== eventId(site)) throw new Error("Changed site id");
+
+  //   setSite(event);
+  // } else {
+  //   // sign it
+  //   await site.sign(new NDKNip07Signer());
+  //   console.log("signed site event", site);
+
+  //   // publish
+  //   const r = await site.publish(NDKRelaySet.fromRelayUrls(relays, ndk));
+  //   console.log(
+  //     "published site event to",
+  //     [...r].map((r) => r.url)
+  //   );
+  // }
 
   // return naddr
-  return eventId(site);
+  return eventId(event);
 }
 
 async function fetchSite() {

@@ -61,7 +61,6 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
       const ou = new URL(oldUrl);
       if (ou.hostname.endsWith("." + NPUB_PRO_DOMAIN))
         oldDomain = ou.hostname.split("." + NPUB_PRO_DOMAIN)[0];
-      if (oldDomain === domain) oldDomain = "";
     }
   } catch (e) {
     console.log("url error", data.url, e);
@@ -109,6 +108,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   });
 
   // ensure new domain is reserved
+  console.log("domain", domain, "oldDomain", oldDomain);
   if (domain && domain !== oldDomain) {
     const reply = await fetchWithSession(
       `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`

@@ -4,7 +4,7 @@ import NDK, {
   NDKRelaySet,
   NostrEvent,
 } from "@nostr-dev-kit/ndk";
-import { eventId, fetchOutboxRelays, fetchProfile } from "libnostrsite";
+import { eventId, fetchOutboxRelays, fetchProfile, tv } from "libnostrsite";
 import { createContext } from "react";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { sha256 } from "@noble/hashes/sha256";
@@ -61,7 +61,7 @@ export function addOnAuth(cb: (type: string) => Promise<void>) {
 function setUserToken(token: string) {
   userToken = token;
   try {
-    window.localStorage.setItem('token', userToken);
+    window.localStorage.setItem("token", userToken);
   } catch {}
 }
 
@@ -229,9 +229,9 @@ export async function publishSite(
   site: NDKEvent,
   relays: string[]
 ): Promise<NostrEvent> {
-  // if we're signed in with OTP 
+  // if we're signed in with OTP
   // or if we're editing delegated site
-  if (userIsDelegated || site.pubkey === SERVER_PUBKEY) {
+  if (userIsDelegated || (site.pubkey === SERVER_PUBKEY && tv(site, "u"))) {
     if (site.pubkey !== SERVER_PUBKEY)
       throw new Error("Cannot edit site signed by your keys in delegated mode");
     const reply = await fetchWithSession(

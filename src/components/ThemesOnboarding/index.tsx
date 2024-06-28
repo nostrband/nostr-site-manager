@@ -22,11 +22,12 @@ export const ThemesOnboarding = () => {
       activeTag
         ? THEMES_PREVIEW.filter((item) => item.tag === activeTag)
         : THEMES_PREVIEW,
-    [activeTag],
+    [activeTag]
   );
 
   const handleChoise = (tag: TYPES_THEMES_TAG) => {
     setActiveTag((prev) => (prev === tag ? null : tag));
+    setShowAllThemes(true);
   };
 
   const getColor = (tag: TYPES_THEMES_TAG) =>
@@ -108,13 +109,15 @@ export const ThemesOnboarding = () => {
         </StyledPreviews>
 
         <StyledMoreButton>
-          <StyledButton
-            color="decorate"
-            variant="contained"
-            onClick={handleMoreTheme}
-          >
-            {showAllThemes ? "Less" : "More"} Themes
-          </StyledButton>
+          {!showAllThemes && (
+            <StyledButton
+              color="decorate"
+              variant="contained"
+              onClick={handleMoreTheme}
+            >
+              More Themes
+            </StyledButton>
+          )}
         </StyledMoreButton>
       </Container>
     </StyledWrap>

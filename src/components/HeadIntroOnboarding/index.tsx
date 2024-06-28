@@ -16,7 +16,7 @@ export const HeadIntroOnboarding = () => {
       </StyledLogo>
 
       <StyledTypographyTitle variant="h1">
-        Create a beautiful nostr-based website in seconds
+        Beautiful nostr-based websites for creators
       </StyledTypographyTitle>
 
       <StyledTypographySubtitle variant="subtitle1">

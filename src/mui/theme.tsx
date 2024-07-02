@@ -94,6 +94,11 @@ export const InterDisplay = localFont({
       weight: "700",
       style: "normal",
     },
+    {
+      path: "../../public/fonts/InterDisplay-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
   ],
   display: "swap",
 });
@@ -130,7 +135,7 @@ const theme = createTheme({
       main: "#292C34",
     },
     secondary: {
-      main: "#424754",
+      main: "#696F7D",
     },
     // info: {
     //   light: blue[500],
@@ -264,13 +269,18 @@ const theme = createTheme({
         },
       },
     },
-
     MuiContainer: {
       styleOverrides: {
         maxWidthLg: {
           maxWidth: "1344px",
           "@media (min-width: 1200px)": {
-            maxWidth: "1344px",
+            maxWidth: "1240px",
+          },
+        },
+        maxWidthMd: {
+          maxWidth: "1240px",
+          "@media (min-width: 900px)": {
+            maxWidth: "940px",
           },
         },
       },

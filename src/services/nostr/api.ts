@@ -111,7 +111,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   console.log("domain", domain, "oldDomain", oldDomain);
   if (domain && domain !== oldDomain) {
     const reply = await fetchWithSession(
-      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`
+      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`,
     );
     if (reply.status !== 200) throw new Error("Failed to reserve");
     const r = await reply.json();
@@ -125,7 +125,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   if (oldDomain && oldDomain !== domain) {
     const reply = await fetchWithSession(
       // from=oldDomain - delete the old site after 7 days
-      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`
+      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`,
     );
     if (reply.status !== 200) throw new Error("Failed to deploy");
 
@@ -197,7 +197,7 @@ async function fetchSiteThemes() {
         .filter((id) => !!id),
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk!)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk!),
   );
 
   for (const e of events) {
@@ -230,7 +230,6 @@ export async function fetchSites() {
   if (sitesPromise) await sitesPromise;
 
   if (!sites.length) {
-
     sitesPromise = new Promise<void>(async (ok) => {
       const events = await ndk.fetchEvents(
         [
@@ -249,17 +248,17 @@ export async function fetchSites() {
           },
         ],
         { groupable: false },
-        NDKRelaySet.fromRelayUrls(userRelays, ndk!)
+        NDKRelaySet.fromRelayUrls(userRelays, ndk!),
       );
       console.log("site events", events);
-  
+
       // sort by timestamp desc
       const array = [...events.values()].sort(
-        (a, b) => b.created_at! - a.created_at!
+        (a, b) => b.created_at! - a.created_at!,
       );
-  
+
       sites.push(...array.map((e) => parseSite(e.rawEvent())));
-  
+
       await fetchSiteThemes();
 
       ok();
@@ -299,7 +298,7 @@ export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
       authors: req,
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls(OUTBOX_RELAYS, ndk)
+    NDKRelaySet.fromRelayUrls(OUTBOX_RELAYS, ndk),
   );
 
   for (const e of events) {
@@ -324,7 +323,7 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
     {
       groupable: false,
     },
-    NDKRelaySet.fromRelayUrls(SEARCH_RELAYS, ndk)
+    NDKRelaySet.fromRelayUrls(SEARCH_RELAYS, ndk),
   );
 
   for (const e of events) {

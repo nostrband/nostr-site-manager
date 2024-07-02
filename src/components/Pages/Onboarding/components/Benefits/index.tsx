@@ -12,6 +12,7 @@ import { CustomDomain } from "@/components/Pages/Onboarding/components/CustomDom
 import { OpenSourceBenefit } from "@/components/Pages/Onboarding/components/OpenSourceBenefit";
 import { PopularAppsBenefit } from "@/components/Pages/Onboarding/components/PopularAppsBenefit";
 import { NativelySocialBenefit } from "@/components/Pages/Onboarding/components/NativelySocialBenefit";
+import { BeautifulThemesBenefit } from "@/components/Pages/Onboarding/components/BeautifulThemesBenefit";
 
 export const Benefits = () => {
   return (
@@ -49,6 +50,10 @@ export const Benefits = () => {
 
           <Grid item xs={12}>
             <OpenSourceBenefit />
+          </Grid>
+
+          <Grid item xs={12}>
+            <BeautifulThemesBenefit />
           </Grid>
 
           <Grid item xs={12}>

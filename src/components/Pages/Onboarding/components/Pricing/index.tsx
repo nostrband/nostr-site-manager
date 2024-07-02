@@ -32,6 +32,7 @@ export const Pricing = () => {
                 fullWidth
                 color="decorate"
                 variant="contained"
+                href="#themes-onboarding"
               >
                 Choose a Theme
               </Button>
@@ -92,6 +93,7 @@ export const Pricing = () => {
                 fullWidth
                 color="decorate"
                 variant="contained"
+                href="#themes-onboarding"
               >
                 Choose a Theme
               </Button>

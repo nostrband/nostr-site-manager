@@ -83,11 +83,13 @@ export const StyledTitle = styled(Typography)(({ theme }) => ({
   maxWidth: 908,
   margin: "auto",
   textAlign: "center",
+  lineHeight: "59px",
   color: theme.palette.secondary.main,
   span: {
     color: theme.palette.decorate.main,
   },
   [theme.breakpoints.down("md")]: {
     fontSize: 24,
+    lineHeight: "39px",
   },
 }));

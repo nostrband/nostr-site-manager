@@ -46,8 +46,10 @@ export async function GET(req: NextRequest) {
         hashtags: [],
         kinds: [],
         accentColor: "",
+        codeinjection_head: "",
+        codeinjection_foot: "",
       };
-    },
+    }
   );
 
   await new Promise((resolve) => setTimeout(resolve, 100));

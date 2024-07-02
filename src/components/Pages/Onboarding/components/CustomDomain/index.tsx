@@ -33,7 +33,7 @@ export const CustomDomain = () => {
           <StyledImgDomain>
             <Image src={img} alt="User avatar" priority />
           </StyledImgDomain>
-          <StyledTextDomainDark>janewrites.com</StyledTextDomainDark>
+          <StyledTextDomainDark>jane.npub.pro</StyledTextDomainDark>
         </StyledWrapDomainDark>
       </StyledGroupDomain>
     </StyledLightBenefit>

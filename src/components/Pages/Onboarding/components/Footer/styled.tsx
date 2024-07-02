@@ -1,8 +1,7 @@
 import { styled } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
-import { InterDisplay } from "@/mui/theme";
+import { Box } from "@mui/material";
 
-export const StyledFooter = styled(Box)(({ theme }) => ({
+export const StyledFooter = styled(Box)(() => ({
   padding: 25,
   textAlign: "center",
   color: "#292C34",

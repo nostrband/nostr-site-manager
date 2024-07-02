@@ -126,7 +126,8 @@ export const FAQ = () => {
               <a href="https://github.com/nostrband/nostrsite/" target="_blank">
                 open-source
               </a>
-              , and there is no &quot;migration&quot; &mdash; it just works, anywhere.
+              , and there is no &quot;migration&quot; &mdash; it just works,
+              anywhere.
             </StyledTitleDescription>
           </StyledGridItem>
 

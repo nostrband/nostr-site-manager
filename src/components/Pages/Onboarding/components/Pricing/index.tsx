@@ -196,8 +196,8 @@ export const Pricing = () => {
                   <Box>
                     <StyledFeatureDescriptionPrice>
                       <span>Fund the ecosystem.</span> Big part of your payments
-                      go directly to developers of themes and plugins you&apos;re
-                      using.
+                      go directly to developers of themes and plugins
+                      you&apos;re using.
                     </StyledFeatureDescriptionPrice>
                   </Box>
                 </StyledFeaturePrice>

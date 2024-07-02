@@ -40,7 +40,7 @@ export const StyledFullLightGrayBenefit = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const StyledOpenSourceEmblemWrap = styled(Box)(({ theme }) => ({
+export const StyledOpenSourceEmblemWrap = styled(Box)(() => ({
   height: 320,
   borderRadius: 40,
   maxWidth: 320,
@@ -49,7 +49,7 @@ export const StyledOpenSourceEmblemWrap = styled(Box)(({ theme }) => ({
   background: "linear-gradient(to top, #FF3ED9, #FFF)",
 }));
 
-export const StyledOpenSourceEmblem = styled(Box)(({ theme }) => ({
+export const StyledOpenSourceEmblem = styled(Box)(() => ({
   height: "calc(100% - 8px)",
   width: "calc(100% - 8px)",
   borderRadius: 40,

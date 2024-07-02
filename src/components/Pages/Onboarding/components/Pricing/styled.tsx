@@ -1,6 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { InterDisplay } from "@/mui/theme";
 
 export const StyledWrap = styled(Box)(({ theme }) => ({

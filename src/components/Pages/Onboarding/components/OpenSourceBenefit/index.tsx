@@ -18,7 +18,7 @@ export const OpenSourceBenefit = () => {
         </StyledTitleFullBlock>
         <StyledSubTitleFullBlock>
           Use our high-performance infrastructure to power your website or host
-          yourself - all data is on your Nostr relays.
+          yourself &mdash; all data is on your Nostr relays.
         </StyledSubTitleFullBlock>
       </Box>
 

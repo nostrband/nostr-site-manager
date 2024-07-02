@@ -22,7 +22,7 @@ export const ThemesOnboarding = () => {
       activeTag
         ? THEMES_PREVIEW.filter((item) => item.tag === activeTag)
         : THEMES_PREVIEW,
-    [activeTag]
+    [activeTag],
   );
 
   const handleChoise = (tag: TYPES_THEMES_TAG) => {

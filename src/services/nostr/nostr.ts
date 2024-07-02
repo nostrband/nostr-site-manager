@@ -135,7 +135,7 @@ async function fetchAuthed({
       "in",
       Date.now() - start,
       "ms",
-      minedEvent
+      minedEvent,
     );
     authEvent = new NDKEvent(ndk, minedEvent);
   }
@@ -189,7 +189,7 @@ async function getSessionToken() {
 
 export async function fetchWithSession(
   url: string,
-  body: any | undefined = undefined
+  body: any | undefined = undefined,
 ) {
   try {
     const method = body ? "POST" : "GET";
@@ -233,7 +233,7 @@ export async function fetchWithSession(
 
 export async function publishSite(
   site: NDKEvent,
-  relays: string[]
+  relays: string[],
 ): Promise<NostrEvent> {
   // if we're signed in with OTP
   // or if we're editing delegated site
@@ -242,7 +242,7 @@ export async function publishSite(
       throw new Error("Cannot edit site signed by your keys in delegated mode");
     const reply = await fetchWithSession(
       `${NPUB_PRO_API}/site?relays=${relays.join(",")}`,
-      site.rawEvent()
+      site.rawEvent(),
     );
     if (reply.status !== 200) throw new Error("Failed to publish event");
 
@@ -261,7 +261,7 @@ export async function publishSite(
     const r = await site.publish(NDKRelaySet.fromRelayUrls(relays, ndk));
     console.log(
       "published site event to",
-      [...r].map((r) => r.url)
+      [...r].map((r) => r.url),
     );
     if (!r.size) throw new Error("Failed to publish to relays");
 

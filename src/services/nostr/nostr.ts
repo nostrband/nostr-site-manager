@@ -48,6 +48,12 @@ export function stv(e: NDKEvent | NostrEvent, name: string, value: string) {
   else e.tags.push([name, value]);
 }
 
+export function stv2(e: NDKEvent | NostrEvent, prefix: string, name: string, value: string) {
+  const t = e.tags.find((t) => t.length >= 3 && t[0] === prefix && t[1] === name);
+  if (t) t[2] = value;
+  else e.tags.push([prefix, name, value]);
+}
+
 export function stag(e: NDKEvent | NostrEvent, tag: string[]) {
   const i = e.tags.findIndex((t) => t.length >= 2 && t[0] === tag[0]);
   if (i < 0) e.tags.push(tag);

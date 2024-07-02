@@ -24,6 +24,7 @@ import {
   srm,
   publishSite,
   fetchWithSession,
+  stv2,
 } from "./nostr";
 import { nip19 } from "nostr-tools";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
@@ -84,6 +85,8 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   stv(e, "twitter_title", data.xTitle);
   stv(e, "twitter_description", data.xDescription);
   stv(e, "twitter_image", data.xImage);
+  stv2(e, "config", "codeinjection_head", data.codeinjection_head);
+  stv2(e, "config", "codeinjection_foot", data.codeinjection_foot);
 
   // remove nav
   srm(e, "nav");
@@ -170,6 +173,8 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
     fDescription: "",
     socialAccountFaceBook: "",
     socialAccountX: "",
+    codeinjection_head: s.codeinjection_head || "",
+    codeinjection_foot: s.codeinjection_foot || "",
     navigation: {
       primary:
         s.navigation?.map((n) => ({

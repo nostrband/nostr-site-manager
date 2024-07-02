@@ -50,6 +50,8 @@ export type ReturnSettingsSiteDataType = {
   hashtags: string[];
   kinds: number[];
   accentColor: string;
+  codeinjection_head: string;
+  codeinjection_foot: string;
 };
 
 export const getSites = async (): Promise<ReturnSitesDataType[]> => {

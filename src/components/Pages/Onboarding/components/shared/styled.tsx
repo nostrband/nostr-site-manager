@@ -90,12 +90,14 @@ export const StyledTitleBlock = styled(Typography)(({ theme }) => ({
   fontFamily: InterDisplay.style.fontFamily,
   fontWeight: "700",
   fontSize: 32,
+  lineHeight: "39px",
   color: theme.palette.secondary.main,
   span: {
     color: theme.palette.decorate.main,
   },
   [theme.breakpoints.down("md")]: {
     fontSize: 24,
+    lineHeight: "29px",
   },
 }));
 
@@ -113,9 +115,11 @@ export const StyledTitleFullBlock = styled(Typography)(({ theme }) => ({
   fontSize: 48,
   color: "#fff",
   marginBottom: 18,
+  lineHeight: "59px",
   [theme.breakpoints.down("md")]: {
     marginBottom: 16,
     fontSize: 32,
+    lineHeight: "39px",
   },
 }));
 
@@ -123,4 +127,5 @@ export const StyledSubTitleFullBlock = styled(Typography)(() => ({
   fontWeight: "600",
   fontSize: 24,
   color: "#fff",
+  lineHeight: "34px",
 }));

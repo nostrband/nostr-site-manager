@@ -34,6 +34,7 @@ export const StyledTitleFAQ = styled(Typography)(({ theme }) => ({
   fontSize: 24,
   color: theme.palette.primary.main,
   fontWeight: "600",
+  lineHeight: "34px",
   [theme.breakpoints.down("md")]: {
     fontSize: 21,
     marginBottom: 8,
@@ -44,8 +45,10 @@ export const StyledTitleDescription = styled(Typography)(({ theme }) => ({
   fontSize: 18,
   color: theme.palette.primary.main,
   fontWeight: "400",
+  lineHeight: "28px",
   [theme.breakpoints.down("md")]: {
     fontSize: 16,
+    lineHeight: "24px",
   },
 }));
 

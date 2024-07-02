@@ -76,6 +76,7 @@ export const StyledIconPrice = styled(Box)(() => ({
 
 export const StyledFeatureDescriptionPrice = styled(Typography)(() => ({
   fontSize: 16,
+  lineHeight: "24px",
   fontWeight: "400",
   span: {
     fontWeight: "bold",

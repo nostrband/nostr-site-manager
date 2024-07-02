@@ -13,7 +13,7 @@ export const StyledWrap = styled(Box)(({ theme }) => ({
   background: "#464B58",
   borderRadius: 40,
   padding: 96,
-  paddingTop: 128,
+  paddingTop: 64,
   [theme.breakpoints.down("md")]: {
     padding: 24,
     paddingTop: 32,

@@ -171,7 +171,7 @@ export const IconZeroMaintenance = () => {
       viewBox="0 0 235 300"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ height: "auto", width: "100%" }}
+      style={{ height: "100%", width: "100%" }}
     >
       <g id="Zero">
         <path

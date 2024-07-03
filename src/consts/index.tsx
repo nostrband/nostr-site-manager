@@ -14,6 +14,7 @@ import LinkTwoToneIcon from "@mui/icons-material/LinkTwoTone";
 import ImageTwoToneIcon from "@mui/icons-material/ImageTwoTone";
 import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
+import CodeTwoToneIcon from "@mui/icons-material/CodeTwoTone";
 
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
@@ -92,6 +93,8 @@ export const HASH_CONFIG = {
   HASHTAGS: "hashtags",
   KINDS: "kinds",
   ACCENT_COLOR: "accent-color",
+  CODE_INJECTION_FOOT: "codeinjection_foot",
+  CODE_INJECTION_HEAD: "codeinjection_head",
 };
 
 export const SETTINGS_CONFIG = [
@@ -152,6 +155,16 @@ export const SETTINGS_CONFIG = [
         title: "Kinds",
         path: HASH_CONFIG.KINDS,
         icon: <SegmentTwoToneIcon />,
+      },
+      {
+        title: "Code injection head",
+        path: HASH_CONFIG.CODE_INJECTION_HEAD,
+        icon: <CodeTwoToneIcon />,
+      },
+      {
+        title: "Code injection foot",
+        path: HASH_CONFIG.CODE_INJECTION_FOOT,
+        icon: <CodeTwoToneIcon />,
       },
     ],
   },

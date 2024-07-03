@@ -1,9 +1,10 @@
 "use client";
 import { StyledWrapper } from "@/components/PreviewHeader/styled";
-import { OutlinedInput, Select, Typography } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import { useRouter, useSearchParams } from "next/navigation";
-import { THEMES_PREVIEW, TYPES_THEMES_TAG } from "@/consts";
+import { Button } from "@mui/material";
+import { useSearchParams } from "next/navigation";
+import { ModalThemes } from "@/components/ModalThemes";
+import React, { useState } from "react";
+import { ExpandMoreTwoTone as ExpandMoreTwoToneIcon } from "@mui/icons-material";
 
 export const PreviewHeader = ({
   themeName,
@@ -12,56 +13,42 @@ export const PreviewHeader = ({
   themeName: string;
   themeId: string;
 }) => {
-  const router = useRouter();
+  const [isOpenModalThemes, setOpenModalThemes] = useState(false);
   const params = useSearchParams();
   const tag = params.get("tag") || "";
 
-  const handleChange = (value: string) => {
-    const filteredThemeIds = (
-      value ? THEMES_PREVIEW.filter((t) => t.tag === value) : THEMES_PREVIEW
-    ).map((t) => t.id);
-    const newThemeId = filteredThemeIds.includes(themeId)
-      ? themeId
-      : filteredThemeIds[0];
-    console.log("newThemeId", newThemeId, filteredThemeIds.length);
-
-    router.push(
-      `/preview?themeId=${newThemeId}${value !== "" ? `&tag=${value}` : ""}`,
-    );
+  const handleClose = () => {
+    setOpenModalThemes(false);
   };
 
-  const options = Object.values(TYPES_THEMES_TAG);
+  const handleOpen = () => {
+    setOpenModalThemes(true);
+  };
+
+
 
   return (
     <>
       <StyledWrapper>
-        <Typography variant="body1">
-          Theme: <b>{themeName}</b>
-        </Typography>
-
-        <Select
-          displayEmpty
-          value={tag}
-          size="small"
-          input={<OutlinedInput />}
-          renderValue={(selected: string) => {
-            if (selected === "") {
-              return "All themes";
-            }
-
-            return selected;
-          }}
+        <Button
+          sx={{ span: { paddingLeft: "4px" } }}
+          color="primary"
+          variant="outlined"
+          onClick={handleOpen}
+          endIcon={<ExpandMoreTwoToneIcon />}
         >
-          <MenuItem onClick={() => handleChange("")} key="" value="">
-            All themes
-          </MenuItem>
-          {options.map((el) => (
-            <MenuItem onClick={() => handleChange(el)} key={el} value={el}>
-              {el}
-            </MenuItem>
-          ))}
-        </Select>
+          Theme:
+          <b>
+            <span>{themeName}</span>
+          </b>
+        </Button>
       </StyledWrapper>
+      <ModalThemes
+        tag={tag}
+        themeId={themeId}
+        isOpen={isOpenModalThemes}
+        handleClose={handleClose}
+      />
     </>
   );
 };

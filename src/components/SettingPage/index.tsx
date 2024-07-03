@@ -20,6 +20,8 @@ import { Hashtags } from "@/components/SettingPage/components/Hashtags";
 import { AccentColor } from "@/components/SettingPage/components/AccentColor";
 import { Kinds } from "@/components/SettingPage/components/Kinds";
 import { WebsiteAddress } from "./components/WebsiteAddress";
+import { CodeInjectionHead } from "@/components/SettingPage/components/CodeInjectionHead";
+import { CodeInjectionFoot } from "@/components/SettingPage/components/CodeInjectionFoot";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -170,7 +172,7 @@ export const SettingPage = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id
+      (item) => item.id !== input.id,
     );
 
     setFieldValue("navigation", navigation);
@@ -243,6 +245,22 @@ export const SettingPage = () => {
       <Kinds
         handleChangeKinds={handleChangeKinds}
         selectedKinds={values.kinds}
+        submitForm={submitForm}
+        isLoading={isLoading}
+      />
+
+      <CodeInjectionHead
+        codeinjectionHead={values.codeinjection_head}
+        handleBlur={handleBlur}
+        handleChange={handleChange}
+        submitForm={submitForm}
+        isLoading={isLoading}
+      />
+
+      <CodeInjectionFoot
+        codeinjectionFoot={values.codeinjection_foot}
+        handleBlur={handleBlur}
+        handleChange={handleChange}
         submitForm={submitForm}
         isLoading={isLoading}
       />

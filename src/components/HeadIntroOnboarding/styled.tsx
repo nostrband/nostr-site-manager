@@ -33,6 +33,7 @@ export const StyledTypographyTitle = styled(Typography)(({ theme }) => ({
   maxWidth: "860px",
   margin: "auto",
   lineHeight: "124%",
+  fontWeight: "700",
   [theme.breakpoints.down("sm")]: {
     fontSize: "32px",
   },

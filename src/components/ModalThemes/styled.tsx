@@ -1,11 +1,15 @@
 import { styled } from "@mui/material/styles";
-import { Typography, Dialog, DialogContent } from "@mui/material";
+import { Typography, Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 export const StyledTitle = styled(Typography)(() => ({
+  fontWeight: "bold",
+  marginBottom: 10
+}));
+
+export const StyledDialogTitle = styled(DialogTitle)(() => ({
   display: "flex",
   justifyContent: "space-between",
-  alignItems: "center",
-  fontWeight: "bold",
+  paddingBottom: 5
 }));
 
 export const StyledDialog = styled(Dialog)(() => ({

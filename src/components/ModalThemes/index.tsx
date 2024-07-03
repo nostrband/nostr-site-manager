@@ -13,7 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   StyledTitle,
   StyledDialog,
-  StyledDialogContent,
+  StyledDialogContent, StyledDialogTitle,
 } from "@/components/ModalThemes/styled";
 import React, { useMemo } from "react";
 import {THEMES_PREVIEW, TYPES_THEMES_TAG} from "@/consts";
@@ -70,47 +70,49 @@ export const ModalThemes = ({
 
   return (
     <StyledDialog open={isOpen} onClose={handleClose}>
-      <DialogTitle component="div" id="alert-dialog-title">
-        <StyledTitle variant="body1">
-          Choose theme
-          <Fab
+      <StyledDialogTitle component="div" id="alert-dialog-title">
+        <Box>
+          <StyledTitle variant="body1">
+            Choose theme
+          </StyledTitle>
+          <Select
+              displayEmpty
+              IconComponent={ExpandMoreTwoToneIcon}
+              value={tag}
+              size="small"
+              color="primary"
+              sx={{ svg: { color: "#292C34" } }}
+              input={<OutlinedInput />}
+              renderValue={(selected: string) => {
+                if (selected === "") {
+                  return "All themes";
+                }
+
+                return selected;
+              }}
+          >
+            <MenuItem onClick={() => handleChange("")} key="" value="">
+              All themes
+            </MenuItem>
+            {options.map((el) => (
+                <MenuItem onClick={() => handleChange(el)} key={el} value={el}>
+                  {el}
+                </MenuItem>
+            ))}
+          </Select>
+        </Box>
+
+        <Fab
             onClick={handleCancel}
             size="small"
             color="primary"
             aria-label="close"
-          >
-            <CloseIcon />
-          </Fab>
-        </StyledTitle>
-      </DialogTitle>
+        >
+          <CloseIcon />
+        </Fab>
+      </StyledDialogTitle>
       <StyledDialogContent>
-<Box sx={{padding: '10px 24px', textAlign: 'center'}}>
-  <Select
-      displayEmpty
-      IconComponent={ExpandMoreTwoToneIcon}
-      value={tag}
-      size="small"
-      color="primary"
-      sx={{ svg: { color: "#292C34" } }}
-      input={<OutlinedInput />}
-      renderValue={(selected: string) => {
-        if (selected === "") {
-          return "All themes";
-        }
 
-        return selected;
-      }}
-  >
-    <MenuItem onClick={() => handleChange("")} key="" value="">
-      All themes
-    </MenuItem>
-    {options.map((el) => (
-        <MenuItem onClick={() => handleChange(el)} key={el} value={el}>
-          {el}
-        </MenuItem>
-    ))}
-  </Select>
-</Box>
 
 
 

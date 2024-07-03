@@ -1,13 +1,12 @@
 "use client";
-import {
-  StyledWrapper,
-} from "@/components/PreviewHeader/styled";
+import { StyledWrapper } from "@/components/PreviewHeader/styled";
 import { Button, OutlinedInput, Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useRouter, useSearchParams } from "next/navigation";
 import { THEMES_PREVIEW, TYPES_THEMES_TAG } from "@/consts";
 import { ModalThemes } from "@/components/ModalThemes";
-import { useState } from "react";
+import React, { useState } from "react";
+import { ExpandMoreTwoTone as ExpandMoreTwoToneIcon } from "@mui/icons-material";
 
 export const PreviewHeader = ({
   themeName,
@@ -48,14 +47,26 @@ export const PreviewHeader = ({
   return (
     <>
       <StyledWrapper>
-        <Button color="primary" variant="outlined" onClick={handleOpen}>
-          Theme:<b>{themeName}</b>
+        <Button
+          sx={{ span: { paddingLeft: "4px" } }}
+          color="primary"
+          variant="outlined"
+          onClick={handleOpen}
+          endIcon={<ExpandMoreTwoToneIcon />}
+        >
+          Theme:
+          <b>
+            <span>{themeName}</span>
+          </b>
         </Button>
 
         <Select
           displayEmpty
+          IconComponent={ExpandMoreTwoToneIcon}
           value={tag}
           size="small"
+          color="primary"
+          sx={{ svg: { color: "#292C34" } }}
           input={<OutlinedInput />}
           renderValue={(selected: string) => {
             if (selected === "") {

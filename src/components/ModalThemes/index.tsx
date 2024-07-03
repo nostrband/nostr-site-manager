@@ -70,7 +70,7 @@ export const ModalThemes = ({
 
   return (
     <StyledDialog open={isOpen} onClose={handleClose}>
-      <StyledDialogTitle component="div" id="alert-dialog-title">
+      <StyledDialogTitle>
         <Box>
           <StyledTitle variant="body1">
             Choose theme

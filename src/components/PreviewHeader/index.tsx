@@ -1,9 +1,7 @@
 "use client";
 import { StyledWrapper } from "@/components/PreviewHeader/styled";
-import { Button, OutlinedInput, Select } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import { useRouter, useSearchParams } from "next/navigation";
-import { THEMES_PREVIEW, TYPES_THEMES_TAG } from "@/consts";
+import { Button } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 import { ModalThemes } from "@/components/ModalThemes";
 import React, { useState } from "react";
 import { ExpandMoreTwoTone as ExpandMoreTwoToneIcon } from "@mui/icons-material";
@@ -16,23 +14,8 @@ export const PreviewHeader = ({
   themeId: string;
 }) => {
   const [isOpenModalThemes, setOpenModalThemes] = useState(false);
-  const router = useRouter();
   const params = useSearchParams();
   const tag = params.get("tag") || "";
-
-  const handleChange = (value: string) => {
-    const filteredThemeIds = (
-      value ? THEMES_PREVIEW.filter((t) => t.tag === value) : THEMES_PREVIEW
-    ).map((t) => t.id);
-    const newThemeId = filteredThemeIds.includes(themeId)
-      ? themeId
-      : filteredThemeIds[0];
-    console.log("newThemeId", newThemeId, filteredThemeIds.length);
-
-    router.push(
-      `/preview?themeId=${newThemeId}${value !== "" ? `&tag=${value}` : ""}`,
-    );
-  };
 
   const handleClose = () => {
     setOpenModalThemes(false);
@@ -42,7 +25,7 @@ export const PreviewHeader = ({
     setOpenModalThemes(true);
   };
 
-  const options = Object.values(TYPES_THEMES_TAG);
+
 
   return (
     <>
@@ -59,32 +42,6 @@ export const PreviewHeader = ({
             <span>{themeName}</span>
           </b>
         </Button>
-
-        <Select
-          displayEmpty
-          IconComponent={ExpandMoreTwoToneIcon}
-          value={tag}
-          size="small"
-          color="primary"
-          sx={{ svg: { color: "#292C34" } }}
-          input={<OutlinedInput />}
-          renderValue={(selected: string) => {
-            if (selected === "") {
-              return "All themes";
-            }
-
-            return selected;
-          }}
-        >
-          <MenuItem onClick={() => handleChange("")} key="" value="">
-            All themes
-          </MenuItem>
-          {options.map((el) => (
-            <MenuItem onClick={() => handleChange(el)} key={el} value={el}>
-              {el}
-            </MenuItem>
-          ))}
-        </Select>
       </StyledWrapper>
       <ModalThemes
         tag={tag}

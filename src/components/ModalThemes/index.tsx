@@ -6,7 +6,7 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
-  Typography,
+  Typography, Select, OutlinedInput, Box,
 } from "@mui/material";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -15,10 +15,12 @@ import {
   StyledDialog,
   StyledDialogContent,
 } from "@/components/ModalThemes/styled";
-import { useMemo } from "react";
-import { THEMES_PREVIEW } from "@/consts";
+import React, { useMemo } from "react";
+import {THEMES_PREVIEW, TYPES_THEMES_TAG} from "@/consts";
 import ListItemButton from "@mui/material/ListItemButton";
 import { useRouter } from "next/navigation";
+import {ExpandMoreTwoTone as ExpandMoreTwoToneIcon} from "@mui/icons-material";
+import MenuItem from "@mui/material/MenuItem";
 
 export const ModalThemes = ({
   isOpen,
@@ -50,6 +52,22 @@ export const ModalThemes = ({
     handleCancel();
   };
 
+  const handleChange = (value: string) => {
+    const filteredThemeIds = (
+        value ? THEMES_PREVIEW.filter((t) => t.tag === value) : THEMES_PREVIEW
+    ).map((t) => t.id);
+    const newThemeId = filteredThemeIds.includes(themeId)
+        ? themeId
+        : filteredThemeIds[0];
+    console.log("newThemeId", newThemeId, filteredThemeIds.length);
+
+    router.push(
+        `/preview?themeId=${newThemeId}${value !== "" ? `&tag=${value}` : ""}`,
+    );
+  };
+
+  const options = Object.values(TYPES_THEMES_TAG);
+
   return (
     <StyledDialog open={isOpen} onClose={handleClose}>
       <DialogTitle component="div" id="alert-dialog-title">
@@ -66,6 +84,36 @@ export const ModalThemes = ({
         </StyledTitle>
       </DialogTitle>
       <StyledDialogContent>
+<Box sx={{padding: '10px 24px', textAlign: 'center'}}>
+  <Select
+      displayEmpty
+      IconComponent={ExpandMoreTwoToneIcon}
+      value={tag}
+      size="small"
+      color="primary"
+      sx={{ svg: { color: "#292C34" } }}
+      input={<OutlinedInput />}
+      renderValue={(selected: string) => {
+        if (selected === "") {
+          return "All themes";
+        }
+
+        return selected;
+      }}
+  >
+    <MenuItem onClick={() => handleChange("")} key="" value="">
+      All themes
+    </MenuItem>
+    {options.map((el) => (
+        <MenuItem onClick={() => handleChange(el)} key={el} value={el}>
+          {el}
+        </MenuItem>
+    ))}
+  </Select>
+</Box>
+
+
+
         <List sx={{ width: "100%" }}>
           {filteredData.map((el) => {
             const isSelected = el.id === themeId;

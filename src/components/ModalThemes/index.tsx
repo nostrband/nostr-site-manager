@@ -54,7 +54,7 @@ export const ModalThemes = ({
     <StyledDialog open={isOpen} onClose={handleClose}>
       <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
-          Choice theme
+          Choose theme
           <Fab
             onClick={handleCancel}
             size="small"
@@ -81,8 +81,8 @@ export const ModalThemes = ({
                 <ListItemAvatar>
                   <Avatar
                     sx={{
-                      width: 100,
-                      height: 55,
+                      width: 170,
+                      height: 100,
                       boxShadow: "0px 3px 8px 0px #00000026",
                       borderRadius: "10px",
                     }}

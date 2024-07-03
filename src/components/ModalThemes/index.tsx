@@ -6,20 +6,24 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
-  Typography, Select, OutlinedInput, Box,
+  Typography,
+  Select,
+  OutlinedInput,
+  Box,
 } from "@mui/material";
 
 import CloseIcon from "@mui/icons-material/Close";
 import {
   StyledTitle,
   StyledDialog,
-  StyledDialogContent, StyledDialogTitle,
+  StyledDialogContent,
+  StyledDialogTitle,
 } from "@/components/ModalThemes/styled";
 import React, { useMemo } from "react";
-import {THEMES_PREVIEW, TYPES_THEMES_TAG} from "@/consts";
+import { THEMES_PREVIEW, TYPES_THEMES_TAG } from "@/consts";
 import ListItemButton from "@mui/material/ListItemButton";
 import { useRouter } from "next/navigation";
-import {ExpandMoreTwoTone as ExpandMoreTwoToneIcon} from "@mui/icons-material";
+import { ExpandMoreTwoTone as ExpandMoreTwoToneIcon } from "@mui/icons-material";
 import MenuItem from "@mui/material/MenuItem";
 
 export const ModalThemes = ({
@@ -54,15 +58,15 @@ export const ModalThemes = ({
 
   const handleChange = (value: string) => {
     const filteredThemeIds = (
-        value ? THEMES_PREVIEW.filter((t) => t.tag === value) : THEMES_PREVIEW
+      value ? THEMES_PREVIEW.filter((t) => t.tag === value) : THEMES_PREVIEW
     ).map((t) => t.id);
     const newThemeId = filteredThemeIds.includes(themeId)
-        ? themeId
-        : filteredThemeIds[0];
+      ? themeId
+      : filteredThemeIds[0];
     console.log("newThemeId", newThemeId, filteredThemeIds.length);
 
     router.push(
-        `/preview?themeId=${newThemeId}${value !== "" ? `&tag=${value}` : ""}`,
+      `/preview?themeId=${newThemeId}${value !== "" ? `&tag=${value}` : ""}`,
     );
   };
 
@@ -72,50 +76,44 @@ export const ModalThemes = ({
     <StyledDialog open={isOpen} onClose={handleClose}>
       <StyledDialogTitle>
         <Box>
-          <StyledTitle variant="body1">
-            Choose theme
-          </StyledTitle>
+          <StyledTitle variant="body1">Choose theme</StyledTitle>
           <Select
-              displayEmpty
-              IconComponent={ExpandMoreTwoToneIcon}
-              value={tag}
-              size="small"
-              color="primary"
-              sx={{ svg: { color: "#292C34" } }}
-              input={<OutlinedInput />}
-              renderValue={(selected: string) => {
-                if (selected === "") {
-                  return "All themes";
-                }
+            displayEmpty
+            IconComponent={ExpandMoreTwoToneIcon}
+            value={tag}
+            size="small"
+            color="primary"
+            sx={{ svg: { color: "#292C34" } }}
+            input={<OutlinedInput />}
+            renderValue={(selected: string) => {
+              if (selected === "") {
+                return "All themes";
+              }
 
-                return selected;
-              }}
+              return selected;
+            }}
           >
             <MenuItem onClick={() => handleChange("")} key="" value="">
               All themes
             </MenuItem>
             {options.map((el) => (
-                <MenuItem onClick={() => handleChange(el)} key={el} value={el}>
-                  {el}
-                </MenuItem>
+              <MenuItem onClick={() => handleChange(el)} key={el} value={el}>
+                {el}
+              </MenuItem>
             ))}
           </Select>
         </Box>
 
         <Fab
-            onClick={handleCancel}
-            size="small"
-            color="primary"
-            aria-label="close"
+          onClick={handleCancel}
+          size="small"
+          color="primary"
+          aria-label="close"
         >
           <CloseIcon />
         </Fab>
       </StyledDialogTitle>
       <StyledDialogContent>
-
-
-
-
         <List sx={{ width: "100%" }}>
           {filteredData.map((el) => {
             const isSelected = el.id === themeId;

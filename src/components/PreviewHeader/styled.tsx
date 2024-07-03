@@ -1,6 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, IconButton } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 export const StyledWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -22,4 +22,11 @@ export const StyledWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
     padding: "12px 16px",
   },
+}));
+
+export const StyledButtonTheme = styled(Typography)(() => ({
+  cursor: "pointer",
+  borderRadius: 16,
+  padding: "10px 12px",
+  border: "1px solid #292C34",
 }));

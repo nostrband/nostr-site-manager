@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
         codeinjection_head: "",
         codeinjection_foot: "",
       };
-    }
+    },
   );
 
   await new Promise((resolve) => setTimeout(resolve, 100));

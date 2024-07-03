@@ -5,7 +5,7 @@ import { Box, Typography } from "@mui/material";
 export const StyledWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  // justifyContent: "center",
+  justifyContent: "center",
   padding: "12px 32px",
   position: "fixed",
   flexWrap: "wrap",

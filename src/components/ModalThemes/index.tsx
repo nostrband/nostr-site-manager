@@ -45,7 +45,7 @@ export const ModalThemes = ({
     handleClose();
   };
 
-  const handleNavigate = (id) => {
+  const handleNavigate = (id: string) => {
     router.push(`/preview?themeId=${id}${tag ? `&tag=${tag}` : ""}`);
     handleCancel();
   };

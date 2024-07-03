@@ -25,8 +25,6 @@ export const PreviewHeader = ({
     setOpenModalThemes(true);
   };
 
-
-
   return (
     <>
       <StyledWrapper>

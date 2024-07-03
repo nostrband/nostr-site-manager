@@ -20,8 +20,7 @@ import { Hashtags } from "@/components/SettingPage/components/Hashtags";
 import { AccentColor } from "@/components/SettingPage/components/AccentColor";
 import { Kinds } from "@/components/SettingPage/components/Kinds";
 import { WebsiteAddress } from "./components/WebsiteAddress";
-import { CodeInjectionHead } from "@/components/SettingPage/components/CodeInjectionHead";
-import { CodeInjectionFoot } from "@/components/SettingPage/components/CodeInjectionFoot";
+import { Plugins } from "@/components/SettingPage/components/Plugins";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -249,15 +248,8 @@ export const SettingPage = () => {
         isLoading={isLoading}
       />
 
-      <CodeInjectionHead
+      <Plugins
         codeinjectionHead={values.codeinjection_head}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
-
-      <CodeInjectionFoot
         codeinjectionFoot={values.codeinjection_foot}
         handleBlur={handleBlur}
         handleChange={handleChange}

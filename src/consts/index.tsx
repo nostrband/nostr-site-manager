@@ -93,8 +93,7 @@ export const HASH_CONFIG = {
   HASHTAGS: "hashtags",
   KINDS: "kinds",
   ACCENT_COLOR: "accent-color",
-  CODE_INJECTION_FOOT: "codeinjection_foot",
-  CODE_INJECTION_HEAD: "codeinjection_head",
+  PLUGINS: "plugins",
 };
 
 export const SETTINGS_CONFIG = [
@@ -157,13 +156,8 @@ export const SETTINGS_CONFIG = [
         icon: <SegmentTwoToneIcon />,
       },
       {
-        title: "Code injection head",
-        path: HASH_CONFIG.CODE_INJECTION_HEAD,
-        icon: <CodeTwoToneIcon />,
-      },
-      {
-        title: "Code injection foot",
-        path: HASH_CONFIG.CODE_INJECTION_FOOT,
+        title: "Plugins",
+        path: HASH_CONFIG.PLUGINS,
         icon: <CodeTwoToneIcon />,
       },
     ],

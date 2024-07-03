@@ -11,17 +11,19 @@ import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
 
-interface ICodeInjectionFoot extends IBaseSetting {
+interface IPlugins extends IBaseSetting {
+  codeinjectionHead: string;
   codeinjectionFoot: string;
 }
 
-export const CodeInjectionFoot = ({
+export const Plugins = ({
+  codeinjectionHead,
   codeinjectionFoot,
   handleChange,
   handleBlur,
   submitForm,
   isLoading,
-}: ICodeInjectionFoot) => {
+}: IPlugins) => {
   const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setDisabled] = useState(false);
@@ -37,10 +39,10 @@ export const CodeInjectionFoot = ({
   }, [isDisabled]);
 
   return (
-    <StyledSettingCol id={HASH_CONFIG.CODE_INJECTION_FOOT}>
+    <StyledSettingCol id={HASH_CONFIG.PLUGINS}>
       <StyledSettingBlock>
         <StyledHeadSettingBlock>
-          <Typography variant="h6">Code injection foot</Typography>
+          <Typography variant="h6">Plugins</Typography>
 
           <SaveButton
             isEdit={isEdit}
@@ -50,18 +52,34 @@ export const CodeInjectionFoot = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Write some script for foot
+          Write some plugins in header and footer
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
-          <InputLabel htmlFor="codeinjection_foot">
-            Code injection foot
+          <InputLabel htmlFor="codeinjection_head">
+            Code injection in header
           </InputLabel>
           <OutlinedInput
             inputRef={inputRef}
+            id="codeinjection_head"
+            name="codeinjection_head"
+            label="Code injection in header"
+            multiline
+            rows={5}
+            onChange={handleChange}
+            value={codeinjectionHead}
+            onBlur={handleBlur}
+          />
+        </StyledFormControl>
+
+        <StyledFormControl disabled={!isEdit} fullWidth size="small">
+          <InputLabel htmlFor="codeinjection_foot">
+            Code injection in footer
+          </InputLabel>
+          <OutlinedInput
             id="codeinjection_foot"
             name="codeinjection_foot"
-            label="Code injection foot"
+            label="Code injection in footer"
             multiline
             rows={5}
             onChange={handleChange}

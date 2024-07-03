@@ -16,7 +16,7 @@ export const PreviewHeader = ({
   themeName: string;
   themeId: string;
 }) => {
-  const [isOpenModalThemes, setOpenModalThemes] = useState(true);
+  const [isOpenModalThemes, setOpenModalThemes] = useState(false);
   const router = useRouter();
   const params = useSearchParams();
   const tag = params.get("tag") || "";

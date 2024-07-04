@@ -10,6 +10,7 @@ export default function Home() {
 
   const logout = () => {
     document.dispatchEvent(new Event("nlLogout"));
+    window.location.reload();
   };
 
   return (

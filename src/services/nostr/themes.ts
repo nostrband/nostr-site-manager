@@ -1,4 +1,4 @@
-import NDK, { NDKEvent, NDKNip07Signer, NDKRelaySet } from "@nostr-dev-kit/ndk";
+import NDK, { NDKEvent, NDKNip07Signer, NDKRelaySet, NostrEvent } from "@nostr-dev-kit/ndk";
 import {
   DefaultAssetFetcher,
   KIND_PACKAGE,
@@ -34,6 +34,8 @@ import { nip19 } from "nostr-tools";
 import { NPUB_PRO_API, NPUB_PRO_DOMAIN, THEMES_PREVIEW } from "@/consts";
 import { isEqual, omit } from "lodash";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
+import { bytesToHex, randomBytes } from "@noble/hashes/utils";
+
 
 export interface PreviewSettings {
   themeId: string;
@@ -56,7 +58,9 @@ export interface DesignSettings {
   navigation: { label: string; url: string }[];
 }
 
-let token = "";
+const serverPubkey = SERVER_PUBKEY;
+if (!serverPubkey) throw new Error("No server pubkey");
+
 const themes: NDKEvent[] = [];
 const themePackages: NDKEvent[] = [];
 const parsedThemes: Map<string, Theme> = new Map();
@@ -251,8 +255,19 @@ export async function setPreviewSettings(ns: PreviewSettings) {
   return updated || newTheme;
 }
 
+function checkYourSite(s: NDKEvent | NostrEvent) {
+  if (userIsDelegated) {
+    if (s.pubkey === userPubkey)
+      throw new Error("Cannot edit your site in delegated mode");
+    if (s.pubkey !== serverPubkey || tv(s, "u") !== userPubkey)
+      throw new Error("Not your site");
+  } else {
+    if (s.pubkey !== userPubkey) throw new Error("Not your site");
+  }
+}
+
 function setSite(s: NDKEvent) {
-  if (s.pubkey !== userPubkey) throw new Error("Not your site");
+  checkYourSite(s);
 
   site = s;
 
@@ -375,8 +390,6 @@ async function preparePreviewSite() {
       hashtags,
     });
 
-    if (userIsDelegated) event.pubkey = SERVER_PUBKEY;
-
     // admin not contributor?
     if (
       settings.contributors &&
@@ -384,7 +397,7 @@ async function preparePreviewSite() {
       !settings.contributors.includes(userPubkey)
     ) {
       const contribSlug = tv(event, "d");
-      let slug = contribSlug + "-1";
+      let slug = contribSlug + "-" + userPubkey.substring(0, 4);
       if (userProfile) {
         const adminSlug = getProfileSlug(userProfile);
         if (adminSlug) slug = contribSlug + "-" + adminSlug;
@@ -397,14 +410,20 @@ async function preparePreviewSite() {
 
     // make sure d-tag is unique, use ':' as
     // suffix separator so that we could parse it and extract
-    // the original d-tag to use as preferred domain name
+    // the original d-tag to use as preferred domain name,
+    // use longer random suffix for delegated sites
     const d_tag = tv(event, "d");
     stv(
       event,
       "d",
-      // https://stackoverflow.com/a/8084248
-      d_tag + ":" + (Math.random() + 1).toString(36).substring(2, 5)
+      d_tag + ":" + bytesToHex(randomBytes(userIsDelegated ? 8 : 3))
     );
+
+    if (userIsDelegated) {
+      // set admin as owner, server as event author
+      stv(event, "u", userPubkey);
+      event.pubkey = serverPubkey!;
+    }
 
     // reset renderer, init store, etc
     setSite(new NDKEvent(ndk, event));
@@ -427,12 +446,8 @@ async function preparePreviewSite() {
     // for existing sites that have already been published
     // we only update the input settings
 
-    if (userIsDelegated) {
-      if (site.pubkey !== SERVER_PUBKEY || tv(site, "u") !== userPubkey)
-        throw new Error("Not your site");
-    } else {
-      if (site.pubkey !== userPubkey) throw new Error("Not your site");
-    }
+    // ensure we actually can edit this site
+    checkYourSite(site);
 
     // theme
     setSiteTheme(pkg);
@@ -602,19 +617,6 @@ async function publishPreview() {
   setSiteTheme(pkg);
 
   const event = await publishSite(site, [SITE_RELAY, ...userRelays]);
-
-  // // sign it
-  // await site.sign(new NDKNip07Signer());
-  // console.log("signed site event", site);
-
-  // // publish
-  // const r = await site.publish(
-  //   NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk),
-  // );
-  // console.log(
-  //   "published site event to",
-  //   [...r].map((r) => r.url),
-  // );
 
   // return naddr
   return eventId(event);

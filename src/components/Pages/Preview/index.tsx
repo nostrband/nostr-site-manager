@@ -1,5 +1,8 @@
 "use client";
-import { StyledPreviewTestSite } from "@/components/Pages/Preview/styled";
+import {
+  StyledPreviewTestSite,
+  StyledPreviewTestSiteNotAuth,
+} from "@/components/Pages/Preview/styled";
 import { PreviewNavigation } from "@/components/PreviewNavigation";
 import { useSearchParams, redirect, useRouter } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
@@ -197,14 +200,25 @@ export const Preview = () => {
 
       <PreviewHeader themeId={themeId} themeName={theme.name} />
 
-      <StyledPreviewTestSite>
-        <iframe
-          ref={iframeRef}
-          style={{ border: 0 }}
-          width={"100%"}
-          height={"100%"}
-        ></iframe>
-      </StyledPreviewTestSite>
+      {!authed ? (
+        <StyledPreviewTestSiteNotAuth>
+          <iframe
+            ref={iframeRef}
+            style={{ border: 0 }}
+            width={"100%"}
+            height={"100%"}
+          ></iframe>
+        </StyledPreviewTestSiteNotAuth>
+      ) : (
+        <StyledPreviewTestSite>
+          <iframe
+            ref={iframeRef}
+            style={{ border: 0 }}
+            width={"100%"}
+            height={"100%"}
+          ></iframe>
+        </StyledPreviewTestSite>
+      )}
 
       <PreviewNavigation
         author={contributor || userPubkey}

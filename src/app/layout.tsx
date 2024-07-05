@@ -11,7 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
-      lang="ru"
+      lang="en"
       style={{
         height: "100%",
         scrollBehavior: "smooth",

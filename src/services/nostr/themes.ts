@@ -566,6 +566,9 @@ export async function renderPreview(
   return new Promise<void>((ok) => {
     iframe.src = "/preview.html?" + Math.random();
     iframe.onload = async () => {
+
+      iframe.onload = null;
+
       const cw = iframe.contentWindow!;
       await setHtml(html, cw.document, cw);
 

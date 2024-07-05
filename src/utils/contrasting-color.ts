@@ -1,4 +1,4 @@
-const hexToRgb = (hex) => {
+const hexToRgb = (hex: string) => {
   hex = hex.replace(/^#/, "");
 
   if (hex.length === 3) {
@@ -15,11 +15,11 @@ const hexToRgb = (hex) => {
 
   return { r, g, b };
 };
-const getBrightness = ({ r, g, b }) => {
+const getBrightness = ({ r, g, b }: { r: number, g: number, b: number }) => {
   return (r * 299 + g * 587 + b * 114) / 1000;
 };
 
-export const getContrastingTextColor = (hex) => {
+export const getContrastingTextColor = (hex: string) => {
   const rgb = hexToRgb(hex);
   const brightness = getBrightness(rgb);
   return brightness < 128 ? "#fff" : "#000";

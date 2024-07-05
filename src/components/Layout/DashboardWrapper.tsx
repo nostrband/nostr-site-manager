@@ -10,7 +10,8 @@ import useResponsive from "@/hooks/useResponsive";
 import { useListSites } from "@/hooks/useListSites";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { ReturnSitesDataType } from "@/services/sites.service";
-import { Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
+import { Alert, AlertTitle } from "@mui/lab";
 
 export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const isDesktop = useResponsive("up", "lg");
@@ -66,7 +67,21 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
       <MainContent isDesktop={isDesktop}>
         <Header handleOpen={handleOpen} hideSideBar={isHideSideBar} />
         <PageWrapper>
-          {isLogin ? children : <Button onClick={login}>Login</Button>}
+          {isLogin ? (
+            children
+          ) : (
+            <Box sx={{ display: "flex", height: "100%" }}>
+              <Alert sx={{ margin: "auto" }} severity="info">
+                <AlertTitle>Your are not login</AlertTitle>
+                <Typography gutterBottom>
+                  Please log in to manager your websites.
+                </Typography>
+                <Button variant="contained" onClick={login}>
+                  Login
+                </Button>
+              </Alert>
+            </Box>
+          )}
         </PageWrapper>
       </MainContent>
       {!isHideSideBar && (

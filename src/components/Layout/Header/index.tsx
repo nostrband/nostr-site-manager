@@ -74,51 +74,51 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
   const img = meta?.picture || "";
 
   return (
-      <StyledAppBar isHideSideBar={!hideSideBar}>
-        <StyledToolbar>
-          <StyledLogo onClick={handleClickBackToHome}>
-            <Logo />
-          </StyledLogo>
+    <StyledAppBar isHideSideBar={!hideSideBar}>
+      <StyledToolbar>
+        <StyledLogo onClick={handleClickBackToHome}>
+          <Logo />
+        </StyledLogo>
 
-          <StyledUser>
-            {!hideSideBar && (
-              <StyledIconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleOpen}
-              >
-                <MenuTwoToneIcon />
-              </StyledIconButton>
-            )}
-
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <StyledUserAvatar alt={name} src={img} />
-            </IconButton>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+        <StyledUser>
+          {!hideSideBar && (
+            <StyledIconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleOpen}
             >
-              <MenuItem onClick={handleSwitchAccount}>
-                <Typography textAlign="left">Switch account</Typography>
-              </MenuItem>
-              <MenuItem onClick={logout}>
-                <Typography textAlign="left">Logout</Typography>
-              </MenuItem>
-            </Menu>
-          </StyledUser>
-        </StyledToolbar>
-      </StyledAppBar>
+              <MenuTwoToneIcon />
+            </StyledIconButton>
+          )}
+
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <StyledUserAvatar alt={name} src={img} />
+          </IconButton>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            <MenuItem onClick={handleSwitchAccount}>
+              <Typography textAlign="left">Switch account</Typography>
+            </MenuItem>
+            <MenuItem onClick={logout}>
+              <Typography textAlign="left">Logout</Typography>
+            </MenuItem>
+          </Menu>
+        </StyledUser>
+      </StyledToolbar>
+    </StyledAppBar>
   );
 };

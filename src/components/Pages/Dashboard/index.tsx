@@ -60,7 +60,7 @@ export const Dashboard = () => {
               display: "flex",
               height: "300px",
               width: "100%",
-              borderRadius: "15px"
+              borderRadius: "15px",
             }}
           >
             <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />

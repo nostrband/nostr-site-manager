@@ -99,7 +99,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
 
   // edit tags
   srm(e, "include");
-  for (const t of data.hashtags) e.tags.push(["include", "t", t]);
+  for (const t of data.hashtags) e.tags.push(["include", "t", t.replace('#', '')]);
   if (!data.hashtags.length) stv(e, "include", "*");
 
   // edit kinds

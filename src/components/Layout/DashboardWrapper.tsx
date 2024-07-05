@@ -71,15 +71,14 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
             children
           ) : (
             <Box sx={{ display: "flex", height: "100%" }}>
-              <Alert sx={{ margin: "auto" }} severity="info">
-                <AlertTitle>Your are not login</AlertTitle>
-                <Typography gutterBottom>
-                  Please log in to manager your websites.
-                </Typography>
-                <Button variant="contained" onClick={login}>
+              <Box sx={{ margin: "auto", textAlign: 'center' }}>
+                <Button variant="contained" color="decorate" onClick={login}>
                   Login
                 </Button>
-              </Alert>
+                <Typography sx={{ marginTop: "15px" }}>
+                  Please log in to manager your websites.
+                </Typography>
+              </Box>
             </Box>
           )}
         </PageWrapper>

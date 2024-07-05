@@ -76,6 +76,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   stv(e, "icon", data.icon);
   stv(e, "logo", data.logo);
   stv(e, "image", data.image);
+  stv(e, "color", data.accentColor);
   stv(e, "lang", data.language);
   stv(e, "meta_description", data.metaDescription);
   stv(e, "meta_title", data.metaTitle);
@@ -88,19 +89,23 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   stv2(e, "config", "codeinjection_head", data.codeinjection_head);
   stv2(e, "config", "codeinjection_foot", data.codeinjection_foot);
 
-  // remove nav
+  // nav
   srm(e, "nav");
-  // write nav back
-  for (const n of data.navigation.primary) {
+  for (const n of data.navigation.primary)
     e.tags.push(["nav", n.link, n.title]);
-  }
 
-  // remove p
+  // p tags
   srm(e, "p");
-  // write p back
-  for (const p of data.contributors) {
-    e.tags.push(["p", p]);
-  }
+  for (const p of data.contributors) e.tags.push(["p", p]);
+
+  // edit tags
+  srm(e, "include");
+  for (const t of data.hashtags) e.tags.push(["include", "t", t.replace('#', '')]);
+  if (!data.hashtags.length) stv(e, "include", "*");
+
+  // edit kinds
+  srm(e, "kind");
+  for (const k of data.kinds) e.tags.push(["kind", k + ""]);
 
   const relays = [...userRelays, SITE_RELAY];
   const naddr = nip19.naddrEncode({
@@ -114,7 +119,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   console.log("domain", domain, "oldDomain", oldDomain);
   if (domain && domain !== oldDomain) {
     const reply = await fetchWithSession(
-      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`,
+      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`
     );
     if (reply.status !== 200) throw new Error("Failed to reserve");
     const r = await reply.json();
@@ -125,10 +130,11 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   await publishSite(new NDKEvent(ndk, e), relays);
 
   // redeploy if domain changed, also release the old domain
-  if (oldDomain && oldDomain !== domain) {
+  // if (oldDomain && oldDomain !== domain)
+  {
     const reply = await fetchWithSession(
       // from=oldDomain - delete the old site after 7 days
-      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`,
+      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`
     );
     if (reply.status !== 200) throw new Error("Failed to deploy");
 
@@ -202,7 +208,7 @@ async function fetchSiteThemes() {
         .filter((id) => !!id),
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk!),
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk!)
   );
 
   for (const e of events) {
@@ -223,7 +229,7 @@ function parseSite(ne: NostrEvent) {
     // @ts-ignore
     identifier: tv(e, "d") || "",
     pubkey: e.pubkey,
-    relays: [...userRelays, SITE_RELAY],
+    relays: [SITE_RELAY, ...userRelays],
   };
   return parser.parseSite(addr, e);
 }
@@ -253,13 +259,13 @@ export async function fetchSites() {
           },
         ],
         { groupable: false },
-        NDKRelaySet.fromRelayUrls([...userRelays, SITE_RELAY], ndk!),
+        NDKRelaySet.fromRelayUrls([SITE_RELAY, ...userRelays], ndk!)
       );
       console.log("site events", events);
 
       // sort by timestamp desc
       const array = [...events.values()].sort(
-        (a, b) => b.created_at! - a.created_at!,
+        (a, b) => b.created_at! - a.created_at!
       );
 
       sites.push(...array.map((e) => parseSite(e.rawEvent())));
@@ -303,7 +309,7 @@ export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
       authors: req,
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls(OUTBOX_RELAYS, ndk),
+    NDKRelaySet.fromRelayUrls(OUTBOX_RELAYS, ndk)
   );
 
   for (const e of events) {
@@ -328,7 +334,7 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
     {
       groupable: false,
     },
-    NDKRelaySet.fromRelayUrls(SEARCH_RELAYS, ndk),
+    NDKRelaySet.fromRelayUrls(SEARCH_RELAYS, ndk)
   );
 
   for (const e of events) {

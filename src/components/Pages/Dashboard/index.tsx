@@ -15,6 +15,7 @@ import { TitleAdmin } from "@/components/TitleAdmin";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import React from "react";
 import Avatar from "@mui/material/Avatar";
+import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 
 export const Dashboard = () => {
   const { data, isLoading, isFetching } = useListSites();
@@ -43,19 +44,30 @@ export const Dashboard = () => {
       <TitleAdmin>Dashboard</TitleAdmin>
       <Card elevation={0} sx={{ maxWidth: "600px" }}>
         <CardHeader title={<b>{getSite?.title}</b>} sx={{ paddingLeft: 0 }} />
-        <CardMedia
-          component="img"
-          height="300"
-          image={getSite?.image}
-          alt="site"
-          sx={{ borderRadius: "15px" }}
-        />
+
+        {Boolean(getSite?.image) ? (
+          <CardMedia
+            component="img"
+            height="300"
+            image={getSite?.image}
+            alt={getSite?.name}
+            sx={{ borderRadius: "15px" }}
+          />
+        ) : (
+          <Box
+            sx={{
+              background: "#ececec",
+              display: "flex",
+              height: "300px",
+              width: "100%",
+              borderRadius: "15px"
+            }}
+          >
+            <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
+          </Box>
+        )}
         <CardContent sx={{ paddingLeft: 0 }}>
           <Typography variant="body2">{getSite?.description}</Typography>
-          <Typography variant="body2">
-            <b>Hashtags: </b>
-            {getSite?.hashtags.length ? [...getSite?.hashtags].join(", ") : 0}
-          </Typography>
         </CardContent>
       </Card>
       <Box sx={{ display: "flex", gap: "10px" }}>

@@ -27,7 +27,6 @@ interface IHeader {
 }
 
 export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
-  const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
@@ -53,12 +52,8 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
   };
 
   const handleSwitchAccount = () => {
-    setOpenModalAuthor(true);
+    document.dispatchEvent(new Event("nlLaunch"));
     handleCloseUserMenu();
-  };
-
-  const handleAuthor = (pubkey: string | any) => {
-    setOpenModalAuthor(false);
   };
 
   useEffect(() => {
@@ -79,7 +74,6 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
   const img = meta?.picture || "";
 
   return (
-    <>
       <StyledAppBar isHideSideBar={!hideSideBar}>
         <StyledToolbar>
           <StyledLogo onClick={handleClickBackToHome}>
@@ -126,11 +120,5 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
           </StyledUser>
         </StyledToolbar>
       </StyledAppBar>
-      <ModalAuthor
-        pubkey={userPubkey}
-        isOpen={isOpenModalAuthor}
-        handleClose={handleAuthor}
-      />
-    </>
   );
 };

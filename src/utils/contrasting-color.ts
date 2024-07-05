@@ -15,7 +15,7 @@ const hexToRgb = (hex: string) => {
 
   return { r, g, b };
 };
-const getBrightness = ({ r, g, b }: { r: number, g: number, b: number }) => {
+const getBrightness = ({ r, g, b }: { r: number; g: number; b: number }) => {
   return (r * 299 + g * 587 + b * 114) / 1000;
 };
 

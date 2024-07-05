@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
@@ -46,39 +47,50 @@ export const ListSites = ({ data }: ListSitesType) => {
                 onClick={() => handleSelect(el.id)}
               >
                 <CardActionArea sx={{ height: "100%" }}>
-                  <CardHeader title={<b>{el.title}</b>} />
-                  <CardMedia
-                    component="img"
-                    height="194"
-                    image={el.image}
-                    alt="site"
+                  <CardHeader
+                    avatar={<Avatar src={el.logo}>{el.name}</Avatar>}
+                    title={<b>{el.title}</b>}
                   />
+                  {Boolean(el.image) ? (
+                    <CardMedia
+                      component="img"
+                      height="194"
+                      image={el.image}
+                      alt={el.name}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        background: "#ececec",
+                        display: "flex",
+                        height: "194px",
+                        width: "100%",
+                      }}
+                    >
+                      <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
+                    </Box>
+                  )}
                   <Box sx={{ height: "100%", background: `${el.accentColor}` }}>
                     <CardContent>
                       <Typography
                         variant="body2"
                         color={getColor(el.accentColor)}
                         sx={{
-                          whiteSpace: "nowrap",
+                          width: "100%",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
+                          display: "-webkit-box",
+                          WebkitLineClamp: "2",
+                          WebkitBoxOrient: "vertical",
+                          wordWrap: "break-word",
                         }}
                       >
                         {el.description}
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        color={getColor(el.accentColor)}
-                      >
-                        <b>Hashtags: </b>
-                        {el.hashtags.length ? [...el.hashtags].join(", ") : 0}
-                      </Typography>
                     </CardContent>
                     <CardHeader
                       avatar={
-                        <Avatar src={el.icon} aria-label="recipe">
-                          {el.contributors[0]}
-                        </Avatar>
+                        <Avatar src={el.icon}>{el.contributors[0]}</Avatar>
                       }
                       title={
                         <Box

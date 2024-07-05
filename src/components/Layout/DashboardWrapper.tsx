@@ -22,6 +22,8 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const pathAdmin = useFirstPathElement();
   const { data } = useListSites();
 
+  const isHideSideBar = pathname === "/admin";
+
   const getValidParamsId = useCallback(
     (list: ReturnSitesDataType[], id: string | string[]) => {
       const isId = list.find((el) => el.id === id);
@@ -62,12 +64,14 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   return (
     <MainWrapper>
       <MainContent isDesktop={isDesktop}>
-        <Header handleOpen={handleOpen} />
+        <Header handleOpen={handleOpen} hideSideBar={isHideSideBar} />
         <PageWrapper>
           {isLogin ? children : <Button onClick={login}>Login</Button>}
         </PageWrapper>
       </MainContent>
-      <SideBarNav handleClose={handleClose} isOpen={isOpen} />
+      {!isHideSideBar && (
+        <SideBarNav handleClose={handleClose} isOpen={isOpen} />
+      )}
     </MainWrapper>
   );
 };

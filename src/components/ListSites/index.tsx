@@ -105,16 +105,16 @@ export const ListSites = ({ data }: ListSitesType) => {
                           <b>{el.name || el.contributors[0]}</b>
                         </Box>
                       }
-                      subheader={
-                        <Box
-                          sx={{
-                            color: getColor(el.accentColor),
-                            opacity: 0.7,
-                          }}
-                        >
-                          contributer
-                        </Box>
-                      }
+                      // subheader={
+                      //   <Box
+                      //     sx={{
+                      //       color: getColor(el.accentColor),
+                      //       opacity: 0.7,
+                      //     }}
+                      //   >
+                      //     contributer
+                      //   </Box>
+                      // }
                     />
                   </Box>
                 </CardActionArea>

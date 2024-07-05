@@ -76,6 +76,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   stv(e, "icon", data.icon);
   stv(e, "logo", data.logo);
   stv(e, "image", data.image);
+  stv(e, "color", data.accentColor);
   stv(e, "lang", data.language);
   stv(e, "meta_description", data.metaDescription);
   stv(e, "meta_title", data.metaTitle);
@@ -129,7 +130,8 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   await publishSite(new NDKEvent(ndk, e), relays);
 
   // redeploy if domain changed, also release the old domain
-  if (oldDomain && oldDomain !== domain) {
+  // if (oldDomain && oldDomain !== domain) 
+  {
     const reply = await fetchWithSession(
       // from=oldDomain - delete the old site after 7 days
       `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`

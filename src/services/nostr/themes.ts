@@ -1,4 +1,9 @@
-import NDK, { NDKEvent, NDKNip07Signer, NDKRelaySet, NostrEvent } from "@nostr-dev-kit/ndk";
+import NDK, {
+  NDKEvent,
+  NDKNip07Signer,
+  NDKRelaySet,
+  NostrEvent,
+} from "@nostr-dev-kit/ndk";
 import {
   DefaultAssetFetcher,
   KIND_PACKAGE,
@@ -35,7 +40,6 @@ import { NPUB_PRO_API, NPUB_PRO_DOMAIN, THEMES_PREVIEW } from "@/consts";
 import { isEqual, omit } from "lodash";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { bytesToHex, randomBytes } from "@noble/hashes/utils";
-
 
 export interface PreviewSettings {
   themeId: string;
@@ -566,7 +570,6 @@ export async function renderPreview(
   return new Promise<void>((ok) => {
     iframe.src = "/preview.html?" + Math.random();
     iframe.onload = async () => {
-
       iframe.onload = null;
 
       const cw = iframe.contentWindow!;
@@ -718,7 +721,7 @@ export async function publishPreviewSite() {
 
       // need to assign a domain?
       if (!tv(site, "r")) {
-        const requestedDomain = tv(site, "d")!.split(":")[0];
+        const requestedDomain = tv(site, "d")!.split(":")[0].replace("_", "-");
         console.log("naddr", naddr);
         console.log("requesting domain", requestedDomain);
         const reply = await fetchWithSession(

@@ -44,7 +44,10 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
       <StyledSieBarElements>
         {isSettings ? (
           <StyledSieBarButton
-            onClick={() => router.push(`${pathAdmin}/${params.id}/dashboard`)}
+            onClick={() => {
+              router.push(`${pathAdmin}/${params.id}/dashboard`);
+              handleClose();
+            }}
             size="large"
             fullWidth
             variant="text"
@@ -54,14 +57,14 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
             Back to dashboard
           </StyledSieBarButton>
         ) : (
-          <ListSitesDropdown />
+          <ListSitesDropdown handleCloseSideBar={handleClose} />
         )}
       </StyledSieBarElements>
       <Divider />
       {isParamsID && (
         <List disablePadding>
           {isSettings ? (
-            <NavSettings />
+            <NavSettings handleCloseSideBar={handleClose} />
           ) : (
             NAV_CONFIG.map(({ title, path: slug, icon }) => {
               const path = `${pathAdmin}/${params.id}/${slug}`;
@@ -69,6 +72,7 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
               return (
                 <ListItem key={title}>
                   <StyledSieBarButton
+                    onClick={handleClose}
                     size="large"
                     fullWidth
                     variant={pathname === path ? "contained" : "text"}

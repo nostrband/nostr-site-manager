@@ -54,7 +54,7 @@ export type ReturnSettingsSiteDataType = {
   codeinjection_foot: string;
 };
 
-export const getSites = async (): Promise<ReturnSitesDataType[]> => {
+export const getSites = async (): Promise<ReturnSettingsSiteDataType[]> => {
   try {
     return await fetchSites();
     // const res: AxiosResponse<any> = await ApiClient.get("/sites");

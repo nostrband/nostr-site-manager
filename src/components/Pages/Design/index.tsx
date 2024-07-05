@@ -283,6 +283,8 @@ export const Design = () => {
     return redirect("/");
   }
 
+  console.log({ values });
+
   return (
     <>
       {isLoading && (

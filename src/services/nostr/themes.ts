@@ -1,4 +1,9 @@
-import NDK, { NDKEvent, NDKNip07Signer, NDKRelaySet, NostrEvent } from "@nostr-dev-kit/ndk";
+import NDK, {
+  NDKEvent,
+  NDKNip07Signer,
+  NDKRelaySet,
+  NostrEvent,
+} from "@nostr-dev-kit/ndk";
 import {
   DefaultAssetFetcher,
   KIND_PACKAGE,
@@ -35,7 +40,6 @@ import { NPUB_PRO_API, NPUB_PRO_DOMAIN, THEMES_PREVIEW } from "@/consts";
 import { isEqual, omit } from "lodash";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { bytesToHex, randomBytes } from "@noble/hashes/utils";
-
 
 export interface PreviewSettings {
   themeId: string;
@@ -88,7 +92,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   if (!globalThis.document) return;
 
   const addrs = THEMES_PREVIEW.map((t) => t.id).map(
-    (n) => nip19.decode(n).data as nip19.AddressPointer
+    (n) => nip19.decode(n).data as nip19.AddressPointer,
   );
 
   const themeFilter = {
@@ -100,7 +104,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const themeEvents = await ndk.fetchEvents(
     themeFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
   );
 
   themes.push(...themeEvents);
@@ -114,7 +118,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   const packageEvents = await ndk.fetchEvents(
     packageFilter,
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
   );
 
   themePackages.push(...packageEvents);
@@ -188,7 +192,7 @@ export class Mutex {
 export async function setPreviewSettings(ns: PreviewSettings) {
   let updated = !isEqual(
     omit(settings, ["themeId", "design"]),
-    omit(ns, "themeId", "design")
+    omit(ns, "themeId", "design"),
   );
 
   let newContribs = !site;
@@ -306,13 +310,13 @@ export async function fetchTopHashtags(pubkeys: string[]) {
     {
       groupable: false,
     },
-    NDKRelaySet.fromRelayUrls(relays, ndk)
+    NDKRelaySet.fromRelayUrls(relays, ndk),
   );
 
   const topTags = new Map<string, number>();
   for (const t of [...events]
     .map((e) =>
-      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1])
+      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1]),
     )
     .flat()) {
     let c = topTags.get(t) || 0;
@@ -416,7 +420,7 @@ async function preparePreviewSite() {
     stv(
       event,
       "d",
-      d_tag + ":" + bytesToHex(randomBytes(userIsDelegated ? 8 : 3))
+      d_tag + ":" + bytesToHex(randomBytes(userIsDelegated ? 8 : 3)),
     );
 
     if (userIsDelegated) {
@@ -558,7 +562,7 @@ async function renderPreviewHtml(path: string = "/") {
 
 export async function renderPreview(
   iframe: HTMLIFrameElement,
-  path: string = "/"
+  path: string = "/",
 ) {
   if (!iframe) throw new Error("No iframe");
   const html = await renderPreviewHtml(path);
@@ -652,7 +656,7 @@ async function fetchSite() {
       "#d": [addr.identifier],
     },
     { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk)
+    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk),
   );
   console.log("loaded site event", siteId, event);
 
@@ -719,7 +723,7 @@ export async function publishPreviewSite() {
         console.log("naddr", naddr);
         console.log("requesting domain", requestedDomain);
         const reply = await fetchWithSession(
-          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`
+          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
         );
         if (reply.status !== 200)
           throw new Error("Failed to reserve domain name");
@@ -747,7 +751,7 @@ export async function publishPreviewSite() {
         const u = new URL(url);
         if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
           const reply = await fetchWithSession(
-            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`
+            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`,
           );
           if (reply.status !== 200) throw new Error("Failed to deploy");
 
@@ -830,7 +834,7 @@ export async function prefetchThemes(ids: string[]) {
 
 export async function checkNpubProDomain(domain: string, naddr: string) {
   const reply = await fetchWithSession(
-    `${NPUB_PRO_API}/check?domain=${domain}&site=${naddr}`
+    `${NPUB_PRO_API}/check?domain=${domain}&site=${naddr}`,
   );
   return reply.status === 200;
 }

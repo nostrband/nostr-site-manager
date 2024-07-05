@@ -223,7 +223,7 @@ function parseSite(ne: NostrEvent) {
     // @ts-ignore
     identifier: tv(e, "d") || "",
     pubkey: e.pubkey,
-    relays: userRelays,
+    relays: [...userRelays, SITE_RELAY],
   };
   return parser.parseSite(addr, e);
 }
@@ -253,7 +253,7 @@ export async function fetchSites() {
           },
         ],
         { groupable: false },
-        NDKRelaySet.fromRelayUrls(userRelays, ndk!),
+        NDKRelaySet.fromRelayUrls([...userRelays, SITE_RELAY], ndk!),
       );
       console.log("site events", events);
 

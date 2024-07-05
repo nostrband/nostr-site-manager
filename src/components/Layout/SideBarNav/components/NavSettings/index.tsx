@@ -7,7 +7,11 @@ import Link from "next/link";
 import { SETTINGS_CONFIG } from "@/consts";
 import { Fragment, useEffect, useState } from "react";
 
-export const NavSettings = () => {
+export const NavSettings = ({
+  handleCloseSideBar,
+}: {
+  handleCloseSideBar: () => void;
+}) => {
   const params = useParams();
   const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { isLoading, isFetching } = useSettingsSite(siteId);
@@ -62,6 +66,7 @@ export const NavSettings = () => {
                 startIcon={icon}
                 onClick={() => {
                   setHash(hashPath);
+                  handleCloseSideBar();
                 }}
               >
                 {title}

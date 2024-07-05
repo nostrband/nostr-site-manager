@@ -13,7 +13,11 @@ import {
 import { IconButton } from "@mui/material";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 
-export const ListSitesDropdown = () => {
+export const ListSitesDropdown = ({
+  handleCloseSideBar,
+}: {
+  handleCloseSideBar: () => void;
+}) => {
   const { data, isLoading, isFetching } = useListSites();
 
   const router = useRouter();
@@ -31,10 +35,12 @@ export const ListSitesDropdown = () => {
   const handleSelect = (id: string) => {
     setAnchorEl(null);
     router.push(`${pathAdmin}/${id}`);
+    handleCloseSideBar();
   };
 
   const handleClickBackToHome = () => {
     router.push(pathAdmin);
+    handleCloseSideBar();
   };
 
   const handleClose = () => {

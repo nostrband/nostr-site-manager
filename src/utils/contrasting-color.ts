@@ -1,0 +1,26 @@
+const hexToRgb = (hex) => {
+  hex = hex.replace(/^#/, "");
+
+  if (hex.length === 3) {
+    hex = hex
+      .split("")
+      .map((char) => char + char)
+      .join("");
+  }
+
+  const bigint = parseInt(hex, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+
+  return { r, g, b };
+};
+const getBrightness = ({ r, g, b }) => {
+  return (r * 299 + g * 587 + b * 114) / 1000;
+};
+
+export const getContrastingTextColor = (hex) => {
+  const rgb = hexToRgb(hex);
+  const brightness = getBrightness(rgb);
+  return brightness < 128 ? "#fff" : "#000";
+};

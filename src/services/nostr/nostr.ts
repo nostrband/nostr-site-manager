@@ -85,6 +85,8 @@ export async function onAuth(e: any) {
     userIsDelegated = e.detail.method === "otp";
     if (userIsDelegated) {
       setUserToken(JSON.parse(e.detail.otpData).token);
+    } else {
+      setUserToken("");
     }
 
     userPubkey = await window.nostr!.getPublicKey();
@@ -99,6 +101,7 @@ export async function onAuth(e: any) {
     userPubkey = "";
     userRelays.length = 0;
     userProfile = null;
+    setUserToken("");
   }
 
   for (const cb of onAuths) await cb(e.detail.type);

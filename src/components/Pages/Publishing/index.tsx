@@ -16,7 +16,7 @@ import {
   publishPreviewSite,
   setPreviewSettings,
 } from "@/services/nostr/themes";
-import { AuthContext, userPubkey } from "@/services/nostr/nostr";
+import { AuthContext } from "@/services/nostr/nostr";
 import { Site } from "libnostrsite";
 
 const mutex = new Mutex();

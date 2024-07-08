@@ -10,14 +10,14 @@ import {
   Typography,
 } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { TitleAdmin } from "@/components/TitleAdmin";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import React from "react";
-import Avatar from "@mui/material/Avatar";
 import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 
 export const Dashboard = () => {
+  const router = useRouter();
   const { data, isLoading, isFetching } = useListSites();
   console.log({
     data,
@@ -28,7 +28,11 @@ export const Dashboard = () => {
   const getSite = data?.find((el) => el.id === siteId);
 
   const switchTheme = () => {
-    window.open(`/preview?siteId=${siteId}&themeId=${getSite?.themeId}`);
+    router.push(`/preview?siteId=${siteId}&themeId=${getSite?.themeId}`);
+  };
+
+  const openSettings = () => {
+    router.push(`/admin/${siteId}/settings`);
   };
 
   if (isLoading || isFetching) {
@@ -87,6 +91,15 @@ export const Dashboard = () => {
           onClick={switchTheme}
         >
           Change theme
+        </Button>
+
+        <Button
+          size="small"
+          variant="outlined"
+          color="decorate"
+          onClick={openSettings}
+        >
+          Settings
         </Button>
       </Box>
     </>

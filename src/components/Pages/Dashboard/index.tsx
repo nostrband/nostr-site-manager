@@ -28,7 +28,7 @@ export const Dashboard = () => {
   const getSite = data?.find((el) => el.id === siteId);
 
   const switchTheme = () => {
-    router.push(`/preview?siteId=${siteId}&themeId=${getSite?.themeId}`);
+    router.push(`/design?siteId=${siteId}&themeId=${getSite?.themeId}`);
   };
 
   const openSettings = () => {
@@ -90,7 +90,7 @@ export const Dashboard = () => {
           color="decorate"
           onClick={switchTheme}
         >
-          Change theme
+          Theme settings
         </Button>
 
         <Button

@@ -143,7 +143,7 @@ export const SettingPage = () => {
       ...values.navigation,
       [type]: [
         ...values.navigation[type],
-        { title: "", link: "", id: Date.now() },
+        { title: "", link: "", id: ""+Date.now() },
       ],
     });
   };
@@ -180,8 +180,9 @@ export const SettingPage = () => {
   useEffect(() => {
     if (data) {
       setValues(data);
-      setInitialData(data);
-      console.log("initial values", data);
+      const initial = _.cloneDeep(data);
+      setInitialData(initial);
+      console.log("initial values", initial);
     }
   }, [setValues, data]);
 

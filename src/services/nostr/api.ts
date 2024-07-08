@@ -117,7 +117,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   });
 
   // ensure new domain is reserved
-  console.log("domain", domain, "oldDomain", oldDomain);
+  // console.log("domain", domain, "oldDomain", oldDomain);
   if (domain && domain !== oldDomain) {
     const reply = await fetchWithSession(
       `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`,
@@ -126,6 +126,8 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
     const r = await reply.json();
     console.log(Date.now(), "reserved", r);
   }
+
+  console.log("Signing", e);
 
   // publish new site event
   await publishSite(new NDKEvent(ndk, e), relays);

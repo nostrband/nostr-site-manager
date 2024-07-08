@@ -7,6 +7,7 @@ import {
 import { Typography } from "@mui/material";
 import { HASH_CONFIG } from "@/consts";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useRouter } from "next/navigation";
 
 export const DesignBranding = ({
   siteId,
@@ -17,12 +18,11 @@ export const DesignBranding = ({
   themeName: string;
   themeId: string;
 }) => {
-  // FIXME use router
-  //  const router = useRouter();
+
+  const router = useRouter();
 
   const switchTheme = () => {
-    //    console.log(`/preview?siteId=${siteId}&themeId=${themeId}`);
-    window.open(`/preview?siteId=${siteId}&themeId=${themeId}`);
+    router.push(`/design?siteId=${siteId}&themeId=${themeId}`);
   };
 
   return (
@@ -36,7 +36,7 @@ export const DesignBranding = ({
             size="small"
             onClick={switchTheme}
           >
-            Change theme
+            Theme settings
           </LoadingButton>
         </StyledHeadSettingBlock>
 

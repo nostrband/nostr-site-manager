@@ -39,7 +39,8 @@ export const Hashtags = ({
     const {
       target: { value },
     } = event;
-    handleChangeHashtags(typeof value === "string" ? value.split(",") : value);
+    const hashtags = [...new Set(typeof value === "string" ? value.split(",") : value)];
+    handleChangeHashtags(hashtags);
   };
 
   const handleClick = () => {
@@ -47,16 +48,9 @@ export const Hashtags = ({
   };
 
   const getHashtags = useCallback(async () => {
-    // const dataHashtags = await getPreviewTopHashtags();
-    // const dataHashtags = [
-    //   "#cooking",
-    //   "#photography",
-    //   "#nostr",
-    //   "#travel",
-    //   "#grownostr",
-    // ];
-    const hts = await fetchTopHashtags(contributors);
-    setHashtags(hts);
+    const hts = (await fetchTopHashtags(contributors)).map(t => "#"+t);
+    const allHts = [...new Set([...hts, ...selectedHashtags])]
+    setHashtags(allHts);
   }, [setHashtags, contributors]);
 
   useEffect(() => {

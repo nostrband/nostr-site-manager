@@ -32,6 +32,7 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
           data-otp-reply-url="https://api.npubpro.com/authotp"
           src="https://www.unpkg.com/nostr-login@latest/dist/unpkg.js"
         />
+        <script defer data-domain="npub.pro" src="https://plausible.io/js/script.js"></script>
       </BodyWrapper>
     </AuthContext.Provider>
   );

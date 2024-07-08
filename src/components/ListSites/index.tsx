@@ -50,7 +50,12 @@ export const ListSites = ({ data }: ListSitesType) => {
                   <CardHeader
                     avatar={<Avatar src={el.logo}>{el.name}</Avatar>}
                     title={<b>{el.title}</b>}
-                  />
+                      subheader={
+                        <Box>
+                          {el.url}
+                        </Box>
+                      }
+                      />
                   {Boolean(el.image) ? (
                     <CardMedia
                       component="img"

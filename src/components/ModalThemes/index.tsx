@@ -21,29 +21,30 @@ import {
 import React, { useMemo } from "react";
 import { THEMES_PREVIEW, TYPES_THEMES_TAG } from "@/consts";
 import ListItemButton from "@mui/material/ListItemButton";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ExpandMoreTwoTone as ExpandMoreTwoToneIcon } from "@mui/icons-material";
 import MenuItem from "@mui/material/MenuItem";
 
 export const ModalThemes = ({
   isOpen,
-  tag,
   themeId,
   handleClose,
 }: {
   isOpen: boolean;
-  tag: string;
   themeId: string;
   handleClose: () => void;
 }) => {
   const router = useRouter();
+  const params = useSearchParams();
+  const tag = params.get("tag") || "";
+  const siteId = params.get("siteId") || "";
 
   const filteredData = useMemo(
     () =>
       Boolean(tag)
         ? THEMES_PREVIEW.filter((item) => item.tag === tag)
         : THEMES_PREVIEW,
-    [tag],
+    [tag]
   );
 
   const handleCancel = () => {
@@ -51,13 +52,15 @@ export const ModalThemes = ({
   };
 
   const handleNavigate = (id: string) => {
-    router.push(`/preview?themeId=${id}${tag ? `&tag=${tag}` : ""}`);
+    router.push(
+      `/preview?themeId=${id}${tag ? `&tag=${tag}` : ""}${siteId ? `&siteId=${siteId}` : ""}`
+    );
     handleCancel();
   };
 
-  const handleChange = (value: string) => {
+  const handleTagChange = (newTag: string) => {
     const filteredThemeIds = (
-      value ? THEMES_PREVIEW.filter((t) => t.tag === value) : THEMES_PREVIEW
+      newTag ? THEMES_PREVIEW.filter((t) => t.tag === newTag) : THEMES_PREVIEW
     ).map((t) => t.id);
     const newThemeId = filteredThemeIds.includes(themeId)
       ? themeId
@@ -65,7 +68,7 @@ export const ModalThemes = ({
     console.log("newThemeId", newThemeId, filteredThemeIds.length);
 
     router.push(
-      `/preview?themeId=${newThemeId}${value !== "" ? `&tag=${value}` : ""}`,
+      `/preview?themeId=${newThemeId}${newTag !== "" ? `&tag=${newTag}` : ""}${siteId ? `&siteId=${siteId}` : ""}`
     );
   };
 
@@ -92,11 +95,11 @@ export const ModalThemes = ({
               return selected;
             }}
           >
-            <MenuItem onClick={() => handleChange("")} key="" value="">
+            <MenuItem onClick={() => handleTagChange("")} key="" value="">
               All themes
             </MenuItem>
             {options.map((el) => (
-              <MenuItem onClick={() => handleChange(el)} key={el} value={el}>
+              <MenuItem onClick={() => handleTagChange(el)} key={el} value={el}>
                 {el}
               </MenuItem>
             ))}

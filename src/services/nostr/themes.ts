@@ -266,7 +266,11 @@ function checkYourSite(s: NDKEvent | NostrEvent) {
     if (s.pubkey !== serverPubkey || tv(s, "u") !== userPubkey)
       throw new Error("Not your site");
   } else {
-    if (s.pubkey !== userPubkey) throw new Error("Not your site");
+    if (s.pubkey !== serverPubkey) {
+      if (s.pubkey !== userPubkey) throw new Error("Not your site");
+    } else {
+      if (tv(s, "u") !== userPubkey) throw new Error("Not your site");
+    }
   }
 }
 

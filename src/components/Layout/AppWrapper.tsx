@@ -27,7 +27,6 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
         <Script
           data-perms="sign_event:30512,sign_event:512,sign_event:30513,sign_event:30514,sign_event:27235"
           data-no-banner="true"
-          data-methods="connect,extension,otp"
           data-otp-request-url="https://api.npubpro.com/otp"
           data-otp-reply-url="https://api.npubpro.com/authotp"
           src="https://www.unpkg.com/nostr-login@latest/dist/unpkg.js"

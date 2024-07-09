@@ -44,7 +44,7 @@ export const FAQ = () => {
             <StyledTitleDescription>
               Yes, absolutely! The easiest way to do that is using the free
               Github Pages hosting,{" "}
-              <a href="https://blog.npub.pro/post/self-hosting">
+              <a href="https://blog.npub.pro/post/how-to-self-host-on-github">
                 read more here
               </a>
               . A more advanced solution would be to run a docker container that

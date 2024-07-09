@@ -18,7 +18,6 @@ export const DesignBranding = ({
   themeName: string;
   themeId: string;
 }) => {
-
   const router = useRouter();
 
   const switchTheme = () => {

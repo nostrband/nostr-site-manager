@@ -1,22 +1,24 @@
 "use client";
 import * as React from "react";
 import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
+import LaunchIcon from "@mui/icons-material/Launch";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import { StyledListWrap } from "@/components/ListSites/styled";
-import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  Grid,
-} from "@mui/material";
+  StyledCard,
+  StyledCardActionArea,
+  StyledCardHeader,
+  StyledCardMedia,
+  StyledCardNoImage,
+  StyledListWrap,
+  StyledWrapFooter,
+} from "@/components/ListSites/styled";
+import { useFirstPathElement } from "@/hooks/useFirstPathElement";
+import { Box, CardContent, CardHeader, Grid } from "@mui/material";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
+import IconButton from "@mui/material/IconButton";
 
 type ListSitesType = {
   data: ReturnSettingsSiteDataType[];
@@ -29,9 +31,6 @@ export const ListSites = ({ data }: ListSitesType) => {
     router.push(`${pathAdmin}/${id}`);
   };
 
-  const getColor = (color: string | null) =>
-    getContrastingTextColor(color ? color : "#fff");
-
   return (
     <StyledListWrap>
       <Grid
@@ -42,44 +41,54 @@ export const ListSites = ({ data }: ListSitesType) => {
         {data.map((el, i) => {
           return (
             <Grid key={i} item xs={12} sm={6} lg={4}>
-              <Card
-                sx={{ width: "100%", height: "100%" }}
-                onClick={() => handleSelect(el.id)}
-              >
-                <CardActionArea sx={{ height: "100%" }}>
-                  <CardHeader
-                    avatar={<Avatar src={el.logo}>{el.name}</Avatar>}
-                    title={<b>{el.title}</b>}
-                      subheader={
-                        <Box>
-                          {el.url}
-                        </Box>
-                      }
-                      />
+              <StyledCard onClick={() => handleSelect(el.id)}>
+                <StyledCardActionArea>
+                  <StyledCardHeader
+                    avatar={
+                      <Avatar variant="square" src={el.logo}>
+                        {el.name}
+                      </Avatar>
+                    }
+                    title={
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <b>{el.title}</b>{" "}
+                        <IconButton
+                          aria-label="delete"
+                          size="small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+
+                            window.open(el.url);
+                          }}
+                        >
+                          <LaunchIcon fontSize="inherit" />
+                        </IconButton>
+                      </Box>
+                    }
+                    subheader={<Box>{el.url}</Box>}
+                  />
                   {Boolean(el.image) ? (
-                    <CardMedia
+                    <StyledCardMedia
                       component="img"
                       height="194"
                       image={el.image}
                       alt={el.name}
                     />
                   ) : (
-                    <Box
-                      sx={{
-                        background: "#ececec",
-                        display: "flex",
-                        height: "194px",
-                        width: "100%",
-                      }}
-                    >
+                    <StyledCardNoImage>
                       <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
-                    </Box>
+                    </StyledCardNoImage>
                   )}
-                  <Box sx={{ height: "100%", background: `${el.accentColor}` }}>
+                  <StyledWrapFooter sx={{ background: `${el.accentColor}` }}>
                     <CardContent>
                       <Typography
                         variant="body2"
-                        color={getColor(el.accentColor)}
+                        color={getContrastingTextColor(el.accentColor)}
                         sx={{
                           width: "100%",
                           overflow: "hidden",
@@ -94,6 +103,7 @@ export const ListSites = ({ data }: ListSitesType) => {
                       </Typography>
                     </CardContent>
                     <CardHeader
+                      sx={{ marginTop: "auto" }}
                       avatar={
                         <Avatar src={el.icon}>{el.contributors[0]}</Avatar>
                       }
@@ -104,26 +114,16 @@ export const ListSites = ({ data }: ListSitesType) => {
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             maxWidth: "140px",
-                            color: getColor(el.accentColor),
+                            color: getContrastingTextColor(el.accentColor),
                           }}
                         >
                           <b>{el.name || el.contributors[0]}</b>
                         </Box>
                       }
-                      // subheader={
-                      //   <Box
-                      //     sx={{
-                      //       color: getColor(el.accentColor),
-                      //       opacity: 0.7,
-                      //     }}
-                      //   >
-                      //     contributer
-                      //   </Box>
-                      // }
                     />
-                  </Box>
-                </CardActionArea>
-              </Card>
+                  </StyledWrapFooter>
+                </StyledCardActionArea>
+              </StyledCard>
             </Grid>
           );
         })}

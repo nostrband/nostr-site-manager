@@ -143,7 +143,7 @@ export const SettingPage = () => {
       ...values.navigation,
       [type]: [
         ...values.navigation[type],
-        { title: "", link: "", id: ""+Date.now() },
+        { title: "", link: "", id: "" + Date.now() },
       ],
     });
   };

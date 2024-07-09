@@ -18,6 +18,7 @@ import {
 } from "@/services/nostr/themes";
 import { AuthContext } from "@/services/nostr/nostr";
 import { Site } from "libnostrsite";
+import {Alert, AlertTitle} from "@mui/lab";
 
 const mutex = new Mutex();
 
@@ -30,6 +31,7 @@ export const Publishing = () => {
 
   const [state, setState] = useState<"init" | "pub" | "done">("init");
   const [info, setInfo] = useState<Site | undefined>();
+  const [error, setError] = useState(false);
 
   const handleClick = () => {
     window.open(info!.origin! + info!.url!, "_blank");
@@ -81,6 +83,14 @@ export const Publishing = () => {
       setState("done");
     });
   }, [authed, themeId, siteId, state, setState]);
+
+  if (error) {
+    return     <StyledWrap><Alert severity="error">
+      <AlertTitle>Error</AlertTitle>
+      An error occurred, please reload the page to try again
+      <Button variant="contained" fullWidth color="primary" sx={{marginTop: '10px'}}>Try again</Button>
+    </Alert></StyledWrap>
+  }
 
   return (
     <StyledWrap>

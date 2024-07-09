@@ -44,7 +44,7 @@ export const ModalThemes = ({
       Boolean(tag)
         ? THEMES_PREVIEW.filter((item) => item.tag === tag)
         : THEMES_PREVIEW,
-    [tag]
+    [tag],
   );
 
   const handleCancel = () => {
@@ -53,7 +53,7 @@ export const ModalThemes = ({
 
   const handleNavigate = (id: string) => {
     router.push(
-      `/preview?themeId=${id}${tag ? `&tag=${tag}` : ""}${siteId ? `&siteId=${siteId}` : ""}`
+      `/preview?themeId=${id}${tag ? `&tag=${tag}` : ""}${siteId ? `&siteId=${siteId}` : ""}`,
     );
     handleCancel();
   };
@@ -68,7 +68,7 @@ export const ModalThemes = ({
     console.log("newThemeId", newThemeId, filteredThemeIds.length);
 
     router.push(
-      `/preview?themeId=${newThemeId}${newTag !== "" ? `&tag=${newTag}` : ""}${siteId ? `&siteId=${siteId}` : ""}`
+      `/preview?themeId=${newThemeId}${newTag !== "" ? `&tag=${newTag}` : ""}${siteId ? `&siteId=${siteId}` : ""}`,
     );
   };
 

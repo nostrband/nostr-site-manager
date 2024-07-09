@@ -10,13 +10,12 @@ import {
   StyledCard,
   StyledCardActionArea,
   StyledCardHeader,
-  StyledCardMedia,
   StyledCardNoImage,
   StyledListWrap,
   StyledWrapFooter,
 } from "@/components/ListSites/styled";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
-import { Box, CardContent, CardHeader, Grid } from "@mui/material";
+import { Box, CardContent, CardHeader, CardMedia, Grid } from "@mui/material";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
 import IconButton from "@mui/material/IconButton";
 
@@ -73,11 +72,12 @@ export const ListSites = ({ data }: ListSitesType) => {
                     subheader={<Box>{el.url}</Box>}
                   />
                   {Boolean(el.image) ? (
-                    <StyledCardMedia
+                    <CardMedia
                       component="img"
                       height="194"
                       image={el.image}
                       alt={el.name}
+                      sx={{ flex: "0 0 194px" }}
                     />
                   ) : (
                     <StyledCardNoImage>

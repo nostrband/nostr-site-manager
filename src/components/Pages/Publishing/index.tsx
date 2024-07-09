@@ -18,7 +18,7 @@ import {
 } from "@/services/nostr/themes";
 import { AuthContext } from "@/services/nostr/nostr";
 import { Site } from "libnostrsite";
-import {Alert, AlertTitle} from "@mui/lab";
+import { Alert, AlertTitle } from "@mui/lab";
 
 const mutex = new Mutex();
 
@@ -85,11 +85,22 @@ export const Publishing = () => {
   }, [authed, themeId, siteId, state, setState]);
 
   if (error) {
-    return     <StyledWrap><Alert severity="error">
-      <AlertTitle>Error</AlertTitle>
-      An error occurred, please reload the page to try again
-      <Button variant="contained" fullWidth color="primary" sx={{marginTop: '10px'}}>Try again</Button>
-    </Alert></StyledWrap>
+    return (
+      <StyledWrap>
+        <Alert sx={{ maxWidth: "300px" }} severity="error">
+          <AlertTitle>Error</AlertTitle>
+          An error occurred, please reload the page to try again
+          <Button
+            variant="contained"
+            fullWidth
+            color="primary"
+            sx={{ marginTop: "10px" }}
+          >
+            Try again
+          </Button>
+        </Alert>
+      </StyledWrap>
+    );
   }
 
   return (

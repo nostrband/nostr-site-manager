@@ -18,9 +18,7 @@ import {
   StyledCardHeader,
   StyledWrapFooter,
 } from "@/components/ListSites/styled";
-import {
-  StyledCardNoImage,
-} from "@/components/Pages/Dashboard/styled";
+import { StyledCardNoImage } from "@/components/Pages/Dashboard/styled";
 import Avatar from "@mui/material/Avatar";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
 

@@ -47,7 +47,7 @@ export const ThemesOnboarding = () => {
   };
 
   const handleNavigate = (id: string) => {
-    if (authed && data.length) {
+    if (authed && data?.length) {
       setOpen(true);
       setThemeId(id);
       return;

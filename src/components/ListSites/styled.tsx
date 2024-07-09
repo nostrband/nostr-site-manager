@@ -1,12 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import {
-  Box,
-  CardMedia,
-  Card,
-  CardActionArea,
-  CardHeader,
-} from "@mui/material";
+import { Box, Card, CardActionArea, CardHeader } from "@mui/material";
 
 export const StyledListWrap = styled(Box)(() => ({
   marginTop: "40px",
@@ -23,10 +17,6 @@ export const StyledCardActionArea = styled(CardActionArea)(() => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "baseline",
-}));
-
-export const StyledCardMedia = styled(CardMedia)(() => ({
-  flex: "0 0 194px",
 }));
 
 export const StyledCardNoImage = styled(Box)(() => ({

@@ -164,6 +164,11 @@ export const Preview = () => {
     setKinds(kinds);
   };
 
+  const addHashtags = (value: string) => {
+    setHashtagsSelected([value]);
+    setHashtags((prev) => [value, ...prev]);
+  }
+
   const onUseTheme = async () => {
     const siteId = getPreviewSiteId();
     router.push(`/design?themeId=${themeId}&siteId=${siteId}`);
@@ -221,6 +226,7 @@ export const Preview = () => {
       )}
 
       <PreviewNavigation
+          addHashtags={addHashtags}
         author={contributor || userPubkey}
         onChangeTheme={onChangeTheme}
         kindsSelected={kindsSelected || []}

@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, ListSubheader } from "@mui/material";
+import {Avatar, Box, Button, InputAdornment, ListItem, ListSubheader, TextField} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useContext, useEffect, useState } from "react";
@@ -17,6 +17,8 @@ import { ModalAuthor } from "@/components/ModalAuthor";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
 import { prefetchThemes } from "@/services/nostr/themes";
+import IconButton from "@mui/material/IconButton";
+import ClearIcon from '@mui/icons-material/Clear';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -38,6 +40,7 @@ export const PreviewNavigation = ({
   kinds,
   hashtags,
   author,
+                                    addHashtags,
 }: {
   onContentSettings: (
     author: string,
@@ -51,6 +54,7 @@ export const PreviewNavigation = ({
   kinds: { [key: number]: string };
   hashtags: string[];
   author: string;
+  addHashtags: (string) => void;
 }) => {
   const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
   const [profile, setProfile] = useState<NDKEvent | undefined>(undefined);
@@ -65,8 +69,20 @@ export const PreviewNavigation = ({
       : THEMES_PREVIEW;
   let currentIndex = filteredThemes.findIndex((el) => el.id === themeId);
   let currentTheme = filteredThemes[currentIndex];
+  const mergeHashtags =  new Set([...hashtagsSelected, ...hashtags])
   const selectedOptions = [...hashtagsSelected, ...kindsSelected];
   const prepareKindOptions = Object.keys(kinds).map((el) => Number(el));
+
+  const [inputHashtag, setInputHashtag] = useState('');
+
+  const handleChangeHashtagInput = (event) => {
+    setInputHashtag(event.target.value);
+  };
+
+  const handleClear = () => {
+    setInputHashtag('');
+  };
+
 
   prefetchThemes([
     filteredThemes[(currentIndex + 1) % filteredThemes.length].id,
@@ -74,6 +90,8 @@ export const PreviewNavigation = ({
       currentIndex > 0 ? currentIndex - 1 : filteredThemes.length - 1
     ].id,
   ]);
+
+  console.log({hashtags, hashtagsSelected, mergeHashtags })
 
   useEffect(() => {
     console.log("fetch author", author);
@@ -136,6 +154,13 @@ export const PreviewNavigation = ({
     }
 
     onContentSettings(author, newHashtagsOptions, newKindsOptions);
+  };
+
+  const handleSaveHashtag = (event) => {
+    if (event.key === 'Enter' && inputHashtag.length) {
+      addHashtags(inputHashtag)
+      handleClear()
+    }
   };
 
   let avatar = "";
@@ -243,7 +268,25 @@ export const PreviewNavigation = ({
               ))}
 
               <ListSubheader>Hashtags</ListSubheader>
-              {hashtags.map((hashtag) => (
+              <ListItem>
+                <TextField
+                    label="Hashtag"
+                    value={inputHashtag}
+                    size="small"
+                    onChange={handleChangeHashtagInput}
+                    onKeyDown={handleSaveHashtag}
+                    InputProps={{
+                      endAdornment: (inputHashtag.length ?
+                          <InputAdornment position="end">
+                            <IconButton size="small" onClick={handleClear} edge="end">
+                              <ClearIcon fontSize="inherit" />
+                            </IconButton>
+                          </InputAdornment> : null
+                      ),
+                    }}
+                />
+              </ListItem>
+              {[...mergeHashtags].map((hashtag) => (
                 <MenuItem key={hashtag} value={hashtag}>
                   <Checkbox
                     color="decorate"

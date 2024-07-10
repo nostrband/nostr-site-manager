@@ -83,12 +83,13 @@ export const ModalSites = ({
     router.push(`/preview?themeId=${themeId}${tag ? `&tag=${tag}` : ""}`);
   };
   const handleNavigateEdit = () => {
-    router.push(`/preview?themeId=${themeId}&siteId=${getSite?.id}}`);
+    router.push(`/preview?themeId=${themeId}&siteId=${getSite?.id}`);
   };
 
   if (!getSite) {
     return null;
   }
+  console.log("getSite", getSite);
 
   return (
     <StyledDialog
@@ -99,7 +100,7 @@ export const ModalSites = ({
     >
       <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
-          You already have websites
+          You already have {sites.length} website{sites.length > 1 ? "s" : ""}
           <Fab
             onClick={handleClose}
             size="small"
@@ -121,7 +122,7 @@ export const ModalSites = ({
                 {getSite?.name}
               </Avatar>
             }
-            title={<b>{getSite?.title}</b>}
+            title={<b>{getSite?.title || getSite?.name}</b>}
             subheader={<Box>{getSite?.url}</Box>}
           />
           {Boolean(getSite?.image) ? (

@@ -15,6 +15,8 @@ import {
   SiteAddr,
   Theme,
   eventId,
+  fetchEvent,
+  fetchEvents,
   fetchOutboxRelays,
   getProfileSlug,
   parseAddr,
@@ -101,10 +103,10 @@ const prefetchThemesPromise = (async function prefetchThemes() {
     "#d": addrs.map((a) => a.identifier),
   };
 
-  const themeEvents = await ndk.fetchEvents(
+  const themeEvents = await fetchEvents(
+    ndk,
     themeFilter,
-    { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
+    [SITE_RELAY],
   );
 
   themes.push(...themeEvents);
@@ -115,10 +117,10 @@ const prefetchThemesPromise = (async function prefetchThemes() {
     ids: themes.map((e) => tv(e, "e")).filter((id) => !!id) as string[],
   };
 
-  const packageEvents = await ndk.fetchEvents(
+  const packageEvents = await fetchEvents(
+    ndk,
     packageFilter,
-    { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY], ndk),
+    [SITE_RELAY],
   );
 
   themePackages.push(...packageEvents);
@@ -298,7 +300,8 @@ export async function fetchTopHashtags(pubkeys: string[]) {
       : await fetchOutboxRelays(ndk, pubkeys);
 
   console.log("loading tags");
-  const events = await ndk.fetchEvents(
+  const events = await fetchEvents(
+    ndk,
     [
       {
         authors: pubkeys,
@@ -311,10 +314,8 @@ export async function fetchTopHashtags(pubkeys: string[]) {
         limit: 50,
       },
     ],
-    {
-      groupable: false,
-    },
-    NDKRelaySet.fromRelayUrls(relays, ndk),
+    relays,
+    1000
   );
 
   const topTags = new Map<string, number>();
@@ -654,15 +655,15 @@ async function fetchSite() {
   // fetch remote event
   const addr = parseAddr(siteId);
   console.log("loading site addr", addr);
-  const event = await ndk.fetchEvent(
+  const event = await fetchEvent(
+    ndk,
     {
       // @ts-ignore
       kinds: [KIND_SITE],
       authors: [addr.pubkey],
       "#d": [addr.identifier],
     },
-    { groupable: false },
-    NDKRelaySet.fromRelayUrls([SITE_RELAY, ...addr.relays], ndk),
+    [SITE_RELAY, ...addr.relays],
   );
   console.log("loaded site event", siteId, event);
 

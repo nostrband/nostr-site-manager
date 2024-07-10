@@ -18,6 +18,7 @@ import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { Box, CardContent, CardHeader, CardMedia, Grid } from "@mui/material";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
 import IconButton from "@mui/material/IconButton";
+import {StyledAvatarSite} from "@/components/shared/styled";
 
 type ListSitesType = {
   data: ReturnSettingsSiteDataType[];
@@ -44,9 +45,9 @@ export const ListSites = ({ data }: ListSitesType) => {
                 <StyledCardActionArea>
                   <StyledCardHeader
                     avatar={
-                      <Avatar variant="square" src={el.logo}>
+                      <StyledAvatarSite variant="square" src={el.logo}>
                         {el.name}
-                      </Avatar>
+                      </StyledAvatarSite>
                     }
                     title={
                       <Box

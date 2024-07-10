@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardMedia,
   Typography,
+    Avatar
 } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
 import { useParams, useRouter } from "next/navigation";
@@ -19,8 +20,8 @@ import {
   StyledWrapFooter,
 } from "@/components/ListSites/styled";
 import { StyledCardNoImage } from "@/components/Pages/Dashboard/styled";
-import Avatar from "@mui/material/Avatar";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
+import {StyledAvatarSite} from "@/components/shared/styled";
 
 export const Dashboard = () => {
   const router = useRouter();
@@ -61,12 +62,13 @@ export const Dashboard = () => {
           gap: "10px",
         }}
       >
+
         <Card sx={{ maxWidth: "400px" }}>
           <StyledCardHeader
             avatar={
-              <Avatar variant="square" src={getSite?.logo}>
+              <StyledAvatarSite variant="square" src={getSite?.logo}>
                 {getSite?.name}
-              </Avatar>
+              </StyledAvatarSite>
             }
             title={<b>{getSite?.title}</b>}
             subheader={<Box>{getSite?.url}</Box>}
@@ -123,37 +125,40 @@ export const Dashboard = () => {
           </StyledWrapFooter>
         </Card>
 
-        <Box
-          sx={{
-            display: "flex",
-            gap: "10px",
-            flexWrap: "wrap",
-            justifyContent: "center",
-          }}
+        <Box sx={{
+                 display: "flex",
+                 maxWidth: '400px',
+            width: '100%',
+                 gap: "10px",
+                 flexDirection: 'column'
+             }}
         >
           <Button
-            size="small"
+            size="medium"
             variant="outlined"
             color="decorate"
             href={getSite?.url}
+            fullWidth
           >
             Open website
           </Button>
 
           <Button
-            size="small"
+            size="medium"
             variant="outlined"
             color="decorate"
             onClick={switchTheme}
+            fullWidth
           >
             Theme settings
           </Button>
 
           <Button
-            size="small"
+            size="medium"
             variant="outlined"
             color="decorate"
             onClick={openSettings}
+            fullWidth
           >
             Settings
           </Button>

@@ -41,6 +41,7 @@ import { StyledIconButton } from "@/components/PreviewNavigation/styled";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/navigation";
+import {StyledAvatarSite} from "@/components/shared/styled";
 
 export const ModalSites = ({
   isOpen,
@@ -118,9 +119,9 @@ export const ModalSites = ({
         >
           <StyledCardHeader
             avatar={
-              <Avatar variant="square" src={getSite?.logo}>
+              <StyledAvatarSite variant="square" src={getSite?.logo}>
                 {getSite?.name}
-              </Avatar>
+              </StyledAvatarSite>
             }
             title={<b>{getSite?.title || getSite?.name}</b>}
             subheader={<Box>{getSite?.url}</Box>}

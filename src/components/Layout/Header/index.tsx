@@ -8,11 +8,11 @@ import {
   StyledUserAvatar,
 } from "@/components/Layout/Header/styled";
 import { Logo } from "@/components/Logo";
-import React, { useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { nip19 } from "nostr-tools";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
-import { userPubkey } from "@/services/nostr/nostr";
+import {AuthContext, userPubkey} from "@/services/nostr/nostr";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { useRouter } from "next/navigation";
 import IconButton from "@mui/material/IconButton";
@@ -27,6 +27,7 @@ interface IHeader {
 }
 
 export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
+  const authed = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
@@ -39,7 +40,9 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
   };
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
+    if (authed) {
+      setAnchorElUser(event.currentTarget);
+    }
   };
 
   const handleCloseUserMenu = () => {

@@ -1,42 +1,26 @@
 "use client";
 import {
-  Autocomplete,
-  Avatar,
   Box,
   Button,
   Card,
-  CardContent,
-  CardHeader,
   CardMedia,
   DialogTitle,
   Fab,
-  ListItem,
-  TextField,
-  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
-  StyledAuthor,
   StyledTitle,
   StyledDialog,
   StyledDialogContent,
 } from "@/components/ModalAuthor/styled";
-import { debounce } from "lodash";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
-import { NDKEvent } from "@nostr-dev-kit/ndk";
-import { nip19 } from "nostr-tools";
-import { fetchProfiles, searchProfiles } from "@/services/nostr/api";
 import { TYPES_THEMES_TAG } from "@/consts";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import {
   StyledCardHeader,
-  StyledWrapFooter,
 } from "@/components/ListSites/styled";
 import { StyledCardNoImage } from "@/components/Pages/Dashboard/styled";
 import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
-import { getContrastingTextColor } from "@/utils/contrasting-color";
 import { StyledIconButton } from "@/components/PreviewNavigation/styled";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";

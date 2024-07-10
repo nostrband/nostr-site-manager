@@ -19,8 +19,9 @@ const getBrightness = ({ r, g, b }: { r: number; g: number; b: number }) => {
   return (r * 299 + g * 587 + b * 114) / 1000;
 };
 
-export const getContrastingTextColor = (hex: string) => {
-  const rgb = hexToRgb(hex);
+export const getContrastingTextColor = (hex: string | null | undefined) => {
+  const color = hex ? hex : "#fff";
+  const rgb = hexToRgb(color);
   const brightness = getBrightness(rgb);
   return brightness < 128 ? "#fff" : "#000";
 };

@@ -41,6 +41,7 @@ import {
 } from "@/services/nostr/themes";
 import { SpinerWrap } from "@/components/Spiner";
 import { SpinnerCustom } from "@/components/SpinnerCustom";
+import { useSnackbar } from "notistack";
 
 interface DesignValues {
   name: string;
@@ -93,6 +94,7 @@ export const Design = () => {
   const authed = useContext(AuthContext);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
+  const { enqueueSnackbar } = useSnackbar();
   const params = useSearchParams();
   const siteId = params.get("siteId");
   const themeId = params.get("themeId");
@@ -118,30 +120,42 @@ export const Design = () => {
         const start = Date.now();
         console.log("submit values", values);
         setLoading(true);
-        const updated = await updatePreviewSite({
-          accent_color: values.accentColor,
-          name: values.shortName,
-          cover_image: values.banner,
-          description: values.description,
-          icon: values.icon,
-          logo: values.logo,
-          title: values.name,
-          navigation: values.navigation.primary.map((n) => ({
-            label: n.title,
-            url: n.link,
-          })),
-        });
-        console.log("updating design settings ", updated);
+        try {
+          const updated = await updatePreviewSite({
+            accent_color: values.accentColor,
+            name: values.shortName,
+            cover_image: values.banner,
+            description: values.description,
+            icon: values.icon,
+            logo: values.logo,
+            title: values.name,
+            navigation: values.navigation.primary.map((n) => ({
+              label: n.title,
+              url: n.link,
+            })),
+          });
+          console.log("updating design settings ", updated);
 
-        // render
-        if (updated) {
-          await renderPreview(iframeRef.current!);
-          console.log("updated preview in", Date.now() - start);
+          // render
+          if (updated) {
+            await renderPreview(iframeRef.current!);
+            console.log("updated preview in", Date.now() - start);
+          }
+        } catch (e: any) {
+          console.log("error", e);
+          enqueueSnackbar("Error: " + e.toString(), {
+            autoHideDuration: 3000,
+            variant: "error",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "bottom",
+            },
+          });
         }
         setLoading(false);
       });
     },
-    [setLoading],
+    [setLoading]
   );
 
   const {
@@ -177,7 +191,7 @@ export const Design = () => {
     (e: any) => {
       handleBlur(e);
     },
-    [handleBlur],
+    [handleBlur]
   );
 
   const handleChangeNavigation = useCallback(
@@ -197,7 +211,7 @@ export const Design = () => {
 
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleAddLinkNavigation = useCallback(
@@ -210,7 +224,7 @@ export const Design = () => {
         ],
       });
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleRemoveLinkNavigation = useCallback(
@@ -218,12 +232,12 @@ export const Design = () => {
       const navigation = values.navigation;
 
       navigation[input.type] = navigation[input.type].filter(
-        (item) => item.id !== input.id,
+        (item) => item.id !== input.id
       );
 
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   useEffect(() => {
@@ -235,45 +249,57 @@ export const Design = () => {
 
     mutex.run(async () => {
       setLoading(true);
-      const updated = await setPreviewSettings({
-        themeId,
-        siteId,
-        design: true,
-      });
+      try {
+        const updated = await setPreviewSettings({
+          themeId,
+          siteId,
+          design: true,
+        });
 
-      if (updated || mounted) {
-        mounted = false;
+        if (updated || mounted) {
+          mounted = false;
 
-        // init settings sidebar
-        const info = getPreviewSiteInfo();
-        const values: DesignValues = {
-          accentColor: info.accent_color || "",
-          banner: info.cover_image || "",
-          description: info.description || "",
-          icon: info.icon || "",
-          logo: info.logo || "",
-          name: info.title || "",
-          shortName: info.name || "",
-          // hashtags: info.include_tags
-          //   ? info.include_tags.filter((t) => t.tag === "t").map((t) => t.value)
-          //   : [],
-          // kinds: info.include_kinds || [],
-          navigation: {
-            primary: info.navigation
-              ? info.navigation.map((n) => ({
-                  title: n.label,
-                  link: n.url,
-                  id: n.url,
-                }))
-              : [],
-            secondary: [],
+          // init settings sidebar
+          const info = getPreviewSiteInfo();
+          const values: DesignValues = {
+            accentColor: info.accent_color || "",
+            banner: info.cover_image || "",
+            description: info.description || "",
+            icon: info.icon || "",
+            logo: info.logo || "",
+            name: info.title || "",
+            shortName: info.name || "",
+            // hashtags: info.include_tags
+            //   ? info.include_tags.filter((t) => t.tag === "t").map((t) => t.value)
+            //   : [],
+            // kinds: info.include_kinds || [],
+            navigation: {
+              primary: info.navigation
+                ? info.navigation.map((n) => ({
+                    title: n.label,
+                    link: n.url,
+                    id: n.url,
+                  }))
+                : [],
+              secondary: [],
+            },
+          };
+          console.log("info", info, "values", values);
+          setValues(values, false);
+
+          // render
+          await renderPreview(iframeRef.current!);
+        }
+      } catch (e: any) {
+        console.log("error", e);
+        enqueueSnackbar("Error: " + e.toString(), {
+          autoHideDuration: 3000,
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "bottom",
           },
-        };
-        console.log("info", info, "values", values);
-        setValues(values, false);
-
-        // render
-        await renderPreview(iframeRef.current!);
+        });
       }
       setLoading(false);
     });

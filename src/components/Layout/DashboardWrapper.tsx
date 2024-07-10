@@ -11,7 +11,6 @@ import { useListSites } from "@/hooks/useListSites";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { ReturnSitesDataType } from "@/services/sites.service";
 import { Box, Button, Typography } from "@mui/material";
-import { Alert, AlertTitle } from "@mui/lab";
 
 export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const isDesktop = useResponsive("up", "lg");
@@ -70,7 +69,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
             children
           ) : (
             <Box sx={{ display: "flex", height: "100%" }}>
-              <Box sx={{ margin: "auto", textAlign: 'center' }}>
+              <Box sx={{ margin: "auto", textAlign: "center" }}>
                 <Button variant="contained" color="decorate" onClick={login}>
                   Login
                 </Button>

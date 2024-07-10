@@ -23,6 +23,7 @@ import { SpinerWrap } from "@/components/Spiner";
 import { SpinnerCustom } from "@/components/SpinnerCustom";
 import { PreviewHeader } from "@/components/PreviewHeader";
 import { isEqual } from "lodash";
+import { useSnackbar } from "notistack";
 
 // const hashtags = [
 //   "#cooking",
@@ -42,27 +43,14 @@ let mounted = false;
 
 export const Preview = () => {
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   const params = useSearchParams();
-  // const tag = params.get("tag");
   const themeId = params.get("themeId");
   const siteId = params.get("siteId");
   const theme = THEMES_PREVIEW.find((el) => el.id === themeId);
-  // const getKinds = (params.get("kinds") || "")
-  //   .split(",")
-  //   .filter((k) => k.trim())
-  //   .map((k) => parseInt(k));
-  // if (!getKinds.length)
-  //   getKinds.push(
-  //     tag === "photography" || tag === "magazine" || tag === "podcast"
-  //       ? 1
-  //       : 30023
-  //   );
 
-  // FIXME default for testing
   const [contributor, setContributor] = useState<string | undefined>(
-    siteId ? undefined : userPubkey,
-    // "4657dfe8965be8980a93072bcfb5e59a65124406db0f819215ee78ba47934b3e",
-    //    "1bc70a0148b3f316da33fe3c89f23e3e71ac4ff998027ec712b905cd24f6a411"
+    siteId ? undefined : userPubkey
   );
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [hashtagsSelected, setHashtagsSelected] = useState<
@@ -89,46 +77,56 @@ export const Preview = () => {
       mutex.run(async () => {
         setLoading(true);
 
-        const start = Date.now();
+        try {
+          const start = Date.now();
 
-        const updated = await setPreviewSettings({
-          siteId: siteId || undefined,
-          themeId,
-          contributors: contributor ? [contributor] : undefined,
-          kinds: kindsSelected,
-          hashtags: hashtagsSelected,
-        });
+          const updated = await setPreviewSettings({
+            siteId: siteId || undefined,
+            themeId,
+            contributors: contributor ? [contributor] : undefined,
+            kinds: kindsSelected,
+            hashtags: hashtagsSelected,
+          });
 
-        if (updated || mounted) {
-          mounted = false;
+          if (updated || mounted) {
+            mounted = false;
 
-          const info = getPreviewSiteInfo();
-          console.log("info", info);
-          const newContributor =
-            info.contributor_pubkeys?.[0] || info.admin_pubkey;
-          const newHashtags = await getPreviewTopHashtags();
-          const newHashtagsSelected = getPreviewHashtags();
-          const newKindsSelected = getPreviewKinds();
+            const info = getPreviewSiteInfo();
+            console.log("info", info);
+            const newContributor =
+              info.contributor_pubkeys?.[0] || info.admin_pubkey;
+            const newHashtags = await getPreviewTopHashtags();
+            const newHashtagsSelected = getPreviewHashtags();
+            const newKindsSelected = getPreviewKinds();
 
-          // if we don't check for equality then
-          // we might cause infinite loop if user
-          // makes several changes in a sequence
-          if (!isEqual(newContributor, contributor))
-            setContributor(newContributor);
-          if (!isEqual(newHashtags, hashtags)) setHashtags(newHashtags);
-          if (!isEqual(newHashtagsSelected, hashtagsSelected))
-            setHashtagsSelected(newHashtagsSelected);
-          if (!isEqual(newKindsSelected, kindsSelected))
-            setKinds(newKindsSelected);
+            // if we don't check for equality then
+            // we might cause infinite loop if user
+            // makes several changes in a sequence
+            if (!isEqual(newContributor, contributor))
+              setContributor(newContributor);
+            if (!isEqual(newHashtags, hashtags)) setHashtags(newHashtags);
+            if (!isEqual(newHashtagsSelected, hashtagsSelected))
+              setHashtagsSelected(newHashtagsSelected);
+            if (!isEqual(newKindsSelected, kindsSelected))
+              setKinds(newKindsSelected);
 
-          // update the preview html
-          await renderPreview(iframeRef.current!);
-          console.log("updated preview in", Date.now() - start);
-
-          setLoading(false);
-        } else {
-          setLoading(false);
+            // update the preview html
+            await renderPreview(iframeRef.current!);
+            console.log("updated preview in", Date.now() - start);
+          }
+        } catch (e: any) {
+          console.log("error", e);
+          enqueueSnackbar("Error: " + e.toString(), {
+            autoHideDuration: 3000,
+            variant: "error",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "bottom",
+            },
+          });
         }
+
+        setLoading(false);
       });
     } else if (!siteId) {
       iframeRef.current!.src = theme.url;
@@ -156,7 +154,7 @@ export const Preview = () => {
   const onContentSettings = async (
     author: string,
     hashtags: string[],
-    kinds: number[],
+    kinds: number[]
   ) => {
     console.log("onContentSettings", author, hashtags, kinds);
     setContributor(author);

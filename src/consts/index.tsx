@@ -15,6 +15,7 @@ import ImageTwoToneIcon from "@mui/icons-material/ImageTwoTone";
 import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import CodeTwoToneIcon from "@mui/icons-material/CodeTwoTone";
+import PhoneIphoneTwoToneIcon from "@mui/icons-material/PhoneIphoneTwoTone";
 
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
@@ -94,6 +95,7 @@ export const HASH_CONFIG = {
   KINDS: "kinds",
   ACCENT_COLOR: "accent-color",
   PLUGINS: "plugins",
+  APP_NAME: "app-name",
 };
 
 export const SETTINGS_CONFIG = [
@@ -165,6 +167,11 @@ export const SETTINGS_CONFIG = [
   {
     title: "Design",
     sublist: [
+      {
+        title: "App name",
+        path: HASH_CONFIG.APP_NAME,
+        icon: <PhoneIphoneTwoToneIcon />,
+      },
       {
         title: "Theme",
         path: HASH_CONFIG.DESIGN_BRANDING,

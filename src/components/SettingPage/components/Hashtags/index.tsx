@@ -103,9 +103,9 @@ export const Hashtags = ({
             onInputChange={(event, newInputValue) =>
               setInputValue(newInputValue)
             }
-            onChange={(event, value) => {
-              const newHashtag = (string) =>
-                string.startsWith("#") ? string : `#${string}`;
+            onChange={(_, value) => {
+              const newHashtag = (s: string) =>
+                s.startsWith("#") ? s : `#${s}`;
 
               const newValues = value.map((v) =>
                 typeof v === "string" ? newHashtag(v) : newHashtag(v.title),

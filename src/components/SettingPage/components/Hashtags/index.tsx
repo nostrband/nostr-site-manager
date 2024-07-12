@@ -1,28 +1,30 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+"use client";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   StyledFormControl,
   StyledHeadSettingBlock,
   StyledSettingBlock,
   StyledSettingCol,
 } from "@/components/SettingPage/styled";
-import { InputLabel, OutlinedInput, Typography } from "@mui/material";
+import {
+  Autocomplete,
+  ListItem,
+  TextField,
+  Typography,
+  Button,
+} from "@mui/material";
 import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
-import {
-  fetchTopHashtags,
-  getPreviewTopHashtags,
-} from "@/services/nostr/themes";
+import { fetchTopHashtags } from "@/services/nostr/themes";
 
 interface ITitleDescription extends IBaseSetting {
   selectedHashtags: string[];
   contributors: string[];
-  handleChangeHashtags: (value: string | string[]) => void;
+  handleChangeHashtags: (value: string[]) => void;
 }
 
 export const Hashtags = ({
@@ -34,18 +36,10 @@ export const Hashtags = ({
 }: ITitleDescription) => {
   const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
   const [hashtags, setHashtags] = useState<string[]>([]);
-
-  const handleChange = (event: SelectChangeEvent<typeof hashtags>) => {
-    const {
-      target: { value },
-    } = event;
-    const hashtags = [
-      ...new Set(typeof value === "string" ? value.split(",") : value),
-    ];
-    handleChangeHashtags(hashtags);
-  };
+  const [inputValue, setInputValue] = useState("");
 
   const handleClick = () => {
+    setInputValue("");
     handleAction().then();
   };
 
@@ -58,6 +52,27 @@ export const Hashtags = ({
   useEffect(() => {
     getHashtags().then();
   }, [getHashtags]);
+
+  const mergeHashtags = new Set([...hashtags, ...selectedHashtags]);
+  const mergedOptions = Array.from(mergeHashtags).map((el) => ({ title: el }));
+
+  const handleAddHashtag = () => {
+    if (inputValue) {
+      const newHashtag = inputValue.startsWith("#")
+        ? inputValue
+        : `#${inputValue}`;
+      if (!hashtags.includes(newHashtag)) {
+        const newHashtags = [...hashtags, newHashtag];
+        setHashtags(newHashtags);
+        handleChangeHashtags([...selectedHashtags, newHashtag]);
+        setInputValue(""); // Clear the input after adding
+      }
+    }
+  };
+
+  const isSubstringPresent = (value: string) => {
+    return hashtags.some((hashtag) => hashtag.includes(value));
+  };
 
   return (
     <StyledSettingCol id={HASH_CONFIG.HASHTAGS}>
@@ -77,23 +92,75 @@ export const Hashtags = ({
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
-          <InputLabel id="demo-multiple-checkbox-label">Hashtags</InputLabel>
-          <Select
-            labelId="demo-multiple-checkbox-label"
-            id="demo-multiple-checkbox"
+          <Autocomplete
             multiple
+            options={mergedOptions}
+            disableCloseOnSelect
+            disabled={!isEdit}
+            freeSolo
             value={selectedHashtags}
-            onChange={handleChange}
-            input={<OutlinedInput label="Hashtags" />}
-            renderValue={(selected) => selected.join(", ")}
-          >
-            {hashtags.map((hashtag) => (
-              <MenuItem key={hashtag} value={hashtag}>
-                <Checkbox checked={selectedHashtags.indexOf(hashtag) > -1} />
-                <ListItemText primary={hashtag} />
-              </MenuItem>
-            ))}
-          </Select>
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) =>
+              setInputValue(newInputValue)
+            }
+            onChange={(_, value) => {
+              const newHashtag = (s: string) =>
+                s.startsWith("#") ? s : `#${s}`;
+
+              const newValues = value.map((v) =>
+                typeof v === "string" ? newHashtag(v) : newHashtag(v.title),
+              );
+              const uniqueValues = [...new Set(newValues)];
+              handleChangeHashtags(uniqueValues);
+              setHashtags((prevHashtags) => [
+                ...new Set([...prevHashtags, ...uniqueValues]),
+              ]);
+            }}
+            getOptionLabel={(option) =>
+              typeof option === "string" ? option : option.title
+            }
+            renderOption={(props, option) => {
+              // @ts-ignore
+              const { key, ...optionProps } = props;
+              return (
+                <ListItem {...optionProps} key={key}>
+                  <Checkbox
+                    disabled={!isEdit}
+                    checked={selectedHashtags.indexOf(option.title) > -1}
+                    onClick={(e) => {
+                      const isSelected = selectedHashtags.includes(
+                        option.title,
+                      );
+                      if (isSelected) {
+                        e.stopPropagation();
+                        const newSelectedHashtags = selectedHashtags.filter(
+                          (el) => el !== option.title,
+                        );
+
+                        handleChangeHashtags(newSelectedHashtags);
+                      }
+                    }}
+                  />
+                  <ListItemText primary={option.title} />
+                </ListItem>
+              );
+            }}
+            renderInput={(params) => (
+              <TextField {...params} disabled={!isEdit} label="Hashtags" />
+            )}
+          />
+          {inputValue &&
+            !hashtags.includes(inputValue) &&
+            !isSubstringPresent(inputValue) && (
+              <Button
+                disabled={!isEdit}
+                onClick={handleAddHashtag}
+                variant="contained"
+                sx={{ mt: 1 }}
+              >
+                Add {inputValue}
+              </Button>
+            )}
         </StyledFormControl>
       </StyledSettingBlock>
     </StyledSettingCol>

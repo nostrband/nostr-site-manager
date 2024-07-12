@@ -50,7 +50,7 @@ export const Preview = () => {
   const theme = THEMES_PREVIEW.find((el) => el.id === themeId);
 
   const [contributor, setContributor] = useState<string | undefined>(
-    siteId ? undefined : userPubkey
+    siteId ? undefined : userPubkey,
   );
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [hashtagsSelected, setHashtagsSelected] = useState<
@@ -154,7 +154,7 @@ export const Preview = () => {
   const onContentSettings = async (
     author: string,
     hashtags: string[],
-    kinds: number[]
+    kinds: number[],
   ) => {
     console.log("onContentSettings", author, hashtags, kinds);
     setContributor(author);

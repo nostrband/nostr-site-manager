@@ -18,7 +18,7 @@ import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { Box, CardContent, CardHeader, CardMedia, Grid } from "@mui/material";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
 import IconButton from "@mui/material/IconButton";
-import {StyledAvatarSite} from "@/components/shared/styled";
+import { StyledAvatarSite } from "@/components/shared/styled";
 
 type ListSitesType = {
   data: ReturnSettingsSiteDataType[];

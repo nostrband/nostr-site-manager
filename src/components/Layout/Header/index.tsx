@@ -8,18 +8,17 @@ import {
   StyledUserAvatar,
 } from "@/components/Layout/Header/styled";
 import { Logo } from "@/components/Logo";
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { nip19 } from "nostr-tools";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
-import {AuthContext, userPubkey} from "@/services/nostr/nostr";
+import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { useRouter } from "next/navigation";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Typography } from "@mui/material";
-import { ModalAuthor } from "@/components/ModalAuthor";
 
 interface IHeader {
   handleOpen: () => void;

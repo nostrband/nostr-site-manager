@@ -21,15 +21,11 @@ import {
   StyledWrapper,
   StyledImgPreview,
   StyledBannerPreview,
-  StyledItemNavigation,
 } from "@/components/Pages/Design/styled";
 import { useFormik } from "formik";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
 import { MuiColorInput } from "mui-color-input";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import { AuthContext, userPubkey } from "@/services/nostr/nostr";
+import { AuthContext } from "@/services/nostr/nostr";
 import {
   Mutex,
   getPreviewSiteInfo,
@@ -101,7 +97,7 @@ export const Design = () => {
   // const theme = THEMES_PREVIEW.find((el) => el.id === themeId);
   // const previewImg = THEMES_PREVIEW.find((el) => el.id === themeId);
   const [isOpenSettings, setOpenSettings] = useState(true);
-  const [activeTab, setActiveTab] = useState("1");
+  // const [activeTab, setActiveTab] = useState("1");
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const handleOpenSettings = useCallback(() => {
@@ -155,7 +151,7 @@ export const Design = () => {
         setLoading(false);
       });
     },
-    [setLoading]
+    [setLoading],
   );
 
   const {
@@ -191,7 +187,7 @@ export const Design = () => {
     (e: any) => {
       handleBlur(e);
     },
-    [handleBlur]
+    [handleBlur],
   );
 
   const handleChangeNavigation = useCallback(
@@ -211,7 +207,7 @@ export const Design = () => {
 
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleAddLinkNavigation = useCallback(
@@ -224,7 +220,7 @@ export const Design = () => {
         ],
       });
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleRemoveLinkNavigation = useCallback(
@@ -232,12 +228,12 @@ export const Design = () => {
       const navigation = values.navigation;
 
       navigation[input.type] = navigation[input.type].filter(
-        (item) => item.id !== input.id
+        (item) => item.id !== input.id,
       );
 
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   useEffect(() => {

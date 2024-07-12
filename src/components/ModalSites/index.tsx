@@ -1,12 +1,5 @@
 "use client";
-import {
-  Box,
-  Button,
-  Card,
-  CardMedia,
-  DialogTitle,
-  Fab,
-} from "@mui/material";
+import { Box, Button, Card, CardMedia, DialogTitle, Fab } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { useState } from "react";
 import {
@@ -16,16 +9,14 @@ import {
 } from "@/components/ModalAuthor/styled";
 import { TYPES_THEMES_TAG } from "@/consts";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import {
-  StyledCardHeader,
-} from "@/components/ListSites/styled";
+import { StyledCardHeader } from "@/components/ListSites/styled";
 import { StyledCardNoImage } from "@/components/Pages/Dashboard/styled";
 import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import { StyledIconButton } from "@/components/PreviewNavigation/styled";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/navigation";
-import {StyledAvatarSite} from "@/components/shared/styled";
+import { StyledAvatarSite } from "@/components/shared/styled";
 
 export const ModalSites = ({
   isOpen,

@@ -21,6 +21,7 @@ import { AccentColor } from "@/components/SettingPage/components/AccentColor";
 import { Kinds } from "@/components/SettingPage/components/Kinds";
 import { WebsiteAddress } from "./components/WebsiteAddress";
 import { Plugins } from "@/components/SettingPage/components/Plugins";
+import { AppName } from "@/components/SettingPage/components/AppName";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -71,11 +72,7 @@ export const SettingPage = () => {
   const params = useParams();
   const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
 
-  const {
-    data,
-    isLoading: isLoadingSetting,
-    isFetching,
-  } = useSettingsSite(siteId);
+  const { data } = useSettingsSite(siteId);
 
   const {
     values,
@@ -261,6 +258,14 @@ export const SettingPage = () => {
       <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
         Design
       </Typography>
+
+      <AppName
+        name={values.name}
+        handleBlur={handleBlur}
+        handleChange={handleChange}
+        submitForm={submitForm}
+        isLoading={isLoading}
+      />
 
       <DesignBranding
         siteId={values.id}

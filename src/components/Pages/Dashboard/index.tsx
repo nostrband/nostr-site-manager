@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardMedia,
   Typography,
-    Avatar
+  Avatar,
 } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
 import { useParams, useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ import {
 } from "@/components/ListSites/styled";
 import { StyledCardNoImage } from "@/components/Pages/Dashboard/styled";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
-import {StyledAvatarSite} from "@/components/shared/styled";
+import { StyledAvatarSite } from "@/components/shared/styled";
 
 export const Dashboard = () => {
   const router = useRouter();
@@ -62,7 +62,6 @@ export const Dashboard = () => {
           gap: "10px",
         }}
       >
-
         <Card sx={{ maxWidth: "400px" }}>
           <StyledCardHeader
             avatar={
@@ -125,13 +124,14 @@ export const Dashboard = () => {
           </StyledWrapFooter>
         </Card>
 
-        <Box sx={{
-                 display: "flex",
-                 maxWidth: '400px',
-            width: '100%',
-                 gap: "10px",
-                 flexDirection: 'column'
-             }}
+        <Box
+          sx={{
+            display: "flex",
+            maxWidth: "400px",
+            width: "100%",
+            gap: "10px",
+            flexDirection: "column",
+          }}
         >
           <Button
             size="medium"

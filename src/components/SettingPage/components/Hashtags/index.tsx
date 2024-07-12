@@ -146,7 +146,7 @@ export const Hashtags = ({
               );
             }}
             renderInput={(params) => (
-              <TextField disabled={!isEdit} {...params} label="Hashtags" />
+              <TextField {...params} disabled={!isEdit} label="Hashtags" />
             )}
           />
           {inputValue &&

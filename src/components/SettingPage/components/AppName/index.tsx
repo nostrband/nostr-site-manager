@@ -50,11 +50,11 @@ export const AppName = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          App name for PWA
+          Short name for your site, displayed when users add it to homescreen
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
-          <InputLabel htmlFor="app-name">App name</InputLabel>
+          <InputLabel htmlFor="app-name">Name</InputLabel>
           <OutlinedInput
             inputRef={inputRef}
             id="app-name"

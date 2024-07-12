@@ -120,6 +120,7 @@ export const Hashtags = ({
               typeof option === "string" ? option : option.title
             }
             renderOption={(props, option) => {
+              // @ts-ignore
               const { key, ...optionProps } = props;
               return (
                 <ListItem {...optionProps} key={key}>

@@ -52,13 +52,28 @@ export const ModalThemes = ({
   };
 
   const handleNavigate = (id: string) => {
-    router.push(
-      `/preview?themeId=${id}${tag ? `&tag=${tag}` : ""}${siteId ? `&siteId=${siteId}` : ""}`,
-    );
+    const searchParams = new URLSearchParams(params.toString());
+    if (tag) {
+      searchParams.set("tag", tag);
+    } else {
+      searchParams.delete("tag");
+    }
+
+    if (siteId) {
+      searchParams.set("siteId", siteId);
+    } else {
+      searchParams.delete("siteId");
+    }
+
+    searchParams.set("themeId", id);
+
+    router.push(`/preview?${searchParams.toString()}`);
     handleCancel();
   };
 
   const handleTagChange = (newTag: string) => {
+    const searchParams = new URLSearchParams(params.toString());
+
     const filteredThemeIds = (
       newTag ? THEMES_PREVIEW.filter((t) => t.tag === newTag) : THEMES_PREVIEW
     ).map((t) => t.id);
@@ -67,9 +82,21 @@ export const ModalThemes = ({
       : filteredThemeIds[0];
     console.log("newThemeId", newThemeId, filteredThemeIds.length);
 
-    router.push(
-      `/preview?themeId=${newThemeId}${newTag !== "" ? `&tag=${newTag}` : ""}${siteId ? `&siteId=${siteId}` : ""}`,
-    );
+    if (newTag) {
+      searchParams.set("tag", newTag);
+    } else {
+      searchParams.delete("tag");
+    }
+
+    if (siteId) {
+      searchParams.set("siteId", siteId);
+    } else {
+      searchParams.delete("siteId");
+    }
+
+    searchParams.set("themeId", newThemeId);
+
+    router.push(`/preview?${searchParams.toString()}`);
   };
 
   const options = Object.values(TYPES_THEMES_TAG);

@@ -13,7 +13,7 @@ import { useListSites } from "@/hooks/useListSites";
 import { useParams, useRouter } from "next/navigation";
 import { TitleAdmin } from "@/components/TitleAdmin";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
-import React from "react";
+import React, { useState } from "react";
 import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import {
   StyledCardHeader,
@@ -22,8 +22,10 @@ import {
 import { StyledCardNoImage } from "@/components/Pages/Dashboard/styled";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
 import { StyledAvatarSite } from "@/components/shared/styled";
+import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
 
 export const Dashboard = () => {
+  const [isOpenConfirm, setOpenConfirm] = useState(false);
   const router = useRouter();
   const { data, isLoading, isFetching } = useListSites();
   console.log({
@@ -40,6 +42,14 @@ export const Dashboard = () => {
 
   const openSettings = () => {
     router.push(`/admin/${siteId}/settings`);
+  };
+
+  const handeOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
+
+  const handeCloseConfirm = () => {
+    setOpenConfirm(false);
   };
 
   if (isLoading || isFetching) {
@@ -162,8 +172,23 @@ export const Dashboard = () => {
           >
             Settings
           </Button>
+
+          <Button
+            size="medium"
+            variant="outlined"
+            color="error"
+            onClick={handeOpenConfirm}
+            fullWidth
+          >
+            Delete
+          </Button>
         </Box>
       </Box>
+      <ModalConfirmDeleteSite
+        isOpen={isOpenConfirm}
+        siteId={siteId}
+        handleClose={handeCloseConfirm}
+      />
     </>
   );
 };

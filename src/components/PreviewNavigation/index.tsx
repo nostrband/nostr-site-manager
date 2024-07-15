@@ -1,22 +1,25 @@
 import { Avatar, Box, Button, ListSubheader } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import {
+  StyledButtonHashtagKind,
   StyledIconButton,
   StyledWrapper,
 } from "@/components/PreviewNavigation/styled";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { THEMES_PREVIEW } from "@/consts";
 import { AuthContext } from "@/services/nostr/nostr";
 import { ModalAuthor } from "@/components/ModalAuthor";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
 import { prefetchThemes } from "@/services/nostr/themes";
+import { ExpandMoreTwoTone as ExpandMoreTwoToneIcon } from "@mui/icons-material";
+import { ModalHashtagsKinds } from "@/components/ModalHashtagsKinds";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -53,9 +56,40 @@ export const PreviewNavigation = ({
   author: string;
 }) => {
   const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
+  const [isOpenModalHashtagsKinds, setOpenModalHashtagsKinds] = useState(false);
   const [profile, setProfile] = useState<NDKEvent | undefined>(undefined);
   const authed = useContext(AuthContext);
   const params = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const createQueryString = useCallback(
+    ({
+      hashtagsData,
+      kindsData,
+    }: {
+      hashtagsData: string[];
+      kindsData: string[];
+    }) => {
+      const searchParams = new URLSearchParams(params.toString());
+
+      if (hashtagsData.length) {
+        searchParams.set("hashtags", hashtagsData.toString());
+      } else {
+        searchParams.delete("hashtags");
+      }
+
+      if (kindsData.length) {
+        searchParams.set("kinds", kindsData.toString());
+      } else {
+        searchParams.delete("kinds");
+      }
+
+      return searchParams.toString();
+    },
+    [params],
+  );
+
   const tag = params.get("tag");
   const themeId = params.get("themeId");
   const siteId = params.get("siteId");
@@ -65,8 +99,6 @@ export const PreviewNavigation = ({
       : THEMES_PREVIEW;
   let currentIndex = filteredThemes.findIndex((el) => el.id === themeId);
   let currentTheme = filteredThemes[currentIndex];
-  const selectedOptions = [...hashtagsSelected, ...kindsSelected];
-  const prepareKindOptions = Object.keys(kinds).map((el) => Number(el));
 
   prefetchThemes([
     filteredThemes[(currentIndex + 1) % filteredThemes.length].id,
@@ -103,40 +135,32 @@ export const PreviewNavigation = ({
     if (!authed) document.dispatchEvent(new Event("nlLaunch"));
   };
 
-  const handleChange = (event: SelectChangeEvent<typeof selectedOptions>) => {
-    const value = event.target.value as string[];
-    const newHashtagsOptions = [];
-    const newKindsOptions: number[] = [];
+  const handleChange = (hashtagsData: string[], kindsData: number[]) => {
+    const prepareHashtags = hashtagsData
+      .map((str) => str.substring(1))
+      .join(",");
 
-    const selectedHashtags = value.filter((option) =>
-      hashtags.includes(option),
+    const prepareKinds = kindsData.join(",");
+
+    router.push(
+      `${pathname}?${createQueryString({ hashtagsData: prepareHashtags, kindsData: prepareKinds })}`,
     );
 
-    const selectedKinds = value
-      .filter((option) => prepareKindOptions.includes(Number(option)))
-      .map((el) => Number(el));
-
-    if (selectedKinds.length === 0) {
-      if (
-        selectedOptions.some((option) =>
-          prepareKindOptions.includes(Number(option)),
-        )
-      ) {
-        return;
-      } else {
-        newHashtagsOptions.push(...selectedHashtags);
-        newKindsOptions.push(...prepareKindOptions);
-      }
-    } else if (selectedKinds.length === prepareKindOptions.length) {
-      newHashtagsOptions.push(...selectedHashtags);
-      newKindsOptions.push(...prepareKindOptions);
-    } else {
-      newHashtagsOptions.push(...selectedHashtags);
-      newKindsOptions.push(...selectedKinds);
-    }
-
-    onContentSettings(author, newHashtagsOptions, newKindsOptions);
+    onContentSettings(author, hashtagsData, kindsData);
   };
+
+  useEffect(() => {
+    const queryHashtags = params.get("hashtags");
+    const queryKinds = params.get("kinds");
+
+    if (Boolean(queryHashtags) || Boolean(queryKinds)) {
+      onContentSettings(
+        author,
+          queryHashtags?.split(",").map((el) => `#${el}`),
+          queryKinds?.split(",").map((el) => Number(el)),
+      );
+    }
+  }, []);
 
   let avatar = "";
   let username = "";
@@ -165,6 +189,26 @@ export const PreviewNavigation = ({
     );
   };
 
+  const handleCloseModalHashtagsKinds = () => {
+    setOpenModalHashtagsKinds(false);
+  };
+
+  const handleOpenModalHashtagsKinds = () => {
+    setOpenModalHashtagsKinds(true);
+  };
+
+  const kindsNames = kindsSelected.map((value) => {
+    // @ts-ignore
+    if (kinds[value]) {
+      // @ts-ignore
+      return kinds[value];
+    }
+
+    return "";
+  });
+
+  const selectedData = [...kindsNames, ...hashtagsSelected].join(", ");
+
   return (
     <>
       <StyledWrapper>
@@ -187,72 +231,19 @@ export const PreviewNavigation = ({
               order: { xs: 0, sm: 1 },
             }}
           >
-            <Select
-              labelId="demo-multiple-checkbox-label"
-              id="demo-multiple-checkbox"
-              multiple
-              size="small"
-              value={selectedOptions}
-              onChange={handleChange}
-              MenuProps={MenuProps}
+            <StyledButtonHashtagKind
               sx={{
                 height: "42px",
                 width: { xs: `${authed ? "208px" : "100%"}`, sm: "208px" },
+                justifyContent: "space-between",
               }}
-              renderValue={(selected) => {
-                if (!selected.length) {
-                  return "All notes";
-                }
-
-                const kindsNames = selected
-                  .map((value) => {
-                    // @ts-ignore
-                    if (kinds[value]) {
-                      // @ts-ignore
-                      return kinds[value];
-                    }
-
-                    return "";
-                  })
-                  .filter((s) => !!s)
-                  .join(", ");
-
-                return [kindsNames, ...selected]
-                  .map((value) => {
-                    // @ts-ignore
-                    if (kinds[value]) {
-                      return "";
-                    }
-
-                    return value;
-                  })
-                  .filter((s) => !!s)
-                  .join(", ");
-              }}
-              displayEmpty
+              color="primary"
+              variant="outlined"
+              onClick={handleOpenModalHashtagsKinds}
+              endIcon={<ExpandMoreTwoToneIcon />}
             >
-              <ListSubheader>Kinds</ListSubheader>
-              {prepareKindOptions.map((kind) => (
-                <MenuItem key={kind} value={kind}>
-                  <Checkbox
-                    color="decorate"
-                    checked={selectedOptions.includes(kind)}
-                  />
-                  <ListItemText primary={kinds[kind]} />
-                </MenuItem>
-              ))}
-
-              <ListSubheader>Hashtags</ListSubheader>
-              {hashtags.map((hashtag) => (
-                <MenuItem key={hashtag} value={hashtag}>
-                  <Checkbox
-                    color="decorate"
-                    checked={selectedOptions.includes(hashtag)}
-                  />
-                  <ListItemText primary={hashtag} />
-                </MenuItem>
-              ))}
-            </Select>
+              <span>{selectedData.length ? selectedData : "All notes"}</span>
+            </StyledButtonHashtagKind>
           </Box>
         )}
         <Button
@@ -296,6 +287,16 @@ export const PreviewNavigation = ({
         pubkey={author}
         isOpen={isOpenModalAuthor}
         handleClose={handleAuthor}
+      />
+
+      <ModalHashtagsKinds
+        hashtagsSelected={hashtagsSelected}
+        kindsSelected={kindsSelected}
+        kinds={kinds}
+        hashtags={hashtags}
+        isOpen={isOpenModalHashtagsKinds}
+        handleClose={handleCloseModalHashtagsKinds}
+        handleChange={handleChange}
       />
     </>
   );

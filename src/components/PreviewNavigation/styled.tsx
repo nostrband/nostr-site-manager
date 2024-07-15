@@ -1,6 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, IconButton } from "@mui/material";
+import { Box, Button, IconButton } from "@mui/material";
 
 export const StyledWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -26,4 +26,12 @@ export const StyledWrapper = styled(Box)(({ theme }) => ({
 
 export const StyledIconButton = styled(IconButton)(() => ({
   border: "1px solid rgba(233, 233, 233, 1)",
+}));
+
+export const StyledButtonHashtagKind = styled(Button)(() => ({
+  span: {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    textWrap: "nowrap",
+  },
 }));

@@ -70,13 +70,10 @@ export const ModalHashtagsKinds = ({
       target: { value },
     } = event;
 
-    const data =
-      typeof value === "string"
-        ? value.split(",").map((el) => Number(el))
-        : value;
-    const arr = new Set(data.map((el) => Number(el)));
-
-    handleChange(hashtagsSelected, [...arr]);
+    handleChange(
+      hashtagsSelected,
+      typeof value === "string" ? value.split(",").map(Number) : value,
+    );
   };
 
   const handleChangeHashtags = (hashtagsData: string[]) => {
@@ -90,6 +87,8 @@ export const ModalHashtagsKinds = ({
   useEffect(() => {
     setHashtags(hashtagsExternal);
   }, [hashtagsExternal]);
+  //
+  // console.log({kindsSelected})
 
   return (
     <StyledDialog
@@ -118,19 +117,21 @@ export const ModalHashtagsKinds = ({
             labelId="demo-multiple-checkbox-label"
             fullWidth
             multiple
-            value={kindsSelected.map((el) => String(el))}
+            value={kindsSelected}
             onChange={handleChangeKinds}
             input={<OutlinedInput label="Kinds" />}
             renderValue={(selected) =>
               selected.map((val) => kindsMap[val]).join(", ")
             }
           >
-            {Object.keys(kinds).map((kind) => (
-              <MenuItem key={kind} value={kind}>
-                <Checkbox checked={kindsSelected.indexOf(Number(kind)) > -1} />
-                <ListItemText primary={kindsMap[kind]} />
-              </MenuItem>
-            ))}
+            {Object.keys(kinds)
+              .map((el) => Number(el))
+              .map((kind) => (
+                <MenuItem key={kind} value={kind}>
+                  <Checkbox checked={kindsSelected.indexOf(kind) > -1} />
+                  <ListItemText primary={kindsMap[kind]} />
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
 

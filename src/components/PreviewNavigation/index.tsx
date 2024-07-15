@@ -44,7 +44,7 @@ export const PreviewNavigation = ({
 }: {
   onContentSettings: (
     author: string,
-    hastags: string[],
+    hashtags: string[],
     kinds: number[],
   ) => void;
   onUseTheme: () => void;
@@ -68,19 +68,19 @@ export const PreviewNavigation = ({
       hashtagsData,
       kindsData,
     }: {
-      hashtagsData: string[];
-      kindsData: string[];
+      hashtagsData: string;
+      kindsData: string;
     }) => {
       const searchParams = new URLSearchParams(params.toString());
 
       if (hashtagsData.length) {
-        searchParams.set("hashtags", hashtagsData.toString());
+        searchParams.set("hashtags", hashtagsData);
       } else {
         searchParams.delete("hashtags");
       }
 
       if (kindsData.length) {
-        searchParams.set("kinds", kindsData.toString());
+        searchParams.set("kinds", kindsData);
       } else {
         searchParams.delete("kinds");
       }
@@ -153,14 +153,17 @@ export const PreviewNavigation = ({
     const queryHashtags = params.get("hashtags");
     const queryKinds = params.get("kinds");
 
-    if (Boolean(queryHashtags) || Boolean(queryKinds)) {
-      onContentSettings(
-        author,
-          queryHashtags?.split(",").map((el) => `#${el}`),
-          queryKinds?.split(",").map((el) => Number(el)),
-      );
+    const hashtagsArray = queryHashtags
+      ? queryHashtags.split(",").map((el) => `#${el}`)
+      : [];
+    const kindsArray = queryKinds
+      ? queryKinds.split(",").map((el) => Number(el))
+      : [];
+
+    if (hashtagsArray.length > 0 || kindsArray.length > 0) {
+      onContentSettings(author, hashtagsArray, kindsArray);
     }
-  }, []);
+  }, [params]);
 
   let avatar = "";
   let username = "";

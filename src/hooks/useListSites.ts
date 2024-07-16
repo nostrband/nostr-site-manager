@@ -6,7 +6,7 @@ export const useListSites = () => {
   return useQuery({
     queryKey: ["sites"],
     queryFn: getSites,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 };

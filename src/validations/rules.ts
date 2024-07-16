@@ -5,6 +5,13 @@ export const validationSchemaLogin = yup.object({
   username: yup.string().required("Enter your name"),
 });
 
+export const validationSchemaConfirmDelete = yup.object({
+  confirmText: yup
+    .string()
+    .required('Enter confirm text')
+    .oneOf(["delete"], 'The value should be "delete"'),
+});
+
 export const validationSchemaMakePrivateSite = yup.object().shape({
   isPrivate: yup.boolean().notRequired(),
   password: yup

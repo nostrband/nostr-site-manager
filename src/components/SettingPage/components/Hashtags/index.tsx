@@ -65,7 +65,7 @@ export const Hashtags = ({
         const newHashtags = [...hashtags, newHashtag];
         setHashtags(newHashtags);
         handleChangeHashtags([...selectedHashtags, newHashtag]);
-        setInputValue(""); // Clear the input after adding
+        setInputValue("");
       }
     }
   };

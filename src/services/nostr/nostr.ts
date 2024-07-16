@@ -4,7 +4,16 @@ import NDK, {
   NDKRelaySet,
   NostrEvent,
 } from "@nostr-dev-kit/ndk";
-import { eventId, fetchOutboxRelays, fetchProfile, tv } from "libnostrsite";
+import {
+  eventId,
+  fetchEvent,
+  fetchEvents,
+  fetchOutboxRelays,
+  fetchProfile,
+  tags,
+  tv,
+  tvs,
+} from "libnostrsite";
 import { createContext } from "react";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { sha256 } from "@noble/hashes/sha256";
@@ -33,9 +42,14 @@ export const userRelays: string[] = [];
 export let userProfile: NDKEvent | null = null;
 export let userIsDelegated = false;
 export let userToken = "";
+let userTokenPubkey = "";
+
+const KIND_NIP98 = 27235;
+const KIND_DELETE = 5;
 
 try {
   userToken = window.localStorage.getItem("token") || "";
+  userTokenPubkey = window.localStorage.getItem("tokenPubkey") || "";
 } catch {}
 
 export function srm(e: NDKEvent | NostrEvent, name: string) {
@@ -52,10 +66,10 @@ export function stv2(
   e: NDKEvent | NostrEvent,
   prefix: string,
   name: string,
-  value: string,
+  value: string
 ) {
   const t = e.tags.find(
-    (t) => t.length >= 3 && t[0] === prefix && t[1] === name,
+    (t) => t.length >= 3 && t[0] === prefix && t[1] === name
   );
   if (t) t[2] = value;
   else e.tags.push([prefix, name, value]);
@@ -71,10 +85,13 @@ export function addOnAuth(cb: (type: string) => Promise<void>) {
   onAuths.push(cb);
 }
 
-function setUserToken(token: string) {
+function setUserToken(token: string, pubkey: string) {
+  console.log("set token", pubkey, token);
   userToken = token;
+  userTokenPubkey = pubkey;
   try {
-    window.localStorage.setItem("token", userToken);
+    window.localStorage.setItem("token", token);
+    window.localStorage.setItem("tokenPubkey", pubkey);
   } catch {}
 }
 
@@ -82,15 +99,15 @@ export async function onAuth(e: any) {
   console.log("nlAuth", e);
   const authed = e.detail.type !== "logout";
   if (authed) {
-    userIsDelegated = e.detail.method === "otp";
-    if (userIsDelegated) {
-      setUserToken(JSON.parse(e.detail.otpData).token);
-    } else {
-      setUserToken("");
-    }
-
     userPubkey = await window.nostr!.getPublicKey();
     console.log("pubkey", userPubkey);
+
+    userIsDelegated = e.detail.method === "otp";
+    if (userIsDelegated) {
+      setUserToken(JSON.parse(e.detail.otpData).token, userPubkey);
+    } else if (userTokenPubkey !== userPubkey) {
+      setUserToken("", "");
+    }
 
     const outboxRelays = await fetchOutboxRelays(ndk, [userPubkey]);
     userRelays.push(...outboxRelays);
@@ -101,7 +118,7 @@ export async function onAuth(e: any) {
     userPubkey = "";
     userRelays.length = 0;
     userProfile = null;
-    setUserToken("");
+    setUserToken("", "");
   }
 
   for (const cb of onAuths) await cb(e.detail.type);
@@ -124,7 +141,7 @@ async function fetchAuthed({
 }) {
   let authEvent = new NDKEvent(ndk, {
     pubkey: userPubkey,
-    kind: 27235,
+    kind: KIND_NIP98,
     created_at: Math.floor(Date.now() / 1000),
     content: "",
     tags: [
@@ -145,7 +162,7 @@ async function fetchAuthed({
       "in",
       Date.now() - start,
       "ms",
-      minedEvent,
+      minedEvent
     );
     authEvent = new NDKEvent(ndk, minedEvent);
   }
@@ -178,7 +195,7 @@ async function getSessionToken() {
       if (r.status === 200) {
         const data = await r.json();
         console.log("got session token", data);
-        setUserToken(data.token);
+        setUserToken(data.token, userPubkey);
         // done!
         return;
       } else if (r.status === 403) {
@@ -200,9 +217,10 @@ async function getSessionToken() {
 export async function fetchWithSession(
   url: string,
   body: any | undefined = undefined,
+  method?: string
 ) {
   try {
-    const method = body ? "POST" : "GET";
+    method = method || (body ? "POST" : "GET");
     const fetchIt = async () => {
       const headers: any = {
         "X-NpubPro-Token": userToken,
@@ -241,9 +259,9 @@ export async function fetchWithSession(
   }
 }
 
-export async function publishSite(
+export async function publishSiteEvent(
   site: NDKEvent,
-  relays: string[],
+  relays: string[]
 ): Promise<NostrEvent> {
   // if we're signed in with OTP
   // or if we're editing delegated site
@@ -252,7 +270,7 @@ export async function publishSite(
       throw new Error("Cannot edit site signed by your keys in delegated mode");
     const reply = await fetchWithSession(
       `${NPUB_PRO_API}/site?relays=${relays.join(",")}`,
-      site.rawEvent(),
+      site.rawEvent()
     );
     if (reply.status !== 200) throw new Error("Failed to publish event");
 
@@ -263,6 +281,8 @@ export async function publishSite(
 
     return data.event;
   } else {
+    if (site.pubkey !== userPubkey) throw new Error("Not your site");
+
     // sign it
     await site.sign(new NDKNip07Signer());
     console.log("signed site event", site);
@@ -271,10 +291,109 @@ export async function publishSite(
     const r = await site.publish(NDKRelaySet.fromRelayUrls(relays, ndk));
     console.log(
       "published site event to",
-      [...r].map((r) => r.url),
+      [...r].map((r) => r.url)
     );
     if (!r.size) throw new Error("Failed to publish to relays");
 
     return site.rawEvent();
+  }
+}
+
+export async function deleteSiteEvent(site: NostrEvent, relays: string[]) {
+  if (userIsDelegated || (site.pubkey === SERVER_PUBKEY && tv(site, "u"))) {
+    if (site.pubkey !== SERVER_PUBKEY)
+      throw new Error(
+        "Cannot delete site signed by your keys in delegated mode"
+      );
+
+    const naddr = nip19.naddrEncode({
+      identifier: tv(site, "d") || "",
+      pubkey: site.pubkey,
+      kind: site.kind!,
+    });
+
+    const reply = await fetchWithSession(
+      `${NPUB_PRO_API}/site?relays=${relays.join(",")}&site=${naddr}&id=${site.id}`,
+      undefined,
+      "DELETE"
+    );
+    if (reply.status !== 200) throw new Error("Failed to delete site");
+
+    const data = await reply.json();
+    console.log("deleted by server", data);
+  } else {
+    if (site.pubkey !== userPubkey) throw new Error("Not your site");
+
+    // del req for site event
+    const delReq = new NDKEvent(ndk, {
+      kind: KIND_DELETE,
+      content: "",
+      pubkey: userPubkey,
+      created_at: site.created_at! + 1,
+      tags: [
+        ["e", site.id!],
+        ["a", `${site.kind}:${site.pubkey}:${tv(site, "d")}`],
+      ],
+    });
+
+    // sign it
+    await delReq.sign(new NDKNip07Signer());
+    console.log("signed delete site request", delReq);
+
+    // publish
+    const r = await delReq.publish(NDKRelaySet.fromRelayUrls(relays, ndk));
+    console.log(
+      "published delete site request to",
+      [...r].map((r) => r.url)
+    );
+    if (!r.size) throw new Error("Failed to publish to relays");
+  }
+}
+
+function isPRE(kind: number) {
+  return kind >= 30000 && kind < 40000;
+}
+
+function isRE(kind: number) {
+  return kind === 0 || kind === 3 || (kind >= 10000 && kind < 20000);
+}
+
+function formatAddr(e: NDKEvent | NostrEvent) {
+  return `${e.kind!}:${e.pubkey!}:${tv(e, "d") || ""}`;
+}
+
+export async function filterDeleted(events: NDKEvent[], relays: string[]) {
+  const idFilter = {
+    kinds: [KIND_DELETE],
+    ids: [] as string[],
+  };
+  const addrFilter = {
+    kinds: [KIND_DELETE],
+    "#a": [] as string[],
+  };
+  for (const e of events.values()) {
+    if (isPRE(e.kind!) || isRE(e.kind!)) {
+      addrFilter["#a"].push(formatAddr(e));
+    } else {
+      idFilter.ids.push(e.id);
+    }
+  }
+  const filters = [];
+  if (idFilter.ids.length) filters.push(idFilter);
+  if (addrFilter["#a"].length) filters.push(addrFilter);
+
+  const dels = await fetchEvents(ndk, filters, relays, 3000);
+  for (const d of dels.values()) {
+    const i = events.findIndex((e) => {
+      if (isPRE(e.kind!)) {
+        return tags(d, "a").find((t) => t[1] === formatAddr(e));
+      } else {
+        return tags(d, "e").find((t) => t[1] === e.id);
+      }
+    });
+    if (i >= 0) {
+      console.log("deleted event", i, events[i], d);
+      events.splice(i, 1);
+    }
   }
 }

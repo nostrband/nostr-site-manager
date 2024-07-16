@@ -1,13 +1,15 @@
-import { SITE_RELAY, SERVER_PUBKEY } from "../../../services/nostr/consts";
+import { SITE_RELAY, SERVER_PUBKEY, SUPPORT_PUBKEY } from "../../../services/nostr/consts";
 
 export async function GET() {
   const data = {
     names: {
       _: SERVER_PUBKEY,
+      "support": SUPPORT_PUBKEY,
     },
     relays: {},
   };
-  data.relays[SERVER_PUBKEY] = [SITE_RELAY];
+  for (const i in data.names)
+    data.relays[data.names[i]] = [SITE_RELAY, "wss://nos.lol"];
 
   return Response.json(data);
 }

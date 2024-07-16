@@ -48,8 +48,9 @@ export const Dashboard = () => {
     setOpenConfirm(true);
   };
 
-  const handeCloseConfirm = () => {
+  const handeCloseConfirm = (deleted: boolean) => {
     setOpenConfirm(false);
+    if (deleted) router.push(`/admin`);
   };
 
   if (isLoading || isFetching) {

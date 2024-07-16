@@ -151,7 +151,7 @@ export const Design = () => {
         setLoading(false);
       });
     },
-    [setLoading],
+    [setLoading]
   );
 
   const {
@@ -187,7 +187,7 @@ export const Design = () => {
     (e: any) => {
       handleBlur(e);
     },
-    [handleBlur],
+    [handleBlur]
   );
 
   const handleChangeNavigation = useCallback(
@@ -207,7 +207,7 @@ export const Design = () => {
 
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleAddLinkNavigation = useCallback(
@@ -220,7 +220,7 @@ export const Design = () => {
         ],
       });
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleRemoveLinkNavigation = useCallback(
@@ -228,12 +228,12 @@ export const Design = () => {
       const navigation = values.navigation;
 
       navigation[input.type] = navigation[input.type].filter(
-        (item) => item.id !== input.id,
+        (item) => item.id !== input.id
       );
 
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   useEffect(() => {
@@ -427,14 +427,17 @@ export const Design = () => {
               id="icon"
               name="icon"
               fullWidth
+              placeholder="Icon image url"
               onChange={handleChange}
               value={values.icon}
               onBlur={onBlur}
             />
-            <StyledImgPreview>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              {values.icon && <img alt="Icon url" src={values.icon} />}
-            </StyledImgPreview>
+            {values.icon && (
+              <StyledImgPreview>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img alt="Icon url" src={values.icon} />
+              </StyledImgPreview>
+            )}
           </StyledFormControl>
 
           <StyledFormControl>
@@ -444,14 +447,17 @@ export const Design = () => {
               id="logo"
               name="logo"
               fullWidth
+              placeholder="Logo image url"
               onChange={handleChange}
               value={values.logo}
               onBlur={onBlur}
             />
-            <StyledImgPreview>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              {values.logo && <img alt="Logo url" src={values.logo} />}
-            </StyledImgPreview>
+            {values.logo && (
+              <StyledImgPreview>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img alt="Logo url" src={values.logo} />
+              </StyledImgPreview>
+            )}
           </StyledFormControl>
 
           <StyledFormControl>
@@ -461,14 +467,17 @@ export const Design = () => {
               id="banner"
               name="banner"
               fullWidth
+              placeholder="Banner image url"
               onChange={handleChange}
               value={values.banner}
               onBlur={onBlur}
             />
-            <StyledBannerPreview>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              {values.banner && <img alt="Banner url" src={values.banner} />}
-            </StyledBannerPreview>
+            {values.banner && (
+              <StyledBannerPreview>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img alt="Banner url" src={values.banner} />
+              </StyledBannerPreview>
+            )}
           </StyledFormControl>
 
           <StyledFormControl>

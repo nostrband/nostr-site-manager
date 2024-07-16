@@ -14,13 +14,13 @@ import {
   StyledDialogContent,
   StyledActionButton,
 } from "@/components/ModalConfirmDeleteSite/styled";
-import { StyledFormControl, StyledInputAdornment } from "@/modules/auth/styled";
-import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
+import { StyledFormControl } from "@/modules/auth/styled";
 import LoadingButton from "@mui/lab/LoadingButton";
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { validationSchemaConfirmDelete } from "@/validations/rules";
-import { useRouter } from "next/navigation";
+import { deleteSite } from "@/services/nostr/api";
+import { useSnackbar } from "notistack";
 
 export const ModalConfirmDeleteSite = ({
   isOpen,
@@ -29,10 +29,10 @@ export const ModalConfirmDeleteSite = ({
 }: {
   isOpen: boolean;
   siteId: string;
-  handleClose: () => void;
+  handleClose: (deleted: boolean) => void;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { push } = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
 
   const initialValues = {
     confirmText: "",
@@ -53,18 +53,28 @@ export const ModalConfirmDeleteSite = ({
     validationSchema: validationSchemaConfirmDelete,
     onSubmit: async (values) => {
       setIsLoading(true);
-
-      setTimeout(() => {
-        alert("delete site");
-        push("/admin");
-        handleCancel();
-      }, 1500);
-    },
+      try {
+        await deleteSite(siteId);
+        setIsLoading(false);
+        handleClose(true);
+      } catch (e: any) {
+        setIsLoading(false);
+        console.log("error", e);
+        enqueueSnackbar("Error: " + e.toString(), {
+          autoHideDuration: 3000,
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "bottom",
+          },
+        });
+      }
+      },
   });
 
   const handleCancel = () => {
     handleReset(undefined);
-    handleClose();
+    handleClose(false);
   };
 
   return (

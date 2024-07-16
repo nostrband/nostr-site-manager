@@ -100,12 +100,14 @@ export const PreviewNavigation = ({
   let currentIndex = filteredThemes.findIndex((el) => el.id === themeId);
   let currentTheme = filteredThemes[currentIndex];
 
-  prefetchThemes([
-    filteredThemes[(currentIndex + 1) % filteredThemes.length].id,
-    filteredThemes[
-      currentIndex > 0 ? currentIndex - 1 : filteredThemes.length - 1
-    ].id,
-  ]);
+  useEffect(() => {
+    prefetchThemes([
+      filteredThemes[(currentIndex + 1) % filteredThemes.length].id,
+      filteredThemes[
+        currentIndex > 0 ? currentIndex - 1 : filteredThemes.length - 1
+      ].id,
+    ]);  
+  }, [currentIndex, filteredThemes])
 
   useEffect(() => {
     console.log("fetch author", author);

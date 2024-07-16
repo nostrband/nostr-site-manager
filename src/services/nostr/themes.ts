@@ -23,7 +23,7 @@ import {
 import {
   fetchWithSession,
   ndk,
-  publishSite,
+  publishSiteEvent,
   srm,
   stag,
   stv,
@@ -621,7 +621,7 @@ async function publishPreview() {
   const pkg = getThemePackage();
   setSiteTheme(pkg);
 
-  const event = await publishSite(site, [SITE_RELAY, ...userRelays]);
+  const event = await publishSiteEvent(site, [SITE_RELAY, ...userRelays]);
 
   // return naddr
   return eventId(event);

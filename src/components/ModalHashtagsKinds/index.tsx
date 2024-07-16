@@ -22,11 +22,6 @@ import React, { useEffect, useState } from "react";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
-const kindsMap: { [key: number]: string } = {
-  1: "Notes",
-  30023: "Posts",
-};
-
 export const ModalHashtagsKinds = ({
   isOpen,
   hashtagsSelected,
@@ -121,7 +116,7 @@ export const ModalHashtagsKinds = ({
             onChange={handleChangeKinds}
             input={<OutlinedInput label="Kinds" />}
             renderValue={(selected) =>
-              selected.map((val) => kindsMap[val]).join(", ")
+              selected.map((val) => kinds[val]).join(", ")
             }
           >
             {Object.keys(kinds)
@@ -129,7 +124,7 @@ export const ModalHashtagsKinds = ({
               .map((kind) => (
                 <MenuItem key={kind} value={kind}>
                   <Checkbox checked={kindsSelected.indexOf(kind) > -1} />
-                  <ListItemText primary={kindsMap[kind]} />
+                  <ListItemText primary={kinds[kind]} />
                 </MenuItem>
               ))}
           </Select>

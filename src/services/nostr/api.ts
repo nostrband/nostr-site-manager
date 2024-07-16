@@ -3,6 +3,7 @@ import { ReturnSettingsSiteDataType } from "../sites.service";
 import {
   KIND_PACKAGE,
   KIND_PROFILE,
+  KIND_SITE,
   NostrParser,
   OUTBOX_RELAYS,
   Site,
@@ -18,15 +19,15 @@ import {
   stv,
   SEARCH_RELAYS,
   srm,
-  publishSite,
+  publishSiteEvent,
   fetchWithSession,
   stv2,
+  deleteSiteEvent,
+  filterDeleted,
 } from "./nostr";
 import { nip19 } from "nostr-tools";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { NPUB_PRO_API, NPUB_PRO_DOMAIN } from "@/consts";
-
-const KIND_SITE = 30512;
 
 const sites: Site[] = [];
 const packageThemes = new Map<string, string>();
@@ -108,7 +109,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   const naddr = nip19.naddrEncode({
     identifier: tv(e, "d") || "",
     pubkey: e.pubkey,
-    kind: e.kind || KIND_SITE,
+    kind: e.kind!,
     relays,
   });
 
@@ -116,7 +117,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   // console.log("domain", domain, "oldDomain", oldDomain);
   if (domain && domain !== oldDomain) {
     const reply = await fetchWithSession(
-      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`,
+      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`
     );
     if (reply.status !== 200) throw new Error("Failed to reserve");
     const r = await reply.json();
@@ -126,14 +127,14 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   console.log("Signing", e);
 
   // publish new site event
-  await publishSite(new NDKEvent(ndk, e), relays);
+  await publishSiteEvent(new NDKEvent(ndk, e), relays);
 
   // redeploy if domain changed, also release the old domain
   // if (oldDomain && oldDomain !== domain)
   {
     const reply = await fetchWithSession(
       // from=oldDomain - delete the old site after 7 days
-      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`,
+      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`
     );
     if (reply.status !== 200) throw new Error("Failed to deploy");
 
@@ -143,6 +144,37 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
 
   // parse updated site back
   sites[index] = parseSite(e);
+}
+
+export async function deleteSite(siteId: string) {
+  const index = sites.findIndex((s) => s.id === siteId);
+  if (index < 0) throw new Error("Unknown site");
+  const site = sites[index];
+
+  // delete from relays first
+  const relays = [...userRelays, SITE_RELAY];
+  await deleteSiteEvent(site.event, relays);  
+  
+  // delete site from npub.pro database
+  let domain = "";
+  try {
+    const u = new URL(site.origin || "");
+    if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
+      domain = u.hostname.split("." + NPUB_PRO_DOMAIN)[0];
+    }
+  } catch (e) {
+    console.log("Bad site url", site.url);
+  }
+
+  const reply = await fetchWithSession(
+    `${NPUB_PRO_API}/delete?domain=${domain}&site=${siteId}`
+  );
+  if (reply.status !== 200) throw new Error("Failed to delete domain");
+  const r = await reply.json();
+  console.log(Date.now(), "deleted domain", r);
+
+  // delete from local cache
+  sites.splice(index, 1);
 }
 
 function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
@@ -207,7 +239,7 @@ async function fetchSiteThemes() {
         .map((s) => s.extensions?.[0].event_id || "")
         .filter((id) => !!id),
     },
-    [SITE_RELAY],
+    [SITE_RELAY]
   );
 
   for (const e of events) {
@@ -241,6 +273,7 @@ export async function fetchSites() {
 
   if (!sites.length) {
     sitesPromise = new Promise<void>(async (ok) => {
+      const relays = [SITE_RELAY, ...userRelays];
       const events = await fetchEvents(
         ndk,
         [
@@ -258,15 +291,17 @@ export async function fetchSites() {
             "#u": [userPubkey],
           },
         ],
-        [SITE_RELAY, ...userRelays],
-        5000,
+        relays,
+        5000
       );
       console.log("site events", events);
 
       // sort by timestamp desc
       const array = [...events.values()].sort(
-        (a, b) => b.created_at! - a.created_at!,
+        (a, b) => b.created_at! - a.created_at!
       );
+
+      await filterDeleted(array, relays);
 
       sites.push(...array.map((e) => parseSite(e.rawEvent())));
 
@@ -309,7 +344,7 @@ export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
       kinds: [KIND_PROFILE],
       authors: req,
     },
-    OUTBOX_RELAYS,
+    OUTBOX_RELAYS
   );
 
   for (const e of events) {
@@ -332,7 +367,7 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
       search: text + " sort:popular",
       limit: 3,
     },
-    SEARCH_RELAYS,
+    SEARCH_RELAYS
   );
 
   for (const e of events) {

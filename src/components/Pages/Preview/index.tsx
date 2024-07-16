@@ -35,7 +35,7 @@ import { useSnackbar } from "notistack";
 
 const kinds: { [key: number]: string } = {
   1: "Notes",
-  30023: "Posts",
+  30023: "Long-form posts",
 };
 
 const mutex = new Mutex();

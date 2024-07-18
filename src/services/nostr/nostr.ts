@@ -39,7 +39,7 @@ ndk.connect();
 
 export let userPubkey: string = "";
 export const userRelays: string[] = [];
-export let userProfile: NDKEvent | null = null;
+export let userProfile: NDKEvent | undefined = undefined;
 export let userIsDelegated = false;
 export let userToken = "";
 let userTokenPubkey = "";
@@ -117,7 +117,7 @@ export async function onAuth(e: any) {
   } else {
     userPubkey = "";
     userRelays.length = 0;
-    userProfile = null;
+    userProfile = undefined;
     setUserToken("", "");
   }
 

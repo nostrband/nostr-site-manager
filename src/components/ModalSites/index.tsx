@@ -9,8 +9,8 @@ import {
 } from "@/components/ModalAuthor/styled";
 import { TYPES_THEMES_TAG } from "@/consts";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import { StyledCardHeader } from "@/components/ListSites/styled";
-import { StyledCardNoImage } from "@/components/Pages/Dashboard/styled";
+import { StyledCardHeader } from "@/components/PreviewSite/styled";
+import { StyledCardNoImage } from "@/components/PreviewSite/styled";
 import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import { StyledIconButton } from "@/components/PreviewNavigation/styled";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";

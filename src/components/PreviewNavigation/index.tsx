@@ -106,8 +106,8 @@ export const PreviewNavigation = ({
       filteredThemes[
         currentIndex > 0 ? currentIndex - 1 : filteredThemes.length - 1
       ].id,
-    ]);  
-  }, [currentIndex, filteredThemes])
+    ]);
+  }, [currentIndex, filteredThemes]);
 
   useEffect(() => {
     console.log("fetch author", author);

@@ -1,32 +1,60 @@
 "use client";
 import {
   StyledHeaderContainer,
+  StyledHeaderNavigation,
   StyledHeaderOnboarding,
 } from "@/components/HeaderOnboarding/styled";
-import { Typography, Button } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { Box, Button } from "@mui/material";
+import Link from "next/link";
 import { useContext } from "react";
 import { AuthContext } from "@/services/nostr/nostr";
+import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
+import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
+import { usePathname } from "next/navigation";
 
 export const HeaderOnboarding = () => {
-  const router = useRouter();
   const authed = useContext(AuthContext);
-  const handleNavigateToAdmin = () => {
-    router.push("/admin");
-  };
+  const pathname = usePathname();
+
+  const isBack = pathname !== "/";
 
   return (
     <StyledHeaderOnboarding>
       <StyledHeaderContainer maxWidth="lg">
-        {authed && (
+        <Box>
+          {isBack && (
+            <Button
+              LinkComponent={Link}
+              href="/"
+              color="primary"
+              variant="text"
+              startIcon={<ArrowBackTwoToneIcon />}
+            >
+              Back to home
+            </Button>
+          )}
+        </Box>
+        <StyledHeaderNavigation>
           <Button
-            onClick={handleNavigateToAdmin}
-            color="decorate"
-            variant="contained"
+            LinkComponent={Link}
+            href="/sites"
+            color="primary"
+            variant="text"
+            endIcon={<LanguageTwoToneIcon />}
           >
-            My sites
+            Public sites
           </Button>
-        )}
+          {authed && (
+            <Button
+              LinkComponent={Link}
+              href="/admin"
+              color="decorate"
+              variant="contained"
+            >
+              My sites
+            </Button>
+          )}
+        </StyledHeaderNavigation>
       </StyledHeaderContainer>
     </StyledHeaderOnboarding>
   );

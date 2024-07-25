@@ -151,7 +151,7 @@ export const Design = () => {
         setLoading(false);
       });
     },
-    [setLoading]
+    [setLoading],
   );
 
   const {
@@ -187,7 +187,7 @@ export const Design = () => {
     (e: any) => {
       handleBlur(e);
     },
-    [handleBlur]
+    [handleBlur],
   );
 
   const handleChangeNavigation = useCallback(
@@ -207,7 +207,7 @@ export const Design = () => {
 
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleAddLinkNavigation = useCallback(
@@ -220,7 +220,7 @@ export const Design = () => {
         ],
       });
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleRemoveLinkNavigation = useCallback(
@@ -228,12 +228,12 @@ export const Design = () => {
       const navigation = values.navigation;
 
       navigation[input.type] = navigation[input.type].filter(
-        (item) => item.id !== input.id
+        (item) => item.id !== input.id,
       );
 
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   useEffect(() => {

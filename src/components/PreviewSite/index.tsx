@@ -26,7 +26,7 @@ import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 type PreviewSiteType = {
   path?: string;
   isLink?: boolean;
-  isPublick?: boolean;
+  isPublic?: boolean;
   isLinkToOpenSite?: boolean;
   id?: string;
 };
@@ -35,6 +35,8 @@ type PreviewSitePropsType = PreviewSiteType &
   Pick<
     ReturnSettingsSiteDataType,
     | "icon"
+    | "adminAvatar"
+    | "adminName"
     | "description"
     | "contributors"
     | "image"
@@ -47,17 +49,17 @@ type PreviewSitePropsType = PreviewSiteType &
 
 interface CustomLinkComponentProps extends Omit<LinkProps, "href"> {
   href: LinkProps["href"];
-  isPublick?: boolean;
+  isPublic?: boolean;
 }
 
 const CustomLinkComponent = forwardRef<
   HTMLAnchorElement,
   CustomLinkComponentProps
->(({ href, isPublick, ...props }, ref) => (
+>(({ href, isPublic, ...props }, ref) => (
   <Link
     href={href}
     {...props}
-    target={isPublick ? "_blank" : "_self"}
+    target={isPublic ? "_blank" : "_self"}
     ref={ref}
   />
 ));
@@ -76,11 +78,13 @@ export const PreviewSite = ({
   contributors,
   accentColor,
   description,
+  adminAvatar = "",
+  adminName = "",
   isLink = true,
-  isPublick = false,
+  isPublic = false,
   isLinkToOpenSite = true,
 }: PreviewSitePropsType) => {
-  const link = isPublick ? url : `${path}/${id}`;
+  const link = isPublic ? url : `${path}/${id}`;
 
   const WrapCard: FC<{ children: ReactNode }> = ({ children }) => {
     return (
@@ -90,6 +94,7 @@ export const PreviewSite = ({
             LinkComponent={isLink ? CustomLinkComponent : undefined}
             // @ts-expect-error
             href={isLink ? link : undefined}
+            isPublic={isPublic}
           >
             {children}
           </StyledCardActionArea>
@@ -167,7 +172,7 @@ export const PreviewSite = ({
           </CardContent>
           <CardHeader
             sx={{ marginTop: "auto" }}
-            avatar={<Avatar src={icon}>{contributors[0]}</Avatar>}
+            avatar={<Avatar src={isPublic ? adminAvatar : icon}>{isPublic ? adminName : contributors[0]}</Avatar>}
             title={
               <Box
                 sx={{
@@ -178,7 +183,7 @@ export const PreviewSite = ({
                   color: getContrastingTextColor(accentColor),
                 }}
               >
-                <b>{name || contributors[0]}</b>
+                <b>{isPublic ? adminName : name}</b>
               </Box>
             }
           />

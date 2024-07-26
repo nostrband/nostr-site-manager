@@ -10,8 +10,8 @@ export const StyledEmptyBlock = styled(Box)(() => ({
 }));
 
 export const StyledEmptyIcon = styled(Box)(() => ({
-  fontSize: 140,
-  lineHeight: "140px",
+  fontSize: 40,
+  lineHeight: "40px",
 }));
 
 export const SpinerWrapSites = styled(Box)(() => ({

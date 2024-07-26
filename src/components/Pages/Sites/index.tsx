@@ -17,6 +17,7 @@ import { debounce } from "lodash";
 import { SpinerCircularProgress } from "@/components/Spiner";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { searchSites } from "@/services/nostr/api";
+import { LoadingButton } from "@mui/lab";
 
 const debouncedSearchSites = debounce(async (text: string) => {
   console.log("searching", text);
@@ -31,11 +32,12 @@ export const Sites = () => {
   const [until, setUntil] = useState<number>(0);
 
   useEffect(() => {
-    if (data === undefined)
-      searchSites("").then(([data, until]) => {
-        setData(data);
-        setUntil(until);
-      });
+    if (data === undefined) setFetchSites(true);
+    searchSites("").then(([data, until]) => {
+      setData(data);
+      setUntil(until);
+      setFetchSites(false);
+    });
   }, []);
 
   const fetchSites = useCallback(
@@ -48,9 +50,9 @@ export const Sites = () => {
         setFetchSites(false);
       },
       300,
-      { trailing: true }
+      { trailing: true },
     ),
-    [setData, setUntil, setFetchSites]
+    [setData, setUntil, setFetchSites],
   );
 
   const loadMore = useCallback(async () => {
@@ -68,7 +70,7 @@ export const Sites = () => {
       setFetchSites(true);
       fetchSites(event.target.value);
     },
-    [setValue, fetchSites]
+    [setValue, fetchSites],
   );
 
   useEffect(() => {
@@ -102,7 +104,7 @@ export const Sites = () => {
         </Box>
       </Container>
 
-      {data && data.length && (
+      {data && (
         <Container maxWidth="lg">
           <Grid
             sx={{ width: "100%", marginTop: "40px" }}
@@ -132,17 +134,34 @@ export const Sites = () => {
               );
             })}
           </Grid>
-          <button onClick={loadMore}>more</button>
+
+          <Box
+            sx={{
+              marginTop: "50px",
+              marginBottom: "50px",
+              textAlign: "center",
+            }}
+          >
+            <LoadingButton
+              onClick={loadMore}
+              loading={!data || isFetchSites}
+              variant="contained"
+              color="decorate"
+              sx={{ width: "280px", textAlign: "center" }}
+            >
+              More
+            </LoadingButton>
+          </Box>
         </Container>
       )}
 
-      {(!data || isFetchSites) && (
+      {!data && isFetchSites && (
         <SpinerWrapSites>
           <SpinerCircularProgress />
         </SpinerWrapSites>
       )}
 
-      {data && !data.length && (
+      {data && !data.length && !isFetchSites && (
         <StyledEmptyBlock>
           <StyledEmptyIcon>
             <ScreenSearchDesktopTwoToneIcon fontSize="inherit" />

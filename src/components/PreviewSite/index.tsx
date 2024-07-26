@@ -86,24 +86,27 @@ export const PreviewSite = memo(function PreviewSite({
 }: PreviewSitePropsType) {
   const link = isPublic ? url : `${path}/${id}`;
 
-  const WrapCard: FC<{ children: ReactNode }> = useCallback(({ children }) => {
-    return (
-      <>
-        {isLink ? (
-          <StyledCardActionArea
-            LinkComponent={isLink ? CustomLinkComponent : undefined}
-            // @ts-expect-error
-            href={isLink ? link : undefined}
-            isPublic={isPublic}
-          >
-            {children}
-          </StyledCardActionArea>
-        ) : (
-          <>{children}</>
-        )}
-      </>
-    );
-  }, [isLink, isPublic, link]);
+  const WrapCard: FC<{ children: ReactNode }> = useCallback(
+    ({ children }) => {
+      return (
+        <>
+          {isLink ? (
+            <StyledCardActionArea
+              LinkComponent={isLink ? CustomLinkComponent : undefined}
+              // @ts-expect-error
+              href={isLink ? link : undefined}
+              isPublic={isPublic}
+            >
+              {children}
+            </StyledCardActionArea>
+          ) : (
+            <>{children}</>
+          )}
+        </>
+      );
+    },
+    [isLink, isPublic, link],
+  );
 
   return (
     <StyledCard>
@@ -172,7 +175,11 @@ export const PreviewSite = memo(function PreviewSite({
           </CardContent>
           <CardHeader
             sx={{ marginTop: "auto" }}
-            avatar={<Avatar src={isPublic ? adminAvatar : icon}>{isPublic ? adminName : contributors[0]}</Avatar>}
+            avatar={
+              <Avatar src={isPublic ? adminAvatar : icon}>
+                {isPublic ? adminName : contributors[0]}
+              </Avatar>
+            }
             title={
               <Box
                 sx={{

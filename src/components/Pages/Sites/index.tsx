@@ -20,7 +20,7 @@ import { searchSites } from "@/services/nostr/api";
 
 export const Sites = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [value, setValue] = useState<string | null>(null);
+  const [value, setValue] = useState<string>('');
   const [isFetchSites, setFetchSites] = useState(false);
   const [data, setData] = useState<ReturnSettingsSiteDataType[]>([]);
 
@@ -36,9 +36,8 @@ export const Sites = () => {
   }, 1000);
 
   const handleChangeWithDebounce = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setValue(value);
-    fetchSites(value);
+    setValue(event.target.value);
+    fetchSites(event.target.value);
   };
 
   useEffect(() => {

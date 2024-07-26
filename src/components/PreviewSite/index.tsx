@@ -1,5 +1,5 @@
 "use client";
-import { FC, forwardRef, ReactNode } from "react";
+import { FC, forwardRef, memo, ReactNode, useCallback } from "react";
 import Link, { LinkProps } from "next/link";
 import {
   Avatar,
@@ -66,7 +66,7 @@ const CustomLinkComponent = forwardRef<
 
 CustomLinkComponent.displayName = "CustomLinkComponent";
 
-export const PreviewSite = ({
+export const PreviewSite = memo(function PreviewSite({
   id,
   path,
   icon,
@@ -83,10 +83,10 @@ export const PreviewSite = ({
   isLink = true,
   isPublic = false,
   isLinkToOpenSite = true,
-}: PreviewSitePropsType) => {
+}: PreviewSitePropsType) {
   const link = isPublic ? url : `${path}/${id}`;
 
-  const WrapCard: FC<{ children: ReactNode }> = ({ children }) => {
+  const WrapCard: FC<{ children: ReactNode }> = useCallback(({ children }) => {
     return (
       <>
         {isLink ? (
@@ -103,7 +103,7 @@ export const PreviewSite = ({
         )}
       </>
     );
-  };
+  }, [isLink, isPublic, link]);
 
   return (
     <StyledCard>
@@ -191,4 +191,4 @@ export const PreviewSite = ({
       </WrapCard>
     </StyledCard>
   );
-};
+});

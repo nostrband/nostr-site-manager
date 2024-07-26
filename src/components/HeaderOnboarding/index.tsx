@@ -42,7 +42,7 @@ export const HeaderOnboarding = () => {
             variant="text"
             endIcon={<LanguageTwoToneIcon />}
           >
-            Public sites
+            Discover
           </Button>
           {authed && (
             <Button

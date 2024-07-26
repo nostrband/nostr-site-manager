@@ -379,22 +379,24 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
 }
 
 export async function searchSites(
-  text: string
-): Promise<ReturnSettingsSiteDataType[]> {
+  text: string,
+  until?: number
+): Promise<[ReturnSettingsSiteDataType[], number]> {
   const filter: any = {
     kinds: [KIND_SITE],
-    limit: 500,
+    limit: 50,
   };
   if (text) filter.search = text;
+  if (until) filter.until = until - 1;
 
   const events = await fetchEvents(ndk, filter, SEARCH_RELAYS, 5000);
 
-  const array = [...events];
+  const array = [...events].sort((a, b) => b.created_at! - a.created_at!);
 
   const relays = [SITE_RELAY, ...userRelays];
   await filterDeleted(array, relays);
 
-  sites.push(...array.map((e) => parseSite(e.rawEvent())));
+  const sites = array.map((e) => parseSite(e.rawEvent()));
 
   const pubkeys = sites.map((s) => s.admin_pubkey);
   const profiles = await fetchProfiles(pubkeys);
@@ -406,11 +408,12 @@ export async function searchSites(
     if (profile) {
       try {
         const meta = JSON.parse(profile.content);
-        s.adminName = meta.display_name || meta.name || (npub.substring(0, 10)+'...');
+        s.adminName =
+          meta.display_name || meta.name || npub.substring(0, 10) + "...";
         s.adminAvatar = meta.picture || "";
       } catch {}
     }
   });
 
-  return res;
+  return [res, array.length ? array[sites.length - 1].created_at! : 0];
 }

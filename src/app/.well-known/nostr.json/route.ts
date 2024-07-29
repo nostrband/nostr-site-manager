@@ -1,10 +1,14 @@
-import { SITE_RELAY, SERVER_PUBKEY, SUPPORT_PUBKEY } from "../../../services/nostr/consts";
+import {
+  SITE_RELAY,
+  SERVER_PUBKEY,
+  SUPPORT_PUBKEY,
+} from "../../../services/nostr/consts";
 
 export async function GET() {
   const data = {
     names: {
       _: SERVER_PUBKEY,
-      "support": SUPPORT_PUBKEY,
+      support: SUPPORT_PUBKEY,
     },
     relays: {},
   };

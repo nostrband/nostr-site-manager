@@ -8,7 +8,7 @@ export const validationSchemaLogin = yup.object({
 export const validationSchemaConfirmDelete = yup.object({
   confirmText: yup
     .string()
-    .required('Enter confirm text')
+    .required("Enter confirm text")
     .oneOf(["delete"], 'The value should be "delete"'),
 });
 

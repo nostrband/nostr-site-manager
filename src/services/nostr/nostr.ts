@@ -66,10 +66,10 @@ export function stv2(
   e: NDKEvent | NostrEvent,
   prefix: string,
   name: string,
-  value: string
+  value: string,
 ) {
   const t = e.tags.find(
-    (t) => t.length >= 3 && t[0] === prefix && t[1] === name
+    (t) => t.length >= 3 && t[0] === prefix && t[1] === name,
   );
   if (t) t[2] = value;
   else e.tags.push([prefix, name, value]);
@@ -162,7 +162,7 @@ async function fetchAuthed({
       "in",
       Date.now() - start,
       "ms",
-      minedEvent
+      minedEvent,
     );
     authEvent = new NDKEvent(ndk, minedEvent);
   }
@@ -217,7 +217,7 @@ async function getSessionToken() {
 export async function fetchWithSession(
   url: string,
   body: any | undefined = undefined,
-  method?: string
+  method?: string,
 ) {
   try {
     method = method || (body ? "POST" : "GET");
@@ -261,7 +261,7 @@ export async function fetchWithSession(
 
 export async function publishSiteEvent(
   site: NDKEvent,
-  relays: string[]
+  relays: string[],
 ): Promise<NostrEvent> {
   // if we're signed in with OTP
   // or if we're editing delegated site
@@ -270,7 +270,7 @@ export async function publishSiteEvent(
       throw new Error("Cannot edit site signed by your keys in delegated mode");
     const reply = await fetchWithSession(
       `${NPUB_PRO_API}/site?relays=${relays.join(",")}`,
-      site.rawEvent()
+      site.rawEvent(),
     );
     if (reply.status !== 200) throw new Error("Failed to publish event");
 
@@ -291,7 +291,7 @@ export async function publishSiteEvent(
     const r = await site.publish(NDKRelaySet.fromRelayUrls(relays, ndk));
     console.log(
       "published site event to",
-      [...r].map((r) => r.url)
+      [...r].map((r) => r.url),
     );
     if (!r.size) throw new Error("Failed to publish to relays");
 
@@ -303,7 +303,7 @@ export async function deleteSiteEvent(site: NostrEvent, relays: string[]) {
   if (userIsDelegated || (site.pubkey === SERVER_PUBKEY && tv(site, "u"))) {
     if (site.pubkey !== SERVER_PUBKEY)
       throw new Error(
-        "Cannot delete site signed by your keys in delegated mode"
+        "Cannot delete site signed by your keys in delegated mode",
       );
 
     const naddr = nip19.naddrEncode({
@@ -315,7 +315,7 @@ export async function deleteSiteEvent(site: NostrEvent, relays: string[]) {
     const reply = await fetchWithSession(
       `${NPUB_PRO_API}/site?relays=${relays.join(",")}&site=${naddr}&id=${site.id}`,
       undefined,
-      "DELETE"
+      "DELETE",
     );
     if (reply.status !== 200) throw new Error("Failed to delete site");
 
@@ -344,7 +344,7 @@ export async function deleteSiteEvent(site: NostrEvent, relays: string[]) {
     const r = await delReq.publish(NDKRelaySet.fromRelayUrls(relays, ndk));
     console.log(
       "published delete site request to",
-      [...r].map((r) => r.url)
+      [...r].map((r) => r.url),
     );
     if (!r.size) throw new Error("Failed to publish to relays");
   }

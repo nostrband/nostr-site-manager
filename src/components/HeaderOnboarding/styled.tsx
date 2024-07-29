@@ -11,5 +11,12 @@ export const StyledHeaderOnboarding = styled(Box)(() => ({
 export const StyledHeaderContainer = styled(Container)(() => ({
   display: "flex",
   alignItems: "center",
-  justifyContent: "end",
+  justifyContent: "space-between",
+  gap: "10px",
+}));
+
+export const StyledHeaderNavigation = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
 }));

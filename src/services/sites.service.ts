@@ -52,6 +52,10 @@ export type ReturnSettingsSiteDataType = {
   accentColor: string;
   codeinjection_head: string;
   codeinjection_foot: string;
+
+  adminPubkey: string;
+  adminName?: string;
+  adminAvatar?: string;
 };
 
 export const getSites = async (): Promise<ReturnSettingsSiteDataType[]> => {

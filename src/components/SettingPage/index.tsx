@@ -61,6 +61,7 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   accentColor: "",
   codeinjection_foot: "",
   codeinjection_head: "",
+  adminPubkey: "",  
 };
 
 export const SettingPage = () => {

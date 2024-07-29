@@ -10,6 +10,8 @@ import { useContext } from "react";
 import { AuthContext } from "@/services/nostr/nostr";
 import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
+import PersonTwoToneIcon from "@mui/icons-material/PersonTwoTone";
+import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
 import { usePathname } from "next/navigation";
 
 export const HeaderOnboarding = () => {
@@ -17,6 +19,10 @@ export const HeaderOnboarding = () => {
   const pathname = usePathname();
 
   const isBack = pathname !== "/";
+
+  const handleLogin = () => {
+    document.dispatchEvent(new Event("nlLaunch"));
+  };
 
   return (
     <StyledHeaderOnboarding>
@@ -40,18 +46,28 @@ export const HeaderOnboarding = () => {
             href="/sites"
             color="primary"
             variant="text"
-            endIcon={<LanguageTwoToneIcon />}
+            startIcon={<LanguageTwoToneIcon />}
           >
             Discover
           </Button>
-          {authed && (
+          {authed ? (
             <Button
               LinkComponent={Link}
               href="/admin"
               color="decorate"
               variant="contained"
+              startIcon={<PersonTwoToneIcon />}
             >
               My sites
+            </Button>
+          ) : (
+            <Button
+              onClick={handleLogin}
+              color="primary"
+              variant="text"
+              startIcon={<LoginTwoToneIcon />}
+            >
+              Login
             </Button>
           )}
         </StyledHeaderNavigation>

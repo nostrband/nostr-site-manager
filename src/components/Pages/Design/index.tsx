@@ -2,7 +2,7 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { useSearchParams, redirect, useRouter } from "next/navigation";
 import TuneIcon from "@mui/icons-material/Tune";
-import { Fab, Drawer, Button, Box } from "@mui/material";
+import { Fab, Drawer, Button, Box, Tab } from "@mui/material";
 import React, {
   useCallback,
   useContext,
@@ -23,7 +23,7 @@ import {
   StyledBannerPreview,
 } from "@/components/Pages/Design/styled";
 import { useFormik } from "formik";
-import { validationSchemaMakePrivateSite } from "@/validations/rules";
+// import { validationSchemaMakePrivateSite } from "@/validations/rules";
 import { MuiColorInput } from "mui-color-input";
 import { AuthContext } from "@/services/nostr/nostr";
 import {
@@ -38,6 +38,22 @@ import {
 import { SpinerWrap } from "@/components/Spiner";
 import { SpinnerCustom } from "@/components/SpinnerCustom";
 import { useSnackbar } from "notistack";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { CustomConfigType } from "./types";
+import { generateFormFields } from "./utils";
+
+const jsonCustomConfig: CustomConfigType = {
+  typography: {
+    type: "select",
+    options: ["Modern sans-serif", "Elegant serif"],
+    default: "Modern sans-serif",
+  },
+  cta_text: {
+    type: "text",
+    default: "Sign up for more like this",
+    group: "post",
+  },
+};
 
 interface DesignValues {
   name: string;
@@ -51,6 +67,7 @@ interface DesignValues {
     secondary: { title: string; link: string; id: string }[];
   };
   accentColor: string;
+  custom: CustomConfigType;
   // hashtags: string[];
   // kinds: string[];
 }
@@ -67,6 +84,7 @@ const initialDesignValue: DesignValues = {
     secondary: [],
   },
   accentColor: "#ececec",
+  custom: {},
   // hashtags: [],
   // kinds: [],
 };
@@ -97,8 +115,13 @@ export const Design = () => {
   // const theme = THEMES_PREVIEW.find((el) => el.id === themeId);
   // const previewImg = THEMES_PREVIEW.find((el) => el.id === themeId);
   const [isOpenSettings, setOpenSettings] = useState(true);
-  // const [activeTab, setActiveTab] = useState("1");
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = React.useState("theme");
+  const [customConfig, setCustomConfig] = React.useState<CustomConfigType>({});
+
+  const handleChangeActiveTab = (_: React.SyntheticEvent, newValue: string) => {
+    setActiveTab(newValue);
+  };
 
   const handleOpenSettings = useCallback(() => {
     setOpenSettings(true);
@@ -154,16 +177,9 @@ export const Design = () => {
     [setLoading],
   );
 
-  const {
-    values,
-    setValues,
-    submitForm,
-    handleChange,
-    setFieldValue,
-    handleBlur,
-  } = useFormik({
+  const formik = useFormik({
     initialValues: initialDesignValue,
-    validationSchema: validationSchemaMakePrivateSite,
+    // validationSchema: validationSchemaMakePrivateSite,
     validateOnChange: false,
     validate: async (values: DesignValues) => {
       return onSubmit(values);
@@ -174,67 +190,67 @@ export const Design = () => {
   const handleCloseSettings = useCallback(() => {
     setOpenSettings(false);
     // no need to submit, we're submitting on blur
-  }, [setOpenSettings, submitForm]);
+  }, [setOpenSettings, formik.submitForm]);
 
   const handleSwitchTheme = useCallback(async () => {
     setOpenSettings(false);
     // we submit on blur
     // await submitForm();
     router.push(`/preview?themeId=${themeId}&siteId=${siteId}`);
-  }, [setOpenSettings, submitForm, router]);
+  }, [setOpenSettings, formik.submitForm, router]);
 
   const onBlur = useCallback(
     (e: any) => {
-      handleBlur(e);
+      formik.handleBlur(e);
     },
-    [handleBlur],
+    [formik.handleBlur],
   );
 
-  const handleChangeNavigation = useCallback(
-    (input: {
-      id: string;
-      type: "primary" | "secondary";
-      field: "title" | "link";
-      value: string;
-    }) => {
-      const navigation = values.navigation;
+  // const handleChangeNavigation = useCallback(
+  //   (input: {
+  //     id: string;
+  //     type: "primary" | "secondary";
+  //     field: "title" | "link";
+  //     value: string;
+  //   }) => {
+  //     const navigation = formik.values.navigation;
 
-      const item = navigation[input.type].find((item) => item.id === input.id);
+  //     const item = navigation[input.type].find((item) => item.id === input.id);
 
-      if (item) {
-        item[input.field] = input.value;
-      }
+  //     if (item) {
+  //       item[input.field] = input.value;
+  //     }
 
-      setFieldValue("navigation", navigation);
-    },
-    [setFieldValue],
-  );
+  //     formik.setFieldValue("navigation", navigation);
+  //   },
+  //   [formik.setFieldValue],
+  // );
 
-  const handleAddLinkNavigation = useCallback(
-    (type: "primary" | "secondary") => {
-      setFieldValue("navigation", {
-        ...values.navigation,
-        [type]: [
-          ...values.navigation[type],
-          { title: "", link: "", id: Date.now() },
-        ],
-      });
-    },
-    [setFieldValue],
-  );
+  // const handleAddLinkNavigation = useCallback(
+  //   (type: "primary" | "secondary") => {
+  //     formik.setFieldValue("navigation", {
+  //       ...formik.values.navigation,
+  //       [type]: [
+  //         ...formik.values.navigation[type],
+  //         { title: "", link: "", id: Date.now() },
+  //       ],
+  //     });
+  //   },
+  //   [formik.setFieldValue],
+  // );
 
-  const handleRemoveLinkNavigation = useCallback(
-    (input: { id: string; type: "primary" | "secondary" }) => {
-      const navigation = values.navigation;
+  // const handleRemoveLinkNavigation = useCallback(
+  //   (input: { id: string; type: "primary" | "secondary" }) => {
+  //     const navigation = formik.values.navigation;
 
-      navigation[input.type] = navigation[input.type].filter(
-        (item) => item.id !== input.id,
-      );
+  //     navigation[input.type] = navigation[input.type].filter(
+  //       (item) => item.id !== input.id,
+  //     );
 
-      setFieldValue("navigation", navigation);
-    },
-    [setFieldValue],
-  );
+  //     formik.setFieldValue("navigation", navigation);
+  //   },
+  //   [formik.setFieldValue],
+  // );
 
   useEffect(() => {
     mounted = true;
@@ -257,6 +273,7 @@ export const Design = () => {
 
           // init settings sidebar
           const info = getPreviewSiteInfo();
+          const getCustomConfig = jsonCustomConfig;
           const values: DesignValues = {
             accentColor: info.accent_color || "",
             banner: info.cover_image || "",
@@ -279,9 +296,19 @@ export const Design = () => {
                 : [],
               secondary: [],
             },
+            custom: getCustomConfig
+              ? Object.keys(getCustomConfig).reduce(
+                  (acc, key) => {
+                    acc[key] = getCustomConfig[key].default;
+                    return acc;
+                  },
+                  {} as { [key in keyof CustomConfigType]: any },
+                )
+              : {},
           };
           console.log("info", info, "values", values);
-          setValues(values, false);
+          formik.setValues(values, false);
+          setCustomConfig(getCustomConfig);
 
           // render
           await renderPreview(iframeRef.current!);
@@ -299,13 +326,11 @@ export const Design = () => {
       }
       setLoading(false);
     });
-  }, [authed, themeId, siteId, iframeRef, setValues, setLoading]);
+  }, [authed, themeId, siteId, iframeRef, formik.setValues, setLoading]);
 
   if (!themeId || !siteId) {
     return redirect("/");
   }
-
-  console.log({ values });
 
   return (
     <>
@@ -363,24 +388,136 @@ export const Design = () => {
             </Fab>
           </StyledTitle>
 
-          <StyledFormControl>
-            <StyledLabel htmlFor="theme">Theme</StyledLabel>
-            <StyledTextField
-              size="small"
-              fullWidth
-              id="theme"
-              value={getPreviewThemeName()}
-            />
-            <Button
-              onClick={handleSwitchTheme}
-              variant="contained"
-              fullWidth
-              size="medium"
-              color="darkInfo"
-            >
-              Switch theme
-            </Button>
-          </StyledFormControl>
+          <TabContext value={activeTab}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList onChange={handleChangeActiveTab}>
+                <Tab sx={{ width: "50%" }} label="Site" value="site" />
+                <Tab sx={{ width: "50%" }} label="Theme" value="theme" />
+              </TabList>
+            </Box>
+            <TabPanel sx={{ px: 0 }} value="site">
+              <StyledFormControl>
+                <StyledLabel htmlFor="name">Title</StyledLabel>
+                <StyledTextField
+                  size="small"
+                  fullWidth
+                  id="name"
+                  onChange={formik.handleChange}
+                  value={formik.values.name}
+                  onBlur={onBlur}
+                />
+              </StyledFormControl>
+
+              <StyledFormControl>
+                <StyledLabel htmlFor="name">Description</StyledLabel>
+                <StyledTextField
+                  size="small"
+                  fullWidth
+                  id="description"
+                  multiline
+                  rows={4}
+                  onChange={formik.handleChange}
+                  value={formik.values.description}
+                  onBlur={onBlur}
+                />
+              </StyledFormControl>
+
+              <StyledFormControl>
+                <StyledLabel htmlFor="image">Icon</StyledLabel>
+                <StyledTextField
+                  size="small"
+                  id="icon"
+                  name="icon"
+                  fullWidth
+                  placeholder="Icon image url"
+                  onChange={formik.handleChange}
+                  value={formik.values.icon}
+                  onBlur={onBlur}
+                />
+                {formik.values.icon && (
+                  <StyledImgPreview>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img alt="Icon url" src={formik.values.icon} />
+                  </StyledImgPreview>
+                )}
+              </StyledFormControl>
+
+              <StyledFormControl>
+                <StyledLabel htmlFor="logo">Logo</StyledLabel>
+                <StyledTextField
+                  size="small"
+                  id="logo"
+                  name="logo"
+                  fullWidth
+                  placeholder="Logo image url"
+                  onChange={formik.handleChange}
+                  value={formik.values.logo}
+                  onBlur={onBlur}
+                />
+                {formik.values.logo && (
+                  <StyledImgPreview>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img alt="Logo url" src={formik.values.logo} />
+                  </StyledImgPreview>
+                )}
+              </StyledFormControl>
+
+              <StyledFormControl>
+                <StyledLabel htmlFor="banner">Banner</StyledLabel>
+                <StyledTextField
+                  size="small"
+                  id="banner"
+                  name="banner"
+                  fullWidth
+                  placeholder="Banner image url"
+                  onChange={formik.handleChange}
+                  value={formik.values.banner}
+                  onBlur={onBlur}
+                />
+                {formik.values.banner && (
+                  <StyledBannerPreview>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img alt="Banner url" src={formik.values.banner} />
+                  </StyledBannerPreview>
+                )}
+              </StyledFormControl>
+
+              <StyledFormControl>
+                <StyledLabel>Accent color</StyledLabel>
+                <MuiColorInput
+                  fullWidth
+                  format="hex"
+                  value={formik.values.accentColor}
+                  onBlur={onBlur}
+                  onChange={(value) =>
+                    formik.setFieldValue("accentColor", value)
+                  }
+                />
+              </StyledFormControl>
+            </TabPanel>
+            <TabPanel sx={{ px: 0 }} value="theme">
+              <StyledFormControl>
+                <StyledLabel htmlFor="theme">Theme</StyledLabel>
+                <StyledTextField
+                  size="small"
+                  fullWidth
+                  id="theme"
+                  value={getPreviewThemeName()}
+                />
+                <Button
+                  onClick={handleSwitchTheme}
+                  variant="contained"
+                  fullWidth
+                  size="medium"
+                  color="darkInfo"
+                >
+                  Switch theme
+                </Button>
+              </StyledFormControl>
+
+              {generateFormFields(customConfig, formik)}
+            </TabPanel>
+          </TabContext>
 
           {/* <StyledFormControl>
             <StyledLabel htmlFor="shortName">Short name</StyledLabel>
@@ -394,102 +531,6 @@ export const Design = () => {
             />
           </StyledFormControl> */}
 
-          <StyledFormControl>
-            <StyledLabel htmlFor="name">Title</StyledLabel>
-            <StyledTextField
-              size="small"
-              fullWidth
-              id="name"
-              onChange={handleChange}
-              value={values.name}
-              onBlur={onBlur}
-            />
-          </StyledFormControl>
-
-          <StyledFormControl>
-            <StyledLabel htmlFor="name">Description</StyledLabel>
-            <StyledTextField
-              size="small"
-              fullWidth
-              id="description"
-              multiline
-              rows={4}
-              onChange={handleChange}
-              value={values.description}
-              onBlur={onBlur}
-            />
-          </StyledFormControl>
-
-          <StyledFormControl>
-            <StyledLabel htmlFor="image">Icon</StyledLabel>
-            <StyledTextField
-              size="small"
-              id="icon"
-              name="icon"
-              fullWidth
-              placeholder="Icon image url"
-              onChange={handleChange}
-              value={values.icon}
-              onBlur={onBlur}
-            />
-            {values.icon && (
-              <StyledImgPreview>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt="Icon url" src={values.icon} />
-              </StyledImgPreview>
-            )}
-          </StyledFormControl>
-
-          <StyledFormControl>
-            <StyledLabel htmlFor="logo">Logo</StyledLabel>
-            <StyledTextField
-              size="small"
-              id="logo"
-              name="logo"
-              fullWidth
-              placeholder="Logo image url"
-              onChange={handleChange}
-              value={values.logo}
-              onBlur={onBlur}
-            />
-            {values.logo && (
-              <StyledImgPreview>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt="Logo url" src={values.logo} />
-              </StyledImgPreview>
-            )}
-          </StyledFormControl>
-
-          <StyledFormControl>
-            <StyledLabel htmlFor="banner">Banner</StyledLabel>
-            <StyledTextField
-              size="small"
-              id="banner"
-              name="banner"
-              fullWidth
-              placeholder="Banner image url"
-              onChange={handleChange}
-              value={values.banner}
-              onBlur={onBlur}
-            />
-            {values.banner && (
-              <StyledBannerPreview>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt="Banner url" src={values.banner} />
-              </StyledBannerPreview>
-            )}
-          </StyledFormControl>
-
-          <StyledFormControl>
-            <StyledLabel>Accent color</StyledLabel>
-            <MuiColorInput
-              fullWidth
-              format="hex"
-              value={values.accentColor}
-              onBlur={onBlur}
-              onChange={(value) => setFieldValue("accentColor", value)}
-            />
-          </StyledFormControl>
           {/* 
           <StyledFormControl>
             <StyledLabel htmlFor="hashtags">Hashtags</StyledLabel>

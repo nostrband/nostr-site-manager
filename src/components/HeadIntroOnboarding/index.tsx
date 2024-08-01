@@ -20,7 +20,8 @@ export const HeadIntroOnboarding = () => {
       </StyledTypographyTitle>
 
       <StyledTypographySubtitle variant="subtitle1">
-        Easy setup. Self-hostable. Just works.
+        Best way to share your work outside of nostr.<br/>
+        {/* Easy setup. Self-hostable. Just works. */}
       </StyledTypographySubtitle>
 
       <Button
@@ -29,7 +30,7 @@ export const HeadIntroOnboarding = () => {
         color="decorate"
         href="#themes-onboarding"
       >
-        <b>Pick a theme to start</b>
+        <b>Try now &rarr;</b>
       </Button>
     </StyledContainerIntro>
   );

@@ -47,11 +47,44 @@ const jsonCustomConfig: CustomConfigType = {
     type: "select",
     options: ["Modern sans-serif", "Elegant serif"],
     default: "Modern sans-serif",
+    description: "Define the default font used for the publication",
+  },
+  feed_layout: {
+    type: "select",
+    options: ["Dynamic grid", "Simple grid", "List"],
+    default: "Dynamic grid",
+    group: "homepage",
+    description:
+      "The layout of the post feed on the homepage, tag, and author pages",
   },
   cta_text: {
     type: "text",
     default: "Sign up for more like this",
     group: "post",
+    description:
+      "Used in a large CTA on the homepage and small one on the sidebar as well",
+  },
+  test_field: {
+    type: "text",
+    default: "test text",
+    group: "post",
+    description:
+      "Used in a large CTA on the homepage and small one on the sidebar as well",
+  },
+  cta_background_image: {
+    type: "image",
+    default:
+      "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=800",
+    group: "homepage",
+  },
+  color_field: {
+    type: "color",
+    default: "#ececec",
+    description: "color for site",
+  },
+  recent_posts: {
+    type: "boolean",
+    default: true,
   },
 };
 
@@ -116,7 +149,7 @@ export const Design = () => {
   // const previewImg = THEMES_PREVIEW.find((el) => el.id === themeId);
   const [isOpenSettings, setOpenSettings] = useState(true);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = React.useState("theme");
+  const [activeTab, setActiveTab] = React.useState("site");
   const [customConfig, setCustomConfig] = React.useState<CustomConfigType>({});
 
   const handleChangeActiveTab = (_: React.SyntheticEvent, newValue: string) => {

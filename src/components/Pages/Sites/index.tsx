@@ -11,18 +11,24 @@ import {
   Typography,
 } from "@mui/material";
 import ScreenSearchDesktopTwoToneIcon from "@mui/icons-material/ScreenSearchDesktopTwoTone";
-import { SpinerWrapSites, StyledEmptyBlock, StyledEmptyIcon } from "./styled";
+import {
+  SpinerWrapSites,
+  StyledEmptyBlock,
+  StyledEmptyIcon,
+  StyledTitle,
+} from "./styled";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
 import { SpinerCircularProgress } from "@/components/Spiner";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { searchSites } from "@/services/nostr/api";
 import { LoadingButton } from "@mui/lab";
+import useResponsive from "@/hooks/useResponsive";
 
-const debouncedSearchSites = debounce(async (text: string) => {
-  console.log("searching", text);
-  return await searchSites(text);
-}, 300);
+// const debouncedSearchSites = debounce(async (text: string) => {
+//   console.log("searching", text);
+//   return await searchSites(text);
+// }, 300);
 
 export const Sites = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -30,6 +36,7 @@ export const Sites = () => {
   const [isFetchSites, setFetchSites] = useState(false);
   const [data, setData] = useState<ReturnSettingsSiteDataType[] | undefined>();
   const [until, setUntil] = useState<number>(0);
+  const isDesktop = useResponsive("up", "sm");
 
   useEffect(() => {
     if (data === undefined) setFetchSites(true);
@@ -74,18 +81,18 @@ export const Sites = () => {
   );
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
+    if (isDesktop) {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
-  }, []);
+  }, [isDesktop]);
 
   return (
     <Box sx={{ paddingBottom: "50px" }}>
       <HeaderOnboarding />
       <Container maxWidth="lg">
-        <Typography sx={{ textAlign: "center", margin: "40px 0" }} variant="h2">
-          Discover sites
-        </Typography>
+        <StyledTitle variant="h2">Discover sites</StyledTitle>
         <Box sx={{ maxWidth: "600px", margin: "40px auto" }}>
           <OutlinedInput
             fullWidth

@@ -1,34 +1,65 @@
 "use client";
-import { FormikProps } from "formik";
+import { FormikErrors, FormikProps } from "formik";
 import { CustomConfigType } from "../types";
-import { MenuItem, SelectChangeEvent } from "@mui/material";
 import {
+  FormControlLabel,
+  MenuItem,
+  SelectChangeEvent,
+  Switch,
+} from "@mui/material";
+import {
+  StyledDescriptionField,
   StyledFormControl,
   StyledLabel,
   StyledSelectField,
   StyledTextField,
+  StyledTitleGroupField,
 } from "../styled";
 import React from "react";
+import { MuiColorInput } from "mui-color-input";
 
-type FieldPropsText = {
+type FieldProps = {
   name: string;
   label: string;
+  description?: string;
   value: any;
   options?: string[];
-  onChange: (e: React.ChangeEvent<any>) => void;
-  onBlur: (e: React.ChangeEvent<any>) => void;
+  setFieldValue: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean,
+  ) => Promise<void | FormikErrors<any>>;
+  onBlur?: (e: React.ChangeEvent<any>) => void;
 };
 
-type FieldPropsSelect = {
-  name: string;
-  label: string;
-  value: any;
-  options?: string[];
-  onChange: (event: SelectChangeEvent<any>) => void;
-};
+const BooleanField: React.FC<FieldProps> = React.memo(
+  ({ name, label, value, setFieldValue, description }) => (
+    <StyledFormControl>
+      <StyledLabel>{label}</StyledLabel>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={value}
+            onChange={(_, v) => setFieldValue(name, v)}
+            name={name}
+          />
+        }
+        label={`On or Off ${label}`}
+      />
 
-const TextField: React.FC<FieldPropsText> = React.memo(
-  ({ name, label, value, onChange, onBlur }) => (
+      {description && (
+        <StyledDescriptionField variant="body2">
+          {description}
+        </StyledDescriptionField>
+      )}
+    </StyledFormControl>
+  ),
+);
+
+BooleanField.displayName = "BooleanField";
+
+const TextField: React.FC<FieldProps> = React.memo(
+  ({ name, label, value, setFieldValue, onBlur, description }) => (
     <StyledFormControl>
       <StyledLabel htmlFor={name}>{label}</StyledLabel>
       <StyledTextField
@@ -36,25 +67,52 @@ const TextField: React.FC<FieldPropsText> = React.memo(
         fullWidth
         id={name}
         name={name}
-        onChange={onChange}
+        onChange={(e) => setFieldValue(name, e.target.value)}
         value={value}
         onBlur={onBlur}
       />
+      {description && (
+        <StyledDescriptionField variant="body2">
+          {description}
+        </StyledDescriptionField>
+      )}
     </StyledFormControl>
   ),
 );
 
 TextField.displayName = "TextField";
 
-const SelectField: React.FC<FieldPropsSelect> = React.memo(
-  ({ name, label, value, options = [], onChange }) => (
+const ColorField: React.FC<FieldProps> = React.memo(
+  ({ name, label, value, setFieldValue, onBlur, description }) => (
+    <StyledFormControl>
+      <StyledLabel htmlFor={name}>{label}</StyledLabel>
+      <MuiColorInput
+        fullWidth
+        format="hex"
+        value={value}
+        onBlur={onBlur}
+        onChange={(v) => setFieldValue(name, v)}
+      />
+      {description && (
+        <StyledDescriptionField variant="body2">
+          {description}
+        </StyledDescriptionField>
+      )}
+    </StyledFormControl>
+  ),
+);
+
+ColorField.displayName = "ColorField";
+
+const SelectField: React.FC<FieldProps> = React.memo(
+  ({ name, label, value, options = [], setFieldValue, description }) => (
     <StyledFormControl>
       <StyledLabel htmlFor={name}>{label}</StyledLabel>
       <StyledSelectField
         id={name}
         name={name}
         value={value}
-        onChange={onChange}
+        onChange={(e) => setFieldValue(name, e.target.value)}
       >
         {options.map((option) => (
           <MenuItem key={option} value={option}>
@@ -62,6 +120,11 @@ const SelectField: React.FC<FieldPropsSelect> = React.memo(
           </MenuItem>
         ))}
       </StyledSelectField>
+      {description && (
+        <StyledDescriptionField variant="body2">
+          {description}
+        </StyledDescriptionField>
+      )}
     </StyledFormControl>
   ),
 );
@@ -76,29 +139,56 @@ export const generateFormFields = (
   config: CustomConfigType,
   formik: FormikProps<any>,
 ) => {
-  return Object.keys(config).map((key) => {
+  const noGroupFields: JSX.Element[] = [];
+  const groupedFields: { [key: string]: JSX.Element[] } = {};
+
+  Object.keys(config).forEach((key) => {
     const field = config[key];
     const commonProps = {
       name: `custom.${key}`,
+      description: field.description,
       label: capitalizeFirstLetter(key.replace("_", " ")),
       value: formik.values.custom[key],
-      onChange: (event: SelectChangeEvent<any> | React.ChangeEvent<any>) => {
-        if (event && event.target) {
-          formik.setFieldValue(event.target.name, event.target.value);
-        }
-      },
+      setFieldValue: formik.setFieldValue,
       onBlur: formik.handleBlur,
     };
 
-    switch (field.type) {
-      case "text":
-        return <TextField key={key} {...commonProps} />;
-      case "select":
-        return (
-          <SelectField key={key} {...commonProps} options={field.options} />
-        );
-      default:
-        return null;
+    let fieldElement: JSX.Element | null = null;
+    if (field.type === "text") {
+      fieldElement = <TextField key={key} {...commonProps} />;
+    } else if (field.type === "select") {
+      fieldElement = (
+        <SelectField key={key} {...commonProps} options={field.options} />
+      );
+    } else if (field.type === "image") {
+      fieldElement = <TextField key={key} {...commonProps} />;
+    } else if (field.type === "color") {
+      fieldElement = <ColorField key={key} {...commonProps} />;
+    } else if (field.type === "boolean") {
+      fieldElement = <BooleanField key={key} {...commonProps} />;
+    }
+
+    if (fieldElement) {
+      if (field.group) {
+        if (!groupedFields[field.group]) {
+          groupedFields[field.group] = [];
+        }
+        groupedFields[field.group].push(fieldElement);
+      } else {
+        noGroupFields.push(fieldElement);
+      }
     }
   });
+
+  const resultFields: JSX.Element[] = [
+    ...noGroupFields,
+    ...Object.keys(groupedFields).flatMap((group) => [
+      <StyledTitleGroupField variant="h5" key={`group-${group}`}>
+        {capitalizeFirstLetter(group.replace("_", " "))}
+      </StyledTitleGroupField>,
+      ...groupedFields[group],
+    ]),
+  ];
+
+  return resultFields;
 };

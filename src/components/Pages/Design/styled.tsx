@@ -122,3 +122,17 @@ export const StyledPreviewTestSite = styled(Box)(() => ({
   position: "relative",
   overflow: "hidden",
 }));
+
+export const StyledTitleGroupField = styled(Typography)(({ theme }) => ({
+  paddingBottom: "10px",
+  marginBottom: "10px",
+  fontWeight: "bold",
+  color: theme.palette.decorate.main,
+  borderBottom: "1px solid",
+  borderColor: theme.palette.decorate.main,
+  marginTop: "25px",
+}));
+
+export const StyledDescriptionField = styled(Typography)(({ theme }) => ({
+  color: theme.palette.darkInfo.main,
+}));

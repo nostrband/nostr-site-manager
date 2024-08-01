@@ -13,10 +13,12 @@ import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import PersonTwoToneIcon from "@mui/icons-material/PersonTwoTone";
 import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
 import { usePathname } from "next/navigation";
+import useResponsive from "@/hooks/useResponsive";
 
 export const HeaderOnboarding = () => {
   const authed = useContext(AuthContext);
   const pathname = usePathname();
+  const isDesktop = useResponsive("up", "sm");
 
   const isBack = pathname !== "/";
 
@@ -34,9 +36,9 @@ export const HeaderOnboarding = () => {
               href="/"
               color="primary"
               variant="text"
-              startIcon={<ArrowBackTwoToneIcon />}
+              startIcon={isDesktop ? <ArrowBackTwoToneIcon /> : undefined}
             >
-              Back to home
+              Back {isDesktop && "to home"}
             </Button>
           )}
         </Box>
@@ -56,7 +58,7 @@ export const HeaderOnboarding = () => {
               href="/admin"
               color="decorate"
               variant="contained"
-              startIcon={<PersonTwoToneIcon />}
+              startIcon={isDesktop ? <PersonTwoToneIcon /> : undefined}
             >
               My sites
             </Button>

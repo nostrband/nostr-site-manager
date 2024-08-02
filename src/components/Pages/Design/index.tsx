@@ -55,7 +55,7 @@ interface DesignValues {
     secondary: { title: string; link: string; id: string }[];
   };
   accentColor: string;
-  custom: { [key: string]: string }
+  custom: { [key: string]: string };
 }
 
 const initialDesignValue: DesignValues = {
@@ -126,7 +126,7 @@ export const Design = () => {
               label: n.title,
               url: n.link,
             })),
-            custom: values.custom
+            custom: values.custom,
           });
           console.log("updating design settings ", updated);
 
@@ -149,7 +149,7 @@ export const Design = () => {
         setLoading(false);
       });
     },
-    [setLoading]
+    [setLoading],
   );
 
   const formik = useFormik({
@@ -178,7 +178,7 @@ export const Design = () => {
     (e: any) => {
       formik.handleBlur(e);
     },
-    [formik.handleBlur]
+    [formik.handleBlur],
   );
 
   // const handleChangeNavigation = useCallback(

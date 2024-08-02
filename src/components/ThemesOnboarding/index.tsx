@@ -6,6 +6,7 @@ import {
   StyledPreviews,
   StyledWrap,
   StyledMoreButton,
+  StyledTitle,
 } from "@/components/ThemesOnboarding/styled";
 import { useContext, useMemo, useState } from "react";
 import Grid from "@mui/material/Grid";
@@ -71,6 +72,7 @@ export const ThemesOnboarding = () => {
     <>
       <StyledWrap>
         <Container maxWidth="lg" id="themes-onboarding">
+          <StyledTitle>Pick a theme to start</StyledTitle>
           <StyledButtonGroup>
             <StyledButton
               color={getColor(TYPES_THEMES_TAG.MICROBLOG)}

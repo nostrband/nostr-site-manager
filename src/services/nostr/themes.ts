@@ -18,6 +18,7 @@ import {
   prepareSite,
   prepareSiteByContent,
   setHtml,
+  tags,
   tv,
 } from "libnostrsite";
 import {
@@ -37,6 +38,7 @@ import { NPUB_PRO_API, NPUB_PRO_DOMAIN, THEMES_PREVIEW } from "@/consts";
 import { isEqual, omit } from "lodash";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { bytesToHex, randomBytes } from "@noble/hashes/utils";
+import { CustomConfigType } from "@/components/Pages/Design/types";
 
 export interface PreviewSettings {
   themeId: string;
@@ -57,6 +59,7 @@ export interface DesignSettings {
   icon: string;
   logo: string;
   navigation: { label: string; url: string }[];
+  custom: { [key: string]: string };
 }
 
 const serverPubkey = SERVER_PUBKEY;
@@ -71,13 +74,14 @@ let designSettings: DesignSettings | undefined;
 const parser = new NostrParser();
 const assetFetcher = new DefaultAssetFetcher();
 const previewCache = new Map<string, string>();
+const customSettingsCache = new Map<string, CustomConfigType>();
 
 // current site + renderer
 let addr: SiteAddr | undefined;
 let site: NDKEvent | undefined;
 let store: NostrStore | undefined;
 let renderer: NostrSiteRenderer | undefined;
-let tags: string[] | undefined;
+let hashtags: string[] | undefined;
 let publishing: "init" | "publishing" | "done" = "init";
 
 // FIXME remove take from libnostrsite
@@ -89,65 +93,87 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   if (!globalThis.document) return;
 
   const addrs = THEMES_PREVIEW.map((t) => t.id).map(
-    (n) => nip19.decode(n).data as nip19.AddressPointer,
+    (n) => nip19.decode(n).data as nip19.AddressPointer
   );
 
   const themeFilter = {
     kinds: [KIND_THEME],
+    // FIXME so we assume all themes are authored by me?
     authors: [addrs[0].pubkey],
     "#d": addrs.map((a) => a.identifier),
   };
 
   const themeEvents = await fetchEvents(ndk, themeFilter, [SITE_RELAY], 10000);
-
   themes.push(...themeEvents);
   console.log("prefetched themes", themes);
 
+  const packages = await fetchPackages(themes);
+  themePackages.push(...packages);
+  console.log("prefetched packages", themePackages);
+})();
+
+async function ensureSiteTheme(site: NDKEvent) {
+  // theme package event id
+  const eid = tv(site, "x") || "";
+  if (!eid) throw new Error("No theme in site");
+
+  // package already cached?
+  if (themePackages.find((p) => p.id === eid)) return;
+
+  console.log("ensuring site theme, package", eid);
+
+  const pkg = await fetchEvent(
+    ndk,
+    {
+      // @ts-ignore
+      kinds: [KIND_PACKAGE],
+      ids: [eid],
+    },
+    [SITE_RELAY],
+    2000
+  );
+  if (!pkg) throw new Error("Theme package not found");
+
+  console.log("fetched site theme package", pkg);
+  themePackages.push(pkg);
+
+  const themeAddr = (tv(pkg, "a") || "").split(":");
+  if (themeAddr.length !== 3 || themeAddr[0] !== "" + KIND_THEME)
+    throw new Error("Bad theme addr");
+
+  // theme already cached?
+  if (
+    themes.find((t) => t.pubkey === themeAddr[1] && tv(t, "d") === themeAddr[2])
+  )
+    return;
+
+  console.log("ensuring site theme", themeAddr);
+
+  const theme = await fetchEvent(
+    ndk,
+    {
+      // @ts-ignore
+      kinds: [KIND_THEME],
+      authors: [themeAddr[1]],
+      "#d": [themeAddr[2]],
+    },
+    [SITE_RELAY],
+    2000
+  );
+  if (!theme) throw new Error("Theme not found");
+
+  console.log("fetched site theme", theme);
+  themes.push(theme);
+}
+
+async function fetchPackages(themes: NDKEvent[] | NostrEvent[]) {
   const packageFilter = {
     kinds: [KIND_PACKAGE],
     ids: themes.map((e) => tv(e, "e")).filter((id) => !!id) as string[],
   };
 
-  const packageEvents = await fetchEvents(
-    ndk,
-    packageFilter,
-    [SITE_RELAY],
-    10000,
-  );
-
-  themePackages.push(...packageEvents);
-  console.log("prefetched packages", themePackages);
-})();
-
-// https://stackoverflow.com/a/51086893
-// export class Mutex {
-//   private current: Promise<void> = Promise.resolve();
-//   lock = (): Promise<() => void> => {
-//     let _resolve: () => void;
-//     const p = new Promise<void>((resolve) => {
-//       _resolve = () => resolve();
-//     });
-//     // Caller gets a promise that resolves when the current outstanding
-//     // lock resolves
-//     const rv = this.current.then(() => _resolve);
-//     // Don't allow the next request until the new promise is done
-//     this.current = p;
-//     // Return the new promise
-//     return rv;
-//   };
-
-//   async run(cb: () => Promise<any>) {
-//     const unlock = await this.lock();
-//     try {
-//       const r = await cb();
-//       unlock();
-//       return r;
-//     } catch (e) {
-//       unlock();
-//       throw e;
-//     }
-//   }
-// }
+  return await fetchEvents(ndk, packageFilter, [SITE_RELAY], 10000);
+}
 
 type MutexEntry = {
   cb: () => Promise<any>;
@@ -188,7 +214,7 @@ export async function setPreviewSettings(ns: PreviewSettings) {
 
   let updated = !isEqual(
     omit(settings, ["themeId", "design"]),
-    omit(ns, "themeId", "design"),
+    omit(ns, "themeId", "design")
   );
 
   let newContribs = !site;
@@ -233,7 +259,7 @@ export async function setPreviewSettings(ns: PreviewSettings) {
   settings = ns;
 
   // reset tags store if needed before preparing the site
-  if (newContribs) tags = undefined;
+  if (newContribs) hashtags = undefined;
 
   if (updated) {
     console.log("updated settings", settings);
@@ -309,13 +335,13 @@ export async function fetchTopHashtags(pubkeys: string[]) {
       },
     ],
     relays,
-    1000,
+    1000
   );
 
   const topTags = new Map<string, number>();
   for (const t of [...events]
     .map((e) =>
-      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1]),
+      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1])
     )
     .flat()) {
     let c = topTags.get(t) || 0;
@@ -337,12 +363,12 @@ async function loadSite() {
   store = new NostrStore("preview", ndk, info, parser);
   await store.load(50);
 
-  if (tags) return;
+  if (hashtags) return;
 
-  tags = await fetchTopHashtags(info.contributor_pubkeys);
+  hashtags = await fetchTopHashtags(info.contributor_pubkeys);
 }
 
-function setSiteTheme(theme: NDKEvent) {
+function setSiteThemePackage(theme: NDKEvent) {
   if (!site || !theme) throw new Error("Bad params");
   const title = tv(theme, "title") || "";
   const version = tv(theme, "version") || "";
@@ -425,7 +451,7 @@ async function preparePreviewSite() {
     stv(
       event,
       "d",
-      d_tag + ":" + bytesToHex(randomBytes(userIsDelegated ? 8 : 3)),
+      d_tag + ":" + bytesToHex(randomBytes(userIsDelegated ? 8 : 3))
     );
 
     if (userIsDelegated) {
@@ -439,7 +465,7 @@ async function preparePreviewSite() {
     if (!site) throw new Error("No site");
 
     // set current theme
-    setSiteTheme(pkg);
+    setSiteThemePackage(pkg);
 
     // load posts to init from content
     await loadSite();
@@ -459,7 +485,7 @@ async function preparePreviewSite() {
     checkYourSite(site);
 
     // theme
-    setSiteTheme(pkg);
+    setSiteThemePackage(pkg);
 
     // admin doesn't change
 
@@ -567,7 +593,7 @@ async function renderPreviewHtml(path: string = "/") {
 
 export async function renderPreview(
   iframe: HTMLIFrameElement,
-  path: string = "/",
+  path: string = "/"
 ) {
   if (!iframe) throw new Error("No iframe");
   const html = await renderPreviewHtml(path);
@@ -625,7 +651,7 @@ async function publishPreview() {
 
   // set the chosen theme
   const pkg = getThemePackage();
-  setSiteTheme(pkg);
+  setSiteThemePackage(pkg);
 
   const event = await publishSiteEvent(site, [SITE_RELAY, ...userRelays]);
 
@@ -663,7 +689,7 @@ async function fetchSite() {
       authors: [addr.pubkey],
       "#d": [addr.identifier],
     },
-    [SITE_RELAY, ...addr.relays],
+    [SITE_RELAY, ...addr.relays]
   );
   console.log("loaded site event", siteId, event);
 
@@ -674,11 +700,16 @@ async function fetchSite() {
   }
 
   if (!fetchedSite) throw new Error("No site");
+
+  // make sure we have theme and package loaded for this site
+  await ensureSiteTheme(fetchedSite);
+
   setSite(fetchedSite);
 }
 
 export async function updatePreviewSite(ds: DesignSettings) {
   if (!site) throw new Error("No site");
+  console.log("designSettings", ds, designSettings);
   if (isEqual(ds, designSettings)) return false;
 
   designSettings = ds;
@@ -693,6 +724,10 @@ export async function updatePreviewSite(ds: DesignSettings) {
 
   srm(e, "nav");
   for (const n of ds.navigation) e.tags.push(["nav", n.url, n.label]);
+
+  srm(e, "custom");
+  for (const key in ds.custom)
+    e.tags.push(["custom", key, ds.custom[key]]);
 
   // update
   site.tags = e.tags;
@@ -730,7 +765,7 @@ export async function publishPreviewSite() {
         console.log("naddr", naddr);
         console.log("requesting domain", requestedDomain);
         const reply = await fetchWithSession(
-          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
+          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`
         );
         if (reply.status !== 200)
           throw new Error("Failed to reserve domain name");
@@ -758,7 +793,7 @@ export async function publishPreviewSite() {
         const u = new URL(url);
         if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
           const reply = await fetchWithSession(
-            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`,
+            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`
           );
           if (reply.status !== 200) throw new Error("Failed to deploy");
 
@@ -782,8 +817,8 @@ export function getPreviewSiteUrl() {
 }
 
 export async function getPreviewTopHashtags() {
-  if (!tags) throw new Error("No site");
-  return tags.map((t) => "#" + t);
+  if (!hashtags) throw new Error("No site");
+  return hashtags.map((t) => "#" + t);
 }
 
 export function getPreviewSiteId() {
@@ -794,6 +829,37 @@ export function getPreviewSiteId() {
 export function getPreviewSiteInfo() {
   if (!addr || !site) throw new Error("No site");
   return parser.parseSite(addr, site);
+}
+
+export async function getPreviewSiteThemeCustomSettings() {
+  const r: CustomConfigType = {};
+  if (!settings || !settings.themeId) return r;
+
+  const pkg = getThemePackage();
+  const cached = customSettingsCache.get(pkg.id);
+  if (cached) return cached;
+
+  const packageJsonTag = tags(pkg, "f").find(
+    (t) => t.length >= 4 && t[2] === "package.json"
+  );
+  if (!packageJsonTag || !packageJsonTag[3]) {
+    console.warn("no package json in theme package", pkg);
+    return r;
+  }
+
+  const url = packageJsonTag[3];
+  try {
+    const d = await fetch(url);
+    const json = await d.json();
+    for (const name in json.config.custom) {
+      r[name] = json.config.custom[name];
+    }
+    console.log("theme custom settings declaration", r, "package.json", json);
+    customSettingsCache.set(pkg.id, r);
+  } catch (e) {
+    console.warn("failed to load package.json", url, e);
+  }
+  return r;
 }
 
 function getPreviewHashtagNames(info: Site) {
@@ -841,7 +907,7 @@ export async function prefetchThemes(ids: string[]) {
 
 export async function checkNpubProDomain(domain: string, naddr: string) {
   const reply = await fetchWithSession(
-    `${NPUB_PRO_API}/check?domain=${domain}&site=${naddr}`,
+    `${NPUB_PRO_API}/check?domain=${domain}&site=${naddr}`
   );
   return reply.status === 200;
 }

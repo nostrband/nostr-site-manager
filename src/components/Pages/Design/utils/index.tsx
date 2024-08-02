@@ -27,7 +27,7 @@ type FieldProps = {
   setFieldValue: (
     field: string,
     value: any,
-    shouldValidate?: boolean,
+    shouldValidate?: boolean
   ) => Promise<void | FormikErrors<any>>;
   onBlur?: (e: React.ChangeEvent<any>) => void;
 };
@@ -44,7 +44,7 @@ const BooleanField: React.FC<FieldProps> = React.memo(
             name={name}
           />
         }
-        label={`On or Off ${label}`}
+        label={label}
       />
 
       {description && (
@@ -53,7 +53,7 @@ const BooleanField: React.FC<FieldProps> = React.memo(
         </StyledDescriptionField>
       )}
     </StyledFormControl>
-  ),
+  )
 );
 
 BooleanField.displayName = "BooleanField";
@@ -77,7 +77,7 @@ const TextField: React.FC<FieldProps> = React.memo(
         </StyledDescriptionField>
       )}
     </StyledFormControl>
-  ),
+  )
 );
 
 TextField.displayName = "TextField";
@@ -99,19 +99,28 @@ const ColorField: React.FC<FieldProps> = React.memo(
         </StyledDescriptionField>
       )}
     </StyledFormControl>
-  ),
+  )
 );
 
 ColorField.displayName = "ColorField";
 
 const SelectField: React.FC<FieldProps> = React.memo(
-  ({ name, label, value, options = [], setFieldValue, description }) => (
+  ({
+    name,
+    label,
+    value,
+    options = [],
+    setFieldValue,
+    onBlur,
+    description,
+  }) => (
     <StyledFormControl>
       <StyledLabel htmlFor={name}>{label}</StyledLabel>
       <StyledSelectField
         id={name}
         name={name}
         value={value}
+        onBlur={onBlur}
         onChange={(e) => setFieldValue(name, e.target.value)}
       >
         {options.map((option) => (
@@ -126,7 +135,7 @@ const SelectField: React.FC<FieldProps> = React.memo(
         </StyledDescriptionField>
       )}
     </StyledFormControl>
-  ),
+  )
 );
 
 SelectField.displayName = "SelectField";
@@ -137,7 +146,7 @@ const capitalizeFirstLetter = (string: string) => {
 
 export const generateFormFields = (
   config: CustomConfigType,
-  formik: FormikProps<any>,
+  formik: FormikProps<any>
 ) => {
   const noGroupFields: JSX.Element[] = [];
   const groupedFields: { [key: string]: JSX.Element[] } = {};
@@ -147,8 +156,9 @@ export const generateFormFields = (
     const commonProps = {
       name: `custom.${key}`,
       description: field.description,
-      label: capitalizeFirstLetter(key.replace("_", " ")),
-      value: formik.values.custom[key],
+      label: capitalizeFirstLetter(key.replace(/_/g, " ")),
+      value:
+        key in formik.values.custom ? formik.values.custom[key] : field.default,
       setFieldValue: formik.setFieldValue,
       onBlur: formik.handleBlur,
     };

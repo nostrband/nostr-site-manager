@@ -29,6 +29,7 @@ import { AuthContext } from "@/services/nostr/nostr";
 import {
   Mutex,
   getPreviewSiteInfo,
+  getPreviewSiteThemeCustomSettings,
   getPreviewThemeName,
   renderPreview,
   setPreviewSettings,
@@ -42,52 +43,6 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { CustomConfigType } from "./types";
 import { generateFormFields } from "./utils";
 
-const jsonCustomConfig: CustomConfigType = {
-  typography: {
-    type: "select",
-    options: ["Modern sans-serif", "Elegant serif"],
-    default: "Modern sans-serif",
-    description: "Define the default font used for the publication",
-  },
-  feed_layout: {
-    type: "select",
-    options: ["Dynamic grid", "Simple grid", "List"],
-    default: "Dynamic grid",
-    group: "homepage",
-    description:
-      "The layout of the post feed on the homepage, tag, and author pages",
-  },
-  cta_text: {
-    type: "text",
-    default: "Sign up for more like this",
-    group: "post",
-    description:
-      "Used in a large CTA on the homepage and small one on the sidebar as well",
-  },
-  test_field: {
-    type: "text",
-    default: "test text",
-    group: "post",
-    description:
-      "Used in a large CTA on the homepage and small one on the sidebar as well",
-  },
-  cta_background_image: {
-    type: "image",
-    default:
-      "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=800",
-    group: "homepage",
-  },
-  color_field: {
-    type: "color",
-    default: "#ececec",
-    description: "color for site",
-  },
-  recent_posts: {
-    type: "boolean",
-    default: true,
-  },
-};
-
 interface DesignValues {
   name: string;
   shortName: string;
@@ -100,9 +55,7 @@ interface DesignValues {
     secondary: { title: string; link: string; id: string }[];
   };
   accentColor: string;
-  custom: CustomConfigType;
-  // hashtags: string[];
-  // kinds: string[];
+  custom: { [key: string]: string }
 }
 
 const initialDesignValue: DesignValues = {
@@ -118,19 +71,7 @@ const initialDesignValue: DesignValues = {
   },
   accentColor: "#ececec",
   custom: {},
-  // hashtags: [],
-  // kinds: [],
 };
-
-// const hashtags = [
-//   "#cooking",
-//   "#photography",
-//   "#nostr",
-//   "#travel",
-//   "#grownostr",
-// ];
-
-// const kinds = ["Notes", "Long notes"];
 
 const mutex = new Mutex();
 
@@ -185,6 +126,7 @@ export const Design = () => {
               label: n.title,
               url: n.link,
             })),
+            custom: values.custom
           });
           console.log("updating design settings ", updated);
 
@@ -207,7 +149,7 @@ export const Design = () => {
         setLoading(false);
       });
     },
-    [setLoading],
+    [setLoading]
   );
 
   const formik = useFormik({
@@ -236,7 +178,7 @@ export const Design = () => {
     (e: any) => {
       formik.handleBlur(e);
     },
-    [formik.handleBlur],
+    [formik.handleBlur]
   );
 
   // const handleChangeNavigation = useCallback(
@@ -306,7 +248,7 @@ export const Design = () => {
 
           // init settings sidebar
           const info = getPreviewSiteInfo();
-          const getCustomConfig = jsonCustomConfig;
+          const getCustomConfig = await getPreviewSiteThemeCustomSettings();
           const values: DesignValues = {
             accentColor: info.accent_color || "",
             banner: info.cover_image || "",
@@ -315,10 +257,6 @@ export const Design = () => {
             logo: info.logo || "",
             name: info.title || "",
             shortName: info.name || "",
-            // hashtags: info.include_tags
-            //   ? info.include_tags.filter((t) => t.tag === "t").map((t) => t.value)
-            //   : [],
-            // kinds: info.include_kinds || [],
             navigation: {
               primary: info.navigation
                 ? info.navigation.map((n) => ({
@@ -329,16 +267,12 @@ export const Design = () => {
                 : [],
               secondary: [],
             },
-            custom: getCustomConfig
-              ? Object.keys(getCustomConfig).reduce(
-                  (acc, key) => {
-                    acc[key] = getCustomConfig[key].default;
-                    return acc;
-                  },
-                  {} as { [key in keyof CustomConfigType]: any },
-                )
-              : {},
+            custom: {},
           };
+
+          for (const [key, value] of info.custom.entries())
+            values.custom[key] = value;
+
           console.log("info", info, "values", values);
           formik.setValues(values, false);
           setCustomConfig(getCustomConfig);

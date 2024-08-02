@@ -30,6 +30,7 @@ type FieldProps = {
     shouldValidate?: boolean
   ) => Promise<void | FormikErrors<any>>;
   onBlur?: (e: React.ChangeEvent<any>) => void;
+  validate?:(values?: any) => Promise<FormikErrors<any>>
 };
 
 const BooleanField: React.FC<FieldProps> = React.memo(
@@ -111,6 +112,7 @@ const SelectField: React.FC<FieldProps> = React.memo(
     value,
     options = [],
     setFieldValue,
+    validate,
     onBlur,
     description,
   }) => (
@@ -121,7 +123,9 @@ const SelectField: React.FC<FieldProps> = React.memo(
         name={name}
         value={value}
         onBlur={onBlur}
-        onChange={(e) => setFieldValue(name, e.target.value)}
+        onChange={(e) => {
+          setFieldValue(name, e.target.value).then(() => { validate && validate() })
+        }}
       >
         {options.map((option) => (
           <MenuItem key={option} value={option}>
@@ -161,6 +165,7 @@ export const generateFormFields = (
         key in formik.values.custom ? formik.values.custom[key] : field.default,
       setFieldValue: formik.setFieldValue,
       onBlur: formik.handleBlur,
+      validate: formik.validateForm,
     };
 
     let fieldElement: JSX.Element | null = null;

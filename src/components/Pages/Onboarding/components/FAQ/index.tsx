@@ -29,7 +29,14 @@ export const FAQ = () => {
               </a>{" "}
               themes published on relays and Blossom servers. Npub.pro does not
               host your data, it only hosts the code to convert Nostr events to
-              web pages. The proposed NIP-512 is here.
+              web pages. The proposed NIP-512 is{" "}
+              <a
+                href="https://github.com/nostr-protocol/nips/pull/1348"
+                target="_blank"
+              >
+                here
+              </a>
+              .
             </StyledTitleDescription>
           </StyledGridItem>
 
@@ -58,7 +65,7 @@ export const FAQ = () => {
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <StyledTitleFAQ>How do I publish my site?</StyledTitleFAQ>
+            <StyledTitleFAQ>How do I publish on my site?</StyledTitleFAQ>
           </Grid>
           <StyledGridItem item xs={12} sm={6}>
             <StyledTitleDescription>

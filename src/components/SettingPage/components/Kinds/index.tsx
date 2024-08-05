@@ -22,7 +22,7 @@ interface ITitleDescription extends IBaseSetting {
 
 const kindsMap: { [key: number]: string } = {
   1: "Notes",
-  30023: "Posts",
+  30023: "Long-form posts",
 };
 
 export const Kinds = ({

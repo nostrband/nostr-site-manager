@@ -20,7 +20,8 @@ export const HeadIntroOnboarding = () => {
       </StyledTypographyTitle>
 
       <StyledTypographySubtitle variant="subtitle1">
-        Best way to share your work outside of nostr.<br/>
+        Best way to share your work outside of nostr.
+        <br />
         {/* Easy setup. Self-hostable. Just works. */}
       </StyledTypographySubtitle>
 

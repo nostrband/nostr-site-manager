@@ -1,12 +1,19 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Fab, InputLabel, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Fab,
+  InputLabel,
+  TextField,
+  Typography,
+  Select,
+} from "@mui/material";
 
 export const StyledBottomActions = styled(Box)(() => ({
-  position: "sticky",
+  position: "fixed",
   bottom: 0,
-  left: 0,
-  width: "100%",
+  right: 0,
+  width: 320,
   display: "flex",
   padding: "8px",
   gap: "8px",
@@ -25,6 +32,7 @@ export const StyledButtonOpenSetting = styled(Fab)(() => ({
 export const StyledWrapper = styled(Box)(() => ({
   width: 320,
   padding: "15px",
+  paddingBottom: 30,
 }));
 
 export const StyledTitle = styled(Typography)(() => ({
@@ -53,6 +61,13 @@ export const StyledTextField = styled(TextField)(() => ({
     "& fieldset": {
       border: "none",
     },
+  },
+}));
+
+export const StyledSelectField = styled(Select)(() => ({
+  background: "#f3f3f3",
+  "& fieldset": {
+    border: "none",
   },
 }));
 
@@ -106,4 +121,18 @@ export const StyledPreviewTestSite = styled(Box)(() => ({
   height: "100%",
   position: "relative",
   overflow: "hidden",
+}));
+
+export const StyledTitleGroupField = styled(Typography)(({ theme }) => ({
+  paddingBottom: "10px",
+  marginBottom: "10px",
+  fontWeight: "bold",
+  color: theme.palette.decorate.main,
+  borderBottom: "1px solid",
+  borderColor: theme.palette.decorate.main,
+  marginTop: "25px",
+}));
+
+export const StyledDescriptionField = styled(Typography)(({ theme }) => ({
+  color: theme.palette.darkInfo.main,
 }));

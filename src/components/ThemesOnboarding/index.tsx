@@ -6,7 +6,7 @@ import {
   StyledPreviews,
   StyledWrap,
   StyledMoreButton,
-  StyledTitle
+  StyledTitle,
 } from "@/components/ThemesOnboarding/styled";
 import { useContext, useMemo, useState } from "react";
 import Grid from "@mui/material/Grid";

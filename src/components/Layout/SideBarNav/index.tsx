@@ -2,11 +2,11 @@ import Link from "next/link";
 import { usePathname, useRouter, useParams } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
 import { Box, Divider, Drawer, List, ListItem } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
+// import IconButton from "@mui/material/IconButton";
+// import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import KeyboardArrowLeftTwoToneIcon from "@mui/icons-material/KeyboardArrowLeftTwoTone";
 import {
-  StyledSideBarBottom,
+  // StyledSideBarBottom,
   StyledSieBarButton,
   StyledSieBarContent,
   StyledSieBarElements,

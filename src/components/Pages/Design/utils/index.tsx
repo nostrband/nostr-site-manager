@@ -34,14 +34,16 @@ type FieldProps = {
 };
 
 const BooleanField: React.FC<FieldProps> = React.memo(
-  ({ name, label, value, setFieldValue, description }) => (
+  ({ name, label, value, setFieldValue, validate, description }) => (
     <StyledFormControl>
       <StyledLabel>{label}</StyledLabel>
       <FormControlLabel
         control={
           <Switch
             checked={value}
-            onChange={(_, v) => setFieldValue(name, v)}
+            onChange={(_, v) => setFieldValue(name, v).then(() => {
+              validate && validate();
+            })}
             name={name}
           />
         }
@@ -159,12 +161,18 @@ export const generateFormFields = (
 
   Object.keys(config).forEach((key) => {
     const field = config[key];
+    let value = field.default;
+    if (key in formik.values.custom) {
+      const fieldValue = formik.values.custom[key];
+      if (!field.options || field.options.includes(fieldValue))
+        value = fieldValue;
+    } 
+
     const commonProps = {
       name: `custom.${key}`,
       description: field.description,
       label: capitalizeFirstLetter(key.replace(/_/g, " ")),
-      value:
-        key in formik.values.custom ? formik.values.custom[key] : field.default,
+      value,
       setFieldValue: formik.setFieldValue,
       onBlur: formik.handleBlur,
       validate: formik.validateForm,

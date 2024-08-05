@@ -36,9 +36,9 @@ export const HeaderOnboarding = () => {
               href="/"
               color="primary"
               variant="text"
-              startIcon={isDesktop ? <ArrowBackTwoToneIcon /> : undefined}
+              startIcon={<ArrowBackTwoToneIcon />}
             >
-              Back {isDesktop && "to home"}
+              Back
             </Button>
           )}
         </Box>

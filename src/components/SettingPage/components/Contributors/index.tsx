@@ -11,7 +11,7 @@ import { StyledAutorProfile } from "@/components/SettingPage/components/Contribu
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
 import { nip19 } from "nostr-tools";
-import { ModalAuthor } from "@/components/ModalAuthor";
+import { ModalAuthorContributors } from "@/components/ModalAuthorContributors";
 import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { IBaseSetting } from "@/types/setting.types";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
@@ -97,7 +97,7 @@ export const Contributors = ({
           </StyledAutorProfile>
         </StyledSettingBlock>
       </StyledSettingCol>
-      <ModalAuthor
+      <ModalAuthorContributors
         pubkey={pubkey}
         pubkeysContributors={pubkeysContributors}
         isOpen={isOpenModalAuthor}

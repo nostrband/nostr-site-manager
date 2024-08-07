@@ -1,13 +1,7 @@
 "use client";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Alert,
   Autocomplete,
   Avatar,
-  Box,
-  Button,
   DialogTitle,
   Fab,
   ListItem,
@@ -15,15 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
-import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import {
   StyledAuthor,
   StyledTitle,
   StyledDialog,
   StyledDialogContent,
-  StyledActionContributor,
 } from "@/components/ModalAuthor/styled";
 import { debounce } from "lodash";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -36,50 +27,17 @@ export const ModalAuthor = ({
   isOpen,
   pubkey,
   handleClose,
-  pubkeysContributors,
-  handleAuthor,
 }: {
   isOpen: boolean;
   pubkey: string;
-  pubkeysContributors: string[];
-  handleClose: () => void;
-  handleAuthor: (pubkeys: string[]) => void;
+  handleClose: (pubkey: string) => void;
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<
     { pubkey: string; name: string; img: string }[]
   >([]);
   const [isLoading, setLoading] = useState(false);
-  const [isFetchContributors, setFetchContributors] = useState(false);
   const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
-  const [contributors, setContributors] = useState<NDKEvent[]>([]);
-  const [expanded, setExpanded] = useState(false);
-
-  const handleExpansion = () => {
-    setExpanded((prevExpanded) => !prevExpanded);
-  };
-
-  useEffect(() => {
-    if (pubkeysContributors.length) {
-      setFetchContributors(true);
-      fetchProfiles(pubkeysContributors)
-        .then((p) => {
-          if (p.length) {
-            setContributors(p);
-          } else {
-            setContributors([]);
-          }
-
-          setFetchContributors(false);
-        })
-        .catch(() => {
-          setContributors([]);
-          setFetchContributors(false);
-        });
-    } else {
-      setContributors([]);
-    }
-  }, [pubkeysContributors]);
 
   useEffect(() => {
     fetchProfiles([pubkey])
@@ -129,28 +87,12 @@ export const ModalAuthor = ({
     author: { pubkey: string; name: string; img: string } | string | null,
   ) => {
     if (author !== null && typeof author !== "string") {
-      handleAuthor([pubkey, author.pubkey, ...pubkeysContributors]);
-      setInputValue("");
+      handleClose(author.pubkey);
     }
   };
 
-  const handleDeleteContributor = (pubkeyContributor: string) => {
-    const prepareData = pubkeysContributors.filter(
-      (el) => el !== pubkeyContributor,
-    );
-
-    handleAuthor([pubkey, ...prepareData]);
-  };
-
-  const handleSetAuthor = (pubkeyAuthor: string) => {
-    const prepareData = pubkeysContributors.filter((el) => el !== pubkeyAuthor);
-
-    handleAuthor([pubkeyAuthor, pubkey, ...prepareData]);
-  };
-
   const handleCancel = () => {
-    handleClose();
-    setInputValue("");
+    handleClose(pubkey);
   };
 
   const debouncedFetchData = useMemo(() => debounce(fetchData, 300), []);
@@ -176,7 +118,7 @@ export const ModalAuthor = ({
     >
       <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
-          Author & Contributors
+          Author
           <Fab
             onClick={handleCancel}
             size="small"
@@ -188,87 +130,12 @@ export const ModalAuthor = ({
         </StyledTitle>
       </DialogTitle>
       <StyledDialogContent>
-        <StyledTitle
-          sx={{ marginBottom: "15px", marginTop: "15px" }}
-          variant="body1"
-        >
-          Author
-        </StyledTitle>
         <StyledAuthor>
           <Avatar alt={name} src={img} sx={{ width: 43, height: 43 }} />
           <Typography variant="body2" component="div">
             <b>{name}</b>
           </Typography>
         </StyledAuthor>
-
-        <StyledTitle
-          sx={{ marginBottom: "15px", marginTop: "15px" }}
-          variant="body1"
-        >
-          Contributors
-        </StyledTitle>
-        {contributors.length ? (
-          <Box sx={{ marginBottom: "15px" }}>
-            {contributors.map((el, i) => {
-              const dataContributor = JSON.parse(el.content);
-              const npubContributor =
-                nip19.npubEncode(el.pubkey).substring(0, 8) + "...";
-              const nameContributor =
-                dataContributor?.display_name ||
-                dataContributor?.name ||
-                npubContributor;
-              const imgContributor = dataContributor?.picture || "";
-
-              return (
-                <Accordion elevation={0} key={el.pubkey}>
-                  <AccordionSummary
-                    sx={{ paddingLeft: 0, paddingRight: 0 }}
-                    expandIcon={<ExpandMoreOutlinedIcon />}
-                    aria-controls={el.pubkey}
-                    id={el.pubkey}
-                  >
-                    <StyledAuthor key={i}>
-                      <Avatar
-                        alt={nameContributor}
-                        src={imgContributor}
-                        sx={{ width: 43, height: 43 }}
-                      />
-                      <Typography variant="body2" component="div">
-                        <b>{nameContributor}</b>
-                      </Typography>
-                    </StyledAuthor>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ paddingLeft: 0, paddingRight: 0 }}>
-                    <StyledActionContributor>
-                      <Button
-                        onClick={() => handleSetAuthor(el.pubkey)}
-                        variant="outlined"
-                        color="primary"
-                      >
-                        Set author
-                      </Button>
-                      <Button
-                        onClick={() => handleDeleteContributor(el.pubkey)}
-                        variant="outlined"
-                        color="error"
-                      >
-                        Delete
-                      </Button>
-                    </StyledActionContributor>
-                  </AccordionDetails>
-                </Accordion>
-              );
-            })}
-          </Box>
-        ) : (
-          <Alert
-            sx={{ marginBottom: "15px" }}
-            icon={<Inventory2OutlinedIcon fontSize="inherit" />}
-            severity="info"
-          >
-            Add another author for contributers
-          </Alert>
-        )}
 
         <Autocomplete
           freeSolo
@@ -277,7 +144,6 @@ export const ModalAuthor = ({
           loadingText={"Searching..."}
           options={options}
           onChange={handleChangeAuthor}
-          inputValue={inputValue}
           filterOptions={(options) => options}
           getOptionLabel={(option) =>
             typeof option === "string" ? option : option.name

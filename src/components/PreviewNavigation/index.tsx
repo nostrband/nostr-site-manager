@@ -1,11 +1,7 @@
-import { Avatar, Box, Button, ListSubheader } from "@mui/material";
+import { Avatar, Box, Button } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemText from "@mui/material/ListItemText";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Checkbox from "@mui/material/Checkbox";
 import {
   StyledButtonHashtagKind,
   StyledIconButton,

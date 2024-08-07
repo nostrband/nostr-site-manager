@@ -33,6 +33,7 @@ export const Contributors = ({
   const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
 
   const pubkey = contributors?.[0] || "";
+  const pubkeysContributors = contributors.slice(1);
 
   let meta = undefined;
   if (author) {
@@ -46,9 +47,12 @@ export const Contributors = ({
   const nip05 = meta?.nip05 || meta?.name || npub;
   const img = meta?.picture || "";
 
-  const handleAuthor = (pubkeyAuthor: string | any) => {
+  const handleAuthor = (pubkeyAuthors: string[] | any) => {
+    handleChangeContributors(pubkeyAuthors);
+  };
+
+  const handleClose = () => {
     setOpenModalAuthor(false);
-    handleChangeContributors([pubkeyAuthor]);
   };
 
   const handleClick = async () => {
@@ -95,8 +99,10 @@ export const Contributors = ({
       </StyledSettingCol>
       <ModalAuthor
         pubkey={pubkey}
+        pubkeysContributors={pubkeysContributors}
         isOpen={isOpenModalAuthor}
-        handleClose={handleAuthor}
+        handleClose={handleClose}
+        handleAuthor={handleAuthor}
       />
     </>
   );

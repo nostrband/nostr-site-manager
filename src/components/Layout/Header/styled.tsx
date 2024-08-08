@@ -50,6 +50,7 @@ export const StyledLogo = styled(Box)(() => ({
   alignItems: "center",
   cursor: "pointer",
 }));
+
 export const StyledUser = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",

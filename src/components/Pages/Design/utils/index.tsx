@@ -41,9 +41,11 @@ const BooleanField: React.FC<FieldProps> = React.memo(
         control={
           <Switch
             checked={value}
-            onChange={(_, v) => setFieldValue(name, v).then(() => {
-              validate && validate();
-            })}
+            onChange={(_, v) =>
+              setFieldValue(name, v).then(() => {
+                validate && validate();
+              })
+            }
             name={name}
           />
         }
@@ -166,7 +168,7 @@ export const generateFormFields = (
       const fieldValue = formik.values.custom[key];
       if (!field.options || field.options.includes(fieldValue))
         value = fieldValue;
-    } 
+    }
 
     const commonProps = {
       name: `custom.${key}`,

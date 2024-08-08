@@ -37,14 +37,16 @@ export const PreviewNavigation = ({
   kinds,
   hashtags,
   author,
+  noContentSettings,
 }: {
   onContentSettings: (
     author: string,
     hashtags: string[],
-    kinds: number[],
+    kinds: number[]
   ) => void;
   onUseTheme: () => void;
   onChangeTheme: (id: string) => void;
+  noContentSettings: boolean;
   hashtagsSelected: string[];
   kindsSelected: number[];
   kinds: { [key: number]: string };
@@ -83,7 +85,7 @@ export const PreviewNavigation = ({
 
       return searchParams.toString();
     },
-    [params],
+    [params]
   );
 
   const tag = params.get("tag");
@@ -141,7 +143,7 @@ export const PreviewNavigation = ({
     const prepareKinds = kindsData.join(",");
 
     router.push(
-      `${pathname}?${createQueryString({ hashtagsData: prepareHashtags, kindsData: prepareKinds })}`,
+      `${pathname}?${createQueryString({ hashtagsData: prepareHashtags, kindsData: prepareKinds })}`
     );
 
     onContentSettings(author, hashtagsData, kindsData);
@@ -186,7 +188,7 @@ export const PreviewNavigation = ({
     onContentSettings(
       cancel ? author : pubkey,
       hashtagsSelected,
-      kindsSelected,
+      kindsSelected
     );
   };
 
@@ -222,7 +224,7 @@ export const PreviewNavigation = ({
           <ArrowBackIcon />
         </StyledIconButton>
 
-        {authed && (
+        {!noContentSettings && authed && (
           <Box
             sx={{
               width: {
@@ -262,7 +264,7 @@ export const PreviewNavigation = ({
         >
           {authed ? "Use theme" : "Login to continue"}
         </Button>
-        {authed && (
+        {!noContentSettings && authed && (
           <Avatar
             alt={username}
             src={avatar}
@@ -284,21 +286,25 @@ export const PreviewNavigation = ({
           <ArrowForwardIcon />
         </StyledIconButton>
       </StyledWrapper>
-      <ModalAuthor
-        pubkey={author}
-        isOpen={isOpenModalAuthor}
-        handleClose={handleAuthor}
-      />
 
-      <ModalHashtagsKinds
-        hashtagsSelected={hashtagsSelected}
-        kindsSelected={kindsSelected}
-        kinds={kinds}
-        hashtags={hashtags}
-        isOpen={isOpenModalHashtagsKinds}
-        handleClose={handleCloseModalHashtagsKinds}
-        handleChange={handleChange}
-      />
+      {!noContentSettings && (
+        <>
+          <ModalAuthor
+            pubkey={author}
+            isOpen={isOpenModalAuthor}
+            handleClose={handleAuthor}
+          />
+          <ModalHashtagsKinds
+            hashtagsSelected={hashtagsSelected}
+            kindsSelected={kindsSelected}
+            kinds={kinds}
+            hashtags={hashtags}
+            isOpen={isOpenModalHashtagsKinds}
+            handleClose={handleCloseModalHashtagsKinds}
+            handleChange={handleChange}
+          />
+        </>
+      )}
     </>
   );
 };

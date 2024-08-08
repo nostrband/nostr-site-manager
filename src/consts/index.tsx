@@ -63,11 +63,11 @@ export const NAV_CONFIG = [
   //   path: "view-site",
   //   icon: <WebTwoToneIcon />,
   // },
-  // {
-  //   title: "Explore",
-  //   path: "explore",
-  //   icon: <LanguageTwoToneIcon />,
-  // },
+  {
+    title: "Theme settings",
+    path: "switchTheme",
+    icon: <BrushTwoToneIcon />,
+  },
   {
     title: "Settings",
     path: "settings",

@@ -13,6 +13,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@lexical/markdown": "^0.17.0",
     "@mui/icons-material": "^5.15.18",
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.18",
@@ -32,6 +33,7 @@
     "react": "^18",
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^18",
+    "react-dropzone": "^14.2.3",
     "sharp": "^0.33.4",
     "styled-components": "^6.1.11",
     "yup": "^1.4.0"

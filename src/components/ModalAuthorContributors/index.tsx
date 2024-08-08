@@ -34,13 +34,11 @@ import { fetchProfiles, searchProfiles } from "@/services/nostr/api";
 
 export const ModalAuthorContributors = ({
   isOpen,
-  pubkey,
   handleClose,
   pubkeysContributors,
   handleAuthor,
 }: {
   isOpen: boolean;
-  pubkey: string;
   pubkeysContributors: string[];
   handleClose: () => void;
   handleAuthor: (pubkeys: string[]) => void;
@@ -50,18 +48,10 @@ export const ModalAuthorContributors = ({
     { pubkey: string; name: string; img: string }[]
   >([]);
   const [isLoading, setLoading] = useState(false);
-  const [isFetchContributors, setFetchContributors] = useState(false);
-  const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
   const [contributors, setContributors] = useState<NDKEvent[]>([]);
-  const [expanded, setExpanded] = useState(false);
-
-  const handleExpansion = () => {
-    setExpanded((prevExpanded) => !prevExpanded);
-  };
 
   useEffect(() => {
     if (pubkeysContributors.length) {
-      setFetchContributors(true);
       fetchProfiles(pubkeysContributors)
         .then((p) => {
           if (p.length) {
@@ -69,30 +59,14 @@ export const ModalAuthorContributors = ({
           } else {
             setContributors([]);
           }
-
-          setFetchContributors(false);
         })
         .catch(() => {
           setContributors([]);
-          setFetchContributors(false);
         });
     } else {
       setContributors([]);
     }
   }, [pubkeysContributors]);
-
-  useEffect(() => {
-    fetchProfiles([pubkey])
-      .then((p) => (p.length ? setAuthor(p[0]) : []))
-      .catch(() => setAuthor(undefined));
-  }, [pubkey]);
-
-  let meta = undefined;
-  if (author) {
-    try {
-      meta = JSON.parse(author.content);
-    } catch {}
-  }
 
   const fetchData = async (query: string) => {
     try {
@@ -129,7 +103,7 @@ export const ModalAuthorContributors = ({
     author: { pubkey: string; name: string; img: string } | string | null,
   ) => {
     if (author !== null && typeof author !== "string") {
-      handleAuthor([pubkey, author.pubkey, ...pubkeysContributors]);
+      handleAuthor([author.pubkey, ...pubkeysContributors]);
       setInputValue("");
     }
   };
@@ -139,13 +113,7 @@ export const ModalAuthorContributors = ({
       (el) => el !== pubkeyContributor,
     );
 
-    handleAuthor([pubkey, ...prepareData]);
-  };
-
-  const handleSetAuthor = (pubkeyAuthor: string) => {
-    const prepareData = pubkeysContributors.filter((el) => el !== pubkeyAuthor);
-
-    handleAuthor([pubkeyAuthor, pubkey, ...prepareData]);
+    handleAuthor([...prepareData]);
   };
 
   const handleCancel = () => {
@@ -163,10 +131,6 @@ export const ModalAuthorContributors = ({
     }
   }, [inputValue, debouncedFetchData, setOptions]);
 
-  const npub = nip19.npubEncode(pubkey).substring(0, 8) + "...";
-  const name = meta?.display_name || meta?.name || npub;
-  const img = meta?.picture || "";
-
   return (
     <StyledDialog
       open={isOpen}
@@ -176,7 +140,7 @@ export const ModalAuthorContributors = ({
     >
       <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
-          Author & Contributors
+          Contributors
           <Fab
             onClick={handleCancel}
             size="small"
@@ -188,25 +152,6 @@ export const ModalAuthorContributors = ({
         </StyledTitle>
       </DialogTitle>
       <StyledDialogContent>
-        <StyledTitle
-          sx={{ marginBottom: "15px", marginTop: "15px" }}
-          variant="body1"
-        >
-          Author
-        </StyledTitle>
-        <StyledAuthor>
-          <Avatar alt={name} src={img} sx={{ width: 43, height: 43 }} />
-          <Typography variant="body2" component="div">
-            <b>{name}</b>
-          </Typography>
-        </StyledAuthor>
-
-        <StyledTitle
-          sx={{ marginBottom: "15px", marginTop: "15px" }}
-          variant="body1"
-        >
-          Contributors
-        </StyledTitle>
         {contributors.length ? (
           <Box sx={{ marginBottom: "15px" }}>
             {contributors.map((el, i) => {
@@ -241,16 +186,10 @@ export const ModalAuthorContributors = ({
                   <AccordionDetails sx={{ paddingLeft: 0, paddingRight: 0 }}>
                     <StyledActionContributor>
                       <Button
-                        onClick={() => handleSetAuthor(el.pubkey)}
-                        variant="outlined"
-                        color="primary"
-                      >
-                        Set author
-                      </Button>
-                      <Button
                         onClick={() => handleDeleteContributor(el.pubkey)}
                         variant="outlined"
                         color="error"
+                        disabled={contributors.length === 1}
                       >
                         Delete
                       </Button>
@@ -298,7 +237,7 @@ export const ModalAuthorContributors = ({
             <TextField
               {...params}
               variant="outlined"
-              placeholder="Choose another author"
+              placeholder="Add another contributors"
               onChange={(event) => setInputValue(event.target.value)}
             />
           )}

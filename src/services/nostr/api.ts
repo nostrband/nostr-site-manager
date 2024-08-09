@@ -188,6 +188,8 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
       s.include_tags?.filter((t) => t.tag === "t").map((t) => "#" + t.value) ||
       [],
     kinds: s.include_kinds?.map((k) => parseInt(k)) || [1],
+    hashtags_homepage: [],
+    kinds_homepage: [],
     accentColor: s.accent_color || "",
     name: s.name,
     title: s.title || "",

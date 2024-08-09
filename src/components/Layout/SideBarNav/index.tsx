@@ -87,7 +87,7 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
                     color={
                       pathname === path ? "buttonSidebarActive" : "textColor"
                     }
-                    href={slug === 'switchTheme' ? switchTheme : path}
+                    href={slug === "switchTheme" ? switchTheme : path}
                     LinkComponent={Link}
                     startIcon={icon}
                   >

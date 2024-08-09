@@ -49,6 +49,8 @@ export type ReturnSettingsSiteDataType = {
   };
   hashtags: string[];
   kinds: number[];
+  hashtags_homepage: string[];
+  kinds_homepage: number[];
   accentColor: string;
   codeinjection_head: string;
   codeinjection_foot: string;

@@ -12,11 +12,15 @@ import {
   TextField,
   Typography,
   Button,
+  SelectChangeEvent,
+  InputLabel,
+  Select,
+  OutlinedInput,
+  MenuItem,
 } from "@mui/material";
 import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import { fetchTopHashtags } from "@/services/nostr/themes";
@@ -25,17 +29,29 @@ interface ITitleDescription extends IBaseSetting {
   selectedHashtags: string[];
   contributors: string[];
   handleChangeHashtags: (value: string[]) => void;
+  anchor: string;
+  selectedKinds: number[];
+  handleChangeKinds: (value: number[]) => void;
 }
 
-export const Hashtags = ({
+const kindsMap: { [key: number]: string } = {
+  1: "Notes",
+  30023: "Long-form posts",
+};
+
+export const Content = ({
   handleChangeHashtags,
   contributors,
   selectedHashtags,
   submitForm,
   isLoading,
+  anchor,
+  selectedKinds,
+  handleChangeKinds,
 }: ITitleDescription) => {
   const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
   const [hashtags, setHashtags] = useState<string[]>([]);
+  const [kinds, setKinds] = useState<number[]>([]);
   const [inputValue, setInputValue] = useState("");
 
   const handleClick = () => {
@@ -74,11 +90,29 @@ export const Hashtags = ({
     return hashtags.some((hashtag) => hashtag.includes(value));
   };
 
+  const handleChange = (event: SelectChangeEvent<number[]>) => {
+    const {
+      target: { value },
+    } = event;
+    handleChangeKinds(
+      typeof value === "string" ? value.split(",").map(Number) : value,
+    );
+  };
+
+  const getKinds = useCallback(async () => {
+    const dataKinds = [1, 30023];
+    setKinds(dataKinds);
+  }, []);
+
+  useEffect(() => {
+    getKinds().then();
+  }, [getKinds]);
+
   return (
-    <StyledSettingCol id={HASH_CONFIG.HASHTAGS}>
+    <StyledSettingCol id={anchor}>
       <StyledSettingBlock>
         <StyledHeadSettingBlock>
-          <Typography variant="h6">Hashtags</Typography>
+          <Typography variant="h6">Content</Typography>
 
           <SaveButton
             isEdit={isEdit}
@@ -88,7 +122,7 @@ export const Hashtags = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Hashtags of published posts
+          Content based on hashtags of published posts and published event kinds
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
@@ -161,6 +195,28 @@ export const Hashtags = ({
                 Add {inputValue}
               </Button>
             )}
+        </StyledFormControl>
+
+        <StyledFormControl disabled={!isEdit} fullWidth size="medium">
+          <InputLabel id="demo-multiple-checkbox-label">Kinds</InputLabel>
+          <Select
+            labelId="demo-multiple-checkbox-label"
+            id="demo-multiple-checkbox"
+            multiple
+            value={selectedKinds}
+            onChange={handleChange}
+            input={<OutlinedInput disabled={!isEdit} label="Kinds" />}
+            renderValue={(selected) =>
+              selected.map((val) => kindsMap[val]).join(", ")
+            }
+          >
+            {kinds.map((kind) => (
+              <MenuItem key={kind} value={kind}>
+                <Checkbox checked={selectedKinds.indexOf(kind) > -1} />
+                <ListItemText primary={kindsMap[kind]} />
+              </MenuItem>
+            ))}
+          </Select>
         </StyledFormControl>
       </StyledSettingBlock>
     </StyledSettingCol>

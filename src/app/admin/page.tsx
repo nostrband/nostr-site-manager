@@ -4,6 +4,7 @@ import { useListSites } from "@/hooks/useListSites";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { ListSites } from "@/components/ListSites";
 import { Container, Typography } from "@mui/material";
+import { GetStarted } from "@/components/GetStarted";
 
 export default function Home() {
   const { data, isLoading, isFetching } = useListSites();
@@ -15,14 +16,8 @@ export default function Home() {
           <SpinerCircularProgress />
         </SpinerWrap>
       ) : (
-        <Container maxWidth="lg" disableGutters>
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", paddingTop: "10px" }}
-          >
-            Your websites
-          </Typography>
-          <ListSites data={data || []} />
+        <Container sx={{ height: "100%" }} maxWidth="lg" disableGutters>
+          {data?.length ? <ListSites data={data || []} /> : <GetStarted />}
         </Container>
       )}
     </Suspense>

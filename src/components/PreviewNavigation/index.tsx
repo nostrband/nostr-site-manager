@@ -42,7 +42,7 @@ export const PreviewNavigation = ({
   onContentSettings: (
     author: string,
     hashtags: string[],
-    kinds: number[]
+    kinds: number[],
   ) => void;
   onUseTheme: () => void;
   onChangeTheme: (id: string) => void;
@@ -85,7 +85,7 @@ export const PreviewNavigation = ({
 
       return searchParams.toString();
     },
-    [params]
+    [params],
   );
 
   const tag = params.get("tag");
@@ -143,7 +143,7 @@ export const PreviewNavigation = ({
     const prepareKinds = kindsData.join(",");
 
     router.push(
-      `${pathname}?${createQueryString({ hashtagsData: prepareHashtags, kindsData: prepareKinds })}`
+      `${pathname}?${createQueryString({ hashtagsData: prepareHashtags, kindsData: prepareKinds })}`,
     );
 
     onContentSettings(author, hashtagsData, kindsData);
@@ -188,7 +188,7 @@ export const PreviewNavigation = ({
     onContentSettings(
       cancel ? author : pubkey,
       hashtagsSelected,
-      kindsSelected
+      kindsSelected,
     );
   };
 

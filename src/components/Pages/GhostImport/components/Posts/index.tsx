@@ -1,18 +1,17 @@
-import { FC, useEffect, useRef, useState } from 'react'
-import { Button, Stack, Typography } from '@mui/material'
-import { Post } from '../../types'
+import { FC, useState } from 'react'
+import { Button, Checkbox, Stack, Typography } from '@mui/material'
+import { ClientPost } from '../../types'
 import { ItemPost } from './ItemPost'
 
 type PostsProps = {
-	posts: Post[]
-	onImport: (selectedPosts: Post[]) => void
+	posts: ClientPost[]
+	onImport: (selectedPosts: ClientPost[]) => void
 }
 
 export const Posts: FC<PostsProps> = ({ posts, onImport }) => {
-	const [selectedPosts, setSelectedPosts] = useState<Post[]>([])
-	const selectAllRef = useRef<HTMLInputElement | null>(null)
+	const [selectedPosts, setSelectedPosts] = useState<ClientPost[]>([])
 
-	const handleSelectPost = (checkedPost: Post) => {
+	const handleSelectPost = (checkedPost: ClientPost) => {
 		setSelectedPosts((prevSelectedPosts) => {
 			if (!prevSelectedPosts.find((post) => post.id === checkedPost.id)) {
 				return [...prevSelectedPosts, checkedPost]
@@ -28,30 +27,35 @@ export const Posts: FC<PostsProps> = ({ posts, onImport }) => {
 		else setSelectedPosts([])
 	}
 
-	useEffect(() => {
-		const isAllSelected = selectedPosts.length === posts.length
-		const isSomeSelected =
-			selectedPosts.length > 0 && selectedPosts.length < posts.length
-
-		if (selectAllRef.current) {
-			selectAllRef.current.checked = isAllSelected
-			selectAllRef.current.indeterminate = isSomeSelected
-		}
-	}, [selectedPosts, posts.length])
-
 	const handleImportPosts = () => {
 		if (!selectedPosts.length) return
 		onImport(selectedPosts)
 	}
 
+	if (!posts.length) {
+		return (
+			<Typography variant='h5' textAlign={'center'} mt={'1rem'}>
+				No data
+			</Typography>
+		)
+	}
+
 	return (
 		<Stack gap={'1rem'}>
-			<Stack alignSelf={'end'} direction={'row'} gap={'0.5rem'}>
+			<Stack
+				alignSelf={'end'}
+				direction={'row'}
+				gap={'0.5rem'}
+				alignItems={'center'}
+			>
 				<label htmlFor='select-all'>Select All</label>
-				<input
+				<Checkbox
 					id='select-all'
-					type='checkbox'
-					ref={selectAllRef}
+					checked={selectedPosts.length === posts.length}
+					indeterminate={
+						selectedPosts.length > 0 &&
+						selectedPosts.length < posts.length
+					}
 					onChange={(e) => handleSelectAll(e.target.checked)}
 				/>
 			</Stack>

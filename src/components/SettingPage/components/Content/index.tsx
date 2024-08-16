@@ -24,20 +24,17 @@ import { IBaseSetting } from "@/types/setting.types";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import { fetchTopHashtags } from "@/services/nostr/themes";
+import { kindsMap } from "@/consts";
+import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 
 interface ITitleDescription extends IBaseSetting {
   selectedHashtags: string[];
-  contributors: string[];
+  contributors: ReturnSettingsSiteDataType["contributors"];
   handleChangeHashtags: (value: string[]) => void;
   anchor: string;
   selectedKinds: number[];
   handleChangeKinds: (value: number[]) => void;
 }
-
-const kindsMap: { [key: number]: string } = {
-  1: "Notes",
-  30023: "Long-form posts",
-};
 
 export const Content = ({
   handleChangeHashtags,
@@ -60,7 +57,9 @@ export const Content = ({
   };
 
   const getHashtags = useCallback(async () => {
-    const hts = (await fetchTopHashtags(contributors)).map((t) => "#" + t);
+    const hts = (
+      await fetchTopHashtags(contributors.map((el) => el.pubkey))
+    ).map((t) => "#" + t);
     const allHts = [...new Set([...hts, ...selectedHashtags])];
     setHashtags(allHts);
   }, [setHashtags, contributors]);

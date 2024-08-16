@@ -156,8 +156,10 @@ export const SettingPage = () => {
     setFieldValue("hashtags_homepage", value);
   };
 
-  const handleChangeContributors = (pubkeys: string[]) => {
-    setFieldValue("contributors", pubkeys);
+  const handleChangeContributors = (
+    contributors: ReturnSettingsSiteDataType["contributors"],
+  ) => {
+    setFieldValue("contributors", contributors);
   };
 
   const handleChangeKinds = (value: number | number[]) => {
@@ -187,8 +189,22 @@ export const SettingPage = () => {
 
   useEffect(() => {
     if (data) {
-      setValues(data);
-      const initial = _.cloneDeep(data);
+      /// REMOVE TEST CONTRIBUTORS
+      const testDataPrepare = {
+        ...data,
+        contributors: data.contributors.map((el) => ({
+          pubkey: String(el),
+          hashtags: [],
+          kinds: [],
+        })),
+      };
+
+      setValues(testDataPrepare);
+      const initial = _.cloneDeep(testDataPrepare);
+
+      // setValues(data);
+      // const initial = _.cloneDeep(data);
+
       setInitialData(initial);
       console.log("initial values", initial);
     }
@@ -201,6 +217,8 @@ export const SettingPage = () => {
   //     </SpinerWrap>
   //   );
   // }
+
+  console.log({ fetchContr: values.contributors });
 
   return (
     <>
@@ -240,17 +258,10 @@ export const SettingPage = () => {
         contributors={values.contributors}
         submitForm={submitForm}
         isLoading={isLoading}
-      />
-
-      <Content
-        anchor={HASH_CONFIG.CONTENT}
         handleChangeHashtags={handleChangeHashtags}
-        contributors={values.contributors}
         selectedHashtags={values.hashtags}
         handleChangeKinds={handleChangeKinds}
         selectedKinds={values.kinds}
-        submitForm={submitForm}
-        isLoading={isLoading}
       />
 
       <Plugins

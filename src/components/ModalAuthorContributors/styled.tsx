@@ -15,9 +15,9 @@ export const StyledAuthor = styled(Box)(() => ({
 }));
 
 export const StyledActionContributor = styled(Box)(() => ({
-  display: "flex",
-  alignItems: "center",
-  gap: 10,
+  // display: "flex",
+  // alignItems: "center",
+  // gap: 10,
 }));
 
 export const StyledDialog = styled(Dialog)(() => ({

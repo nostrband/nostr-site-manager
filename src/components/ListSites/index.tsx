@@ -9,6 +9,7 @@ import { PreviewSite } from "@/components/PreviewSite";
 type ListSitesType = {
   data: ReturnSettingsSiteDataType[];
 };
+
 export const ListSites = ({ data }: ListSitesType) => {
   const pathAdmin = useFirstPathElement();
 

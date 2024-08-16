@@ -52,6 +52,11 @@ import lieblingDemo from "../../public/images/preview-theme/laeserin-npub-pro.np
 export const NPUB_PRO_DOMAIN = "npub.pro";
 export const NPUB_PRO_API = "https://api.npubpro.com";
 
+export const kindsMap: { [key: number]: string } = {
+  1: "Notes",
+  30023: "Long-form posts",
+};
+
 export const SIDEBAR_WIDTH = 280;
 export const NAV_CONFIG = [
   {
@@ -150,11 +155,11 @@ export const SETTINGS_CONFIG = [
         path: HASH_CONFIG.CONTRIBUTORS,
         icon: <AccountCircleTwoToneIcon />,
       },
-      {
-        title: "Content",
-        path: HASH_CONFIG.CONTENT,
-        icon: <ArticleTwoToneIcon />,
-      },
+      // {
+      //   title: "Content",
+      //   path: HASH_CONFIG.CONTENT,
+      //   icon: <ArticleTwoToneIcon />,
+      // },
       {
         title: "Plugins",
         path: HASH_CONFIG.PLUGINS,

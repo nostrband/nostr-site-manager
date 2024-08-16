@@ -10,6 +10,12 @@ export type ReturnSitesDataType = {
   url: string;
 };
 
+export type ContributorType = {
+  pubkey: string;
+  hashtags: string[];
+  kinds: number[];
+};
+
 export type ReturnSettingsSiteDataType = {
   id: string;
   themeId: string;
@@ -41,7 +47,7 @@ export type ReturnSettingsSiteDataType = {
 
   event?: NostrEvent;
 
-  contributors: string[];
+  contributors: ContributorType[];
 
   navigation: {
     primary: { title: string; link: string; id: string }[];

@@ -52,7 +52,7 @@ export const Plugins = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Write some plugins in header and footer
+          You can add custom html/css/js code into the header and footer of your website
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">

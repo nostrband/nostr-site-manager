@@ -32,6 +32,8 @@ interface ITitleDescription extends IBaseSetting {
   anchor: string;
   selectedKinds: number[];
   handleChangeKinds: (value: number[]) => void;
+  title: string;
+  description: string;
 }
 
 const kindsMap: { [key: number]: string } = {
@@ -48,6 +50,8 @@ export const Content = ({
   anchor,
   selectedKinds,
   handleChangeKinds,
+  title,
+  description
 }: ITitleDescription) => {
   const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
   const [hashtags, setHashtags] = useState<string[]>([]);
@@ -112,7 +116,7 @@ export const Content = ({
     <StyledSettingCol id={anchor}>
       <StyledSettingBlock>
         <StyledHeadSettingBlock>
-          <Typography variant="h6">Content</Typography>
+          <Typography variant="h6">{title}</Typography>
 
           <SaveButton
             isEdit={isEdit}
@@ -122,7 +126,7 @@ export const Content = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Content based on hashtags of published posts and published event kinds
+          {description}
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">

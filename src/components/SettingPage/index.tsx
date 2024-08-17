@@ -179,7 +179,7 @@ export const SettingPage = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id,
+      (item) => item.id !== input.id
     );
 
     setFieldValue("navigation", navigation);
@@ -251,6 +251,8 @@ export const SettingPage = () => {
         selectedKinds={values.kinds}
         submitForm={submitForm}
         isLoading={isLoading}
+        title="Content filters"
+        description="Choose event kinds and hashtags that will be displayed on this site"
       />
 
       <Plugins
@@ -313,12 +315,6 @@ export const SettingPage = () => {
       />
 
       <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
-        Growth
-      </Typography>
-
-      <Recommendation />
-
-      <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
         Home page
       </Typography>
 
@@ -331,7 +327,15 @@ export const SettingPage = () => {
         selectedKinds={values.kinds_homepage}
         submitForm={submitForm}
         isLoading={isLoading}
+        title="Homepage content"
+        description="Choose event kinds and hashtags that will be displayed on the homepage"
       />
+
+      <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
+        Growth
+      </Typography>
+
+      <Recommendation />
     </>
   );
 };

@@ -48,19 +48,21 @@ export const GetStarted = () => {
         <Box
           sx={{
             display: "flex",
+            flexDirection: "column",
             height: "100%",
             width: "auto",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
+          <StyledTitle>Start by creating your first website</StyledTitle>
           <Button
             onClick={handleStart}
             size="large"
             color="decorate"
             variant="contained"
           >
-            Get started
+            Create website &rarr;
           </Button>
         </Box>
       ) : (

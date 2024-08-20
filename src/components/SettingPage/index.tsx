@@ -314,7 +314,7 @@ export const SettingPage = () => {
         handleRemoveLinkNavigation={handleRemoveLinkNavigation}
       />
 
-      {/* <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
+      <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
         Homepage
       </Typography>
 
@@ -329,7 +329,7 @@ export const SettingPage = () => {
         isLoading={isLoading}
         title="Homepage content"
         description="Choose event kinds and hashtags that will be displayed on the homepage"
-      /> */}
+      />
 
       <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
         Growth

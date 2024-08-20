@@ -166,14 +166,14 @@ export const SETTINGS_CONFIG = [
     title: "Design",
     sublist: [
       {
-        title: "App name",
-        path: HASH_CONFIG.APP_NAME,
-        icon: <PhoneIphoneTwoToneIcon />,
-      },
-      {
         title: "Theme",
         path: HASH_CONFIG.DESIGN_BRANDING,
         icon: <BrushTwoToneIcon />,
+      },
+      {
+        title: "App name",
+        path: HASH_CONFIG.APP_NAME,
+        icon: <PhoneIphoneTwoToneIcon />,
       },
       {
         title: "Accent color",
@@ -198,22 +198,22 @@ export const SETTINGS_CONFIG = [
     ],
   },
   {
+    title: "Homepage",
+    sublist: [
+      {
+        title: "Homepage content",
+        path: HASH_CONFIG.CONTENT_HOMEPAGE,
+        icon: <ArticleTwoToneIcon />,
+      },
+    ],
+  },
+  {
     title: "Growth",
     sublist: [
       {
         title: "Recommendations",
         path: HASH_CONFIG.RECOMMENDATION,
         icon: <FavoriteTwoToneIcon />,
-      },
-    ],
-  },
-  {
-    title: "Home page",
-    sublist: [
-      {
-        title: "Content",
-        path: HASH_CONFIG.CONTENT_HOMEPAGE,
-        icon: <ArticleTwoToneIcon />,
       },
     ],
   },

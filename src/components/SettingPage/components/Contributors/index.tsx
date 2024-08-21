@@ -4,12 +4,13 @@ import {
   StyledSettingBlock,
   StyledSettingCol,
 } from "@/components/SettingPage/styled";
-import { Typography } from "@mui/material";
-import { HASH_CONFIG } from "@/consts";
+import { Chip, Typography } from "@mui/material";
+import { HASH_CONFIG, kindsMap } from "@/consts";
 import Avatar from "@mui/material/Avatar";
 import {
   StyledAutorProfile,
   StyledAutorProfileGroup,
+  StyledAutorProfileWrap,
 } from "@/components/SettingPage/components/Contributors/styled";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
@@ -103,12 +104,58 @@ export const Contributors = ({
               const name = meta.display_name || meta.name || npub;
               const img = meta.picture || "";
 
-              return (
-                <StyledAutorProfile key={el.pubkey}>
-                  <Avatar alt={name} src={img} />
+              const authorContent = settingsContributors.find(
+                (sc) => sc.pubkey === el.pubkey,
+              );
 
-                  <Typography variant="body1">{name}</Typography>
-                </StyledAutorProfile>
+              const authorKinds = authorContent?.kinds.length
+                ? authorContent?.kinds
+                : defaultKinds;
+              const authorHashtags = authorContent?.hashtags.length
+                ? authorContent?.hashtags
+                : defaultHashtags;
+
+              return (
+                <StyledAutorProfileWrap key={el.pubkey}>
+                  <StyledAutorProfile>
+                    <Avatar alt={name} src={img} />
+
+                    <Typography variant="body1">{name}</Typography>
+                  </StyledAutorProfile>
+                  {Boolean(authorHashtags?.length) && (
+                    <Typography
+                      sx={{
+                        display: "flex",
+                        gap: "8px",
+                        flexWrap: "wrap",
+                        mb: 2,
+                        mt: 1,
+                      }}
+                      variant="body2"
+                    >
+                      <b>Hashtags:</b>
+                      {authorHashtags?.map((el) => (
+                        <Chip key={el} label={el} size="small" />
+                      ))}
+                    </Typography>
+                  )}
+                  {Boolean(authorKinds?.length) && (
+                    <Typography
+                      sx={{
+                        display: "flex",
+                        gap: "8px",
+                        flexWrap: "wrap",
+                        mt: 1,
+                      }}
+                      variant="body2"
+                    >
+                      <b>Kinds:</b>
+                      {authorKinds?.map((el) => (
+                        <Chip key={el} label={kindsMap[el]} size="small" />
+                      ))}
+                    </Typography>
+                  )}
+                </StyledAutorProfileWrap>
               );
             })}
           </StyledAutorProfileGroup>

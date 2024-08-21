@@ -170,6 +170,16 @@ export const ModalAuthorContributors = ({
                 (c) => c.pubkey === el.pubkey,
               ) || { pubkey: el.pubkey, hashtags: [], kinds: [] };
 
+              const prepareContent = {
+                ...contentContributor,
+                hashtags: contentContributor.hashtags.length
+                  ? contentContributor.hashtags
+                  : defaultHashtags,
+                kinds: contentContributor.kinds.length
+                  ? contentContributor.kinds
+                  : defaultKinds,
+              };
+
               return (
                 <Accordion elevation={0} key={el.pubkey}>
                   <AccordionSummary
@@ -194,12 +204,10 @@ export const ModalAuthorContributors = ({
                       <ContributorContent
                         dataContributors={dataContributors}
                         pubkey={el.pubkey}
-                        content={contentContributor}
+                        content={prepareContent}
                         handleChangeContentContributor={
                           handleChangeSettingsContributors
                         }
-                        defaultKinds={defaultKinds}
-                        defaultHashtags={defaultHashtags}
                       />
                       <Button
                         onClick={() => handleDeleteContributor(el.pubkey)}

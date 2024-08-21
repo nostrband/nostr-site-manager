@@ -9,7 +9,7 @@ import { InputLabel, OutlinedInput, Typography } from "@mui/material";
 import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { HASH_CONFIG, kindsMap } from "@/consts";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
@@ -19,11 +19,6 @@ interface ITitleDescription extends IBaseSetting {
   selectedKinds: number[];
   handleChangeKinds: (value: number[]) => void;
 }
-
-const kindsMap: { [key: number]: string } = {
-  1: "Notes",
-  30023: "Long-form posts",
-};
 
 export const Kinds = ({
   handleChangeKinds,

@@ -27,23 +27,17 @@ export const ContributorContent = ({
   content,
   dataContributors,
   handleChangeContentContributor,
-  defaultKinds,
-  defaultHashtags,
 }: {
   content: ContributorType;
   pubkey: string;
   dataContributors: ContributorType[];
   handleChangeContentContributor: (contributors: ContributorType[]) => void;
-  defaultKinds: number[];
-  defaultHashtags: string[];
 }) => {
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [kinds, setKinds] = useState<number[]>([]);
   const [inputValue, setInputValue] = useState("");
 
-  const selectedHashtags = content.hashtags.length
-    ? content.hashtags
-    : defaultHashtags;
+  const selectedHashtags = content.hashtags;
   const selectedKinds = content.kinds;
 
   const getHashtags = useCallback(async () => {
@@ -99,7 +93,7 @@ export const ContributorContent = ({
   };
 
   const getKinds = useCallback(async () => {
-    const dataKinds = content.kinds.length ? content.kinds : defaultKinds;
+    const dataKinds = [1, 30023];
     setKinds(dataKinds);
   }, []);
 

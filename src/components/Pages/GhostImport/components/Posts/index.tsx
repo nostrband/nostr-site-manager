@@ -76,7 +76,7 @@ export const Posts: FC<PostsProps> = ({ posts, onImport }) => {
 				onClick={handleImportPosts}
 				disabled={!selectedPosts.length}
 			>
-				OK
+				Publish {selectedPosts.length} posts
 			</Button>
 		</Stack>
 	)

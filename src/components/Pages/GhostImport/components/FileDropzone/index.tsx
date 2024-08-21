@@ -23,8 +23,8 @@ export const FileDropzone: FC<FileDropzoneProps> = ({ onDrop }) => {
 			{isDragActive && <Typography>Drop the files here ...</Typography>}
 			{!isDragActive && (
 				<Typography>
-					Drag & drop file here, or click to{' '}
-					<StyledText>select file</StyledText>
+					Drag & drop exported JSON file here or click to{' '}
+					<StyledText>select it</StyledText>.
 				</Typography>
 			)}
 		</StyledDropzoneContainer>

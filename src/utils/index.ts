@@ -1,10 +1,10 @@
-import { ReturnSettingsSiteDataType } from "@/services/sites.service";
+import { ContributorType } from "@/services/sites.service";
 
 export const syncContributorsData = (
   idsArray: string[],
-  objectsArray: ReturnSettingsSiteDataType["contributors"],
+  objectsArray: ContributorType[],
 ) => {
-  const resultArray: ReturnSettingsSiteDataType["contributors"] = [];
+  const resultArray: ContributorType[] = [];
 
   idsArray.forEach((p) => {
     const foundObject = objectsArray.find((obj) => obj.pubkey === p);

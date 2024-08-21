@@ -184,6 +184,11 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
     themeId: packageThemes.get(s.extensions?.[0].event_id || "") || "",
     themeName: s.extensions?.[0].petname || "",
     contributors: s.contributor_pubkeys,
+    contributor_settings: s.contributor_pubkeys.map((el) => ({
+      pubkey: el,
+      hashtags: [],
+      kinds: [],
+    })),
     hashtags:
       s.include_tags?.filter((t) => t.tag === "t").map((t) => "#" + t.value) ||
       [],

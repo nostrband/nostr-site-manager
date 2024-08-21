@@ -25,11 +25,10 @@ import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import { fetchTopHashtags } from "@/services/nostr/themes";
 import { kindsMap } from "@/consts";
-import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 
 interface ITitleDescription extends IBaseSetting {
   selectedHashtags: string[];
-  contributors: ReturnSettingsSiteDataType["contributors"];
+  contributors: string[];
   handleChangeHashtags: (value: string[]) => void;
   anchor: string;
   selectedKinds: number[];
@@ -57,9 +56,7 @@ export const Content = ({
   };
 
   const getHashtags = useCallback(async () => {
-    const hts = (
-      await fetchTopHashtags(contributors.map((el) => el.pubkey))
-    ).map((t) => "#" + t);
+    const hts = (await fetchTopHashtags(contributors)).map((t) => "#" + t);
     const allHts = [...new Set([...hts, ...selectedHashtags])];
     setHashtags(allHts);
   }, [setHashtags, contributors]);

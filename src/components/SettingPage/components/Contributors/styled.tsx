@@ -12,5 +12,4 @@ export const StyledAutorProfileGroup = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",
   gap: 10,
-  marginBottom: 25,
 }));

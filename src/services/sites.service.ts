@@ -47,7 +47,9 @@ export type ReturnSettingsSiteDataType = {
 
   event?: NostrEvent;
 
-  contributors: ContributorType[];
+  contributors: string[];
+
+  contributor_settings: ContributorType[];
 
   navigation: {
     primary: { title: string; link: string; id: string }[];

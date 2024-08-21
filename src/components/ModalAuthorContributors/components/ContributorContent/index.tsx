@@ -27,19 +27,23 @@ export const ContributorContent = ({
   content,
   dataContributors,
   handleChangeContentContributor,
+  defaultKinds,
+  defaultHashtags,
 }: {
   content: ContributorType;
   pubkey: string;
-  dataContributors: ReturnSettingsSiteDataType["contributors"];
-  handleChangeContentContributor: (
-    contributors: ReturnSettingsSiteDataType["contributors"],
-  ) => void;
+  dataContributors: ContributorType[];
+  handleChangeContentContributor: (contributors: ContributorType[]) => void;
+  defaultKinds: number[];
+  defaultHashtags: string[];
 }) => {
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [kinds, setKinds] = useState<number[]>([]);
   const [inputValue, setInputValue] = useState("");
 
-  const selectedHashtags = content.hashtags;
+  const selectedHashtags = content.hashtags.length
+    ? content.hashtags
+    : defaultHashtags;
   const selectedKinds = content.kinds;
 
   const getHashtags = useCallback(async () => {
@@ -95,7 +99,7 @@ export const ContributorContent = ({
   };
 
   const getKinds = useCallback(async () => {
-    const dataKinds = [1, 30023];
+    const dataKinds = content.kinds.length ? content.kinds : defaultKinds;
     setKinds(dataKinds);
   }, []);
 
@@ -164,7 +168,7 @@ export const ContributorContent = ({
             <Button
               onClick={handleAddHashtag}
               variant="contained"
-              sx={{ mt: 1 }}
+              sx={{ mt: 1, mb: 2 }}
             >
               Add {inputValue}
             </Button>

@@ -31,34 +31,35 @@ import ListItemText from "@mui/material/ListItemText";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { nip19 } from "nostr-tools";
 import { searchProfiles } from "@/services/nostr/api";
-import { ReturnSettingsSiteDataType } from "@/services/sites.service";
+import { ContributorType } from "@/services/sites.service";
 import { ContributorContent } from "./components/ContributorContent";
-// import { ContributorContent } from "./components/ContributorContent";
 
 export const ModalAuthorContributors = ({
   isOpen,
   handleClose,
   dataContributors,
+  pubkeysContributors,
   contributorsEvent,
   handleAuthor,
-  handleChangeContentContributor,
+  handleChangeSettingsContributors,
+  defaultKinds,
+  defaultHashtags,
 }: {
   isOpen: boolean;
-  dataContributors: ReturnSettingsSiteDataType["contributors"];
+  dataContributors: ContributorType[];
+  pubkeysContributors: string[];
   handleClose: () => void;
   contributorsEvent: NDKEvent[];
   handleAuthor: (pubkeys: string[]) => void;
-  handleChangeContentContributor: (
-    contributors: ReturnSettingsSiteDataType["contributors"],
-  ) => void;
+  handleChangeSettingsContributors: (contributors: ContributorType[]) => void;
+  defaultKinds: number[];
+  defaultHashtags: string[];
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<
     { pubkey: string; name: string; img: string }[]
   >([]);
   const [isLoading, setLoading] = useState(false);
-
-  const preparePubkeys = dataContributors.map((el) => el.pubkey);
 
   const fetchData = async (query: string) => {
     try {
@@ -95,14 +96,25 @@ export const ModalAuthorContributors = ({
     author: { pubkey: string; name: string; img: string } | string | null,
   ) => {
     if (author !== null && typeof author !== "string") {
-      handleAuthor([author.pubkey, ...preparePubkeys]);
+      handleAuthor([author.pubkey, ...pubkeysContributors]);
+      handleChangeSettingsContributors([
+        { pubkey: author.pubkey, hashtags: [], kinds: [] },
+        ...dataContributors,
+      ]);
       setInputValue("");
     }
   };
 
   const handleDeleteContributor = (pubkeyContributor: string) => {
-    const prepareData = preparePubkeys.filter((el) => el !== pubkeyContributor);
+    const prepareData = pubkeysContributors.filter(
+      (el) => el !== pubkeyContributor,
+    );
 
+    const prepareSettingsData = dataContributors.filter(
+      (el) => el.pubkey !== pubkeyContributor,
+    );
+
+    handleChangeSettingsContributors([...prepareSettingsData]);
     handleAuthor([...prepareData]);
   };
 
@@ -184,8 +196,10 @@ export const ModalAuthorContributors = ({
                         pubkey={el.pubkey}
                         content={contentContributor}
                         handleChangeContentContributor={
-                          handleChangeContentContributor
+                          handleChangeSettingsContributors
                         }
+                        defaultKinds={defaultKinds}
+                        defaultHashtags={defaultHashtags}
                       />
                       <Button
                         onClick={() => handleDeleteContributor(el.pubkey)}

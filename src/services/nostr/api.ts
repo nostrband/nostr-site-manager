@@ -192,8 +192,10 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
       s.include_tags?.filter((t) => t.tag === "t").map((t) => "#" + t.value) ||
       [],
     kinds: s.include_kinds?.map((k) => parseInt(k)) || [1],
-    hashtags_homepage: [],
-    kinds_homepage: [],
+    hashtags_homepage:
+      s.homepage_tags?.filter((t) => t.tag === "t").map((t) => "#" + t.value) ||
+      [],
+    kinds_homepage: s.homepage_kinds?.map((k) => parseInt(k)) || [],
     accentColor: s.accent_color || "",
     name: s.name,
     title: s.title || "",

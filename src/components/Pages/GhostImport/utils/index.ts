@@ -99,6 +99,7 @@ export const createNostrEvent = (
 	post: ClientPost,
 	publishType: 'long' | 'short',
 ) => {
+	if (publishType === "short") throw new Error("Not supported");
 	const timestamp = new Date(post.published_at).getTime()
 	const unixTimestamp = Math.floor(timestamp / 1000)
 
@@ -122,7 +123,7 @@ export const createNostrEvent = (
 	return event
 }
 
-export async function updateUrls(posts: ClientPost[]) {
+export async function updateUrls(posts: ClientPost[], type: string) {
 	console.log('updateUrls', posts)
 	if (!posts || !posts.length) return
 
@@ -137,7 +138,7 @@ export async function updateUrls(posts: ClientPost[]) {
 		...(await fetchEvents(
 			ndk,
 			{
-				kinds: [30023],
+				kinds: [type === "long" ? 30023 : 1],
 				authors: [userPubkey],
 				'#d': d_tags,
 			},

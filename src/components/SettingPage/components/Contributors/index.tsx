@@ -4,14 +4,17 @@ import {
   StyledSettingBlock,
   StyledSettingCol,
 } from "@/components/SettingPage/styled";
-import { Box, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { HASH_CONFIG } from "@/consts";
 import Avatar from "@mui/material/Avatar";
-import { StyledAutorProfile } from "@/components/SettingPage/components/Contributors/styled";
+import {
+  StyledAutorProfile,
+  StyledAutorProfileGroup,
+} from "@/components/SettingPage/components/Contributors/styled";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
 import { nip19 } from "nostr-tools";
-import { ModalAuthor } from "@/components/ModalAuthor";
+import { ModalAuthorContributors } from "@/components/ModalAuthorContributors";
 import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { IBaseSetting } from "@/types/setting.types";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
@@ -22,7 +25,7 @@ interface IContributors extends IBaseSetting {
 }
 
 export const Contributors = ({
-  contributors,
+  contributors: pubkeysContributors,
   handleChangeContributors,
   isLoading,
   submitForm,
@@ -30,25 +33,14 @@ export const Contributors = ({
   const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
 
   const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
-  const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
+  const [contributors, setContributors] = useState<NDKEvent[]>([]);
 
-  const pubkey = contributors?.[0] || "";
+  const handleAuthor = (pubkeyAuthors: string[] | any) => {
+    handleChangeContributors(pubkeyAuthors);
+  };
 
-  let meta = undefined;
-  if (author) {
-    try {
-      meta = JSON.parse(author.content);
-    } catch {}
-  }
-
-  const npub = pubkey ? nip19.npubEncode(pubkey).substring(0, 8) + "..." : "";
-  const name = meta?.display_name || meta?.name || npub;
-  const nip05 = meta?.nip05 || meta?.name || npub;
-  const img = meta?.picture || "";
-
-  const handleAuthor = (pubkeyAuthor: string | any) => {
+  const handleClose = () => {
     setOpenModalAuthor(false);
-    handleChangeContributors([pubkeyAuthor]);
   };
 
   const handleClick = async () => {
@@ -60,11 +52,22 @@ export const Contributors = ({
   };
 
   useEffect(() => {
-    if (pubkey)
-      fetchProfiles([pubkey])
-        .then((p) => (p.length ? setAuthor(p[0]) : []))
-        .catch(() => setAuthor(undefined));
-  }, [pubkey]);
+    if (pubkeysContributors.length) {
+      fetchProfiles(pubkeysContributors)
+        .then((p) => {
+          if (p.length) {
+            setContributors(p);
+          } else {
+            setContributors([]);
+          }
+        })
+        .catch(() => {
+          setContributors([]);
+        });
+    } else {
+      setContributors([]);
+    }
+  }, [pubkeysContributors]);
 
   return (
     <>
@@ -77,26 +80,36 @@ export const Contributors = ({
               isEdit={isEdit}
               isLoading={isLoading}
               handleAction={handleClick}
-              text="Change author"
+              text="Change contributors"
             />
           </StyledHeadSettingBlock>
 
-          <StyledAutorProfile>
-            <Avatar alt={name} src={img} />
+          <StyledAutorProfileGroup>
+            {contributors.map((el) => {
+              let meta = JSON.parse(el.content);
 
-            <Box>
-              <Typography variant="body1">
-                {name} - <b>Owner</b>
-              </Typography>
-              <Typography variant="body2">{nip05}</Typography>
-            </Box>
-          </StyledAutorProfile>
+              const npub = el.pubkey
+                ? nip19.npubEncode(el.pubkey).substring(0, 8) + "..."
+                : "";
+              const name = meta.display_name || meta.name || npub;
+              const img = meta.picture || "";
+
+              return (
+                <StyledAutorProfile key={el.pubkey}>
+                  <Avatar alt={name} src={img} />
+
+                  <Typography variant="body1">{name}</Typography>
+                </StyledAutorProfile>
+              );
+            })}
+          </StyledAutorProfileGroup>
         </StyledSettingBlock>
       </StyledSettingCol>
-      <ModalAuthor
-        pubkey={pubkey}
+      <ModalAuthorContributors
+        pubkeysContributors={pubkeysContributors}
         isOpen={isOpenModalAuthor}
-        handleClose={handleAuthor}
+        handleClose={handleClose}
+        handleAuthor={handleAuthor}
       />
     </>
   );

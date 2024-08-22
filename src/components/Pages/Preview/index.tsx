@@ -17,6 +17,7 @@ import {
   getPreviewKinds,
   Mutex,
   getPreviewSiteInfo,
+  PreviewSettings,
 } from "@/services/nostr/themes";
 import { Box } from "@mui/material";
 import { SpinerWrap } from "@/components/Spiner";
@@ -80,35 +81,41 @@ export const Preview = () => {
         try {
           const start = Date.now();
 
-          const updated = await setPreviewSettings({
+          const settings: PreviewSettings = {
             siteId: siteId || undefined,
             themeId,
-            contributors: contributor ? [contributor] : undefined,
-            kinds: kindsSelected,
-            hashtags: hashtagsSelected,
-          });
+          };
+          if (!siteId) {
+            settings.contributors = contributor ? [contributor] : undefined;
+            settings.kinds = kindsSelected;
+            settings.hashtags = hashtagsSelected;
+          }
+
+          const updated = await setPreviewSettings(settings);
 
           if (updated || mounted) {
             mounted = false;
 
-            const info = getPreviewSiteInfo();
-            console.log("info", info);
-            const newContributor =
-              info.contributor_pubkeys?.[0] || info.admin_pubkey;
-            const newHashtags = await getPreviewTopHashtags();
-            const newHashtagsSelected = getPreviewHashtags();
-            const newKindsSelected = getPreviewKinds();
+            if (!siteId) {
+              const info = getPreviewSiteInfo();
+              console.log("info", info);
+              const newContributor =
+                info.contributor_pubkeys?.[0] || info.admin_pubkey;
+              const newHashtags = await getPreviewTopHashtags();
+              const newHashtagsSelected = getPreviewHashtags();
+              const newKindsSelected = getPreviewKinds();
 
-            // if we don't check for equality then
-            // we might cause infinite loop if user
-            // makes several changes in a sequence
-            if (!isEqual(newContributor, contributor))
-              setContributor(newContributor);
-            if (!isEqual(newHashtags, hashtags)) setHashtags(newHashtags);
-            if (!isEqual(newHashtagsSelected, hashtagsSelected))
-              setHashtagsSelected(newHashtagsSelected);
-            if (!isEqual(newKindsSelected, kindsSelected))
-              setKinds(newKindsSelected);
+              // if we don't check for equality then
+              // we might cause infinite loop if user
+              // makes several changes in a sequence
+              if (!isEqual(newContributor, contributor))
+                setContributor(newContributor);
+              if (!isEqual(newHashtags, hashtags)) setHashtags(newHashtags);
+              if (!isEqual(newHashtagsSelected, hashtagsSelected))
+                setHashtagsSelected(newHashtagsSelected);
+              if (!isEqual(newKindsSelected, kindsSelected))
+                setKinds(newKindsSelected);
+            }
 
             // update the preview html
             await renderPreview(iframeRef.current!);
@@ -227,6 +234,7 @@ export const Preview = () => {
         hashtags={hashtags}
         kinds={kinds}
         onUseTheme={onUseTheme}
+        noContentSettings={!!siteId}
       />
     </>
   );

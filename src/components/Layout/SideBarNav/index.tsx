@@ -16,6 +16,7 @@ import { NavSettings } from "@/components/Layout/SideBarNav/components/NavSettin
 import { NAV_CONFIG, SIDEBAR_WIDTH } from "@/consts";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { useEffect, useState } from "react";
+import { useListSites } from "@/hooks/useListSites";
 
 interface ISideBarNav {
   isOpen: boolean;
@@ -32,6 +33,13 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
 
   const isSettings = pathname === `${pathAdmin}/${params.id}/settings`;
   const isParamsID = Boolean(params.id);
+
+  const { data } = useListSites();
+  const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
+
+  const getSite = data?.find((el) => el.id === siteId);
+
+  const switchTheme = `/design?siteId=${siteId}&themeId=${getSite?.themeId}`;
 
   useEffect(() => {
     if (localStorage.getItem("__nostrlogin_nip46")) {
@@ -79,7 +87,7 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
                     color={
                       pathname === path ? "buttonSidebarActive" : "textColor"
                     }
-                    href={path}
+                    href={slug === "switchTheme" ? switchTheme : path}
                     LinkComponent={Link}
                     startIcon={icon}
                   >

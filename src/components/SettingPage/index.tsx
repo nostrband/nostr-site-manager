@@ -16,12 +16,12 @@ import { ImageBanner } from "@/components/SettingPage/components/Image";
 import { Navigation } from "@/components/SettingPage/components/Navigation";
 import { editSite } from "@/services/nostr/api";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import { Hashtags } from "@/components/SettingPage/components/Hashtags";
+import { Content } from "@/components/SettingPage/components/Content";
 import { AccentColor } from "@/components/SettingPage/components/AccentColor";
-import { Kinds } from "@/components/SettingPage/components/Kinds";
 import { WebsiteAddress } from "./components/WebsiteAddress";
 import { Plugins } from "@/components/SettingPage/components/Plugins";
 import { AppName } from "@/components/SettingPage/components/AppName";
+import { HASH_CONFIG } from "@/consts";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -58,6 +58,8 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   },
   hashtags: [],
   kinds: [],
+  hashtags_homepage: [],
+  kinds_homepage: [],
   accentColor: "",
   codeinjection_foot: "",
   codeinjection_head: "",
@@ -150,12 +152,20 @@ export const SettingPage = () => {
     setFieldValue("hashtags", value);
   };
 
+  const handleChangeHashtagsHomePage = (value: string | string[]) => {
+    setFieldValue("hashtags_homepage", value);
+  };
+
   const handleChangeContributors = (pubkeys: string[]) => {
     setFieldValue("contributors", pubkeys);
   };
 
   const handleChangeKinds = (value: number | number[]) => {
     setFieldValue("kinds", value);
+  };
+
+  const handleChangeKindsHomePage = (value: number | number[]) => {
+    setFieldValue("kinds_homepage", value);
   };
 
   const handleChangeColor = (color: string) => {
@@ -169,7 +179,7 @@ export const SettingPage = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id,
+      (item) => item.id !== input.id
     );
 
     setFieldValue("navigation", navigation);
@@ -232,19 +242,17 @@ export const SettingPage = () => {
         isLoading={isLoading}
       />
 
-      <Hashtags
+      <Content
+        anchor={HASH_CONFIG.CONTENT}
         handleChangeHashtags={handleChangeHashtags}
         contributors={values.contributors}
         selectedHashtags={values.hashtags}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
-
-      <Kinds
         handleChangeKinds={handleChangeKinds}
         selectedKinds={values.kinds}
         submitForm={submitForm}
         isLoading={isLoading}
+        title="Content filters"
+        description="Choose event kinds and hashtags that will be displayed on this site"
       />
 
       <Plugins
@@ -304,6 +312,23 @@ export const SettingPage = () => {
         isLoading={isLoading}
         handleAddLinkNavigation={handleAddLinkNavigation}
         handleRemoveLinkNavigation={handleRemoveLinkNavigation}
+      />
+
+      <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
+        Homepage
+      </Typography>
+
+      <Content
+        anchor={HASH_CONFIG.CONTENT_HOMEPAGE}
+        handleChangeHashtags={handleChangeHashtagsHomePage}
+        handleChangeKinds={handleChangeKindsHomePage}
+        contributors={values.contributors}
+        selectedHashtags={values.hashtags_homepage}
+        selectedKinds={values.kinds_homepage}
+        submitForm={submitForm}
+        isLoading={isLoading}
+        title="Homepage content"
+        description="Choose event kinds and hashtags that will be displayed on the homepage"
       />
 
       <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>

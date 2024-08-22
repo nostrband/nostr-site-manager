@@ -2,8 +2,8 @@
 // import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
 import TitleTwoToneIcon from "@mui/icons-material/TitleTwoTone";
 import ColorizeTwoToneIcon from "@mui/icons-material/ColorizeTwoTone";
-import SegmentTwoToneIcon from "@mui/icons-material/SegmentTwoTone";
-import TagIcon from "@mui/icons-material/Tag";
+// import SegmentTwoToneIcon from "@mui/icons-material/SegmentTwoTone";
+// import TagIcon from "@mui/icons-material/Tag";
 // import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
 import GridOnTwoToneIcon from "@mui/icons-material/GridOnTwoTone";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
@@ -16,6 +16,7 @@ import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import CodeTwoToneIcon from "@mui/icons-material/CodeTwoTone";
 import PhoneIphoneTwoToneIcon from "@mui/icons-material/PhoneIphoneTwoTone";
+import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
 
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
@@ -63,11 +64,11 @@ export const NAV_CONFIG = [
   //   path: "view-site",
   //   icon: <WebTwoToneIcon />,
   // },
-  // {
-  //   title: "Explore",
-  //   path: "explore",
-  //   icon: <LanguageTwoToneIcon />,
-  // },
+  {
+    title: "Theme settings",
+    path: "switchTheme",
+    icon: <BrushTwoToneIcon />,
+  },
   {
     title: "Settings",
     path: "settings",
@@ -96,6 +97,8 @@ export const HASH_CONFIG = {
   ACCENT_COLOR: "accent-color",
   PLUGINS: "plugins",
   APP_NAME: "app-name",
+  CONTENT: "content",
+  CONTENT_HOMEPAGE: "content-homepage",
 };
 
 export const SETTINGS_CONFIG = [
@@ -148,14 +151,9 @@ export const SETTINGS_CONFIG = [
         icon: <AccountCircleTwoToneIcon />,
       },
       {
-        title: "Hashtags",
-        path: HASH_CONFIG.HASHTAGS,
-        icon: <TagIcon />,
-      },
-      {
-        title: "Kinds",
-        path: HASH_CONFIG.KINDS,
-        icon: <SegmentTwoToneIcon />,
+        title: "Content",
+        path: HASH_CONFIG.CONTENT,
+        icon: <ArticleTwoToneIcon />,
       },
       {
         title: "Plugins",
@@ -168,14 +166,14 @@ export const SETTINGS_CONFIG = [
     title: "Design",
     sublist: [
       {
-        title: "App name",
-        path: HASH_CONFIG.APP_NAME,
-        icon: <PhoneIphoneTwoToneIcon />,
-      },
-      {
         title: "Theme",
         path: HASH_CONFIG.DESIGN_BRANDING,
         icon: <BrushTwoToneIcon />,
+      },
+      {
+        title: "App name",
+        path: HASH_CONFIG.APP_NAME,
+        icon: <PhoneIphoneTwoToneIcon />,
       },
       {
         title: "Accent color",
@@ -196,6 +194,16 @@ export const SETTINGS_CONFIG = [
         title: "Navigation",
         path: HASH_CONFIG.NAVIGATION,
         icon: <AltRouteTwoToneIcon />,
+      },
+    ],
+  },
+  {
+    title: "Homepage",
+    sublist: [
+      {
+        title: "Homepage content",
+        path: HASH_CONFIG.CONTENT_HOMEPAGE,
+        icon: <ArticleTwoToneIcon />,
       },
     ],
   },

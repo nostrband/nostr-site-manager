@@ -1,18 +1,36 @@
 import { FC, useState } from 'react'
-import { Button, Checkbox, Stack, Typography } from '@mui/material'
+import {
+	Button,
+	Checkbox,
+	FormControlLabel,
+	Radio,
+	Stack,
+	Switch,
+	Typography,
+} from '@mui/material'
 import { ClientPost } from '../../types'
 import { ItemPost } from './ItemPost'
+import { SpinerCircularProgress } from '@/components/Spiner'
 
 type PostsProps = {
 	posts: ClientPost[]
-	onImport: (selectedPosts: ClientPost[]) => void
+	onImport: (selectedItems: ClientPost[]) => void
+	isPending: boolean
+	publishType: 'long' | 'short'
+	onPublishTypeChange: (type: 'long' | 'short') => void
 }
 
-export const Posts: FC<PostsProps> = ({ posts, onImport }) => {
-	const [selectedPosts, setSelectedPosts] = useState<ClientPost[]>([])
+export const Posts: FC<PostsProps> = ({
+	posts,
+	onImport,
+	isPending,
+	publishType,
+	onPublishTypeChange,
+}) => {
+	const [selectedItems, setSelectedItems] = useState<ClientPost[]>([])
 
 	const handleSelectPost = (checkedPost: ClientPost) => {
-		setSelectedPosts((prevSelectedPosts) => {
+		setSelectedItems((prevSelectedPosts) => {
 			if (!prevSelectedPosts.find((post) => post.id === checkedPost.id)) {
 				return [...prevSelectedPosts, checkedPost]
 			}
@@ -23,13 +41,28 @@ export const Posts: FC<PostsProps> = ({ posts, onImport }) => {
 	}
 
 	const handleSelectAll = (checked: boolean) => {
-		if (checked) setSelectedPosts(posts)
-		else setSelectedPosts([])
+		if (checked) setSelectedItems(posts)
+		else setSelectedItems([])
+	}
+
+	const handleSelectAllPosts = (checked: boolean) => {
+		if (checked) setSelectedItems(posts.filter((p) => p.type === 'post'))
+		else setSelectedItems([])
+	}
+
+	const handleSelectAllPages = (checked: boolean) => {
+		if (checked) setSelectedItems(posts.filter((p) => p.type === 'page'))
+		else setSelectedItems([])
 	}
 
 	const handleImportPosts = () => {
-		if (!selectedPosts.length) return
-		onImport(selectedPosts)
+		if (!selectedItems.length) return
+		onImport(selectedItems)
+	}
+
+	const handleSwitchPublishType = (_: any, checked: boolean) => {
+		if (checked) return onPublishTypeChange('short')
+		return onPublishTypeChange('long')
 	}
 
 	if (!posts.length) {
@@ -39,24 +72,70 @@ export const Posts: FC<PostsProps> = ({ posts, onImport }) => {
 			</Typography>
 		)
 	}
+	// Select all states
+	const allIndeterminate =
+		selectedItems.length > 0 && selectedItems.length < posts.length
+	const allSelected = selectedItems.length === posts.length
+
+	// Select all posts states
+	const filteredPosts = posts.filter((p) => p.type === 'post')
+	const selectedPosts = selectedItems.filter((p) => p.type === 'post')
+	const allPostsIndeterminate =
+		selectedPosts.length > 0 && selectedPosts.length < filteredPosts.length
+	const allPostsSelected =
+		selectedPosts.length === filteredPosts.length && !allSelected
+
+	// Select all pages states
+	const filteredPages = posts.filter((p) => p.type === 'page')
+	const selectedPages = selectedItems.filter((p) => p.type === 'page')
+	const allPagesIndeterminate =
+		selectedPages.length > 0 && selectedPages.length < filteredPages.length
+	const allPagesSelected =
+		selectedPages.length === filteredPages.length && !allSelected
 
 	return (
 		<Stack gap={'1rem'}>
 			<Stack
-				alignSelf={'end'}
 				direction={'row'}
-				gap={'0.5rem'}
+				justifyContent={'flex-end'}
 				alignItems={'center'}
 			>
-				<label htmlFor='select-all'>Select All</label>
-				<Checkbox
-					id='select-all'
-					checked={selectedPosts.length === posts.length}
-					indeterminate={
-						selectedPosts.length > 0 &&
-						selectedPosts.length < posts.length
+				<FormControlLabel
+					control={
+						<Checkbox
+							id='select-all-posts'
+							checked={allPostsSelected}
+							indeterminate={allPostsIndeterminate}
+							onChange={(e) =>
+								handleSelectAllPosts(e.target.checked)
+							}
+						/>
 					}
-					onChange={(e) => handleSelectAll(e.target.checked)}
+					label='Select All Posts'
+				/>
+				<FormControlLabel
+					control={
+						<Checkbox
+							id='select-all-pages'
+							checked={allPagesSelected}
+							indeterminate={allPagesIndeterminate}
+							onChange={(e) =>
+								handleSelectAllPages(e.target.checked)
+							}
+						/>
+					}
+					label='Select All Pages'
+				/>
+				<FormControlLabel
+					control={
+						<Checkbox
+							id='select-all'
+							checked={allSelected}
+							indeterminate={allIndeterminate}
+							onChange={(e) => handleSelectAll(e.target.checked)}
+						/>
+					}
+					label='Select All'
 				/>
 			</Stack>
 
@@ -64,19 +143,50 @@ export const Posts: FC<PostsProps> = ({ posts, onImport }) => {
 				{posts.map((post) => (
 					<ItemPost
 						{...post}
-						checked={selectedPosts.some((p) => p.id === post.id)}
+						checked={selectedItems.some((p) => p.id === post.id)}
 						key={post.id}
 						onCheckboxChange={() => handleSelectPost(post)}
 					/>
 				))}
 			</Stack>
 
+			<Stack
+				direction={'row'}
+				alignItems={'center'}
+				justifyContent={'center'}
+			>
+				<Typography
+					component={'label'}
+					htmlFor='switcher'
+					variant='body2'
+				>
+					Publish as long-form posts
+				</Typography>
+				<Switch
+					id='switcher'
+					checked={publishType === 'short'}
+					onChange={handleSwitchPublishType}
+				/>
+				<Typography
+					component={'label'}
+					htmlFor='switcher'
+					variant='body2'
+				>
+					Publish as short notes
+				</Typography>
+			</Stack>
+
 			<Button
 				variant='contained'
 				onClick={handleImportPosts}
-				disabled={!selectedPosts.length}
+				disabled={!selectedItems.length || isPending}
 			>
-				Publish {selectedPosts.length} posts
+				<Stack direction={'row'} gap={'1rem'} alignItems={'center'}>
+					Publish {selectedItems.length} posts
+					{isPending && (
+						<SpinerCircularProgress size={17} color='secondary' />
+					)}
+				</Stack>
 			</Button>
 		</Stack>
 	)

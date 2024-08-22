@@ -25,6 +25,7 @@ import { nip19 } from "nostr-tools";
 export const AuthContext = createContext<boolean>(false);
 export const DEFAULT_RELAYS = [
   "wss://nos.lol",
+  "wss://relay.primal.net",
   "wss://relay.damus.io",
   "wss://purplepag.es",
   SITE_RELAY,

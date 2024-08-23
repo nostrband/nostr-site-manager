@@ -16,6 +16,7 @@ export type ClientPost = Post & {
 	tags: Tag[]
 	author?: Author
 	url?: string
+	conflict?: boolean
 	d_tag: string
 }
 

@@ -69,14 +69,18 @@ export const GhostImport = () => {
     // reset urls just for visual indication
     setPosts(
       posts!.map((p) =>
-        selectedPosts.find((sp) => sp.id === p.id) ? { ...p, url: "" } : p
+        selectedPosts.find((sp) => sp.id === p.id && !p.conflict) ? { ...p, url: "" } : p
       )
     );
 
     const relays = userRelays.length ? userRelays : DEFAULT_RELAYS;
 
     for (const post of selectedPosts) {
-      const event = new NDKEvent(ndk, {
+
+			// skip for now, allow url edit later
+			if (post.conflict) continue;
+
+			const event = new NDKEvent(ndk, {
 				...createNostrEvent(post, publishType),
 				pubkey: userPubkey
 			});

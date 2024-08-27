@@ -30,43 +30,36 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { nip19 } from "nostr-tools";
-import { fetchProfiles, searchProfiles } from "@/services/nostr/api";
+import { searchProfiles } from "@/services/nostr/api";
+import { ContributorType } from "@/services/sites.service";
+import { ContributorContent } from "./components/ContributorContent";
 
 export const ModalAuthorContributors = ({
   isOpen,
   handleClose,
+  dataContributors,
   pubkeysContributors,
+  contributorsEvent,
   handleAuthor,
+  handleChangeSettingsContributors,
+  defaultKinds,
+  defaultHashtags,
 }: {
   isOpen: boolean;
+  dataContributors: ContributorType[];
   pubkeysContributors: string[];
   handleClose: () => void;
+  contributorsEvent: NDKEvent[];
   handleAuthor: (pubkeys: string[]) => void;
+  handleChangeSettingsContributors: (contributors: ContributorType[]) => void;
+  defaultKinds: number[];
+  defaultHashtags: string[];
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<
     { pubkey: string; name: string; img: string }[]
   >([]);
   const [isLoading, setLoading] = useState(false);
-  const [contributors, setContributors] = useState<NDKEvent[]>([]);
-
-  useEffect(() => {
-    if (pubkeysContributors.length) {
-      fetchProfiles(pubkeysContributors)
-        .then((p) => {
-          if (p.length) {
-            setContributors(p);
-          } else {
-            setContributors([]);
-          }
-        })
-        .catch(() => {
-          setContributors([]);
-        });
-    } else {
-      setContributors([]);
-    }
-  }, [pubkeysContributors]);
 
   const fetchData = async (query: string) => {
     try {
@@ -104,6 +97,10 @@ export const ModalAuthorContributors = ({
   ) => {
     if (author !== null && typeof author !== "string") {
       handleAuthor([author.pubkey, ...pubkeysContributors]);
+      handleChangeSettingsContributors([
+        { pubkey: author.pubkey, hashtags: [], kinds: [] },
+        ...dataContributors,
+      ]);
       setInputValue("");
     }
   };
@@ -113,6 +110,11 @@ export const ModalAuthorContributors = ({
       (el) => el !== pubkeyContributor,
     );
 
+    const prepareSettingsData = dataContributors.filter(
+      (el) => el.pubkey !== pubkeyContributor,
+    );
+
+    handleChangeSettingsContributors([...prepareSettingsData]);
     handleAuthor([...prepareData]);
   };
 
@@ -152,9 +154,9 @@ export const ModalAuthorContributors = ({
         </StyledTitle>
       </DialogTitle>
       <StyledDialogContent>
-        {contributors.length ? (
+        {contributorsEvent.length ? (
           <Box sx={{ marginBottom: "15px" }}>
-            {contributors.map((el, i) => {
+            {contributorsEvent.map((el) => {
               const dataContributor = JSON.parse(el.content);
               const npubContributor =
                 nip19.npubEncode(el.pubkey).substring(0, 8) + "...";
@@ -164,6 +166,20 @@ export const ModalAuthorContributors = ({
                 npubContributor;
               const imgContributor = dataContributor?.picture || "";
 
+              const contentContributor = dataContributors.find(
+                (c) => c.pubkey === el.pubkey,
+              ) || { pubkey: el.pubkey, hashtags: [], kinds: [] };
+
+              const prepareContent = {
+                ...contentContributor,
+                hashtags: contentContributor.hashtags.length
+                  ? contentContributor.hashtags
+                  : defaultHashtags,
+                kinds: contentContributor.kinds.length
+                  ? contentContributor.kinds
+                  : defaultKinds,
+              };
+
               return (
                 <Accordion elevation={0} key={el.pubkey}>
                   <AccordionSummary
@@ -172,7 +188,7 @@ export const ModalAuthorContributors = ({
                     aria-controls={el.pubkey}
                     id={el.pubkey}
                   >
-                    <StyledAuthor key={i}>
+                    <StyledAuthor key={el.pubkey}>
                       <Avatar
                         alt={nameContributor}
                         src={imgContributor}
@@ -185,11 +201,19 @@ export const ModalAuthorContributors = ({
                   </AccordionSummary>
                   <AccordionDetails sx={{ paddingLeft: 0, paddingRight: 0 }}>
                     <StyledActionContributor>
+                      <ContributorContent
+                        dataContributors={dataContributors}
+                        pubkey={el.pubkey}
+                        content={prepareContent}
+                        handleChangeContentContributor={
+                          handleChangeSettingsContributors
+                        }
+                      />
                       <Button
                         onClick={() => handleDeleteContributor(el.pubkey)}
                         variant="outlined"
                         color="error"
-                        disabled={contributors.length === 1}
+                        disabled={contributorsEvent.length === 1}
                       >
                         Delete
                       </Button>

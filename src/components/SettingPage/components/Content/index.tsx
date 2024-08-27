@@ -24,6 +24,7 @@ import { IBaseSetting } from "@/types/setting.types";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import { fetchTopHashtags } from "@/services/nostr/themes";
+import { kindsMap } from "@/consts";
 
 interface ITitleDescription extends IBaseSetting {
   selectedHashtags: string[];
@@ -35,11 +36,6 @@ interface ITitleDescription extends IBaseSetting {
   title: string;
   description: string;
 }
-
-const kindsMap: { [key: number]: string } = {
-  1: "Notes",
-  30023: "Long-form posts",
-};
 
 export const Content = ({
   handleChangeHashtags,

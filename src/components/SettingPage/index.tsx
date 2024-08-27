@@ -15,7 +15,10 @@ import { Icon } from "@/components/SettingPage/components/Icon";
 import { ImageBanner } from "@/components/SettingPage/components/Image";
 import { Navigation } from "@/components/SettingPage/components/Navigation";
 import { editSite } from "@/services/nostr/api";
-import { ReturnSettingsSiteDataType } from "@/services/sites.service";
+import {
+  ContributorType,
+  ReturnSettingsSiteDataType,
+} from "@/services/sites.service";
 import { Content } from "@/components/SettingPage/components/Content";
 import { AccentColor } from "@/components/SettingPage/components/AccentColor";
 import { WebsiteAddress } from "./components/WebsiteAddress";
@@ -28,6 +31,7 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   themeId: "",
   themeName: "",
   contributors: [],
+  contributor_settings: [],
   name: "",
   title: "",
   description: "",
@@ -148,21 +152,27 @@ export const SettingPage = () => {
     });
   };
 
-  const handleChangeHashtags = (value: string | string[]) => {
-    setFieldValue("hashtags", value);
-  };
-
   const handleChangeHashtagsHomePage = (value: string | string[]) => {
     setFieldValue("hashtags_homepage", value);
   };
 
-  const handleChangeContributors = (pubkeys: string[]) => {
-    setFieldValue("contributors", pubkeys);
+  const handleChangeContributors = (contributors: string[]) => {
+    setFieldValue("contributors", contributors);
   };
 
-  const handleChangeKinds = (value: number | number[]) => {
-    setFieldValue("kinds", value);
+  const handleChangeSettingsContributors = (
+    contributors: ContributorType[],
+  ) => {
+    setFieldValue("contributor_settings", contributors);
   };
+
+  // const handleChangeKinds = (value: number | number[]) => {
+  //   setFieldValue("kinds", value);
+  // };
+
+  // const handleChangeHashtags = (value: string | string[]) => {
+  //   setFieldValue("hashtags", value);
+  // };
 
   const handleChangeKindsHomePage = (value: number | number[]) => {
     setFieldValue("kinds_homepage", value);
@@ -189,6 +199,7 @@ export const SettingPage = () => {
     if (data) {
       setValues(data);
       const initial = _.cloneDeep(data);
+
       setInitialData(initial);
       console.log("initial values", initial);
     }
@@ -201,6 +212,8 @@ export const SettingPage = () => {
   //     </SpinerWrap>
   //   );
   // }
+
+  console.log({ fetchContr: values });
 
   return (
     <>
@@ -237,18 +250,11 @@ export const SettingPage = () => {
 
       <Contributors
         handleChangeContributors={handleChangeContributors}
+        handleChangeSettingsContributors={handleChangeSettingsContributors}
         contributors={values.contributors}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
-
-      <Content
-        anchor={HASH_CONFIG.CONTENT}
-        handleChangeHashtags={handleChangeHashtags}
-        contributors={values.contributors}
-        selectedHashtags={values.hashtags}
-        handleChangeKinds={handleChangeKinds}
-        selectedKinds={values.kinds}
+        defaultKinds={values.kinds}
+        defaultHashtags={values.hashtags}
+        settingsContributors={values.contributor_settings}
         submitForm={submitForm}
         isLoading={isLoading}
         title="Content filters"

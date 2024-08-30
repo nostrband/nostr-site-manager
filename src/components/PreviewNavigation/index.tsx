@@ -1,7 +1,7 @@
 import { Avatar, Box, Button } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
   StyledButtonHashtagKind,
   StyledIconButton,
@@ -38,6 +38,7 @@ export const PreviewNavigation = ({
   hashtags,
   author,
   noContentSettings,
+  getHeightNavigation
 }: {
   onContentSettings: (
     author: string,
@@ -52,6 +53,7 @@ export const PreviewNavigation = ({
   kinds: { [key: number]: string };
   hashtags: string[];
   author: string;
+  getHeightNavigation: (height: number) => void
 }) => {
   const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
   const [isOpenModalHashtagsKinds, setOpenModalHashtagsKinds] = useState(false);
@@ -60,6 +62,25 @@ export const PreviewNavigation = ({
   const params = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+
+  const componentRef = useRef<HTMLDivElement>(null);
+
+  const updateHeight = () => {
+    if (componentRef.current) {
+
+      getHeightNavigation(componentRef.current.clientHeight)
+    }
+  };
+
+  useEffect(() => {
+    updateHeight();
+
+    window.addEventListener('resize', updateHeight);
+
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, []);
 
   const createQueryString = useCallback(
     ({
@@ -214,7 +235,7 @@ export const PreviewNavigation = ({
 
   return (
     <>
-      <StyledWrapper>
+      <StyledWrapper ref={componentRef}>
         <StyledIconButton
           color="primary"
           size="large"

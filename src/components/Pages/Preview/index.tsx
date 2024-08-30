@@ -62,6 +62,8 @@ export const Preview = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
+  const [height, setHeight] = useState(0);
+
   useEffect(() => {
     mounted = true;
   }, []);
@@ -181,6 +183,10 @@ export const Preview = () => {
 
     router.push(`?${newParams.toString()}`);
   };
+ 
+  const getHeightNavigation = (h: number) => {
+    setHeight(h)
+  }
 
   return (
     <>
@@ -206,7 +212,7 @@ export const Preview = () => {
       <PreviewHeader themeId={themeId} themeName={theme.name} />
 
       {!authed ? (
-        <StyledPreviewTestSiteNotAuth>
+        <StyledPreviewTestSiteNotAuth sx={{paddingBottom: `${height}px`}}>
           <iframe
             ref={iframeRef}
             style={{ border: 0 }}
@@ -215,7 +221,7 @@ export const Preview = () => {
           ></iframe>
         </StyledPreviewTestSiteNotAuth>
       ) : (
-        <StyledPreviewTestSite>
+        <StyledPreviewTestSite sx={{paddingBottom: `${height}px`}}>
           <iframe
             ref={iframeRef}
             style={{ border: 0 }}
@@ -235,6 +241,7 @@ export const Preview = () => {
         kinds={kinds}
         onUseTheme={onUseTheme}
         noContentSettings={!!siteId}
+        getHeightNavigation={getHeightNavigation}
       />
     </>
   );

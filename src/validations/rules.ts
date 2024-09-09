@@ -12,6 +12,10 @@ export const validationSchemaConfirmDelete = yup.object({
     .oneOf(["delete"], 'The value should be "delete"'),
 });
 
+export const validationSchemaDomain = yup.object({
+  domain: yup.string().required("Enter domain"),
+});
+
 export const validationSchemaMakePrivateSite = yup.object().shape({
   isPrivate: yup.boolean().notRequired(),
   password: yup

@@ -179,7 +179,7 @@ export const SettingPage = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id
+      (item) => item.id !== input.id,
     );
 
     setFieldValue("navigation", navigation);

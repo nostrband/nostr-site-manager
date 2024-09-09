@@ -121,7 +121,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   // console.log("domain", domain, "oldDomain", oldDomain);
   if (domain && domain !== oldDomain) {
     const reply = await fetchWithSession(
-      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`
+      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`,
     );
     if (reply.status !== 200) throw new Error("Failed to reserve");
     const r = await reply.json();
@@ -138,7 +138,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   {
     const reply = await fetchWithSession(
       // from=oldDomain - delete the old site after 7 days
-      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`
+      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`,
     );
     if (reply.status !== 200) throw new Error("Failed to deploy");
 
@@ -171,7 +171,7 @@ export async function deleteSite(siteId: string) {
   }
 
   const reply = await fetchWithSession(
-    `${NPUB_PRO_API}/delete?domain=${domain}&site=${siteId}`
+    `${NPUB_PRO_API}/delete?domain=${domain}&site=${siteId}`,
   );
   if (reply.status !== 200) throw new Error("Failed to delete domain");
   const r = await reply.json();
@@ -248,7 +248,7 @@ async function fetchSiteThemes() {
         .map((s) => s.extensions?.[0].event_id || "")
         .filter((id) => !!id),
     },
-    [SITE_RELAY]
+    [SITE_RELAY],
   );
 
   for (const e of events) {
@@ -301,13 +301,13 @@ export async function fetchSites() {
           },
         ],
         relays,
-        5000
+        5000,
       );
       console.log("site events", events);
 
       // sort by timestamp desc
       const array = [...events.values()].sort(
-        (a, b) => b.created_at! - a.created_at!
+        (a, b) => b.created_at! - a.created_at!,
       );
 
       await filterDeleted(array, relays);
@@ -353,7 +353,7 @@ export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
       kinds: [KIND_PROFILE],
       authors: req,
     },
-    OUTBOX_RELAYS
+    OUTBOX_RELAYS,
   );
 
   for (const e of events) {
@@ -376,7 +376,7 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
       search: text + " sort:popular",
       limit: 3,
     },
-    SEARCH_RELAYS
+    SEARCH_RELAYS,
   );
 
   for (const e of events) {
@@ -388,7 +388,7 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
 
 export async function searchSites(
   text: string,
-  until?: number
+  until?: number,
 ): Promise<[ReturnSettingsSiteDataType[], number]> {
   const filter: any = {
     kinds: [KIND_SITE],

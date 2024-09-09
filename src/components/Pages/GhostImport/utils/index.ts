@@ -29,14 +29,14 @@ export const preparePosts = (db: DBReturnType): ClientPost[] => {
       post.custom_excerpt || post.plaintext.trim().substring(0, 100);
 
     const postAuthorRelation = posts_authors.find(
-      (relation) => relation.post_id === post.id
+      (relation) => relation.post_id === post.id,
     );
     const author = postAuthorRelation
       ? users.find((user) => user.id === postAuthorRelation.author_id)
       : undefined;
 
     const postTagsRelations = posts_tags.filter(
-      (relation) => relation.post_id === post.id
+      (relation) => relation.post_id === post.id,
     );
     const postTags = postTagsRelations
       .map((relation) => tags.find((tag) => tag.id === relation.tag_id))
@@ -103,7 +103,7 @@ function getExternalId(post: ClientPost) {
 
 export const createNostrEvent = (
   post: ClientPost,
-  publishType: "long" | "short"
+  publishType: "long" | "short",
 ) => {
   if (publishType === "short") throw new Error("Not supported");
   const timestamp = new Date(post.published_at).getTime();
@@ -150,7 +150,7 @@ export async function updateUrls(posts: ClientPost[], type: string) {
         "#d": d_tags,
       },
       relays,
-      1000
+      1000,
     )),
   ];
   console.log("post events", events);

@@ -11,6 +11,7 @@ import {
   Typography,
   CircularProgress,
   InputAdornment,
+  Button,
 } from "@mui/material";
 import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
@@ -18,6 +19,7 @@ import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG, NPUB_PRO_DOMAIN } from "@/consts";
 import { debounce } from "lodash";
 import { checkNpubProDomain } from "@/services/nostr/themes";
+import { CustomDomainForm } from "../CustomDomainForm";
 
 interface ITitleDescription extends IBaseSetting {
   url: string;
@@ -134,6 +136,24 @@ export const WebsiteAddress = ({
             }
           />
           {error && <Typography color="error">{error}</Typography>}
+        </StyledFormControl>
+
+        <StyledFormControl
+          sx={{ mt: 1 }}
+          disabled={!isEdit}
+          fullWidth
+          size="small"
+        >
+          <Button
+            sx={{ mt: 1 }}
+            variant="contained"
+            disabled={!isEdit}
+            color="primary"
+          >
+            Custom domain
+          </Button>
+
+          <CustomDomainForm />
         </StyledFormControl>
       </StyledSettingBlock>
     </StyledSettingCol>

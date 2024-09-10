@@ -27,7 +27,7 @@ type FieldProps = {
   setFieldValue: (
     field: string,
     value: any,
-    shouldValidate?: boolean,
+    shouldValidate?: boolean
   ) => Promise<void | FormikErrors<any>>;
   onBlur?: (e: React.ChangeEvent<any>) => void;
   validate?: (values?: any) => Promise<FormikErrors<any>>;
@@ -58,7 +58,7 @@ const BooleanField: React.FC<FieldProps> = React.memo(
         </StyledDescriptionField>
       )}
     </StyledFormControl>
-  ),
+  )
 );
 
 BooleanField.displayName = "BooleanField";
@@ -82,7 +82,7 @@ const TextField: React.FC<FieldProps> = React.memo(
         </StyledDescriptionField>
       )}
     </StyledFormControl>
-  ),
+  )
 );
 
 TextField.displayName = "TextField";
@@ -104,7 +104,7 @@ const ColorField: React.FC<FieldProps> = React.memo(
         </StyledDescriptionField>
       )}
     </StyledFormControl>
-  ),
+  )
 );
 
 ColorField.displayName = "ColorField";
@@ -145,7 +145,7 @@ const SelectField: React.FC<FieldProps> = React.memo(
         </StyledDescriptionField>
       )}
     </StyledFormControl>
-  ),
+  )
 );
 
 SelectField.displayName = "SelectField";
@@ -156,7 +156,7 @@ const capitalizeFirstLetter = (string: string) => {
 
 export const generateFormFields = (
   config: CustomConfigType,
-  formik: FormikProps<any>,
+  formik: FormikProps<any>
 ) => {
   const noGroupFields: JSX.Element[] = [];
   const groupedFields: { [key: string]: JSX.Element[] } = {};
@@ -169,6 +169,9 @@ export const generateFormFields = (
       if (!field.options || field.options.includes(fieldValue))
         value = fieldValue;
     }
+
+    // we used to write true/false into tags :(
+    if (field.type === "boolean") value = value === true || value === "true";
 
     const commonProps = {
       name: `custom.${key}`,

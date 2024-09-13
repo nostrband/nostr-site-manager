@@ -326,6 +326,10 @@ export async function fetchSites() {
   return convertSites(sites);
 }
 
+export function resetSites() {
+  sites.length = 0;
+}
+
 addOnAuth(async (type: string) => {
   // clear sites on logout
   if (type === "logout") sites.length = 0;

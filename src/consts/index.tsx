@@ -40,6 +40,11 @@ import digestDemo from "../../public/images/preview-theme/tony-demo.npub.pro.png
 import microSimplyDemo from "../../public/images/preview-theme/corndalorian-npub-pro.npub.pro.png";
 import microRubyDemo from "../../public/images/preview-theme/m-t-npub-pro.npub.pro.png";
 import lieblingDemo from "../../public/images/preview-theme/laeserin-npub-pro.npub.pro.png";
+import headlineDemo from "../../public/images/preview-theme/headline-demo.npub.pro.png";
+import easeDemo from "../../public/images/preview-theme/ease-demo.npub.pro.png";
+import scriptorDemo from "../../public/images/preview-theme/scriptor-demo.npub.pro.png";
+import sourceDemo from "../../public/images/preview-theme/source-demo.npub.pro.png";
+import mnmlDemo from "../../public/images/preview-theme/mnml-demo.npub.pro.png";
 
 // import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
 // import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
@@ -649,5 +654,40 @@ export const THEMES_PREVIEW = [
     name: "Attila",
     url: "https://lynalden-demo.npub.pro",
     preview: attilaDemo,
+  },
+  {
+    id: "naddr1qqyxsetpv3kxjmn9qgsq36k72r04rkj2gt6acpz7xkehrypwqmt2spfpt0kr6ukudp7vkpqrqsqqqaejz34fns",
+    tag: "magazine",
+    name: "Headline",
+    url: "https://headline-demo.npub.pro",
+    preview: headlineDemo,
+  },
+  {
+    id: "naddr1qqzx2ctnv5pzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxg6hz39v",
+    tag: "magazine",
+    name: "Ease",
+    url: "https://ease-demo.npub.pro/",
+    preview: easeDemo,
+  },
+  {
+    id: "naddr1qqy8xcmjd9c8gmmjqgsq36k72r04rkj2gt6acpz7xkehrypwqmt2spfpt0kr6ukudp7vkpqrqsqqqaejkmdkjl",
+    tag: "blog",
+    name: "Scriptor",
+    url: "https://scriptor-demo.npub.pro/",
+    preview: scriptorDemo,
+  },
+  {
+    id: "naddr1qqr8xmm4wf3k2q3qpr4du5xl28dy5sh4msz9uddnwxgzupkk4qzjzklv84edc6ruevzqxpqqqpmnyu8s4qp",
+    tag: "magazine",
+    name: "Source",
+    url: "https://source-demo.npub.pro/",
+    preview: sourceDemo,
+  },
+  {
+    id: "naddr1qqzx6mnddspzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxgtyr0e7",
+    tag: "blog",
+    name: "MNML",
+    url: "https://mnml-demo.npub.pro/",
+    preview: mnmlDemo,
   },
 ];

@@ -2,6 +2,7 @@
 
 import {
   Alert,
+  Box,
   Button,
   Chip,
   CircularProgress,
@@ -38,39 +39,55 @@ import { useFormik } from "formik";
 import { enqueueSnackbar } from "notistack";
 import { validationSchemaDomain } from "@/validations/rules";
 import CheckIcon from "@mui/icons-material/Check";
+import {
+  fetchCertDomain,
+  fetchCertDomainStatus,
+  fetchDNS,
+  fetchDNSStatus,
+} from "@/services/nostr/api";
+import { ReadOnlyInput } from "./components/ReadOnlyInput";
 
-export const CustomDomainForm = () => {
-  const [isOpen, setOpen] = useState(false);
+export const CustomDomainForm = ({
+  siteId,
+  updateWebSiteAddress,
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  siteId: string;
+  onClose: () => void;
+  updateWebSiteAddress: (url: string) => void;
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setLoading] = useState(false);
   const [stepForm, setStepForm] = useState<
     | "edit-dns"
     | "enter-domain"
     | "edit-dns-success"
+    | "edit-dns-error"
     | "choose-options"
     | "success-edit-dns"
+    | "choose-options-error"
   >("enter-domain");
 
-  const [dataDns, setDataDns] = useState<
-    {
-      domain: string;
-      status: string;
-      dnsValidation: {
-        type: string;
-        name: string;
-        value: string;
-      }[];
-    }[]
-  >([]);
+  const [dataDns, setDataDns] = useState<{
+    domain: string;
+    status: string;
+    dnsValidation: {
+      type: string;
+      name: string;
+      value: string;
+    }[];
+  } | null>(null);
 
-  const [valueOption, setValueOption] = useState("www.domain.com");
+  const [redirectionOptions, setRedirectionOptions] = useState<{
+    cnameDomain: string;
+    redirectIps: string[];
+    status: string;
+  } | null>(null);
 
   const handleChangeOption = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValueOption((event.target as HTMLInputElement).value);
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
   };
 
   const {
@@ -87,42 +104,13 @@ export const CustomDomainForm = () => {
     onSubmit: async (values) => {
       setLoading(true);
 
-      console.log({ values });
-
       try {
-        setTimeout(() => {
-          enqueueSnackbar("Success!", {
-            autoHideDuration: 3000,
-            variant: "success",
-            anchorOrigin: {
-              horizontal: "right",
-              vertical: "bottom",
-            },
-          });
+        const res = await fetchCertDomain(values.domain);
 
-          setStepForm("edit-dns");
-          setDataDns([
-            {
-              domain: "nostrband.com",
-              status: "ISSUED",
-              dnsValidation: [
-                {
-                  type: "TXT",
-                  name: "",
-                  value:
-                    "nostr-admin-pubkey=3356de61b39647931ce8b2140b2bab837e0810c0ef515bbe92de0248040b8bdd",
-                },
-                {
-                  type: "CNAME",
-                  name: "_fc61b382f79fa8ee55ba2063e3a52bca",
-                  value:
-                    "_419319d4a42c0b10387c2d25ed968424.djqtsrsxkq.acm-validations.aws.",
-                },
-              ],
-            },
-          ]);
-        }, 2000);
+        setDataDns(res);
+        setStepForm("edit-dns");
       } catch (e: any) {
+        console.log(e);
         enqueueSnackbar("Error: " + e.toString(), {
           autoHideDuration: 3000,
           variant: "error",
@@ -132,63 +120,126 @@ export const CustomDomainForm = () => {
           },
         });
       } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 2000);
+        setLoading(false);
       }
     },
   });
 
+  const [valueOption, setValueOption] = useState(`www.${domainValues.domain}`);
+
   const handleSubmitDns = async () => {
     setLoading(true);
 
-    try {
-      setTimeout(() => {
-        enqueueSnackbar("Success!", {
+    const checkStatus = async () => {
+      try {
+        const res = await fetchCertDomainStatus(domainValues.domain);
+        if (res.status !== "ISSUED") {
+          setTimeout(checkStatus, 5000);
+        } else {
+          setStepForm("edit-dns-success");
+          setValueOption(`www.${domainValues.domain}`);
+          setLoading(false);
+
+          enqueueSnackbar("Certificate ready", {
+            autoHideDuration: 3000,
+            variant: "success",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "bottom",
+            },
+          });
+        }
+      } catch (e: any) {
+        console.log(e);
+        enqueueSnackbar("Error: " + e.toString(), {
           autoHideDuration: 3000,
-          variant: "success",
+          variant: "error",
           anchorOrigin: {
             horizontal: "right",
             vertical: "bottom",
           },
         });
-
-        setStepForm("edit-dns-success");
-      }, 2000);
-    } catch (error) {
-    } finally {
-      setTimeout(() => {
+        setStepForm("edit-dns-error");
         setLoading(false);
-      }, 2000);
-    }
+      }
+    };
+
+    await checkStatus();
   };
 
   const handleSubmitOption = async () => {
     setLoading(true);
 
-    try {
-      setTimeout(() => {
-        enqueueSnackbar("Success!", {
+    const checkStatus = async () => {
+      try {
+        const res = await fetchDNSStatus(domainValues.domain, siteId);
+        if (res.status !== "Deployed") {
+          setTimeout(checkStatus, 5000);
+        } else {
+          setStepForm("success-edit-dns");
+
+          setLoading(false);
+
+          enqueueSnackbar("Deployed", {
+            autoHideDuration: 3000,
+            variant: "success",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "bottom",
+            },
+          });
+        }
+      } catch (e: any) {
+        console.log(e);
+        enqueueSnackbar("Error: " + e.toString(), {
           autoHideDuration: 3000,
-          variant: "success",
+          variant: "error",
           anchorOrigin: {
             horizontal: "right",
             vertical: "bottom",
           },
         });
 
-        setStepForm("success-edit-dns");
-      }, 2000);
-    } catch (error) {
-    } finally {
-      setTimeout(() => {
+        setStepForm("choose-options-error");
         setLoading(false);
-      }, 2000);
-    }
+      }
+    };
+
+    await checkStatus();
   };
 
-  const handleToChoiceOptions = () => {
-    setStepForm("choose-options");
+  const handleUpdateWebSiteAddress = () => {
+    updateWebSiteAddress(valueOption);
+
+    onClose();
+  };
+
+  const handleToFirstStep = () => {
+    setStepForm("enter-domain");
+  };
+
+  const handleToChoiceOptions = async () => {
+    setLoading(true);
+
+    try {
+      const res = await fetchDNS(domainValues.domain, siteId);
+
+      setRedirectionOptions(res);
+      setStepForm("choose-options");
+    } catch (e: any) {
+      console.log(e);
+      enqueueSnackbar("Error: " + e.toString(), {
+        autoHideDuration: 3000,
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
+      });
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -196,32 +247,6 @@ export const CustomDomainForm = () => {
       inputRef.current.focus();
     }
   }, [inputRef.current]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setOpen(true);
-      setDataDns([
-        {
-          domain: "nostrband.com",
-          status: "ISSUED",
-          dnsValidation: [
-            {
-              type: "TXT",
-              name: "",
-              value:
-                "nostr-admin-pubkey=3356de61b39647931ce8b2140b2bab837e0810c0ef515bbe92de0248040b8bdd",
-            },
-            {
-              type: "CNAME",
-              name: "_fc61b382f79fa8ee55ba2063e3a52bca",
-              value:
-                "_419319d4a42c0b10387c2d25ed968424.djqtsrsxkq.acm-validations.aws.",
-            },
-          ],
-        },
-      ]);
-    }, 500);
-  }, []);
 
   return (
     <Dialog
@@ -233,7 +258,7 @@ export const CustomDomainForm = () => {
         <StyledTitle variant="body1">
           Custom domain
           <Fab
-            onClick={handleCancel}
+            onClick={onClose}
             size="small"
             color="primary"
             aria-label="close"
@@ -271,7 +296,9 @@ export const CustomDomainForm = () => {
               />
 
               {domainErrors.domain && (
-                <Typography color="error">{domainErrors.domain}</Typography>
+                <Typography variant="body2" color="error">
+                  {domainErrors.domain}
+                </Typography>
               )}
             </StyledFormControl>
             <StyledFormControl fullWidth size="medium">
@@ -290,43 +317,50 @@ export const CustomDomainForm = () => {
           </StyledDialogContent>
         )}
 
-        {(stepForm === "edit-dns" || stepForm === "edit-dns-success") && (
+        {(stepForm === "edit-dns" ||
+          stepForm === "edit-dns-success" ||
+          stepForm === "edit-dns-error") && (
           <StyledDialogContentTable>
             <Typography sx={{ mb: 1 }} variant="h5">
               Update DNS settings
             </Typography>
             <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
               Edit DNS records of domain XXX to verify domain ownership to issue
-              SSL certificate дальше таблица с записями из dnsValidation.
+              SSL certificate
             </Typography>
             <TableContainer component={Paper} elevation={0}>
               <Table aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Domain</TableCell>
-                    <TableCell align="right">Status</TableCell>
+                    <TableCell>Type</TableCell>
+                    <TableCell align="right">Name</TableCell>
+                    <TableCell align="right">Value</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {dataDns.map((dns) => (
-                    <TableRow
-                      key={dns.domain}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                      }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {dns.domain}
-                      </TableCell>
-                      <TableCell align="right">
-                        <Chip
-                          size="small"
-                          label={dns.status}
-                          color="decorate"
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {dataDns &&
+                    dataDns.dnsValidation.map((dns) => (
+                      <TableRow
+                        key={dns.value}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {dns.type}
+                        </TableCell>
+                        <TableCell align="right">
+                          {Boolean(dns.name) ? (
+                            <ReadOnlyInput value={dns.name} />
+                          ) : (
+                            "-"
+                          )}
+                        </TableCell>
+                        <TableCell align="right">
+                          <ReadOnlyInput value={dns.value} />
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -339,17 +373,31 @@ export const CustomDomainForm = () => {
 
             <StyledFormControl fullWidth size="medium">
               {stepForm === "edit-dns" && (
-                <LoadingButton
-                  fullWidth
-                  color="primary"
-                  variant="contained"
-                  size="medium"
-                  loading={isLoading}
-                  disabled={isLoading}
-                  onClick={handleSubmitDns}
-                >
-                  I edit dns
-                </LoadingButton>
+                <>
+                  <LoadingButton
+                    fullWidth
+                    color="primary"
+                    variant="contained"
+                    size="medium"
+                    loading={isLoading}
+                    disabled={isLoading}
+                    onClick={handleSubmitDns}
+                  >
+                    I edit dns
+                  </LoadingButton>
+                  {isLoading && (
+                    <Typography
+                      sx={{
+                        marginTop: 1,
+                        textAlign: "center",
+                        color: "#cd1fa6",
+                      }}
+                      variant="body2"
+                    >
+                      Waiting for validation
+                    </Typography>
+                  )}
+                </>
               )}
               {stepForm === "edit-dns-success" && (
                 <LoadingButton
@@ -364,11 +412,34 @@ export const CustomDomainForm = () => {
                   Continue
                 </LoadingButton>
               )}
+              {stepForm === "edit-dns-error" && (
+                <Alert
+                  sx={{ marginBottom: 1 }}
+                  icon={<CloseIcon fontSize="inherit" />}
+                  severity="error"
+                >
+                  Failed, please retry
+                </Alert>
+              )}
+              {stepForm === "edit-dns-error" && (
+                <LoadingButton
+                  fullWidth
+                  color="primary"
+                  variant="contained"
+                  size="medium"
+                  loading={isLoading}
+                  disabled={isLoading}
+                  onClick={handleToFirstStep}
+                >
+                  Go to first step to retry
+                </LoadingButton>
+              )}
             </StyledFormControl>
           </StyledDialogContentTable>
         )}
 
-        {stepForm === "choose-options" && (
+        {(stepForm === "choose-options" ||
+          stepForm === "choose-options-error") && (
           <StyledDialogContentTable>
             <Typography sx={{ mb: 1 }} variant="h6">
               Choose redirection options
@@ -382,12 +453,18 @@ export const CustomDomainForm = () => {
                 onChange={handleChangeOption}
               >
                 <FormControlLabel
-                  value="www.domain.com"
+                  disabled={isLoading}
+                  value={`www.${domainValues.domain}`}
                   control={<Radio />}
                   label={
                     <>
-                      www.domain.com{" "}
-                      <Chip size="small" label="Recomendet" color="decorate" />
+                      {`www.${domainValues.domain}`}
+                      <Chip
+                        sx={{ marginLeft: 1 }}
+                        size="small"
+                        label="Recomendet"
+                        color="decorate"
+                      />
                     </>
                   }
                 />
@@ -395,9 +472,10 @@ export const CustomDomainForm = () => {
                   Supported by all DNS providers
                 </Typography>
                 <FormControlLabel
-                  value="domain.com"
+                  disabled={isLoading}
+                  value={domainValues.domain}
                   control={<Radio />}
-                  label="domain.com"
+                  label={domainValues.domain}
                 />
                 <Typography sx={{ mb: 1 }} variant="body2">
                   Supported by limited number of DNS providers
@@ -405,50 +483,87 @@ export const CustomDomainForm = () => {
               </RadioGroup>
             </FormControl>
 
+            <Box>
+              <Button color="info" href="#">
+                Learn more
+              </Button>
+            </Box>
+
             <TableContainer component={Paper} elevation={0}>
               <Table aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Domain</TableCell>
-                    <TableCell align="right">Status</TableCell>
+                    <TableCell>
+                      {`www.${domainValues.domain}` === valueOption
+                        ? "CNAME"
+                        : "CNAME/ALIAS/ANAME"}
+                    </TableCell>
+                    <TableCell align="right">
+                      {`www.${domainValues.domain}` === valueOption
+                        ? "www"
+                        : "@"}
+                    </TableCell>
+                    <TableCell align="right">cnameDomain</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {dataDns.map((dns) => (
-                    <TableRow
-                      key={dns.domain}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                      }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {dns.domain}
-                      </TableCell>
-                      <TableCell align="right">
-                        <Chip
-                          size="small"
-                          label={dns.status}
-                          color="decorate"
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  <TableRow
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
+                  >
+                    <TableCell component="th" scope="row">
+                      A
+                    </TableCell>
+                    <TableCell align="right">
+                      {`www.${domainValues.domain}` === valueOption
+                        ? "@"
+                        : "www"}
+                    </TableCell>
+                    <TableCell align="right">
+                      {redirectionOptions?.redirectIps.join(" ")}
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
 
-            <StyledFormControl fullWidth size="medium">
-              <LoadingButton
-                fullWidth
-                color="primary"
-                variant="contained"
-                size="medium"
-                loading={isLoading}
-                disabled={isLoading}
-                onClick={handleSubmitOption}
+            {stepForm === "choose-options-error" && (
+              <Alert
+                sx={{ marginBottom: 1 }}
+                icon={<CloseIcon fontSize="inherit" />}
+                severity="error"
               >
-                I write
-              </LoadingButton>
+                Failed, please retry
+              </Alert>
+            )}
+
+            <StyledFormControl fullWidth size="medium">
+              {stepForm === "choose-options-error" ? (
+                <LoadingButton
+                  fullWidth
+                  color="primary"
+                  variant="contained"
+                  size="medium"
+                  loading={isLoading}
+                  disabled={isLoading}
+                  onClick={handleToFirstStep}
+                >
+                  Go to first step to retry
+                </LoadingButton>
+              ) : (
+                <LoadingButton
+                  fullWidth
+                  color="primary"
+                  variant="contained"
+                  size="medium"
+                  loading={isLoading}
+                  disabled={isLoading}
+                  onClick={handleSubmitOption}
+                >
+                  I write
+                </LoadingButton>
+              )}
             </StyledFormControl>
           </StyledDialogContentTable>
         )}
@@ -460,7 +575,7 @@ export const CustomDomainForm = () => {
               icon={<CheckIcon fontSize="inherit" />}
               severity="success"
             >
-              Success edit DNS
+              DNS settings are correct
             </Alert>
 
             <StyledFormControl fullWidth size="medium">
@@ -469,10 +584,9 @@ export const CustomDomainForm = () => {
                 color="primary"
                 variant="contained"
                 size="medium"
-                loading={isLoading}
-                disabled={isLoading}
+                onClick={handleUpdateWebSiteAddress}
               >
-                Open website
+                Update website address
               </LoadingButton>
             </StyledFormControl>
           </StyledDialogContentTable>

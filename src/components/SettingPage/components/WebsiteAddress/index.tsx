@@ -24,6 +24,7 @@ import { CustomDomainForm } from "../CustomDomainForm";
 interface ITitleDescription extends IBaseSetting {
   url: string;
   siteId: string;
+  updateWebSiteAddress: (url: string) => void;
 }
 
 export const WebsiteAddress = ({
@@ -33,12 +34,22 @@ export const WebsiteAddress = ({
   handleBlur,
   submitForm,
   isLoading,
+  updateWebSiteAddress,
 }: ITitleDescription) => {
   const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setDisabled] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isFetchAddress, setFetchAddress] = useState(false);
+  const [isOpenCustomDomain, setOpenCustomDomain] = useState(false);
+
+  const handleCloseCustomDomain = () => {
+    setOpenCustomDomain(false);
+  };
+
+  const handleOpenCustomDomain = () => {
+    setOpenCustomDomain(true);
+  };
 
   const handleClick = () => {
     if (error) return;
@@ -149,11 +160,17 @@ export const WebsiteAddress = ({
             variant="contained"
             disabled={!isEdit}
             color="primary"
+            onClick={handleOpenCustomDomain}
           >
             Custom domain
           </Button>
 
-          <CustomDomainForm />
+          <CustomDomainForm
+            onClose={handleCloseCustomDomain}
+            isOpen={isOpenCustomDomain}
+            siteId={siteId}
+            updateWebSiteAddress={updateWebSiteAddress}
+          />
         </StyledFormControl>
       </StyledSettingBlock>
     </StyledSettingCol>

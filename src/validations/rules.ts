@@ -12,8 +12,13 @@ export const validationSchemaConfirmDelete = yup.object({
     .oneOf(["delete"], 'The value should be "delete"'),
 });
 
-export const validationSchemaDomain = yup.object({
-  domain: yup.string().required("Enter domain"),
+const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-_]{1,63}\.)*[a-zA-Z]{2,}$/;
+
+export const validationSchemaDomain = yup.object().shape({
+  domain: yup
+    .string()
+    .matches(domainRegex, "Invalid domain name")
+    .required("Domain name is required"),
 });
 
 export const validationSchemaMakePrivateSite = yup.object().shape({

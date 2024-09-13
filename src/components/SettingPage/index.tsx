@@ -22,6 +22,7 @@ import { WebsiteAddress } from "./components/WebsiteAddress";
 import { Plugins } from "@/components/SettingPage/components/Plugins";
 import { AppName } from "@/components/SettingPage/components/AppName";
 import { HASH_CONFIG } from "@/consts";
+import { addHttps } from "@/utils";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -160,6 +161,10 @@ export const SettingPage = () => {
     setFieldValue("contributors", pubkeys);
   };
 
+  const handleUpdateWebSiteAddress = (url: string) => {
+    setFieldValue("url", addHttps(url));
+  };
+
   const handleChangeKinds = (value: number | number[]) => {
     setFieldValue("kinds", value);
   };
@@ -214,6 +219,7 @@ export const SettingPage = () => {
         handleBlur={handleBlur}
         handleChange={handleChange}
         submitForm={submitForm}
+        updateWebSiteAddress={handleUpdateWebSiteAddress}
         isLoading={isLoading}
       />
 

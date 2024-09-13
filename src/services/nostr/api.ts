@@ -425,3 +425,37 @@ export async function searchSites(
 
   return [res, array.length ? array[sites.length - 1].created_at! : 0];
 }
+
+export const fetchCertDomain = async (domain: string) => {
+  const reply = await fetchWithSession(
+    `${NPUB_PRO_API}/cert?domain=${domain}`,
+    undefined,
+    "POST",
+  );
+
+  return reply.json();
+};
+
+export const fetchCertDomainStatus = async (domain: string) => {
+  const reply = await fetchWithSession(`${NPUB_PRO_API}/cert?domain=${domain}`);
+
+  return reply.json();
+};
+
+export const fetchDNS = async (domain: string, site: string) => {
+  const reply = await fetchWithSession(
+    `${NPUB_PRO_API}/attach?domain=${domain}&site=${site}`,
+    undefined,
+    "POST",
+  );
+
+  return reply.json();
+};
+
+export const fetchDNSStatus = async (domain: string, site: string) => {
+  const reply = await fetchWithSession(
+    `${NPUB_PRO_API}/attach?domain=${domain}&site=${site}`,
+  );
+
+  return reply.json();
+};

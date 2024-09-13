@@ -44,7 +44,7 @@ export const ModalThemes = ({
       Boolean(tag)
         ? THEMES_PREVIEW.filter((item) => item.tag === tag)
         : THEMES_PREVIEW,
-    [tag],
+    [tag]
   );
 
   const handleCancel = () => {
@@ -165,7 +165,7 @@ export const ModalThemes = ({
                     }}
                     variant="square"
                     alt={el.name}
-                    src={el.preview.src}
+                    src={el.preview.src}                    
                   />
                 </ListItemAvatar>
                 <ListItemText

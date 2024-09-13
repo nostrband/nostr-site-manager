@@ -39,6 +39,7 @@ import { isEqual, omit } from "lodash";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { bytesToHex, randomBytes } from "@noble/hashes/utils";
 import { CustomConfigType } from "@/components/Pages/Design/types";
+import { resetSites } from "./api";
 
 export interface PreviewSettings {
   themeId: string;
@@ -798,6 +799,9 @@ export async function publishPreviewSite() {
 
           const r = await reply.json();
           console.log(Date.now(), "deployed", r);
+
+          // make sure /admin updates their list of sites
+          resetSites();
         }
       } catch (e) {
         console.warn("Bad site url", url, e);

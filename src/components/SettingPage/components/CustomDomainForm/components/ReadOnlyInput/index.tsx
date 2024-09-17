@@ -28,7 +28,7 @@ export const ReadOnlyInput = ({ value }: { value: string }) => {
   };
 
   return (
-    <FormControl>
+    <FormControl size="small">
       <OutlinedInput
         value={value}
         id="outlined-adornment-password"

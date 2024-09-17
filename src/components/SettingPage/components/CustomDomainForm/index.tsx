@@ -11,7 +11,6 @@ import {
   Fab,
   FormControl,
   FormControlLabel,
-  FormLabel,
   InputAdornment,
   InputLabel,
   OutlinedInput,
@@ -328,42 +327,77 @@ export const CustomDomainForm = ({
               Edit DNS records of domain XXX to verify domain ownership to issue
               SSL certificate
             </Typography>
-            <TableContainer component={Paper} elevation={0}>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Type</TableCell>
-                    <TableCell align="right">Name</TableCell>
-                    <TableCell align="right">Value</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {dataDns &&
-                    dataDns.dnsValidation.map((dns) => (
-                      <TableRow
-                        key={dns.value}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {dns.type}
-                        </TableCell>
-                        <TableCell align="right">
-                          {Boolean(dns.name) ? (
-                            <ReadOnlyInput value={dns.name} />
-                          ) : (
-                            "-"
-                          )}
-                        </TableCell>
-                        <TableCell align="right">
-                          <ReadOnlyInput value={dns.value} />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+
+            {dataDns &&
+              dataDns.dnsValidation.map((dns, i) => (
+                <Box key={i} sx={{ mb: 5 }}>
+                  <Typography variant="body1">
+                    <b>
+                      {" "}
+                      DNS:
+                      {i + 1}
+                    </b>
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      mb: 1,
+                      pb: 2,
+                      pt: 2,
+                      borderBottom: "1px dashed #000",
+                      alignItems: "end",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      maxWidth: "400px",
+                    }}
+                    variant="body2"
+                  >
+                    <span>Type</span>
+                    {dns.type}
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      mb: 1,
+                      pb: 2,
+                      pt: 2,
+                      borderBottom: "1px dashed #000",
+                      display: "flex",
+                      alignItems: "end",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      maxWidth: "400px",
+                    }}
+                    variant="body2"
+                  >
+                    <span>Name</span>
+                    {Boolean(dns.name) ? (
+                      <ReadOnlyInput value={dns.name} />
+                    ) : (
+                      "-"
+                    )}
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      mb: 1,
+                      pb: 2,
+                      pt: 2,
+                      borderBottom: "1px dashed #000",
+                      display: "flex",
+                      alignItems: "end",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      maxWidth: "400px",
+                    }}
+                    variant="body2"
+                  >
+                    <span>Value</span>
+                    <ReadOnlyInput value={dns.value} />
+                  </Typography>
+                </Box>
+              ))}
 
             {stepForm === "edit-dns-success" && (
               <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
@@ -489,44 +523,67 @@ export const CustomDomainForm = ({
               </Button>
             </Box>
 
-            <TableContainer component={Paper} elevation={0}>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      {`www.${domainValues.domain}` === valueOption
-                        ? "CNAME"
-                        : "CNAME/ALIAS/ANAME"}
-                    </TableCell>
-                    <TableCell align="right">
-                      {`www.${domainValues.domain}` === valueOption
-                        ? "www"
-                        : "@"}
-                    </TableCell>
-                    <TableCell align="right">cnameDomain</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                  >
-                    <TableCell component="th" scope="row">
-                      A
-                    </TableCell>
-                    <TableCell align="right">
-                      {`www.${domainValues.domain}` === valueOption
-                        ? "@"
-                        : "www"}
-                    </TableCell>
-                    <TableCell align="right">
-                      {redirectionOptions?.redirectIps.join(" ")}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <Typography
+              sx={{
+                mb: 1,
+                pb: 2,
+                pt: 2,
+                borderBottom: "1px dashed #000",
+                alignItems: "end",
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+                maxWidth: "400px",
+              }}
+              variant="body2"
+            >
+              <span>
+                {" "}
+                {`www.${domainValues.domain}` === valueOption
+                  ? "CNAME"
+                  : "CNAME/ALIAS/ANAME"}
+              </span>
+              A
+            </Typography>
+
+            <Typography
+              sx={{
+                mb: 1,
+                pb: 2,
+                pt: 2,
+                borderBottom: "1px dashed #000",
+                display: "flex",
+                alignItems: "end",
+                justifyContent: "space-between",
+                width: "100%",
+                maxWidth: "400px",
+              }}
+              variant="body2"
+            >
+              <span>
+                {" "}
+                {`www.${domainValues.domain}` === valueOption ? "www" : "@"}
+              </span>
+              {`www.${domainValues.domain}` === valueOption ? "@" : "www"}
+            </Typography>
+
+            <Typography
+              sx={{
+                mb: 1,
+                pb: 2,
+                pt: 2,
+                borderBottom: "1px dashed #000",
+                display: "flex",
+                alignItems: "end",
+                justifyContent: "space-between",
+                width: "100%",
+                maxWidth: "400px",
+              }}
+              variant="body2"
+            >
+              <span>cnameDomain</span>
+              {redirectionOptions?.redirectIps.join(" ")}
+            </Typography>
 
             {stepForm === "choose-options-error" && (
               <Alert

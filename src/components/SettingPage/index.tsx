@@ -23,6 +23,8 @@ import { Plugins } from "@/components/SettingPage/components/Plugins";
 import { AppName } from "@/components/SettingPage/components/AppName";
 import { HASH_CONFIG } from "@/consts";
 import { addHttps } from "@/utils";
+import { CustomDomains } from "./components/CustomDomains";
+import { Other } from "./components/Other";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -65,6 +67,8 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   codeinjection_foot: "",
   codeinjection_head: "",
   adminPubkey: "",
+  postsPerPage: "",
+  selectedOptionsMainCallAction: [],
 };
 
 export const SettingPage = () => {
@@ -169,6 +173,10 @@ export const SettingPage = () => {
     setFieldValue("kinds", value);
   };
 
+  const handleOptionsMainCallAction = (value: string | string[]) => {
+    setFieldValue("selectedOptionsMainCallAction", value);
+  };
+
   const handleChangeKindsHomePage = (value: number | number[]) => {
     setFieldValue("kinds_homepage", value);
   };
@@ -223,6 +231,13 @@ export const SettingPage = () => {
         isLoading={isLoading}
       />
 
+      <CustomDomains
+        siteId={values.id}
+        submitForm={submitForm}
+        updateWebSiteAddress={handleUpdateWebSiteAddress}
+        isLoading={isLoading}
+      />
+
       <TitleDescription
         title={values.title}
         description={values.description}
@@ -264,6 +279,16 @@ export const SettingPage = () => {
       <Plugins
         codeinjectionHead={values.codeinjection_head}
         codeinjectionFoot={values.codeinjection_foot}
+        handleBlur={handleBlur}
+        handleChange={handleChange}
+        submitForm={submitForm}
+        isLoading={isLoading}
+      />
+
+      <Other
+        postsPerPage={values.postsPerPage}
+        selectedOptionsMainCallAction={values.selectedOptionsMainCallAction}
+        handleOptionsMainCallAction={handleOptionsMainCallAction}
         handleBlur={handleBlur}
         handleChange={handleChange}
         submitForm={submitForm}

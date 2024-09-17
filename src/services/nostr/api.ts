@@ -459,3 +459,9 @@ export const fetchDNSStatus = async (domain: string, site: string) => {
 
   return reply.json();
 };
+
+export const fetchDomains = async (site: string) => {
+  const reply = await fetchWithSession(`${NPUB_PRO_API}/attach?site=${site}`);
+
+  return reply.json();
+};

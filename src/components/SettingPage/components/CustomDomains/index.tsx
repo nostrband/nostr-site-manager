@@ -51,16 +51,20 @@ export const CustomDomains = ({
   }, [isDisabled]);
 
   const getDomains = async () => {
-    const res = await fetchDomains(siteId);
-
-    setListDomains(["test-domain.com", "test-domain.com"]);
-
-    console.log({ res });
+    if (siteId) {
+      const res = await fetchDomains(siteId);
+      console.log({ res });
+      console.log("getDomains", res);
+  
+      setListDomains(res.domains.map((d: any) => d.domain));  
+    } else {
+      setListDomains([]);
+    }
   };
 
   useEffect(() => {
     getDomains();
-  }, []);
+  }, [siteId]);
 
   return (
     <StyledSettingCol id={HASH_CONFIG.CUSTOM_DOMAINS}>

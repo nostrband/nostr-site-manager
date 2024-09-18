@@ -34,6 +34,7 @@ export const ReadOnlyInput = ({ value }: { value: string }) => {
         id="outlined-adornment-password"
         type="text"
         disabled
+        multiline={true}
         endAdornment={
           <InputAdornment position="end">
             <IconButton

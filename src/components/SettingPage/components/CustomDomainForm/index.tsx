@@ -41,8 +41,8 @@ import CheckIcon from "@mui/icons-material/Check";
 import {
   fetchCertDomain,
   fetchCertDomainStatus,
-  fetchDNS,
-  fetchDNSStatus,
+  fetchAttachDomain,
+  fetchAttachDomainStatus,
 } from "@/services/nostr/api";
 import { ReadOnlyInput } from "./components/ReadOnlyInput";
 
@@ -171,7 +171,7 @@ export const CustomDomainForm = ({
 
     const checkStatus = async () => {
       try {
-        const res = await fetchDNSStatus(domainValues.domain, siteId);
+        const res = await fetchAttachDomainStatus(domainValues.domain, siteId);
         if (res.status !== "Deployed") {
           setTimeout(checkStatus, 5000);
         } else {
@@ -221,7 +221,7 @@ export const CustomDomainForm = ({
     setLoading(true);
 
     try {
-      const res = await fetchDNS(domainValues.domain, siteId);
+      const res = await fetchAttachDomain(domainValues.domain, siteId);
 
       setRedirectionOptions(res);
       setStepForm("choose-options");
@@ -246,6 +246,76 @@ export const CustomDomainForm = ({
       inputRef.current.focus();
     }
   }, [inputRef.current]);
+
+  function renderDNS(
+    dns: { name: string; value: string; type: string },
+    i: number
+  ) {
+    return (
+      <Box key={i} sx={{ mb: 5 }}>
+        <Typography variant="body1">
+          <b> DNS record #{i + 1}</b>
+        </Typography>
+
+        <Typography
+          sx={{
+            mb: 1,
+            pb: 2,
+            pt: 2,
+            borderBottom: "1px solid #ccc",
+            alignItems: "flex-start",
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            maxWidth: "400px",
+          }}
+          variant="body2"
+        >
+          <span>Type</span>
+          <ReadOnlyInput value={dns.type} />
+        </Typography>
+
+        <Typography
+          sx={{
+            mb: 1,
+            pb: 2,
+            pt: 2,
+            borderBottom: "1px solid #ccc",
+            alignItems: "flex-start",
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            maxWidth: "400px",
+          }}
+          variant="body2"
+        >
+          <span>Name</span>
+          {dns.name && <ReadOnlyInput value={dns.name} />}
+          {!dns.name && (
+            <span style={{ color: "#aaa" }}>&lt;Leave blank&gt;</span>
+          )}
+        </Typography>
+
+        <Typography
+          sx={{
+            mb: 1,
+            pb: 2,
+            pt: 2,
+            borderBottom: "1px solid #ccc",
+            alignItems: "flex-start",
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            maxWidth: "400px",
+          }}
+          variant="body2"
+        >
+          <span>Value</span>
+          <ReadOnlyInput value={dns.value} />
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Dialog
@@ -324,90 +394,34 @@ export const CustomDomainForm = ({
               Update DNS settings
             </Typography>
             <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
-              Edit DNS records of domain XXX to verify domain ownership to issue
-              SSL certificate
+              We need this to make sure you own this domain and to issue SSL
+              certificate.
             </Typography>
 
             {dataDns &&
-              dataDns.dnsValidation.map((dns, i) => (
-                <Box key={i} sx={{ mb: 5 }}>
-                  <Typography variant="body1">
-                    <b>
-                      {" "}
-                      DNS:
-                      {i + 1}
-                    </b>
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      mb: 1,
-                      pb: 2,
-                      pt: 2,
-                      borderBottom: "1px dashed #000",
-                      alignItems: "end",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      width: "100%",
-                      maxWidth: "400px",
-                    }}
-                    variant="body2"
-                  >
-                    <span>Type</span>
-                    {dns.type}
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      mb: 1,
-                      pb: 2,
-                      pt: 2,
-                      borderBottom: "1px dashed #000",
-                      display: "flex",
-                      alignItems: "end",
-                      justifyContent: "space-between",
-                      width: "100%",
-                      maxWidth: "400px",
-                    }}
-                    variant="body2"
-                  >
-                    <span>Name</span>
-                    {Boolean(dns.name) ? (
-                      <ReadOnlyInput value={dns.name} />
-                    ) : (
-                      "-"
-                    )}
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      mb: 1,
-                      pb: 2,
-                      pt: 2,
-                      borderBottom: "1px dashed #000",
-                      display: "flex",
-                      alignItems: "end",
-                      justifyContent: "space-between",
-                      width: "100%",
-                      maxWidth: "400px",
-                    }}
-                    variant="body2"
-                  >
-                    <span>Value</span>
-                    <ReadOnlyInput value={dns.value} />
-                  </Typography>
-                </Box>
-              ))}
+              dataDns.dnsValidation.map((dns, i) => renderDNS(dns, i))}
 
             {stepForm === "edit-dns-success" && (
               <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
-                Certificate ready
+                SSL certificate is ready!
               </Alert>
             )}
 
             <StyledFormControl fullWidth size="medium">
               {stepForm === "edit-dns" && (
                 <>
+                  {isLoading && (
+                    <Typography
+                      sx={{
+                        marginBottom: 1,
+                        textAlign: "center",
+                        color: "#cd1fa6",
+                      }}
+                      variant="body2"
+                    >
+                      Waiting for SSL certificate...
+                    </Typography>
+                  )}
                   <LoadingButton
                     fullWidth
                     color="primary"
@@ -417,20 +431,8 @@ export const CustomDomainForm = ({
                     disabled={isLoading}
                     onClick={handleSubmitDns}
                   >
-                    I edit dns
+                    I updated DNS records
                   </LoadingButton>
-                  {isLoading && (
-                    <Typography
-                      sx={{
-                        marginTop: 1,
-                        textAlign: "center",
-                        color: "#cd1fa6",
-                      }}
-                      variant="body2"
-                    >
-                      Waiting for validation
-                    </Typography>
-                  )}
                 </>
               )}
               {stepForm === "edit-dns-success" && (
@@ -476,10 +478,14 @@ export const CustomDomainForm = ({
           stepForm === "choose-options-error") && (
           <StyledDialogContentTable>
             <Typography sx={{ mb: 1 }} variant="h6">
-              Choose redirection options
+              Choose main address
+            </Typography>
+            <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
+              Main site address will be used as canonical, and the alternative
+              name will be redirected to the main address.
             </Typography>
 
-            <FormControl sx={{ paddingLeft: "15px" }}>
+            <FormControl sx={{ paddingLeft: "0px" }}>
               <RadioGroup
                 aria-labelledby="demo-controlled-radio-buttons-group"
                 name="controlled-radio-buttons-group"
@@ -496,7 +502,7 @@ export const CustomDomainForm = ({
                       <Chip
                         sx={{ marginLeft: 1 }}
                         size="small"
-                        label="Recomendet"
+                        label="Recommended"
                         color="decorate"
                       />
                     </>
@@ -517,13 +523,31 @@ export const CustomDomainForm = ({
               </RadioGroup>
             </FormControl>
 
-            <Box>
-              <Button color="info" href="#">
+            {/* <Box>
+              <Button color="info" href="#" target="_blank">
                 Learn more
               </Button>
-            </Box>
+            </Box> */}
 
-            <Typography
+            {renderDNS(
+              {
+                type: "CNAME",
+                name: `www.${domainValues.domain}` === valueOption ? "www" : "",
+                value: redirectionOptions!.cnameDomain!
+              },
+              0
+            )}
+
+            {renderDNS(
+              {
+                type: "A",
+                name: `www.${domainValues.domain}` === valueOption ? "" : "www",
+                value: redirectionOptions!.redirectIps[0]!
+              },
+              1
+            )}
+
+            {/* <Typography
               sx={{
                 mb: 1,
                 pb: 2,
@@ -537,13 +561,10 @@ export const CustomDomainForm = ({
               }}
               variant="body2"
             >
-              <span>
-                {" "}
-                {`www.${domainValues.domain}` === valueOption
-                  ? "CNAME"
-                  : "CNAME/ALIAS/ANAME"}
-              </span>
-              A
+              <span>Type</span>{" "}
+              {`www.${domainValues.domain}` === valueOption
+                ? "CNAME"
+                : "CNAME/ALIAS/ANAME"}
             </Typography>
 
             <Typography
@@ -560,10 +581,7 @@ export const CustomDomainForm = ({
               }}
               variant="body2"
             >
-              <span>
-                {" "}
-                {`www.${domainValues.domain}` === valueOption ? "www" : "@"}
-              </span>
+              <span>Name</span>
               {`www.${domainValues.domain}` === valueOption ? "@" : "www"}
             </Typography>
 
@@ -583,7 +601,7 @@ export const CustomDomainForm = ({
             >
               <span>cnameDomain</span>
               {redirectionOptions?.redirectIps.join(" ")}
-            </Typography>
+            </Typography> */}
 
             {stepForm === "choose-options-error" && (
               <Alert
@@ -618,7 +636,7 @@ export const CustomDomainForm = ({
                   disabled={isLoading}
                   onClick={handleSubmitOption}
                 >
-                  I write
+                  I updated DNS settings
                 </LoadingButton>
               )}
             </StyledFormControl>

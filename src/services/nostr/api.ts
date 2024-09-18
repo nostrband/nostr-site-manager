@@ -432,36 +432,36 @@ export const fetchCertDomain = async (domain: string) => {
     undefined,
     "POST",
   );
-
-  return reply.json();
+  if (reply.status === 200) return reply.json();
+  else throw new Error("Failed to issue certificate");
 };
 
 export const fetchCertDomainStatus = async (domain: string) => {
   const reply = await fetchWithSession(`${NPUB_PRO_API}/cert?domain=${domain}`);
-
-  return reply.json();
+  if (reply.status === 200) return reply.json();
+  else throw new Error("Failed to fetch certificate status");
 };
 
-export const fetchDNS = async (domain: string, site: string) => {
+export const fetchAttachDomain = async (domain: string, site: string) => {
   const reply = await fetchWithSession(
     `${NPUB_PRO_API}/attach?domain=${domain}&site=${site}`,
     undefined,
     "POST",
   );
-
-  return reply.json();
+  if (reply.status === 200) return reply.json();
+  else throw new Error("Failed to attach domain");
 };
 
-export const fetchDNSStatus = async (domain: string, site: string) => {
+export const fetchAttachDomainStatus = async (domain: string, site: string) => {
   const reply = await fetchWithSession(
     `${NPUB_PRO_API}/attach?domain=${domain}&site=${site}`,
   );
 
-  return reply.json();
+  if (reply.status === 200) return reply.json();
+  else throw new Error("Failed to fetch domain status");
 };
 
 export const fetchDomains = async (site: string) => {
   const reply = await fetchWithSession(`${NPUB_PRO_API}/attach?site=${site}`);
-
   return reply.json();
 };

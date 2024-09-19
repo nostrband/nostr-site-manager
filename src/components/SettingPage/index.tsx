@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import _ from "lodash";
 import { Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
@@ -21,10 +21,11 @@ import { AccentColor } from "@/components/SettingPage/components/AccentColor";
 import { WebsiteAddress } from "./components/WebsiteAddress";
 import { Plugins } from "@/components/SettingPage/components/Plugins";
 import { AppName } from "@/components/SettingPage/components/AppName";
-import { HASH_CONFIG } from "@/consts";
+import { HASH_CONFIG, TESTERS } from "@/consts";
 import { addHttps } from "@/utils";
 import { CustomDomains } from "./components/CustomDomains";
 import { Other } from "./components/Other";
+import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -72,6 +73,7 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
 };
 
 export const SettingPage = () => {
+  const authed = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const [initialData, setInitialData] = useState(initialSettingValue);
@@ -168,7 +170,7 @@ export const SettingPage = () => {
   const handleUpdateWebSiteAddress = async (url: string) => {
     setFieldValue("url", addHttps(url));
 
-    await submitForm()
+    await submitForm();
   };
 
   const handleChangeKinds = (value: number | number[]) => {
@@ -194,7 +196,7 @@ export const SettingPage = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id,
+      (item) => item.id !== input.id
     );
 
     setFieldValue("navigation", navigation);
@@ -232,12 +234,14 @@ export const SettingPage = () => {
         isLoading={isLoading}
       />
 
-      <CustomDomains
-        siteId={values.id}
-        submitForm={submitForm}
-        updateWebSiteAddress={handleUpdateWebSiteAddress}
-        isLoading={isLoading}
-      />
+      {authed && TESTERS.includes(userPubkey) && (
+        <CustomDomains
+          siteId={values.id}
+          submitForm={submitForm}
+          updateWebSiteAddress={handleUpdateWebSiteAddress}
+          isLoading={isLoading}
+        />
+      )}
 
       <TitleDescription
         title={values.title}

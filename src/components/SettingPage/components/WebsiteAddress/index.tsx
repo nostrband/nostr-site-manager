@@ -11,7 +11,6 @@ import {
   Typography,
   CircularProgress,
   InputAdornment,
-  Button,
 } from "@mui/material";
 import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
@@ -19,12 +18,10 @@ import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG, NPUB_PRO_DOMAIN } from "@/consts";
 import { debounce } from "lodash";
 import { checkNpubProDomain } from "@/services/nostr/themes";
-import { CustomDomainForm } from "../CustomDomainForm";
 
 interface ITitleDescription extends IBaseSetting {
   url: string;
   siteId: string;
-  updateWebSiteAddress: (url: string) => void;
 }
 
 export const WebsiteAddress = ({
@@ -34,22 +31,12 @@ export const WebsiteAddress = ({
   handleBlur,
   submitForm,
   isLoading,
-  updateWebSiteAddress,
 }: ITitleDescription) => {
   const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setDisabled] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isFetchAddress, setFetchAddress] = useState(false);
-  const [isOpenCustomDomain, setOpenCustomDomain] = useState(false);
-
-  const handleCloseCustomDomain = () => {
-    setOpenCustomDomain(false);
-  };
-
-  const handleOpenCustomDomain = () => {
-    setOpenCustomDomain(true);
-  };
 
   const handleClick = () => {
     if (error) return;
@@ -147,30 +134,6 @@ export const WebsiteAddress = ({
             }
           />
           {error && <Typography color="error">{error}</Typography>}
-        </StyledFormControl>
-
-        <StyledFormControl
-          sx={{ mt: 1 }}
-          disabled={!isEdit}
-          fullWidth
-          size="small"
-        >
-          <Button
-            sx={{ mt: 1 }}
-            variant="contained"
-            disabled={!isEdit}
-            color="primary"
-            onClick={handleOpenCustomDomain}
-          >
-            Custom domain
-          </Button>
-
-          <CustomDomainForm
-            onClose={handleCloseCustomDomain}
-            isOpen={isOpenCustomDomain}
-            siteId={siteId}
-            updateWebSiteAddress={updateWebSiteAddress}
-          />
         </StyledFormControl>
       </StyledSettingBlock>
     </StyledSettingCol>

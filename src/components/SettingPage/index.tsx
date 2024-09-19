@@ -165,8 +165,10 @@ export const SettingPage = () => {
     setFieldValue("contributors", pubkeys);
   };
 
-  const handleUpdateWebSiteAddress = (url: string) => {
+  const handleUpdateWebSiteAddress = async (url: string) => {
     setFieldValue("url", addHttps(url));
+
+    await submitForm()
   };
 
   const handleChangeKinds = (value: number | number[]) => {
@@ -227,7 +229,6 @@ export const SettingPage = () => {
         handleBlur={handleBlur}
         handleChange={handleChange}
         submitForm={submitForm}
-        updateWebSiteAddress={handleUpdateWebSiteAddress}
         isLoading={isLoading}
       />
 

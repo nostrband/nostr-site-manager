@@ -95,6 +95,7 @@ export const SettingPage = () => {
     initialValues: initialSettingValue,
     validationSchema: validationSchemaMakePrivateSite,
     onSubmit: async (values) => {
+      console.log("onSubmit", values, initialData);
       if (!_.isEqual(values, initialData)) {
         setIsLoading(true);
 
@@ -169,8 +170,6 @@ export const SettingPage = () => {
 
   const handleUpdateWebSiteAddress = async (url: string) => {
     setFieldValue("url", addHttps(url));
-
-    await submitForm();
   };
 
   const handleChangeKinds = (value: number | number[]) => {

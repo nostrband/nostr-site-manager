@@ -183,10 +183,10 @@ export const Preview = () => {
 
     router.push(`?${newParams.toString()}`);
   };
- 
+
   const getHeightNavigation = (h: number) => {
-    setHeight(h)
-  }
+    setHeight(h);
+  };
 
   return (
     <>
@@ -212,7 +212,7 @@ export const Preview = () => {
       <PreviewHeader themeId={themeId} themeName={theme.name} />
 
       {!authed ? (
-        <StyledPreviewTestSiteNotAuth sx={{paddingBottom: `${height}px`}}>
+        <StyledPreviewTestSiteNotAuth sx={{ paddingBottom: `${height}px` }}>
           <iframe
             ref={iframeRef}
             style={{ border: 0 }}
@@ -221,7 +221,7 @@ export const Preview = () => {
           ></iframe>
         </StyledPreviewTestSiteNotAuth>
       ) : (
-        <StyledPreviewTestSite sx={{paddingBottom: `${height}px`}}>
+        <StyledPreviewTestSite sx={{ paddingBottom: `${height}px` }}>
           <iframe
             ref={iframeRef}
             style={{ border: 0 }}

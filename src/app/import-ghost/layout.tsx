@@ -1,12 +1,12 @@
 export const metadata = {
-	title: 'Npub.pro | Ghost Import',
-	description: '',
-}
+  title: "Npub.pro | Ghost Import",
+  description: "",
+};
 
 export default async function GhostImportLayout({
-	children,
+  children,
 }: {
-	children: React.ReactNode
+  children: React.ReactNode;
 }) {
-	return <>{children}</>
+  return <>{children}</>;
 }

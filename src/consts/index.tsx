@@ -17,6 +17,8 @@ import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import CodeTwoToneIcon from "@mui/icons-material/CodeTwoTone";
 import PhoneIphoneTwoToneIcon from "@mui/icons-material/PhoneIphoneTwoTone";
 import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
+import DnsTwoToneIcon from "@mui/icons-material/DnsTwoTone";
+import PendingTwoToneIcon from "@mui/icons-material/PendingTwoTone";
 
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
@@ -82,6 +84,14 @@ export const NAV_CONFIG = [
   },
 ];
 
+export const TESTERS = [
+  // brugeman
+  "3356de61b39647931ce8b2140b2bab837e0810c0ef515bbe92de0248040b8bdd",
+  // vitor
+  "460c25e682fda7832b52d1f22d3d22b3176d972f60dcdc3212ed8c92ef85065c",
+  // FIXME add alex
+];
+
 export const HASH_CONFIG = {
   TITLE_DESCRIPTION: "title-description",
   TIMEZONE: "timezone",
@@ -96,6 +106,7 @@ export const HASH_CONFIG = {
   NAVIGATION: "navigation",
   RECOMMENDATION: "recommendation",
   URL: "url",
+  CUSTOM_DOMAINS: "custom-domains",
   ICON: "icon",
   IMAGE: "image",
   HASHTAGS: "hashtags",
@@ -105,6 +116,7 @@ export const HASH_CONFIG = {
   APP_NAME: "app-name",
   CONTENT: "content",
   CONTENT_HOMEPAGE: "content-homepage",
+  OTHER: "other",
 };
 
 export const SETTINGS_CONFIG = [
@@ -115,6 +127,11 @@ export const SETTINGS_CONFIG = [
         title: "Website address",
         path: HASH_CONFIG.URL,
         icon: <LinkTwoToneIcon />,
+      },
+      {
+        title: "Custom domains",
+        path: HASH_CONFIG.CUSTOM_DOMAINS,
+        icon: <DnsTwoToneIcon />,
       },
       {
         title: "Title & Description",
@@ -165,6 +182,11 @@ export const SETTINGS_CONFIG = [
         title: "Plugins",
         path: HASH_CONFIG.PLUGINS,
         icon: <CodeTwoToneIcon />,
+      },
+      {
+        title: "Other",
+        path: HASH_CONFIG.OTHER,
+        icon: <PendingTwoToneIcon />,
       },
     ],
   },

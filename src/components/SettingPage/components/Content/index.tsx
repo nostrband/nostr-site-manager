@@ -51,7 +51,7 @@ export const Content = ({
   selectedKinds,
   handleChangeKinds,
   title,
-  description
+  description,
 }: ITitleDescription) => {
   const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
   const [hashtags, setHashtags] = useState<string[]>([]);

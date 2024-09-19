@@ -61,7 +61,7 @@ export const GhostImport = () => {
       reader.onload = handleLoadFile;
       reader.readAsText(file);
     },
-    [enqueueSnackbar, authed, setIsLoading, setPosts, publishType]
+    [enqueueSnackbar, authed, setIsLoading, setPosts, publishType],
   );
 
   const handleImportPosts = async (selectedPosts: ClientPost[]) => {
@@ -69,28 +69,29 @@ export const GhostImport = () => {
     // reset urls just for visual indication
     setPosts(
       posts!.map((p) =>
-        selectedPosts.find((sp) => sp.id === p.id && !p.conflict) ? { ...p, url: "" } : p
-      )
+        selectedPosts.find((sp) => sp.id === p.id && !p.conflict)
+          ? { ...p, url: "" }
+          : p,
+      ),
     );
 
     const relays = userRelays.length ? userRelays : DEFAULT_RELAYS;
 
     for (const post of selectedPosts) {
+      // skip for now, allow url edit later
+      if (post.conflict) continue;
 
-			// skip for now, allow url edit later
-			if (post.conflict) continue;
-
-			const event = new NDKEvent(ndk, {
-				...createNostrEvent(post, publishType),
-				pubkey: userPubkey
-			});
+      const event = new NDKEvent(ndk, {
+        ...createNostrEvent(post, publishType),
+        pubkey: userPubkey,
+      });
       // console.log("signing", event);
-			const signer = new NDKNip07Signer();
-			await event.sign(signer);
+      const signer = new NDKNip07Signer();
+      await event.sign(signer);
       console.log("publishing to", relays, event);
       const r = await event.publish(
         NDKRelaySet.fromRelayUrls(relays, ndk),
-        10000
+        10000,
       );
       console.log("published to", r.size);
       if (r.size) {
@@ -124,11 +125,11 @@ export const GhostImport = () => {
   const handlePublishTypeChange = async (type: "long" | "short") => {
     setPublishType(type);
     if (authed && posts) {
-			// reset urls
+      // reset urls
       setPosts(posts!.map((p) => ({ ...p, url: "" })));
       await updateUrls(posts, type);
-			// updated posts
-			setPosts(posts.map(p => ({...p})));
+      // updated posts
+      setPosts(posts.map((p) => ({ ...p })));
     }
   };
 

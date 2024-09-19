@@ -44,6 +44,11 @@ export const CustomDomains = ({
     setDisabled((prev) => !prev);
   };
 
+  const handleUpdateWebSiteAddress = async (url: string) => {
+    updateWebSiteAddress(url);
+    handleAction(); // simulate "Save" click
+  };
+
   useEffect(() => {
     if (inputRef.current && isDisabled) {
       inputRef.current.focus();
@@ -115,7 +120,7 @@ export const CustomDomains = ({
             onClose={handleCloseCustomDomain}
             isOpen={isOpenCustomDomain}
             siteId={siteId}
-            updateWebSiteAddress={updateWebSiteAddress}
+            updateWebSiteAddress={handleUpdateWebSiteAddress}
           />
         </StyledFormControl>
       </StyledSettingBlock>

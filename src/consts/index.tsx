@@ -83,6 +83,8 @@ export const TESTERS = [
   "3356de61b39647931ce8b2140b2bab837e0810c0ef515bbe92de0248040b8bdd",
   // vitor
   "460c25e682fda7832b52d1f22d3d22b3176d972f60dcdc3212ed8c92ef85065c",
+  // amethyst
+  "aa9047325603dacd4f8142093567973566de3b1e20a89557b728c3be4c6a844b",
   // FIXME add alex
 ];
 

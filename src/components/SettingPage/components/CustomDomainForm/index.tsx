@@ -292,7 +292,7 @@ export const CustomDomainForm = ({
           <span>Name</span>
           {dns.name && <ReadOnlyInput value={dns.name} />}
           {!dns.name && (
-            <span style={{ color: "#aaa" }}>&lt;Leave blank&gt;</span>
+            <span style={{ color: "#aaa" }}>&lt;Leave blank or use @&gt;</span>
           )}
         </Typography>
 

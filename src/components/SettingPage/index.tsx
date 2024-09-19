@@ -290,15 +290,17 @@ export const SettingPage = () => {
         isLoading={isLoading}
       />
 
-      <Other
-        postsPerPage={values.postsPerPage}
-        selectedOptionsMainCallAction={values.selectedOptionsMainCallAction}
-        handleOptionsMainCallAction={handleOptionsMainCallAction}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
+      {authed && TESTERS.includes(userPubkey) && (
+        <Other
+          postsPerPage={values.postsPerPage}
+          selectedOptionsMainCallAction={values.selectedOptionsMainCallAction}
+          handleOptionsMainCallAction={handleOptionsMainCallAction}
+          handleBlur={handleBlur}
+          handleChange={handleChange}
+          submitForm={submitForm}
+          isLoading={isLoading}
+        />
+      )}
 
       <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
         Design

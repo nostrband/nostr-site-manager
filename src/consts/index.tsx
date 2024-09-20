@@ -91,6 +91,16 @@ export const TESTERS = [
   "460c25e682fda7832b52d1f22d3d22b3176d972f60dcdc3212ed8c92ef85065c",
   // amethyst
   "aa9047325603dacd4f8142093567973566de3b1e20a89557b728c3be4c6a844b",
+  // archjourney
+  "05e4649832dfb8d1bfa81ea7cbf1c92c4f1cd5052bfc8d5465ba744aa6fa5eb8",
+  // bitpopart
+  "43baaf0c28e6cfb195b17ee083e19eb3a4afdfac54d9b6baf170270ed193e34c",
+  // nostrpromo
+  "c0ff2ec778904222194d0a05ab96ba385024a57d46720cfc97f58b67dac391a6",
+  // traveltelly
+  "7d33ba57d8a6e8869a1f1d5215254597594ac0dbfeb01b690def8c461b82db35",
+  // k
+  "bd4ae3e67e29964d494172261dc45395c89f6bd2e774642e366127171dfb81f5",
   // FIXME add alex
 ];
 

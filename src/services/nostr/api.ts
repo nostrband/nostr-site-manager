@@ -222,7 +222,7 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
     codeinjection_head: s.codeinjection_head || "",
     codeinjection_foot: s.codeinjection_foot || "",
     postsPerPage: "",
-    selectedOptionsMainCallAction: [],
+    selectedOptionsMainCallAction: '',
     navigation: {
       primary:
         s.navigation?.map((n) => ({
@@ -237,6 +237,7 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
           id: n.url,
         })) || [],
     },
+    contentActions: [],
   }));
 }
 

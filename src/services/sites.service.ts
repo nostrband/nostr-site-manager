@@ -83,9 +83,6 @@ export const getSettingsSite = async (
     console.log("site", site);
     return {
       ...site,
-      postsPerPage: "",
-      selectedOptionsMainCallAction: "",
-      contentActions: [],
     }; // FIXME remove, add empty hashtags for test and accentColor
     // const res: AxiosResponse<any> = await ApiClient.get(
     //   `/settings-site?id=${id}`,

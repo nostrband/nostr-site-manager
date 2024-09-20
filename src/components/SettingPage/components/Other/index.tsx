@@ -22,8 +22,10 @@ import { HASH_CONFIG } from "@/consts";
 
 interface IOther extends IBaseSetting {
   postsPerPage: string;
-  selectedOptionsMainCallAction: string[];
-  handleOptionsMainCallAction: (value: string[]) => void;
+  selectedOptionsMainCallAction: string;
+  selectedContentActions: string[];
+  handleOptionsMainCallAction: (value: string) => void;
+  handleChangeContentActions: (value: string[]) => void;
 }
 
 const options = ["Zap", "Like", "Repost", "Share", "Subscribe", "Open with"];
@@ -34,7 +36,9 @@ export const Other = ({
   handleChange,
   handleBlur,
   submitForm,
+  selectedContentActions,
   handleOptionsMainCallAction,
+  handleChangeContentActions,
   isLoading,
 }: IOther) => {
   const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
@@ -55,9 +59,15 @@ export const Other = ({
     const {
       target: { value },
     } = event;
-    handleOptionsMainCallAction(
+    handleChangeContentActions(
       typeof value === "string" ? value.split(",") : value,
     );
+  };
+
+  const handleContentActions = (event: SelectChangeEvent<string>) => {
+    const { value } = event.target;
+
+    handleOptionsMainCallAction(value);
   };
 
   return (
@@ -92,22 +102,39 @@ export const Other = ({
         </StyledFormControl>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
+          <InputLabel id="main-call-to-action">Main call to action</InputLabel>
+          <Select
+            labelId="main-call-to-action"
+            id="main-call-to-action"
+            value={selectedOptionsMainCallAction}
+            label="Main call to action"
+            onChange={handleContentActions}
+          >
+            {options.map((o) => (
+              <MenuItem key={o} value={o}>
+                <ListItemText primary={o} />
+              </MenuItem>
+            ))}
+          </Select>
+        </StyledFormControl>
+
+        <StyledFormControl disabled={!isEdit} fullWidth size="small">
           <InputLabel id="demo-multiple-checkbox-label">
-            Main call to action
+            Content actions
           </InputLabel>
           <Select
             labelId="demo-multiple-checkbox-label"
             id="demo-multiple-checkbox"
             multiple
-            value={selectedOptionsMainCallAction}
+            value={selectedContentActions}
             onChange={handleChangeOptions}
-            input={<OutlinedInput label="Main call to action" />}
+            input={<OutlinedInput label="Content actions" />}
             renderValue={(selected) => selected.join(", ")}
           >
             {options.map((o) => (
               <MenuItem key={o} value={o}>
                 <Checkbox
-                  checked={selectedOptionsMainCallAction.indexOf(o) > -1}
+                  checked={selectedContentActions.indexOf(o) > -1}
                 />
                 <ListItemText primary={o} />
               </MenuItem>

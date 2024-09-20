@@ -102,6 +102,7 @@ export const TESTERS = [
   // k
   "bd4ae3e67e29964d494172261dc45395c89f6bd2e774642e366127171dfb81f5",
   // FIXME add alex
+  "b33f4a427387a151c82a5925b3c9fa631b240563a9c8b82f42af18655845fb2f",
 ];
 
 export const HASH_CONFIG = {

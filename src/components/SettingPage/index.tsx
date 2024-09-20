@@ -69,7 +69,8 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   codeinjection_head: "",
   adminPubkey: "",
   postsPerPage: "",
-  selectedOptionsMainCallAction: [],
+  selectedOptionsMainCallAction: "",
+  contentActions: [],
 };
 
 export const SettingPage = () => {
@@ -172,11 +173,15 @@ export const SettingPage = () => {
     setFieldValue("url", addHttps(url));
   };
 
+  const handleChangeContentActions = (value: string[]) => {
+    setFieldValue("contentActions", value);
+  };
+
   const handleChangeKinds = (value: number | number[]) => {
     setFieldValue("kinds", value);
   };
 
-  const handleOptionsMainCallAction = (value: string | string[]) => {
+  const handleOptionsMainCallAction = (value: string) => {
     setFieldValue("selectedOptionsMainCallAction", value);
   };
 
@@ -195,7 +200,7 @@ export const SettingPage = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id
+      (item) => item.id !== input.id,
     );
 
     setFieldValue("navigation", navigation);
@@ -217,7 +222,7 @@ export const SettingPage = () => {
   //     </SpinerWrap>
   //   );
   // }
-
+  console.log({ values });
   return (
     <>
       <Typography variant="h4" sx={{ fontWeight: "bold" }}>
@@ -294,9 +299,11 @@ export const SettingPage = () => {
           postsPerPage={values.postsPerPage}
           selectedOptionsMainCallAction={values.selectedOptionsMainCallAction}
           handleOptionsMainCallAction={handleOptionsMainCallAction}
+          handleChangeContentActions={handleChangeContentActions}
           handleBlur={handleBlur}
           handleChange={handleChange}
           submitForm={submitForm}
+          selectedContentActions={values.contentActions}
           isLoading={isLoading}
         />
       )}

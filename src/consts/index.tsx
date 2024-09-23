@@ -95,6 +95,8 @@ export const TESTERS = [
   "7d33ba57d8a6e8869a1f1d5215254597594ac0dbfeb01b690def8c461b82db35",
   // k
   "bd4ae3e67e29964d494172261dc45395c89f6bd2e774642e366127171dfb81f5",
+  // marco barulli
+  "3cfa816bb4892fa6be993ac72a9fcdbb089bdea0c5d9011fd204d154545fa2d9",
   // FIXME add alex
 ];
 

@@ -29,7 +29,7 @@
     "axios": "^1.7.2",
     "formik": "^2.4.6",
     "lexical": "^0.17.0",
-    "libnostrsite": "^1.0.69",
+    "libnostrsite": "^1.0.75",
     "lodash": "^4.17.21",
     "mui-color-input": "^2.0.3",
     "next": "^14.2.3",

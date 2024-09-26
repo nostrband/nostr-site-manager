@@ -371,11 +371,13 @@ export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
 }
 
 export async function searchProfiles(text: string): Promise<NDKEvent[]> {
+  let search = text + " include:spam";
+  if (!text.trim().startsWith("npub1")) search += " sort:popular";
   const events = await fetchEvents(
     ndk,
     {
       kinds: [KIND_PROFILE],
-      search: text + " sort:popular",
+      search,
       limit: 3,
     },
     SEARCH_RELAYS

@@ -5,7 +5,7 @@ import {
 } from "@/components/Pages/Preview/styled";
 import { PreviewNavigation } from "@/components/PreviewNavigation";
 import { useSearchParams, redirect, useRouter } from "next/navigation";
-import { THEMES_PREVIEW } from "@/consts";
+import { SUPPORTED_KIND_NAMES, THEMES_PREVIEW } from "@/consts";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
@@ -33,11 +33,6 @@ import { useSnackbar } from "notistack";
 //   "#travel",
 //   "#grownostr",
 // ];
-
-const kinds: { [key: number]: string } = {
-  1: "Notes",
-  30023: "Long-form posts",
-};
 
 const mutex = new Mutex();
 let mounted = false;
@@ -238,7 +233,7 @@ export const Preview = () => {
         hashtagsSelected={hashtagsSelected || []}
         onContentSettings={onContentSettings}
         hashtags={hashtags}
-        kinds={kinds}
+        kinds={SUPPORTED_KIND_NAMES}
         onUseTheme={onUseTheme}
         noContentSettings={!!siteId}
         getHeightNavigation={getHeightNavigation}

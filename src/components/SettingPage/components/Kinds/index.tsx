@@ -9,7 +9,7 @@ import { InputLabel, OutlinedInput, Typography } from "@mui/material";
 import { SaveButton } from "@/components/SettingPage/components/SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { HASH_CONFIG, SUPPORTED_KIND_NAMES } from "@/consts";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
@@ -19,11 +19,6 @@ interface ITitleDescription extends IBaseSetting {
   selectedKinds: number[];
   handleChangeKinds: (value: number[]) => void;
 }
-
-const kindsMap: { [key: number]: string } = {
-  1: "Notes",
-  30023: "Long-form posts",
-};
 
 export const Kinds = ({
   handleChangeKinds,
@@ -82,13 +77,13 @@ export const Kinds = ({
             onChange={handleChange}
             input={<OutlinedInput label="Kinds" />}
             renderValue={(selected) =>
-              selected.map((val) => kindsMap[val]).join(", ")
+              selected.map((val) => SUPPORTED_KIND_NAMES[val]).join(", ")
             }
           >
             {kinds.map((kind, i) => (
               <MenuItem key={i} value={kind}>
                 <Checkbox checked={selectedKinds.indexOf(kind) > -1} />
-                <ListItemText primary={kindsMap[kind]} />
+                <ListItemText primary={SUPPORTED_KIND_NAMES[kind]} />
               </MenuItem>
             ))}
           </Select>

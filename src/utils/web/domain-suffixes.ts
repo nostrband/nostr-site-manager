@@ -15782,7 +15782,7 @@ export interface DomainInfo {
 export function parseDomain(domain: string): DomainInfo {
   const suffix = DOMAIN_SUFFIXES.filter((s) => domain.endsWith(s)).reduce(
     (p, c) => (c.length > p.length ? c : p),
-    ""
+    "",
   );
   console.log("suffix", domain, suffix);
 

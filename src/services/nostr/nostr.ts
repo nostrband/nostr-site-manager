@@ -30,7 +30,7 @@ export const DEFAULT_RELAYS = [
   "wss://purplepag.es",
   SITE_RELAY,
 ];
-export const SEARCH_RELAYS = ["wss://relay.nostr.band"];
+export const SEARCH_RELAYS = ["wss://relay.nostr.band/"];
 const onAuths: ((type: string) => Promise<void>)[] = [];
 
 export let ndk: NDK = new NDK({

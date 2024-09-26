@@ -84,6 +84,12 @@ export const NAV_CONFIG = [
   },
 ];
 
+export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
+  1: "Notes",
+  30023: "Long-form posts",
+  // 31337: "Music tracks",
+};
+
 export const TESTERS = [
   // brugeman
   "3356de61b39647931ce8b2140b2bab837e0810c0ef515bbe92de0248040b8bdd",
@@ -103,6 +109,8 @@ export const TESTERS = [
   "bd4ae3e67e29964d494172261dc45395c89f6bd2e774642e366127171dfb81f5",
   // marco barulli
   "3cfa816bb4892fa6be993ac72a9fcdbb089bdea0c5d9011fd204d154545fa2d9",
+  // pitunited
+  "f1f9b0996d4ff1bf75e79e4cc8577c89eb633e68415c7faf74cf17a07bf80bd8",
   // FIXME add alex
 ];
 

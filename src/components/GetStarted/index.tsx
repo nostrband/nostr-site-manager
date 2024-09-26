@@ -116,6 +116,14 @@ export const GetStarted = () => {
             >
               Magazine
             </StyledButton>
+
+            <StyledButton
+              color={getColor(TYPES_THEMES_TAG.APPS)}
+              variant="contained"
+              onClick={() => handleChoise(TYPES_THEMES_TAG.APPS)}
+            >
+              App
+            </StyledButton>
           </StyledButtonGroup>
 
           <StyledPreviews>

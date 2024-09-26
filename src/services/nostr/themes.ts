@@ -39,6 +39,7 @@ import { isEqual, omit } from "lodash";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { bytesToHex, randomBytes } from "@noble/hashes/utils";
 import { CustomConfigType } from "@/components/Pages/Design/types";
+import { resetSites } from "./api";
 
 export interface PreviewSettings {
   themeId: string;
@@ -726,7 +727,7 @@ export async function updatePreviewSite(ds: DesignSettings) {
   for (const n of ds.navigation) e.tags.push(["nav", n.url, n.label]);
 
   srm(e, "custom");
-  for (const key in ds.custom) e.tags.push(["custom", key, ds.custom[key]]);
+  for (const key in ds.custom) e.tags.push(["custom", key, ""+ds.custom[key]]);
 
   // update
   site.tags = e.tags;
@@ -798,6 +799,9 @@ export async function publishPreviewSite() {
 
           const r = await reply.json();
           console.log(Date.now(), "deployed", r);
+
+          // make sure /admin updates their list of sites
+          resetSites();
         }
       } catch (e) {
         console.warn("Bad site url", url, e);

@@ -121,6 +121,14 @@ export const ThemesOnboarding = () => {
             >
               Magazine
             </StyledButton>
+
+            <StyledButton
+              color={getColor(TYPES_THEMES_TAG.APPS)}
+              variant="contained"
+              onClick={() => handleChoise(TYPES_THEMES_TAG.APPS)}
+            >
+              Apps
+            </StyledButton>
           </StyledButtonGroup>
 
           <StyledPreviews>

@@ -13,6 +13,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@hello-pangea/dnd": "^17.0.0",
     "@lexical/headless": "^0.17.0",
     "@lexical/html": "^0.17.0",
     "@lexical/link": "^0.17.0",
@@ -37,7 +38,6 @@
     "nostr-tools": "^1.17.0",
     "notistack": "^3.0.1",
     "react": "^18",
-    "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "sharp": "^0.33.4",
@@ -48,7 +48,6 @@
     "@types/lodash": "^4.17.4",
     "@types/node": "^20",
     "@types/react": "^18",
-    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",

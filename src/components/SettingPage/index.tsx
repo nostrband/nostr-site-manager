@@ -26,6 +26,7 @@ import { addHttps } from "@/utils";
 import { CustomDomains } from "./components/CustomDomains";
 import { Other } from "./components/Other";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
+import { PinnedNotes } from "./components/PinnedNotes";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -195,7 +196,7 @@ export const SettingPage = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id
+      (item) => item.id !== input.id,
     );
 
     setFieldValue("navigation", navigation);
@@ -300,6 +301,8 @@ export const SettingPage = () => {
           isLoading={isLoading}
         />
       )}
+
+      <PinnedNotes />
 
       <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
         Design

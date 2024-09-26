@@ -44,7 +44,7 @@ export const ModalThemes = ({
       Boolean(tag)
         ? THEMES_PREVIEW.filter((item) => item.tag === tag)
         : THEMES_PREVIEW,
-    [tag]
+    [tag],
   );
 
   const handleCancel = () => {
@@ -125,8 +125,8 @@ export const ModalThemes = ({
             <MenuItem onClick={() => handleTagChange("")} key="" value="">
               All themes
             </MenuItem>
-            {options.map((el) => (
-              <MenuItem onClick={() => handleTagChange(el)} key={el} value={el}>
+            {options.map((el, i) => (
+              <MenuItem onClick={() => handleTagChange(el)} key={i} value={el}>
                 {el}
               </MenuItem>
             ))}
@@ -144,12 +144,12 @@ export const ModalThemes = ({
       </StyledDialogTitle>
       <StyledDialogContent>
         <List sx={{ width: "100%" }}>
-          {filteredData.map((el) => {
+          {filteredData.map((el, i) => {
             const isSelected = el.id === themeId;
 
             return (
               <ListItemButton
-                key={el.id}
+                key={i}
                 selected={isSelected}
                 alignItems="flex-start"
                 sx={{ gap: "10px" }}
@@ -165,7 +165,7 @@ export const ModalThemes = ({
                     }}
                     variant="square"
                     alt={el.name}
-                    src={el.preview.src}                    
+                    src={el.preview.src}
                   />
                 </ListItemAvatar>
                 <ListItemText

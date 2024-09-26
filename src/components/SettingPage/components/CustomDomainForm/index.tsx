@@ -249,7 +249,7 @@ export const CustomDomainForm = ({
 
   function renderDNS(
     dns: { name: string; value: string; type: string },
-    i: number
+    i: number,
   ) {
     return (
       <Box key={i} sx={{ mb: 5 }}>
@@ -533,18 +533,18 @@ export const CustomDomainForm = ({
               {
                 type: "CNAME",
                 name: `www.${domainValues.domain}` === valueOption ? "www" : "",
-                value: redirectionOptions!.cnameDomain!
+                value: redirectionOptions!.cnameDomain!,
               },
-              0
+              0,
             )}
 
             {renderDNS(
               {
                 type: "A",
                 name: `www.${domainValues.domain}` === valueOption ? "" : "www",
-                value: redirectionOptions!.redirectIps[0]!
+                value: redirectionOptions!.redirectIps[0]!,
               },
-              1
+              1,
             )}
 
             {/* <Typography

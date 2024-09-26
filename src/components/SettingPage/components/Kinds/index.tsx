@@ -85,8 +85,8 @@ export const Kinds = ({
               selected.map((val) => kindsMap[val]).join(", ")
             }
           >
-            {kinds.map((kind) => (
-              <MenuItem key={kind} value={kind}>
+            {kinds.map((kind, i) => (
+              <MenuItem key={i} value={kind}>
                 <Checkbox checked={selectedKinds.indexOf(kind) > -1} />
                 <ListItemText primary={kindsMap[kind]} />
               </MenuItem>

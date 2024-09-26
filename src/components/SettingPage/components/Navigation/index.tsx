@@ -83,9 +83,9 @@ export const Navigation = ({
           </Box>
           <TabPanel value="1">
             {navigation &&
-              navigation.primary.map((el) => {
+              navigation.primary.map((el, i) => {
                 return (
-                  <StyledItemNavigation key={el.id}>
+                  <StyledItemNavigation key={i}>
                     <FormControl disabled={!isEdit} fullWidth size="small">
                       <InputLabel htmlFor="title">Title link</InputLabel>
                       <OutlinedInput
@@ -150,9 +150,9 @@ export const Navigation = ({
           </TabPanel>
           <TabPanel value="2">
             {navigation &&
-              navigation.secondary.map((el) => {
+              navigation.secondary.map((el, i) => {
                 return (
-                  <StyledItemNavigation key={el.id}>
+                  <StyledItemNavigation key={i}>
                     <FormControl disabled={!isEdit} fullWidth size="small">
                       <InputLabel htmlFor="title">Title link</InputLabel>
                       <OutlinedInput

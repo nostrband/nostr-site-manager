@@ -727,7 +727,8 @@ export async function updatePreviewSite(ds: DesignSettings) {
   for (const n of ds.navigation) e.tags.push(["nav", n.url, n.label]);
 
   srm(e, "custom");
-  for (const key in ds.custom) e.tags.push(["custom", key, ""+ds.custom[key]]);
+  for (const key in ds.custom)
+    e.tags.push(["custom", key, "" + ds.custom[key]]);
 
   // update
   site.tags = e.tags;

@@ -279,6 +279,11 @@ export const PinnedNotes = () => {
               items={dataPinnedNotes}
               onDragEnd={onDragEnd}
             />
+            {Boolean(dataPinnedNotes.length) && (
+              <Typography variant="body2">
+                You can drag&drop items for manage order
+              </Typography>
+            )}
           </StyledDialogContent>
         </StyledDialog>
       </StyledSettingBlock>

@@ -24,6 +24,7 @@ import {
   stv2,
   deleteSiteEvent,
   filterDeleted,
+  stv3,
 } from "./nostr";
 import { nip19 } from "nostr-tools";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
@@ -83,8 +84,18 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   stv(e, "twitter_title", data.xTitle);
   stv(e, "twitter_description", data.xDescription);
   stv(e, "twitter_image", data.xImage);
-  stv2(e, "config", "codeinjection_head", data.codeinjection_head);
-  stv2(e, "config", "codeinjection_foot", data.codeinjection_foot);
+
+  // DEPRECATED
+  // stv2(e, "config", "codeinjection_head", data.codeinjection_head);
+  // stv2(e, "config", "codeinjection_foot", data.codeinjection_foot);
+
+  // DEPRECATED
+  srm(e, "config");
+
+  // new way
+  srm(e, "settings", "core");
+  stv3(e, "settings", "core", "codeinjection_head", data.codeinjection_head);
+  stv3(e, "settings", "core", "codeinjection_foot", data.codeinjection_foot);
 
   // nav
   srm(e, "nav");
@@ -376,11 +387,13 @@ export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
 }
 
 export async function searchProfiles(text: string): Promise<NDKEvent[]> {
+  let search = text + " include:spam";
+  if (!text.trim().startsWith("npub1")) search += " sort:popular";
   const events = await fetchEvents(
     ndk,
     {
       kinds: [KIND_PROFILE],
-      search: text + " sort:popular",
+      search,
       limit: 3,
     },
     SEARCH_RELAYS,

@@ -45,6 +45,7 @@ import {
   fetchAttachDomainStatus,
 } from "@/services/nostr/api";
 import { ReadOnlyInput } from "./components/ReadOnlyInput";
+import { DomainInfo, parseDomain } from "../../../../utils/web/domain-suffixes";
 
 export const CustomDomainForm = ({
   siteId,
@@ -85,6 +86,8 @@ export const CustomDomainForm = ({
     status: string;
   } | null>(null);
 
+  const [domainInfo, setDomainInfo] = useState<DomainInfo | undefined>();
+
   const handleChangeOption = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValueOption((event.target as HTMLInputElement).value);
   };
@@ -102,6 +105,10 @@ export const CustomDomainForm = ({
     validationSchema: validationSchemaDomain,
     onSubmit: async (values) => {
       setLoading(true);
+
+      const info = parseDomain(values.domain);
+      console.log("info", info);
+      setDomainInfo(info);
 
       try {
         const res = await fetchCertDomain(values.domain);
@@ -124,7 +131,7 @@ export const CustomDomainForm = ({
     },
   });
 
-  const [valueOption, setValueOption] = useState(`www.${domainValues.domain}`);
+  const [valueOption, setValueOption] = useState("");
 
   const handleSubmitDns = async () => {
     setLoading(true);
@@ -136,7 +143,8 @@ export const CustomDomainForm = ({
           setTimeout(checkStatus, 5000);
         } else {
           setStepForm("edit-dns-success");
-          setValueOption(`www.${domainValues.domain}`);
+          if (domainInfo!.isApex) setValueOption(`www.${domainValues.domain}`);
+          else setValueOption(domainValues.domain);
           setLoading(false);
 
           enqueueSnackbar("Certificate ready", {
@@ -208,6 +216,7 @@ export const CustomDomainForm = ({
   };
 
   const handleUpdateWebSiteAddress = () => {
+    console.log("updateWebSiteAddress", valueOption);
     updateWebSiteAddress(valueOption);
 
     onClose();
@@ -353,7 +362,7 @@ export const CustomDomainForm = ({
                 id="domain"
                 name="domain"
                 disabled={isLoading}
-                label="Enter domai"
+                label="Enter domain"
                 endAdornment={
                   isLoading ? (
                     <InputAdornment position="end">
@@ -397,12 +406,24 @@ export const CustomDomainForm = ({
               Update DNS settings
             </Typography>
             <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
-              We need this to make sure you own this domain and to issue SSL
-              certificate.
+              Please edit DNS records of <b>{domainInfo!.apex}</b>. We need this
+              to make sure you own this domain and to issue SSL certificate.
             </Typography>
 
             {dataDns &&
-              dataDns.dnsValidation.map((dns, i) => renderDNS(dns, i))}
+              dataDns.dnsValidation.map((dns, i) =>
+                renderDNS(
+                  {
+                    ...dns,
+                    name: domainInfo!.isApex
+                      ? dns.name
+                      : [dns.name, domainInfo!.sub]
+                          .filter((s) => !!s)
+                          .join("."),
+                  },
+                  i
+                )
+              )}
 
             {stepForm === "edit-dns-success" && (
               <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
@@ -480,74 +501,102 @@ export const CustomDomainForm = ({
         {(stepForm === "choose-options" ||
           stepForm === "choose-options-error") && (
           <StyledDialogContentTable>
-            <Typography sx={{ mb: 1 }} variant="h6">
-              Choose main address
-            </Typography>
-            <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
-              Main site address will be used as canonical, and the alternative
-              name will be redirected to the main address.
-            </Typography>
-
-            <FormControl sx={{ paddingLeft: "0px" }}>
-              <RadioGroup
-                aria-labelledby="demo-controlled-radio-buttons-group"
-                name="controlled-radio-buttons-group"
-                value={valueOption}
-                onChange={handleChangeOption}
-              >
-                <FormControlLabel
-                  disabled={isLoading}
-                  value={`www.${domainValues.domain}`}
-                  control={<Radio />}
-                  label={
-                    <>
-                      {`www.${domainValues.domain}`}
-                      <Chip
-                        sx={{ marginLeft: 1 }}
-                        size="small"
-                        label="Recommended"
-                        color="decorate"
-                      />
-                    </>
-                  }
-                />
-                <Typography sx={{ mb: 1 }} variant="body2">
-                  Supported by all DNS providers
+            {domainInfo!.isApex && (
+              <>
+                <Typography sx={{ mb: 1 }} variant="h6">
+                  Choose main address
                 </Typography>
-                <FormControlLabel
-                  disabled={isLoading}
-                  value={domainValues.domain}
-                  control={<Radio />}
-                  label={domainValues.domain}
-                />
-                <Typography sx={{ mb: 1 }} variant="body2">
-                  Supported by limited number of DNS providers
+                <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
+                  Main site address will be used as canonical, and the
+                  alternative name will be redirected to the main address.
                 </Typography>
-              </RadioGroup>
-            </FormControl>
-
-            {/* <Box>
+                <FormControl sx={{ paddingLeft: "0px" }}>
+                  <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={valueOption}
+                    onChange={handleChangeOption}
+                  >
+                    <FormControlLabel
+                      disabled={isLoading}
+                      value={`www.${domainValues.domain}`}
+                      control={<Radio />}
+                      label={
+                        <>
+                          {`www.${domainValues.domain}`}
+                          <Chip
+                            sx={{ marginLeft: 1 }}
+                            size="small"
+                            label="Recommended"
+                            color="decorate"
+                          />
+                        </>
+                      }
+                    />
+                    <Typography sx={{ mb: 1 }} variant="body2">
+                      Supported by all DNS providers
+                    </Typography>
+                    <FormControlLabel
+                      disabled={isLoading}
+                      value={domainValues.domain}
+                      control={<Radio />}
+                      label={domainValues.domain}
+                    />
+                    <Typography sx={{ mb: 1 }} variant="body2">
+                      Supported by limited number of DNS providers
+                    </Typography>
+                  </RadioGroup>
+                </FormControl>
+                {/* <Box>
               <Button color="info" href="#" target="_blank">
                 Learn more
-              </Button>
-            </Box> */}
+                </Button>
+              </Box> */}
 
-            {renderDNS(
-              {
-                type: "CNAME",
-                name: `www.${domainValues.domain}` === valueOption ? "www" : "",
-                value: redirectionOptions!.cnameDomain!,
-              },
-              0,
+                {renderDNS(
+                  {
+                    type: "CNAME",
+                    name:
+                      `www.${domainValues.domain}` === valueOption ? "www" : "",
+                    value: redirectionOptions!.cnameDomain!,
+                  },
+                  0
+                )}
+
+                {renderDNS(
+                  {
+                    type: "A",
+                    name:
+                      `www.${domainValues.domain}` === valueOption ? "" : "www",
+                    value: redirectionOptions!.redirectIps[0]!,
+                  },
+                  1
+                )}
+              </>
             )}
 
-            {renderDNS(
-              {
-                type: "A",
-                name: `www.${domainValues.domain}` === valueOption ? "" : "www",
-                value: redirectionOptions!.redirectIps[0]!,
-              },
-              1,
+            {!domainInfo!.isApex && (
+              <>
+                <Typography sx={{ mb: 1 }} variant="h6">
+                  Almost done
+                </Typography>
+                <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
+                  Your SSL certificate is issued, set these DNS records to start
+                  serving your site on <b>{domainInfo!.domain}</b>.
+                </Typography>
+                {renderDNS(
+                  {
+                    type: "CNAME",
+                    name: domainInfo!.sub,
+                    value: redirectionOptions!.cnameDomain!,
+                  },
+                  0
+                )}
+                <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
+                  Make sure to remove other CNAME and A records for this name,
+                  if they existed.
+                </Typography>
+              </>
             )}
 
             {/* <Typography
@@ -630,17 +679,31 @@ export const CustomDomainForm = ({
                   Go to first step to retry
                 </LoadingButton>
               ) : (
-                <LoadingButton
-                  fullWidth
-                  color="primary"
-                  variant="contained"
-                  size="medium"
-                  loading={isLoading}
-                  disabled={isLoading}
-                  onClick={handleSubmitOption}
-                >
-                  I updated DNS settings
-                </LoadingButton>
+                <>
+                  {isLoading && (
+                    <Typography
+                      sx={{
+                        marginBottom: 1,
+                        textAlign: "center",
+                        color: "#cd1fa6",
+                      }}
+                      variant="body2"
+                    >
+                      Waiting for deployment...
+                    </Typography>
+                  )}
+                  <LoadingButton
+                    fullWidth
+                    color="primary"
+                    variant="contained"
+                    size="medium"
+                    loading={isLoading}
+                    disabled={isLoading}
+                    onClick={handleSubmitOption}
+                  >
+                    I updated DNS settings
+                  </LoadingButton>
+                </>
               )}
             </StyledFormControl>
           </StyledDialogContentTable>

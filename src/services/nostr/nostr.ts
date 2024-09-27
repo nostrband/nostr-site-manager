@@ -30,7 +30,7 @@ export const DEFAULT_RELAYS = [
   "wss://purplepag.es",
   SITE_RELAY,
 ];
-export const SEARCH_RELAYS = ["wss://relay.nostr.band"];
+export const SEARCH_RELAYS = ["wss://relay.nostr.band/"];
 const onAuths: ((type: string) => Promise<void>)[] = [];
 
 export let ndk: NDK = new NDK({
@@ -53,8 +53,11 @@ try {
   userTokenPubkey = window.localStorage.getItem("tokenPubkey") || "";
 } catch {}
 
-export function srm(e: NDKEvent | NostrEvent, name: string) {
-  e.tags = e.tags.filter((t) => t.length < 2 || t[0] !== name);
+export function srm(e: NDKEvent | NostrEvent, name: string, name1?: string) {
+  if (!name)
+    e.tags = e.tags.filter((t) => t.length < 2 || t[0] !== name);
+  else
+    e.tags = e.tags.filter((t) => t.length < 3 || t[0] !== name || t[1] !== name1);
 }
 
 export function stv(e: NDKEvent | NostrEvent, name: string, value: string) {
@@ -74,6 +77,20 @@ export function stv2(
   );
   if (t) t[2] = value;
   else e.tags.push([prefix, name, value]);
+}
+
+export function stv3(
+  e: NDKEvent | NostrEvent,
+  prefix: string,
+  name: string,
+  subname: string,
+  value: string,
+) {
+  const t = e.tags.find(
+    (t) => t.length >= 4 && t[0] === prefix && t[1] === name && t[2] === subname,
+  );
+  if (t) t[3] = value;
+  else e.tags.push([prefix, name, subname, value]);
 }
 
 export function stag(e: NDKEvent | NostrEvent, tag: string[]) {

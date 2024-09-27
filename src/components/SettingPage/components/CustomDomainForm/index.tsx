@@ -143,7 +143,7 @@ export const CustomDomainForm = ({
           setTimeout(checkStatus, 5000);
         } else {
           setStepForm("edit-dns-success");
-          if (domainInfo!.apex) setValueOption(`www.${domainValues.domain}`);
+          if (domainInfo!.isApex) setValueOption(`www.${domainValues.domain}`);
           else setValueOption(domainValues.domain);
           setLoading(false);
 
@@ -216,6 +216,7 @@ export const CustomDomainForm = ({
   };
 
   const handleUpdateWebSiteAddress = () => {
+    console.log("updateWebSiteAddress", valueOption);
     updateWebSiteAddress(valueOption);
 
     onClose();
@@ -358,7 +359,7 @@ export const CustomDomainForm = ({
                 id="domain"
                 name="domain"
                 disabled={isLoading}
-                label="Enter domai"
+                label="Enter domain"
                 endAdornment={
                   isLoading ? (
                     <InputAdornment position="end">

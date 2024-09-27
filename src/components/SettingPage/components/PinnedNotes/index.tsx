@@ -280,7 +280,7 @@ export const PinnedNotes = () => {
               onDragEnd={onDragEnd}
             />
             {Boolean(dataPinnedNotes.length) && (
-              <Typography variant="body2">
+              <Typography sx={{ mt: 1 }} variant="body2">
                 You can drag&drop items for manage order
               </Typography>
             )}

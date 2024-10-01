@@ -30,15 +30,31 @@ import { PinnedNote } from "./components/PinnedNote";
 import { StyledDialog, StyledDialogContent, StyledTitle } from "./styled";
 import { reorder } from "./helpers";
 import { ListPinnedNote } from "./components/ListPinnedNote";
+import { fetchPins, searchPosts } from "@/services/nostr/api";
+import { Post } from "libnostrsite";
 
-export const PinnedNotes = () => {
+function convertPosts(posts: Post[]) {
+  const pins: IPinnedNote[] = [];
+  for (const post of posts) {
+    pins.push({
+      id: post.id,
+      title: post.title || "",
+      picture: post.images?.[0] || "",
+      summary: post.excerpt || "",
+      datetime: post.published_at || "",
+    });
+  }
+  return pins;
+}
+
+export const PinnedNotes = ({ siteId }: { siteId: string }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [dataPinnedNotes, setDataPinnedNotes] = useState<IPinnedNote[]>([]);
   const [originalPinnedNotes, setOriginalPinnedNotes] = useState<IPinnedNote[]>(
-    [],
+    []
   );
 
   const [options, setOptions] = useState<IPinnedNote[]>([]);
@@ -80,11 +96,11 @@ export const PinnedNotes = () => {
 
   const handleChangeAuthor = (
     _: SyntheticEvent<Element, Event>,
-    pinnedNote: IPinnedNote | string | null,
+    pinnedNote: IPinnedNote | string | null
   ) => {
     if (pinnedNote !== null && typeof pinnedNote !== "string") {
       const isAlreadyPinned = dataPinnedNotes.some(
-        (note) => note.id === pinnedNote.id,
+        (note) => note.id === pinnedNote.id
       );
 
       if (!isAlreadyPinned) {
@@ -94,80 +110,42 @@ export const PinnedNotes = () => {
     }
   };
 
+  console.log("siteId", siteId);
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-
-      const initialData = [
-        {
-          id: "1",
-          title: "Test title",
-          picture:
-            "https://image.nostr.build/535960683182e3284dd54b97bf180266e59ffe1c6a33c64c3e9fcadcb61d94f9.png",
-          summary: "Test summary test yexy",
-        },
-        {
-          id: "2",
-          title: "Test title",
-          picture:
-            "https://image.nostr.build/535960683182e3284dd54b97bf180266e59ffe1c6a33c64c3e9fcadcb61d94f9.png",
-          summary: "Test summary test yexy",
-        },
-        {
-          id: "3",
-          title: "Test title",
-          picture:
-            "https://image.nostr.build/535960683182e3284dd54b97bf180266e59ffe1c6a33c64c3e9fcadcb61d94f9.png",
-          summary: "Test summary test yexy",
-        },
-      ];
-
-      setDataPinnedNotes(initialData);
-      setOriginalPinnedNotes(initialData);
-    }, 2000);
-  }, []);
+    fetchPins(siteId)
+      .then((posts) => {
+        const pins = convertPosts(posts);
+        setDataPinnedNotes(pins);
+        setOriginalPinnedNotes(pins);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.error("Error fetching pins:", e);
+        setLoading(false);
+      });
+  }, [siteId]);
 
   const fetchData = async (query: string) => {
     try {
       setLoading(true);
       setOptions([]);
 
-      console.log(query);
-
-      const generatedOptions: IPinnedNote[] = [
-        {
-          id: "4",
-          title: "Fetched title 1",
-          picture:
-            "https://image.nostr.build/535960683182e3284dd54b97bf180266e59ffe1c6a33c64c3e9fcadcb61d94f9.png",
-          summary: "Fetched summary 1",
-        },
-        {
-          id: "5",
-          title: "Fetched title 2",
-          picture:
-            "https://image.nostr.build/535960683182e3284dd54b97bf180266e59ffe1c6a33c64c3e9fcadcb61d94f9.png",
-          summary: "Fetched summary 2",
-        },
-        {
-          id: "6",
-          title: "Fetched title 3",
-          picture:
-            "https://image.nostr.build/535960683182e3284dd54b97bf180266e59ffe1c6a33c64c3e9fcadcb61d94f9.png",
-          summary: "Fetched summary 3",
-        },
-      ];
+      console.log("query", query, siteId);
+      const posts = await searchPosts(siteId, query);
+      // console.log("events", posts);
+      const pins = convertPosts(posts);
+      console.log("found pins", pins);
 
       setLoading(false);
-      setOptions(generatedOptions);
+      setOptions(pins);
     } catch (error) {
       setLoading(false);
       console.error("Error fetching data:", error);
     }
   };
 
-  const debouncedFetchData = useMemo(() => debounce(fetchData, 300), []);
+  const debouncedFetchData = useMemo(() => debounce(fetchData, 300), [siteId]);
 
   useEffect(() => {
     if (inputValue) {
@@ -175,7 +153,7 @@ export const PinnedNotes = () => {
     } else {
       setOptions([]);
     }
-  }, [inputValue, debouncedFetchData, setOptions]);
+  }, [inputValue, debouncedFetchData, setOptions, siteId]);
 
   return (
     <StyledSettingCol id={HASH_CONFIG.PINNED_NOTES}>
@@ -213,7 +191,7 @@ export const PinnedNotes = () => {
         <StyledDialog onClose={handleClose} open={isOpen}>
           <DialogTitle>
             <StyledTitle variant="body1">
-              Manage pinned notes
+              Manage pinned posts
               <Fab
                 onClick={handleClose}
                 size="small"
@@ -225,6 +203,10 @@ export const PinnedNotes = () => {
             </StyledTitle>
           </DialogTitle>
           <StyledDialogContent>
+            <Typography sx={{ mt: 1, mb: 1 }} variant="body2">
+              Pin posts to always show them at the top and to mark them as{" "}
+              <em>featured</em>, depending on your theme.
+            </Typography>
             <Autocomplete
               freeSolo
               disablePortal
@@ -239,7 +221,7 @@ export const PinnedNotes = () => {
               }
               renderOption={(props, option) => {
                 const isAlreadyPinned = dataPinnedNotes.some(
-                  (note) => note.id === option.id,
+                  (note) => note.id === option.id
                 );
 
                 return typeof option === "string" ? (
@@ -268,7 +250,7 @@ export const PinnedNotes = () => {
                 <TextField
                   {...params}
                   variant="outlined"
-                  placeholder="Search notes"
+                  placeholder="Search posts"
                   onChange={(event) => setInputValue(event.target.value)}
                 />
               )}
@@ -281,7 +263,7 @@ export const PinnedNotes = () => {
             />
             {Boolean(dataPinnedNotes.length) && (
               <Typography sx={{ mt: 1 }} variant="body2">
-                You can drag&drop items for manage order
+                Drag & drop to change the order
               </Typography>
             )}
           </StyledDialogContent>

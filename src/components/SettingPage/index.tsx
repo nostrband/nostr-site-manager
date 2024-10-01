@@ -196,7 +196,7 @@ export const SettingPage = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id,
+      (item) => item.id !== input.id
     );
 
     setFieldValue("navigation", navigation);
@@ -302,7 +302,7 @@ export const SettingPage = () => {
         />
       )}
 
-      <PinnedNotes />
+      <PinnedNotes siteId={values.id} />
 
       <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
         Design

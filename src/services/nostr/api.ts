@@ -1,13 +1,16 @@
-import { NDKEvent, NostrEvent } from "@nostr-dev-kit/ndk";
+import { NDKEvent, NDKFilter, NDKKind, NostrEvent } from "@nostr-dev-kit/ndk";
 import { ReturnSettingsSiteDataType } from "../sites.service";
 import {
   KIND_PACKAGE,
+  KIND_PINNED,
   KIND_PROFILE,
   KIND_SITE,
   NostrParser,
   OUTBOX_RELAYS,
+  Post,
   Site,
   SiteAddr,
+  createSiteFilters,
   fetchEvents,
   tv,
 } from "libnostrsite";
@@ -25,9 +28,12 @@ import {
   deleteSiteEvent,
   filterDeleted,
 } from "./nostr";
-import { nip19 } from "nostr-tools";
+import { Event, matchFilters, nip19 } from "nostr-tools";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { NPUB_PRO_API, NPUB_PRO_DOMAIN } from "@/consts";
+
+// FIXME reuse decls from libnostrsite
+const KIND_PINNED_LONG_NOTES = 10023;
 
 const sites: Site[] = [];
 const packageThemes = new Map<string, string>();
@@ -473,3 +479,99 @@ export const fetchDomains = async (site: string) => {
   const reply = await fetchWithSession(`${NPUB_PRO_API}/attach?site=${site}`);
   return reply.json();
 };
+
+export const searchPosts = async (siteId: string, query: string) => {
+  const site = sites.find(s => s.id === siteId);
+  if (!site) return [];
+
+  const filters = createSiteFilters({
+    settings: site,
+    limit: 10
+  });
+
+  // set search query
+  filters.forEach(f => f.search = query);
+  console.log("search filters", filters);
+
+  const events = await fetchEvents(
+    ndk,
+    filters,
+    SEARCH_RELAYS,
+  );
+
+  console.log("searched events");
+
+  const posts: Post[] = [];
+  for (const e of [...events]) {
+    const post = await parser.parseEvent(e);
+    if (post)
+      posts.push(post);
+  }
+
+  return posts;
+}
+
+export const fetchPins = async (siteId: string) => {
+  const site = sites.find(s => s.id === siteId);
+  if (!site) return [];
+
+  const pinLists = await fetchEvents(
+    ndk,
+    {
+      kinds: [KIND_PINNED, KIND_PINNED_LONG_NOTES] as NDKKind[],
+      authors: site.contributor_pubkeys,
+    },
+    [...site.contributor_relays, ...SEARCH_RELAYS],
+  );
+  console.log("pinLists", pinLists);
+
+  const idAddrs = new Set<string>();
+  const eventAddrs = new Set<string>();
+  for (const p of pinLists) {
+    const ids = parser.parsePins(p);
+    for (const id of ids)
+      idAddrs.add(id);
+  }
+  console.log("idAddrs", { idAddrs });
+
+  const pinFilters: NDKFilter[] = [];
+  const idFilter: NDKFilter = {
+    ids: [...idAddrs].filter(i => i.startsWith("note")).map(id => nip19.decode(id).data) as string[]
+  };
+
+  const addrs = [...idAddrs].filter(i => i.startsWith("naddr")).map(a => nip19.decode(a).data) as nip19.AddressPointer[];
+
+  const addrFilter: NDKFilter = {
+    authors: [...new Set(addrs.map(a => a.pubkey))],
+    kinds: [...new Set(addrs.map(a => a.kind))],
+    "#d": [...new Set(addrs.map(a => a.identifier))],
+  };
+
+  if (idFilter.ids?.length)
+    pinFilters.push(idFilter);
+  if (addrFilter.authors?.length)
+    pinFilters.push(addrFilter);
+
+  if (!pinFilters.length) return [];
+
+  const pinned = await fetchEvents(
+    ndk,
+    pinFilters,
+    [...site.contributor_relays, ...SEARCH_RELAYS],
+  );
+  console.log("pinned", pinned);
+
+  const siteFilters = createSiteFilters({
+    settings: site,
+    limit: 10
+  });
+
+  const valid = [...pinned].filter(p => matchFilters(siteFilters, p.rawEvent() as Event));
+  const posts: Post[] = [];
+  for (const e of valid) {
+    const post = await parser.parseEvent(e);
+    if (post) posts.push(post);
+  }
+
+  return posts;
+}

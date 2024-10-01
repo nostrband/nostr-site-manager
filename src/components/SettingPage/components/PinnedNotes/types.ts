@@ -3,4 +3,5 @@ export interface IPinnedNote {
   title: string;
   picture: string;
   summary: string;
+  datetime: string;
 }

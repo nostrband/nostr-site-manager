@@ -54,7 +54,7 @@ try {
 } catch {}
 
 export function srm(e: NDKEvent | NostrEvent, name: string, name1?: string) {
-  if (!name)
+  if (!name1)
     e.tags = e.tags.filter((t) => t.length < 2 || t[0] !== name);
   else
     e.tags = e.tags.filter((t) => t.length < 3 || t[0] !== name || t[1] !== name1);

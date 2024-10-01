@@ -60,7 +60,7 @@ export type ReturnSettingsSiteDataType = {
   adminAvatar?: string;
 
   postsPerPage: string;
-  selectedOptionsMainCallAction: string;
+  contentActionMain: string;
   contentActions: string[];
 };
 

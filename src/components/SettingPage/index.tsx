@@ -69,7 +69,7 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   codeinjection_head: "",
   adminPubkey: "",
   postsPerPage: "",
-  selectedOptionsMainCallAction: "",
+  contentActionMain: "",
   contentActions: [],
 };
 
@@ -182,7 +182,7 @@ export const SettingPage = () => {
   };
 
   const handleOptionsMainCallAction = (value: string) => {
-    setFieldValue("selectedOptionsMainCallAction", value);
+    setFieldValue("contentActionMain", value);
   };
 
   const handleChangeKindsHomePage = (value: number | number[]) => {
@@ -297,7 +297,7 @@ export const SettingPage = () => {
       {authed && TESTERS.includes(userPubkey) && (
         <Other
           postsPerPage={values.postsPerPage}
-          selectedOptionsMainCallAction={values.selectedOptionsMainCallAction}
+          contentActionMain={values.contentActionMain}
           handleOptionsMainCallAction={handleOptionsMainCallAction}
           handleChangeContentActions={handleChangeContentActions}
           handleBlur={handleBlur}

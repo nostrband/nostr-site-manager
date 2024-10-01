@@ -1,10 +1,16 @@
 "use client";
 import * as React from "react";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import { StyledListWrap } from "@/components/ListSites/styled";
+import {
+  StyledButtonAdd,
+  StyledListWrap,
+  StyledTitle,
+} from "@/components/ListSites/styled";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { PreviewSite } from "@/components/PreviewSite";
+import Link from "next/link";
 
 type ListSitesType = {
   data: ReturnSettingsSiteDataType[];
@@ -14,9 +20,18 @@ export const ListSites = ({ data }: ListSitesType) => {
 
   return (
     <>
-      <Typography variant="h4" sx={{ fontWeight: "bold", paddingTop: "10px" }}>
+      <StyledTitle variant="h4">
         Your websites
-      </Typography>
+        <StyledButtonAdd
+          LinkComponent={Link}
+          href="/admin/add"
+          color="decorate"
+          variant="contained"
+        >
+          <span>Add website</span>
+          <AddCircleOutlineOutlinedIcon fontSize="small" />
+        </StyledButtonAdd>
+      </StyledTitle>
       <StyledListWrap>
         <Grid
           sx={{ width: "100%", marginTop: "40px" }}

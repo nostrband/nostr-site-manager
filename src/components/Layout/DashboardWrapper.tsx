@@ -22,11 +22,15 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const pathAdmin = useFirstPathElement();
   const { data } = useListSites();
 
-  const isHideSideBar = pathname === "/admin";
+  const isHideSideBar = pathname === "/admin" || pathname === "/admin/add";
 
   const getValidParamsId = useCallback(
-    (list: ReturnSitesDataType[], id: string | string[]) => {
+    (list: ReturnSitesDataType[], id: string | string[], url: string) => {
       const isId = list.find((el) => el.id === id);
+
+      if (url.includes("add")) {
+        return;
+      }
 
       if (!isId) {
         router.push(pathAdmin);
@@ -43,7 +47,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (data) {
-      getValidParamsId(data, params.id);
+      getValidParamsId(data, params.id, pathname);
     }
   }, [data, getValidParamsId, params.id, pathname]);
 

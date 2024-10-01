@@ -731,7 +731,8 @@ export async function updatePreviewSite(ds: DesignSettings) {
 
   // new way to store settings
   srm(e, "settings", "theme");
-  for (const key in ds.custom) e.tags.push(["settings", "theme", key, ""+ds.custom[key]]);
+  for (const key in ds.custom)
+    e.tags.push(["settings", "theme", key, "" + ds.custom[key]]);
 
   // update
   site.tags = e.tags;
@@ -917,8 +918,11 @@ export async function checkNpubProDomain(domain: string, naddr: string) {
     `${NPUB_PRO_API}/check?domain=${domain}&site=${naddr}`,
   );
   switch (reply.status) {
-    case 200: return 'ok';
-    case 409: return 'conflict';
-    default: return 'error';
+    case 200:
+      return "ok";
+    case 409:
+      return "conflict";
+    default:
+      return "error";
   }
 }

@@ -76,13 +76,19 @@ export const WebsiteAddress = ({
     }
 
     setFetchAddress(true);
-    const ok = await checkNpubProDomain(sub, siteId);
+    const status = await checkNpubProDomain(sub, siteId);
     setFetchAddress(false);
 
-    if (!ok) {
-      setError("This domain is already taken.");
-    } else {
-      setError(null);
+    switch (status) {
+      case "ok":
+        setError(null);
+        break;
+      case "conflict":
+        setError("This domain is already taken.");
+        break;
+      case "error":
+        setError("Invalid domain or other error");
+        break;
     }
   }, 500);
 

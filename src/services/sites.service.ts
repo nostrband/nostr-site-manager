@@ -60,7 +60,8 @@ export type ReturnSettingsSiteDataType = {
   adminAvatar?: string;
 
   postsPerPage: string;
-  selectedOptionsMainCallAction: string[];
+  contentActionMain: string;
+  contentActions: string[];
 };
 
 export const getSites = async (): Promise<ReturnSettingsSiteDataType[]> => {
@@ -80,7 +81,9 @@ export const getSettingsSite = async (
   try {
     const site = (await fetchSites()).find((s) => s.id === id)!;
     console.log("site", site);
-    return { ...site, postsPerPage: "", selectedOptionsMainCallAction: [] }; // FIXME remove, add empty hashtags for test and accentColor
+    return {
+      ...site,
+    }; // FIXME remove, add empty hashtags for test and accentColor
     // const res: AxiosResponse<any> = await ApiClient.get(
     //   `/settings-site?id=${id}`,
     // );

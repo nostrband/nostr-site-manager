@@ -22,19 +22,34 @@ import { HASH_CONFIG } from "@/consts";
 
 interface IOther extends IBaseSetting {
   postsPerPage: string;
-  selectedOptionsMainCallAction: string[];
-  handleOptionsMainCallAction: (value: string[]) => void;
+  contentActionMain: string;
+  selectedContentActions: string[];
+  handleOptionsMainCallAction: (value: string) => void;
+  handleChangeContentActions: (value: string[]) => void;
 }
 
-const options = ["Zap", "Like", "Repost", "Share", "Subscribe", "Open with"];
+const options: { [name: string]: string } = {
+  zap: "Zap",
+  like: "Like",
+  bookmark: "Bookmark",
+  share: "Share",
+  follow: "Follow",
+  "open-with": "Open with",
+  quote: "Quote",
+  comment: "Comment",
+  highlight: "Highlight",
+};
+const mainOptions = ["zap", "like", "bookmark", "share", "follow", "open-with"];
 
 export const Other = ({
   postsPerPage,
-  selectedOptionsMainCallAction,
+  contentActionMain,
   handleChange,
   handleBlur,
   submitForm,
+  selectedContentActions,
   handleOptionsMainCallAction,
+  handleChangeContentActions,
   isLoading,
 }: IOther) => {
   const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
@@ -55,16 +70,22 @@ export const Other = ({
     const {
       target: { value },
     } = event;
-    handleOptionsMainCallAction(
-      typeof value === "string" ? value.split(",") : value,
+    handleChangeContentActions(
+      typeof value === "string" ? value.split(",") : value
     );
+  };
+
+  const handleContentActions = (event: SelectChangeEvent<string>) => {
+    const { value } = event.target;
+
+    handleOptionsMainCallAction(value);
   };
 
   return (
     <StyledSettingCol id={HASH_CONFIG.OTHER}>
       <StyledSettingBlock>
         <StyledHeadSettingBlock>
-          <Typography variant="h6">Other</Typography>
+          <Typography variant="h6">Other settings</Typography>
 
           <SaveButton
             isEdit={isEdit}
@@ -74,7 +95,7 @@ export const Other = ({
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Control content on pages
+          Other content and plugin settings
         </Typography>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
@@ -92,24 +113,41 @@ export const Other = ({
         </StyledFormControl>
 
         <StyledFormControl disabled={!isEdit} fullWidth size="small">
+          <InputLabel id="main-call-to-action">Main call to action</InputLabel>
+          <Select
+            labelId="main-call-to-action"
+            id="main-call-to-action"
+            value={contentActionMain}
+            label="Main call to action"
+            onChange={handleContentActions}
+          >
+            {mainOptions.map((o) => (
+              <MenuItem key={o} value={o}>
+                <ListItemText primary={options[o]} />
+              </MenuItem>
+            ))}
+          </Select>
+        </StyledFormControl>
+
+        <StyledFormControl disabled={!isEdit} fullWidth size="small">
           <InputLabel id="demo-multiple-checkbox-label">
-            Main call to action
+            Content actions
           </InputLabel>
           <Select
             labelId="demo-multiple-checkbox-label"
             id="demo-multiple-checkbox"
             multiple
-            value={selectedOptionsMainCallAction}
+            value={selectedContentActions}
             onChange={handleChangeOptions}
-            input={<OutlinedInput label="Main call to action" />}
-            renderValue={(selected) => selected.join(", ")}
+            input={<OutlinedInput label="Content actions" />}
+            renderValue={(selected) =>
+              selected.filter((s) => !!s.trim()).map(s => options[s]).join(", ")
+            }
           >
-            {options.map((o) => (
+            {Object.keys(options).map((o) => (
               <MenuItem key={o} value={o}>
-                <Checkbox
-                  checked={selectedOptionsMainCallAction.indexOf(o) > -1}
-                />
-                <ListItemText primary={o} />
+                <Checkbox checked={selectedContentActions.includes(o)} />
+                <ListItemText primary={options[o]} />
               </MenuItem>
             ))}
           </Select>

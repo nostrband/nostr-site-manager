@@ -1,13 +1,22 @@
 "use client";
-import { Suspense } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 import { useListSites } from "@/hooks/useListSites";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { ListSites } from "@/components/ListSites";
 import { Container } from "@mui/material";
 import { GetStarted } from "@/components/GetStarted";
+import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 
 export default function Home() {
   const { data, isLoading, isFetching } = useListSites();
+  const authed = useContext(AuthContext);
+  const [pubkey, setPubkey] = useState("");
+  useEffect(() => {
+    if (pubkey && userPubkey !== pubkey) {
+      window.location.reload();
+    }
+    setPubkey(userPubkey);
+  }, [authed]);
 
   return (
     <Suspense>

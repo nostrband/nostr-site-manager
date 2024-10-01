@@ -13,6 +13,7 @@ import {
   createSiteFilters,
   fetchEvents,
   tv,
+  matchPostsToFilters
 } from "libnostrsite";
 import {
   addOnAuth,

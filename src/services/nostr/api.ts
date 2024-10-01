@@ -489,20 +489,20 @@ export const searchPosts = async (siteId: string, query: string) => {
     limit: 10
   });
 
-  // set search query
-  filters.forEach(f => f.search = query);
   console.log("search filters", filters);
 
   const events = await fetchEvents(
     ndk,
-    filters,
+    filters.map(f => ({ ...f, search: query })),
     SEARCH_RELAYS,
   );
 
-  console.log("searched events");
+  console.log("searched events", events);
+
+  const valid = [...events].filter(e => matchPostsToFilters(e, filters))
 
   const posts: Post[] = [];
-  for (const e of [...events]) {
+  for (const e of valid) {
     const post = await parser.parseEvent(e);
     if (post)
       posts.push(post);

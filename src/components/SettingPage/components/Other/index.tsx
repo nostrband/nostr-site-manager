@@ -71,7 +71,7 @@ export const Other = ({
       target: { value },
     } = event;
     handleChangeContentActions(
-      typeof value === "string" ? value.split(",") : value
+      typeof value === "string" ? value.split(",") : value,
     );
   };
 
@@ -141,7 +141,10 @@ export const Other = ({
             onChange={handleChangeOptions}
             input={<OutlinedInput label="Content actions" />}
             renderValue={(selected) =>
-              selected.filter((s) => !!s.trim()).map(s => options[s]).join(", ")
+              selected
+                .filter((s) => !!s.trim())
+                .map((s) => options[s])
+                .join(", ")
             }
           >
             {Object.keys(options).map((o) => (

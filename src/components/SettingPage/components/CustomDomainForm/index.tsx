@@ -421,8 +421,8 @@ export const CustomDomainForm = ({
                           .filter((s) => !!s)
                           .join("."),
                   },
-                  i
-                )
+                  i,
+                ),
               )}
 
             {stepForm === "edit-dns-success" && (
@@ -560,7 +560,7 @@ export const CustomDomainForm = ({
                       `www.${domainValues.domain}` === valueOption ? "www" : "",
                     value: redirectionOptions!.cnameDomain!,
                   },
-                  0
+                  0,
                 )}
 
                 {renderDNS(
@@ -570,7 +570,7 @@ export const CustomDomainForm = ({
                       `www.${domainValues.domain}` === valueOption ? "" : "www",
                     value: redirectionOptions!.redirectIps[0]!,
                   },
-                  1
+                  1,
                 )}
               </>
             )}
@@ -590,7 +590,7 @@ export const CustomDomainForm = ({
                     name: domainInfo!.sub,
                     value: redirectionOptions!.cnameDomain!,
                   },
-                  0
+                  0,
                 )}
                 <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
                   Make sure to remove other CNAME and A records for this name,

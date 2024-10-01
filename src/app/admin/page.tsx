@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { useListSites } from "@/hooks/useListSites";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { ListSites } from "@/components/ListSites";
-import { Container, Typography } from "@mui/material";
+import { Container } from "@mui/material";
 import { GetStarted } from "@/components/GetStarted";
 
 export default function Home() {

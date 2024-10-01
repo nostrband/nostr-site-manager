@@ -111,7 +111,9 @@ export const TESTERS = [
   "3cfa816bb4892fa6be993ac72a9fcdbb089bdea0c5d9011fd204d154545fa2d9",
   // pitunited
   "f1f9b0996d4ff1bf75e79e4cc8577c89eb633e68415c7faf74cf17a07bf80bd8",
-  // FIXME add alex
+  // Frisian Bears
+  "3ba42e70f27a79467bb3377527818384fe41c720ceb3b367223cb896f9954cb2",
+  // alex
   "b33f4a427387a151c82a5925b3c9fa631b240563a9c8b82f42af18655845fb2f",
 ];
 

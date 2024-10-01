@@ -29,6 +29,7 @@ export const ListPinnedNote: FC<Props> = React.memo(
                   title={el.title}
                   summary={el.summary}
                   picture={el.picture}
+                  datetime={el.datetime}
                   index={index}
                   isDragElement={true}
                   secondaryAction={

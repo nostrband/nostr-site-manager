@@ -183,6 +183,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
                 title={el.title}
                 summary={el.summary}
                 picture={el.picture}
+                datetime={el.datetime}
               />
             ))}
           </List>

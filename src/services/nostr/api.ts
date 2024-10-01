@@ -25,7 +25,6 @@ import {
   srm,
   publishSiteEvent,
   fetchWithSession,
-  stv2,
   deleteSiteEvent,
   filterDeleted,
   stv3,

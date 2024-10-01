@@ -726,8 +726,12 @@ export async function updatePreviewSite(ds: DesignSettings) {
   srm(e, "nav");
   for (const n of ds.navigation) e.tags.push(["nav", n.url, n.label]);
 
+  // DEPRECATED
   srm(e, "custom");
-  for (const key in ds.custom) e.tags.push(["custom", key, ""+ds.custom[key]]);
+
+  // new way to store settings
+  srm(e, "settings", "theme");
+  for (const key in ds.custom) e.tags.push(["settings", "theme", key, ""+ds.custom[key]]);
 
   // update
   site.tags = e.tags;

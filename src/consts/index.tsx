@@ -112,6 +112,7 @@ export const TESTERS = [
   // pitunited
   "f1f9b0996d4ff1bf75e79e4cc8577c89eb633e68415c7faf74cf17a07bf80bd8",
   // FIXME add alex
+  "b33f4a427387a151c82a5925b3c9fa631b240563a9c8b82f42af18655845fb2f",
 ];
 
 export const HASH_CONFIG = {

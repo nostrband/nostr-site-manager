@@ -60,8 +60,8 @@ export const CustomDomains = ({
       const res = await fetchDomains(siteId);
       console.log({ res });
       console.log("getDomains", res);
-  
-      setListDomains(res.domains.map((d: any) => d.domain));  
+
+      setListDomains(res.domains.map((d: any) => d.domain));
     } else {
       setListDomains([]);
     }

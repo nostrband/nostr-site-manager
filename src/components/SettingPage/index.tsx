@@ -69,7 +69,8 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   codeinjection_head: "",
   adminPubkey: "",
   postsPerPage: "",
-  selectedOptionsMainCallAction: [],
+  contentActionMain: "",
+  contentActions: [],
 };
 
 export const SettingPage = () => {
@@ -172,12 +173,16 @@ export const SettingPage = () => {
     setFieldValue("url", addHttps(url));
   };
 
+  const handleChangeContentActions = (value: string[]) => {
+    setFieldValue("contentActions", value);
+  };
+
   const handleChangeKinds = (value: number | number[]) => {
     setFieldValue("kinds", value);
   };
 
-  const handleOptionsMainCallAction = (value: string | string[]) => {
-    setFieldValue("selectedOptionsMainCallAction", value);
+  const handleOptionsMainCallAction = (value: string) => {
+    setFieldValue("contentActionMain", value);
   };
 
   const handleChangeKindsHomePage = (value: number | number[]) => {
@@ -195,7 +200,7 @@ export const SettingPage = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id
+      (item) => item.id !== input.id,
     );
 
     setFieldValue("navigation", navigation);
@@ -217,7 +222,7 @@ export const SettingPage = () => {
   //     </SpinerWrap>
   //   );
   // }
-
+  console.log({ values });
   return (
     <>
       <Typography variant="h4" sx={{ fontWeight: "bold" }}>
@@ -292,11 +297,13 @@ export const SettingPage = () => {
       {authed && TESTERS.includes(userPubkey) && (
         <Other
           postsPerPage={values.postsPerPage}
-          selectedOptionsMainCallAction={values.selectedOptionsMainCallAction}
+          contentActionMain={values.contentActionMain}
           handleOptionsMainCallAction={handleOptionsMainCallAction}
+          handleChangeContentActions={handleChangeContentActions}
           handleBlur={handleBlur}
           handleChange={handleChange}
           submitForm={submitForm}
+          selectedContentActions={values.contentActions}
           isLoading={isLoading}
         />
       )}

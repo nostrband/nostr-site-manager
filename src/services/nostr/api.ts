@@ -24,6 +24,7 @@ import {
   stv2,
   deleteSiteEvent,
   filterDeleted,
+  stv3,
 } from "./nostr";
 import { nip19 } from "nostr-tools";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
@@ -83,8 +84,24 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   stv(e, "twitter_title", data.xTitle);
   stv(e, "twitter_description", data.xDescription);
   stv(e, "twitter_image", data.xImage);
-  stv2(e, "config", "codeinjection_head", data.codeinjection_head);
-  stv2(e, "config", "codeinjection_foot", data.codeinjection_foot);
+
+  // DEPRECATED
+  // stv2(e, "config", "codeinjection_head", data.codeinjection_head);
+  // stv2(e, "config", "codeinjection_foot", data.codeinjection_foot);
+
+  // DEPRECATED
+  srm(e, "config");
+
+  // new way
+  srm(e, "settings", "core");
+  stv3(e, "settings", "core", "codeinjection_head", data.codeinjection_head);
+  stv3(e, "settings", "core", "codeinjection_foot", data.codeinjection_foot);
+  stv3(e, "settings", "core", "posts_per_page", data.postsPerPage);
+
+  // FIXME move to plugin settings later
+  stv3(e, "settings", "core", "content_cta_main", data.contentActionMain);
+  stv3(e, "settings", "core", "content_cta_list", data.contentActions.join(","));
+
 
   // nav
   srm(e, "nav");
@@ -93,20 +110,20 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
 
   // p tags
   srm(e, "p");
-  for (const p of data.contributors) e.tags.push(["p", p]);
+  for (const p of [...new Set(data.contributors)]) e.tags.push(["p", p]);
 
   // edit tags
   srm(e, "include");
-  for (const t of data.hashtags)
+  for (const t of [... new Set(data.hashtags)])
     e.tags.push(["include", "t", t.replace("#", "")]);
   if (!data.hashtags.length) stv(e, "include", "*");
-  for (const t of data.hashtags_homepage)
+  for (const t of [... new Set(data.hashtags_homepage)])
     e.tags.push(["include", "t", t.replace("#", ""), "", "homepage"]);
 
   // edit kinds
   srm(e, "kind");
-  for (const k of data.kinds) e.tags.push(["kind", k + ""]);
-  for (const k of data.kinds_homepage)
+  for (const k of [... new Set(data.kinds)]) e.tags.push(["kind", k + ""]);
+  for (const k of [... new Set(data.kinds_homepage)])
     e.tags.push(["kind", k + "", "", "homepage"]);
 
   const relays = [...userRelays, SITE_RELAY];
@@ -221,22 +238,26 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
     socialAccountX: "",
     codeinjection_head: s.codeinjection_head || "",
     codeinjection_foot: s.codeinjection_foot || "",
-    postsPerPage: "",
-    selectedOptionsMainCallAction: [],
     navigation: {
       primary:
-        s.navigation?.map((n) => ({
+        s.navigation?.map((n, i) => ({
           title: n.label,
           link: n.url,
-          id: n.url,
+          id: ""+i,
         })) || [],
       secondary:
-        s.secondary_navigation?.map((n) => ({
+        s.secondary_navigation?.map((n, i) => ({
           title: n.label,
           link: n.url,
-          id: n.url,
+          id: ""+i,
         })) || [],
     },
+    postsPerPage: s.config.get("posts_per_page") || "",
+    contentActionMain: s.config.get("content_cta_main") || "",
+    contentActions: (s.config.get("content_cta_list") || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => !!s),
   }));
 }
 

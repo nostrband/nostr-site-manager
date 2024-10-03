@@ -1,3 +1,5 @@
+import { format, parseISO } from "date-fns";
+
 export const reorder = <T>(
   list: T[],
   startIndex: number,
@@ -8,4 +10,11 @@ export const reorder = <T>(
   result.splice(endIndex, 0, removed);
 
   return result;
+};
+
+export const getDateTime = (dateString: string) => {
+  const date = parseISO(dateString);
+  const formattedDate = format(date, "d MMMM yyyy, HH:mm");
+
+  return formattedDate;
 };

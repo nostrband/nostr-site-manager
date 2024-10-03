@@ -731,7 +731,8 @@ export async function updatePreviewSite(ds: DesignSettings) {
 
   // new way to store settings
   srm(e, "settings", "theme");
-  for (const key in ds.custom) e.tags.push(["settings", "theme", key, ""+ds.custom[key]]);
+  for (const key in ds.custom)
+    e.tags.push(["settings", "theme", key, "" + ds.custom[key]]);
 
   // update
   site.tags = e.tags;

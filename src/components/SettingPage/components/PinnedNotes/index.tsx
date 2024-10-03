@@ -8,8 +8,9 @@ import {
 import {
   Autocomplete,
   Avatar,
+  Box,
+  Chip,
   CircularProgress,
-  Dialog,
   DialogTitle,
   Fab,
   IconButton,
@@ -28,10 +29,21 @@ import { HASH_CONFIG } from "@/consts";
 import { IPinnedNote } from "./types";
 import { PinnedNote } from "./components/PinnedNote";
 import { StyledDialog, StyledDialogContent, StyledTitle } from "./styled";
-import { reorder } from "./helpers";
+import { getDateTime, reorder } from "./helpers";
 import { ListPinnedNote } from "./components/ListPinnedNote";
 import { fetchPins, searchPosts } from "@/services/nostr/api";
 import { Post } from "libnostrsite";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
+import {
+  StyledIdItem,
+  StyledItemAvatar,
+  StyledItemWrap,
+  StyledSecondaryAction,
+  StyledSummary,
+  StyledTitleItem,
+  StyledWrapInfo,
+} from "./components/PinnedNote/styled";
 
 function convertPosts(posts: Post[]) {
   const pins: IPinnedNote[] = [];
@@ -54,7 +66,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
   const [inputValue, setInputValue] = useState("");
   const [dataPinnedNotes, setDataPinnedNotes] = useState<IPinnedNote[]>([]);
   const [originalPinnedNotes, setOriginalPinnedNotes] = useState<IPinnedNote[]>(
-    []
+    [],
   );
 
   const [options, setOptions] = useState<IPinnedNote[]>([]);
@@ -96,11 +108,11 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
 
   const handleChangeAuthor = (
     _: SyntheticEvent<Element, Event>,
-    pinnedNote: IPinnedNote | string | null
+    pinnedNote: IPinnedNote | string | null,
   ) => {
     if (pinnedNote !== null && typeof pinnedNote !== "string") {
       const isAlreadyPinned = dataPinnedNotes.some(
-        (note) => note.id === pinnedNote.id
+        (note) => note.id === pinnedNote.id,
       );
 
       if (!isAlreadyPinned) {
@@ -222,29 +234,49 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
               }
               renderOption={(props, option) => {
                 const isAlreadyPinned = dataPinnedNotes.some(
-                  (note) => note.id === option.id
+                  (note) => note.id === option.id,
                 );
 
                 return typeof option === "string" ? (
                   option
                 ) : (
-                  <ListItem
-                    {...props}
-                    key={option.id}
-                    alignItems="flex-start"
-                    secondaryAction={
-                      isAlreadyPinned ? undefined : (
-                        <IconButton edge="end" aria-label="add" color="info">
-                          <PushPinOutlinedIcon />
-                        </IconButton>
-                      )
-                    }
-                  >
-                    <ListItemAvatar>
-                      <Avatar alt={option.title} src={option.picture} />
-                    </ListItemAvatar>
-                    <ListItemText primary={`${option.id} - ${option.title}`} />
-                  </ListItem>
+                  <>
+                    <StyledItemWrap {...props} key={option.id}>
+                      <StyledItemAvatar
+                        variant="rounded"
+                        alt={option.title}
+                        src={option.picture}
+                      >
+                        <InsertPhotoOutlinedIcon />
+                      </StyledItemAvatar>
+
+                      <StyledWrapInfo>
+                        <StyledTitleItem>{option.title}</StyledTitleItem>
+                        <StyledSummary variant="body2">
+                          {option.summary}
+                        </StyledSummary>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            aliginItems: "center",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            width: "100%",
+                          }}
+                        >
+                          <Chip
+                            size="small"
+                            icon={<AccessTimeOutlinedIcon />}
+                            label={getDateTime(option.datetime)}
+                          />
+
+                          {isAlreadyPinned ? null : (
+                            <PushPinOutlinedIcon color="info" />
+                          )}
+                        </Box>
+                      </StyledWrapInfo>
+                    </StyledItemWrap>
+                  </>
                 );
               }}
               renderInput={(params) => (

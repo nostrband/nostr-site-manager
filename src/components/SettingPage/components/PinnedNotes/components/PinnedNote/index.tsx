@@ -1,8 +1,20 @@
 "use client";
 import { Draggable } from "@hello-pangea/dnd";
-import { Avatar, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+import { Chip } from "@mui/material";
 import { IPinnedNote } from "../../types";
 import React from "react";
+import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import {
+  StyledIdItem,
+  StyledItemAvatar,
+  StyledItemWrap,
+  StyledSecondaryAction,
+  StyledSummary,
+  StyledTitleItem,
+  StyledWrapInfo,
+} from "./styled";
+import { getDateTime } from "../../helpers";
 
 interface PinnedNoteItem extends IPinnedNote {
   secondaryAction?: React.ReactNode;
@@ -15,6 +27,7 @@ export const PinnedNote = ({
   picture,
   summary,
   id,
+  datetime,
   secondaryAction,
   index,
   isDragElement = false,
@@ -23,38 +36,64 @@ export const PinnedNote = ({
     return (
       <Draggable draggableId={id} index={index}>
         {(provided, snapshot) => (
-          <ListItem
+          <StyledItemWrap
             alignItems="flex-start"
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             sx={{
               cursor: "grab",
-              borderBottom: "1px solid #ececec",
-              background: snapshot.isDragging ? "rgb(235,235,235)" : "",
+              opacity: snapshot.isDragging ? "0.5" : "1",
             }}
-            secondaryAction={secondaryAction}
           >
-            <ListItemAvatar>
-              <Avatar alt={title} src={picture} />
-            </ListItemAvatar>
-            <ListItemText primary={`${id} - ${title}`} secondary={summary} />
-          </ListItem>
+            <StyledItemAvatar variant="rounded" alt={title} src={picture}>
+              <InsertPhotoOutlinedIcon />
+            </StyledItemAvatar>
+
+            <StyledWrapInfo>
+              <StyledTitleItem>{title}</StyledTitleItem>
+              <StyledSummary variant="body2">{summary}</StyledSummary>
+              <Chip
+                size="small"
+                icon={<AccessTimeOutlinedIcon />}
+                label={getDateTime(datetime)}
+              />
+              <StyledIdItem variant="body2">
+                <small>{id}</small>
+              </StyledIdItem>
+
+              {secondaryAction ? (
+                <StyledSecondaryAction>{secondaryAction}</StyledSecondaryAction>
+              ) : null}
+            </StyledWrapInfo>
+          </StyledItemWrap>
         )}
       </Draggable>
     );
   }
 
   return (
-    <ListItem
-      alignItems="flex-start"
-      sx={{ px: 0, borderBottom: "1px solid #ececec" }}
-      secondaryAction={secondaryAction}
-    >
-      <ListItemAvatar>
-        <Avatar alt={title} src={picture} />
-      </ListItemAvatar>
-      <ListItemText primary={`${id} - ${title}`} secondary={summary} />
-    </ListItem>
+    <StyledItemWrap alignItems="flex-start">
+      <StyledItemAvatar variant="rounded" alt={title} src={picture}>
+        <InsertPhotoOutlinedIcon />
+      </StyledItemAvatar>
+
+      <StyledWrapInfo>
+        <StyledTitleItem>{title}</StyledTitleItem>
+        <StyledSummary variant="body2">{summary}</StyledSummary>
+        <Chip
+          size="small"
+          icon={<AccessTimeOutlinedIcon />}
+          label={getDateTime(datetime)}
+        />
+        <StyledIdItem variant="body2">
+          <small>{id}</small>
+        </StyledIdItem>
+
+        {secondaryAction ? (
+          <StyledSecondaryAction>{secondaryAction}</StyledSecondaryAction>
+        ) : null}
+      </StyledWrapInfo>
+    </StyledItemWrap>
   );
 };

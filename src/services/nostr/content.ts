@@ -8,7 +8,11 @@ import {
   Post,
 } from "libnostrsite";
 
-export async function searchEvents(
+export type SearchPost = Post & {
+  status: string;
+}
+
+export async function searchPosts(
   siteId: string,
   {
     authors,
@@ -25,7 +29,7 @@ export async function searchEvents(
     until?: number;
     search?: string;
   }
-): Promise<Post[]> {
+): Promise<SearchPost[]> {
   const site = await getSiteSettings(siteId);
   if (!site) throw new Error("Unknown site");
 
@@ -58,9 +62,19 @@ export async function searchEvents(
 
   // make sure it matches our other local filter
   const valid = [...events].filter((e) => matchPostsToFilters(e, filters));
+
+  // mark as 'submitted'
+  const autoFilters = createSiteFilters({
+    limit: 1,
+    settings: site,
+  });
+  // @ts-ignore
+  valid.map(e => e.status = matchPostsToFilters(e, autoFilters) ? "auto" : "");
+
+  // add hashtags
   const posts = [];
   for (const e of valid) {
-    const post = await nostrParser.parseEvent(e);
+    const post = await nostrParser.parseEvent(e) as SearchPost;
     if (!post) continue;
     
     // FIXME wtf? move to libnostrsite
@@ -70,6 +84,10 @@ export async function searchEvents(
       id: t.toLocaleLowerCase(),
       name: t,
     }));
+
+    // copy status
+    // @ts-ignore
+    post.status = e.status;
 
     posts.push(post);
   }

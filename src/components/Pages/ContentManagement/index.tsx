@@ -35,7 +35,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { TitleAdmin } from "@/components/TitleAdmin";
 import { AvatarContributor, GroupContributors, TitleSection } from "./styled";
-import { searchEvents } from "@/services/nostr/content";
+import { searchPosts } from "@/services/nostr/content";
 import { useParams } from "next/navigation";
 
 const filter = createFilterOptions();
@@ -157,7 +157,7 @@ export const ContentManagement = () => {
   };
 
   const test = async () => {
-    const posts = await searchEvents(siteId, {
+    const posts = await searchPosts(siteId, {
       hashtags: ["travel"],
       kinds: [1],
       authors: ["7d33ba57d8a6e8869a1f1d5215254597594ac0dbfeb01b690def8c461b82db35"],

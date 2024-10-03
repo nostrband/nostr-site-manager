@@ -917,5 +917,12 @@ export async function checkNpubProDomain(domain: string, naddr: string) {
   const reply = await fetchWithSession(
     `${NPUB_PRO_API}/check?domain=${domain}&site=${naddr}`,
   );
-  return reply.status === 200;
+  switch (reply.status) {
+    case 200:
+      return "ok";
+    case 409:
+      return "conflict";
+    default:
+      return "error";
+  }
 }

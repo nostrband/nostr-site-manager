@@ -21,7 +21,6 @@ import {
   srm,
   publishSiteEvent,
   fetchWithSession,
-  stv2,
   deleteSiteEvent,
   filterDeleted,
   stv3,
@@ -32,7 +31,7 @@ import { NPUB_PRO_API, NPUB_PRO_DOMAIN } from "@/consts";
 
 const sites: Site[] = [];
 const packageThemes = new Map<string, string>();
-const parser = new NostrParser("http://localhost/");
+export const nostrParser = new NostrParser("http://localhost/");
 let sitesPromise: Promise<void> | undefined = undefined;
 
 export async function editSite(data: ReturnSettingsSiteDataType) {
@@ -299,8 +298,14 @@ function parseSite(ne: NostrEvent) {
     pubkey: e.pubkey,
     relays: [SITE_RELAY, ...userRelays],
   };
-  return parser.parseSite(addr, e);
+  return nostrParser.parseSite(addr, e);
 }
+
+export async function getSiteSettings(siteId: string) {
+  await fetchSites();
+  return sites.find(s => s.id === siteId);
+}
+
 
 export async function fetchSites() {
   console.log("fetchSites", userPubkey);

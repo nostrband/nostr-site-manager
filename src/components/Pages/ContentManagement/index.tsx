@@ -35,6 +35,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { TitleAdmin } from "@/components/TitleAdmin";
 import { AvatarContributor, GroupContributors, TitleSection } from "./styled";
+import { searchEvents } from "@/services/nostr/content";
+import { useParams } from "next/navigation";
 
 const filter = createFilterOptions();
 
@@ -105,6 +107,9 @@ const sampleCards = [
 ];
 
 export const ContentManagement = () => {
+  const params = useParams();
+  const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
+
   const [isOpenContributor, setOpenContributor] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const isOpenAuthor = Boolean(anchorEl);
@@ -149,6 +154,15 @@ export const ContentManagement = () => {
 
   const handleCloseFilterDialog = () => {
     setFilterDialogOpen(false);
+  };
+
+  const test = async () => {
+    const posts = await searchEvents(siteId, {
+      hashtags: ["travel"],
+      kinds: [1],
+      authors: ["7d33ba57d8a6e8869a1f1d5215254597594ac0dbfeb01b690def8c461b82db35"],
+    })
+    console.log("found", posts);
   };
 
   const FilterContent = () => (
@@ -306,6 +320,7 @@ export const ContentManagement = () => {
             size="large"
             fullWidth
             sx={{ height: "56px" }}
+            onClick={test}
           >
             Accept
           </Button>

@@ -30,6 +30,8 @@ import { fetchPins, savePins, searchPosts } from "@/services/nostr/api";
 import { Post } from "libnostrsite";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import {
   StyledItemAvatar,
   StyledItemWrap,
@@ -114,7 +116,6 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
       if (!isAlreadyPinned) {
         setDataPinnedNotes([...dataPinnedNotes, pinnedNote]);
       }
-      setInputValue("");
     }
   };
 
@@ -219,6 +220,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
             <Autocomplete
               freeSolo
               disablePortal
+              clearIcon={<CloseOutlinedIcon onClick={() => setInputValue('')} />}
               loading={isLoading}
               loadingText={"Searching..."}
               options={options}
@@ -266,7 +268,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
                             label={getDateTime(option.datetime)}
                           />
 
-                          {isAlreadyPinned ? null : (
+                          {isAlreadyPinned ? <CheckCircleOutlinedIcon htmlColor="#5bc892" /> : (
                             <PushPinOutlinedIcon color="info" />
                           )}
                         </Box>

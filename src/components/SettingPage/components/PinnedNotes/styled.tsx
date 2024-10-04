@@ -9,7 +9,7 @@ export const StyledTitle = styled(Typography)(() => ({
 }));
 
 export const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
-  width: "400px",
+  width: "600px",
   [theme.breakpoints.down("sm")]: {
     width: "100%",
   },

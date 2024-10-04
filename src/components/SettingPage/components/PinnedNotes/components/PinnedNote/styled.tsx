@@ -54,8 +54,8 @@ export const StyledItemWrap = styled(ListItem)(({ theme }) => ({
 }));
 
 export const StyledItemAvatar = styled(Avatar)(({ theme }) => ({
-  height: "50px",
-  width: "50px",
+  height: "70px",
+  width: "100px",
   marginBottom: "auto",
   [theme.breakpoints.down("sm")]: {
     height: "100px",

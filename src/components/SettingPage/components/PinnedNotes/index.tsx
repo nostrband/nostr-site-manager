@@ -7,17 +7,12 @@ import {
 } from "@/components/SettingPage/styled";
 import {
   Autocomplete,
-  Avatar,
   Box,
   Chip,
   CircularProgress,
   DialogTitle,
   Fab,
-  IconButton,
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   TextField,
   Typography,
 } from "@mui/material";
@@ -31,15 +26,13 @@ import { PinnedNote } from "./components/PinnedNote";
 import { StyledDialog, StyledDialogContent, StyledTitle } from "./styled";
 import { getDateTime, reorder } from "./helpers";
 import { ListPinnedNote } from "./components/ListPinnedNote";
-import { fetchPins, searchPosts } from "@/services/nostr/api";
+import { fetchPins, savePins, searchPosts } from "@/services/nostr/api";
 import { Post } from "libnostrsite";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
 import {
-  StyledIdItem,
   StyledItemAvatar,
   StyledItemWrap,
-  StyledSecondaryAction,
   StyledSummary,
   StyledTitleItem,
   StyledWrapInfo,
@@ -66,7 +59,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
   const [inputValue, setInputValue] = useState("");
   const [dataPinnedNotes, setDataPinnedNotes] = useState<IPinnedNote[]>([]);
   const [originalPinnedNotes, setOriginalPinnedNotes] = useState<IPinnedNote[]>(
-    [],
+    []
   );
 
   const [options, setOptions] = useState<IPinnedNote[]>([]);
@@ -76,14 +69,17 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
     setDataPinnedNotes(updatedNotes);
   };
 
-  const handleAction = () => {
+  const handleAction = async () => {
     if (!_.isEqual(dataPinnedNotes, originalPinnedNotes)) {
       setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        setIsEdit(false);
-        setOriginalPinnedNotes(dataPinnedNotes);
-      }, 2000);
+      console.log("saving", dataPinnedNotes);
+      await savePins(
+        siteId,
+        dataPinnedNotes.map((p) => p.id)
+      );
+      setLoading(false);
+      setIsEdit(false);
+      setOriginalPinnedNotes(dataPinnedNotes);
     } else {
       if (isEdit) {
         setIsEdit(false);
@@ -108,11 +104,11 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
 
   const handleChangeAuthor = (
     _: SyntheticEvent<Element, Event>,
-    pinnedNote: IPinnedNote | string | null,
+    pinnedNote: IPinnedNote | string | null
   ) => {
     if (pinnedNote !== null && typeof pinnedNote !== "string") {
       const isAlreadyPinned = dataPinnedNotes.some(
-        (note) => note.id === pinnedNote.id,
+        (note) => note.id === pinnedNote.id
       );
 
       if (!isAlreadyPinned) {
@@ -218,7 +214,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
           <StyledDialogContent>
             <Typography sx={{ mt: 1, mb: 1 }} variant="body2">
               Pin posts to always show them at the top and to mark them as{" "}
-              <em>featured</em>, depending on your theme.
+              <em>featured</em>, if supported by your theme.
             </Typography>
             <Autocomplete
               freeSolo
@@ -234,7 +230,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
               }
               renderOption={(props, option) => {
                 const isAlreadyPinned = dataPinnedNotes.some(
-                  (note) => note.id === option.id,
+                  (note) => note.id === option.id
                 );
 
                 return typeof option === "string" ? (

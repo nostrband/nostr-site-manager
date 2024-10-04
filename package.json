@@ -11,8 +11,8 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@lexical/headless": "^0.17.0",
     "@lexical/html": "^0.17.0",
     "@lexical/link": "^0.17.0",
@@ -33,7 +33,7 @@
     "lexical": "^0.17.0",
     "libnostrsite": "^1.0.78",
     "lodash": "^4.17.21",
-    "mui-color-input": "^2.0.3",
+    "mui-color-input": "^4.0.1",
     "next": "^14.2.3",
     "nostr-login": "^1.3.4",
     "nostr-tools": "^1.17.0",
@@ -43,7 +43,7 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "sharp": "^0.33.4",
-    "styled-components": "^6.1.11",
+    "styled-components": "^6.1.13",
     "yup": "^1.4.0"
   },
   "devDependencies": {

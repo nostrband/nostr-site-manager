@@ -27,7 +27,6 @@ export const StyledTitleItem = styled(Typography)(({theme}) => ({
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
-  maxWidth: "250px",
   fontWeight: "bold",
   maxWidth: "355px",
   [theme.breakpoints.down("sm")]: {

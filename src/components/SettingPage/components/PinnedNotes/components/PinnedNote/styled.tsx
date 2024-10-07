@@ -24,7 +24,6 @@ export const StyledSummary = styled(Typography)(({theme}) => ({
 }));
 
 export const StyledTitleItem = styled(Typography)(({theme}) => ({
-  whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
   fontWeight: "bold",

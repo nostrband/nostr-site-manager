@@ -121,8 +121,8 @@ export const ModalHashtagsKinds = ({
           >
             {Object.keys(kinds)
               .map((el) => Number(el))
-              .map((kind) => (
-                <MenuItem key={kind} value={kind}>
+              .map((kind, i) => (
+                <MenuItem key={i} value={kind}>
                   <Checkbox checked={kindsSelected.indexOf(kind) > -1} />
                   <ListItemText primary={kinds[kind]} />
                 </MenuItem>

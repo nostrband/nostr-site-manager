@@ -39,6 +39,7 @@ export const StyledSettingBlock = styled(Box)(({ theme }) => ({
 export const StyledSettingCol = styled(Box)(() => ({
   maxWidth: 500,
   paddingTop: 20,
+  justifyContent: "space-between",
 }));
 
 export const StyledFormControl = styled((props: FormControlProps) => {

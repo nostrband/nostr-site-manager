@@ -95,7 +95,7 @@ export const CustomDomains = ({
             </>
           ) : (
             <Typography variant="body2">
-              You not have custom domains!
+              You do not have custom domains yet.
             </Typography>
           )}
         </Box>

@@ -393,7 +393,7 @@ function getThemePackage(id = "") {
   id = id || settings!.themeId;
 
   const theme = themes.find((t) => eventId(t) === id);
-  // console.log("theme", theme, "id", settings!.themeId, "themes", themes);
+  console.log("theme", { theme, id, themes, settings });
   if (!theme) throw new Error("No theme");
 
   const pkg = themePackages.find((p) => p.id === tv(theme, "e"));

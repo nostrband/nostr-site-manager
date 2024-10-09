@@ -104,7 +104,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
     setOpen(false);
   };
 
-  const handleChangeAuthor = (
+  const handlePin = (
     _: SyntheticEvent<Element, Event>,
     pinnedNote: IPinnedNote | string | null
   ) => {
@@ -114,7 +114,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
       );
 
       if (!isAlreadyPinned) {
-        setDataPinnedNotes([...dataPinnedNotes, pinnedNote]);
+        setDataPinnedNotes([pinnedNote, ...dataPinnedNotes]);
       }
     }
   };
@@ -224,7 +224,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
               loading={isLoading}
               loadingText={"Searching..."}
               options={options}
-              onChange={handleChangeAuthor}
+              onChange={handlePin}
               inputValue={inputValue}
               filterOptions={(options) => options}
               getOptionLabel={(option) =>

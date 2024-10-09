@@ -82,6 +82,11 @@ export const NAV_CONFIG = [
     path: "settings",
     icon: <SettingsTwoToneIcon />,
   },
+  {
+    title: "Content management",
+    path: "content",
+    icon: <ArticleTwoToneIcon />,
+  },
 ];
 
 export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {

@@ -10,7 +10,7 @@ import {
 
 export type SearchPost = Post & {
   status: string;
-}
+};
 
 export async function searchPosts(
   siteId: string,
@@ -28,7 +28,7 @@ export async function searchPosts(
     since?: number;
     until?: number;
     search?: string;
-  }
+  },
 ): Promise<SearchPost[]> {
   const site = await getSiteSettings(siteId);
   if (!site) throw new Error("Unknown site");
@@ -57,7 +57,7 @@ export async function searchPosts(
       ...f,
       search,
     })),
-    relays
+    relays,
   );
 
   // make sure it matches our other local filter
@@ -69,18 +69,20 @@ export async function searchPosts(
     settings: site,
   });
   // @ts-ignore
-  valid.map(e => e.status = matchPostsToFilters(e, autoFilters) ? "auto" : "");
+  valid.map(
+    (e) => (e.status = matchPostsToFilters(e, autoFilters) ? "auto" : ""),
+  );
 
   // add hashtags
   const posts = [];
   for (const e of valid) {
-    const post = await nostrParser.parseEvent(e) as SearchPost;
+    const post = (await nostrParser.parseEvent(e)) as SearchPost;
     if (!post) continue;
-    
+
     // FIXME wtf? move to libnostrsite
     const hashtags = nostrParser.parseHashtags(e);
     // @ts-ignore
-    post.tags = hashtags.map(t => ({
+    post.tags = hashtags.map((t) => ({
       id: t.toLocaleLowerCase(),
       name: t,
     }));

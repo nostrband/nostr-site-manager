@@ -303,9 +303,8 @@ function parseSite(ne: NostrEvent) {
 
 export async function getSiteSettings(siteId: string) {
   await fetchSites();
-  return sites.find(s => s.id === siteId);
+  return sites.find((s) => s.id === siteId);
 }
-
 
 export async function fetchSites() {
   console.log("fetchSites", userPubkey);

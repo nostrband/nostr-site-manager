@@ -1,23 +1,16 @@
-/* eslint-disable */
-// @ts-nocheck
+// /* eslint-disable */
+// // @ts-nocheck
 "use client";
 
 import React, { useState, useEffect } from "react";
 import {
-  Autocomplete,
   Button,
   Dialog,
   DialogTitle,
   FormControl,
-  InputLabel,
-  List,
-  Menu,
-  MenuItem,
-  Select,
   TextField,
   Tooltip,
   Typography,
-  createFilterOptions,
   Grid,
   useMediaQuery,
   DialogContent,
@@ -31,6 +24,7 @@ import {
   Box,
 } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import CloseIcon from "@mui/icons-material/Close";
@@ -39,17 +33,9 @@ import { TitleAdmin } from "@/components/TitleAdmin";
 import { AvatarContributor, GroupContributors, TitleSection } from "./styled";
 import { searchPosts } from "@/services/nostr/content";
 import { useParams } from "next/navigation";
-
-const filter = createFilterOptions();
-
-const hashtags = [
-  { title: "Hashtag 1" },
-  { title: "Hashtag 2" },
-  { title: "Hashtag 3" },
-  { title: "Hashtag 4" },
-  { title: "Hashtag 5" },
-  { title: "Hashtag 6" },
-];
+import { AuthorFilter } from "./Filter/components/Author";
+import { HashtagsFilter } from "./Filter/components/Hashtags";
+import { TypesFilter } from "./Filter/components/Types";
 
 const sampleCards = [
   {
@@ -60,6 +46,7 @@ const sampleCards = [
     image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
     hashtags: ["Hashtag 1", "Hashtag 2"],
     url: "https://example.com/card1",
+    status: "auto",
   },
   {
     title: "Card 2",
@@ -69,6 +56,7 @@ const sampleCards = [
     image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
     hashtags: ["Hashtag 3"],
     url: "https://example.com/card2",
+    status: "manual",
   },
   {
     title: "Card 3",
@@ -78,6 +66,7 @@ const sampleCards = [
     image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
     hashtags: ["Nature", "Outdoors"],
     url: "https://example.com/card3",
+    status: "",
   },
   {
     title: "Card 4",
@@ -87,6 +76,7 @@ const sampleCards = [
     image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
     hashtags: ["Forest", "Adventure"],
     url: "https://example.com/card4",
+    status: "",
   },
   {
     title: "Card 5",
@@ -96,6 +86,7 @@ const sampleCards = [
     image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
     hashtags: ["Mountain", "Scenery"],
     url: "https://example.com/card5",
+    status: "",
   },
   {
     title: "Card 6",
@@ -105,23 +96,22 @@ const sampleCards = [
     image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
     hashtags: ["Beach", "Relaxation"],
     url: "https://example.com/card6",
+    status: "manual",
   },
 ];
 
 export const ContentManagement = () => {
   const params = useParams();
   const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
-
   const [isOpenContributor, setOpenContributor] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const isOpenAuthor = Boolean(anchorEl);
-  const [value, setValue] = useState(null);
-  const [age, setAge] = useState("");
   const [isFilterDialogOpen, setFilterDialogOpen] = useState(false);
-
   const isMobile = useMediaQuery("(max-width:600px)");
-
   const [isLoading, setIsLoading] = useState(true);
+
+  const [selectedDateSince, setSelectedDateSince] = useState<Date | null>(null);
+  const [selectedUntilSince, setSelectedDateUntil] = useState<Date | null>(
+    null,
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -129,18 +119,6 @@ export const ContentManagement = () => {
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setAge(event.target.value as string);
-  };
-
-  const handleOpenAuthor = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseAuthor = () => {
-    setAnchorEl(null);
-  };
 
   const handleClickOpen = () => {
     setOpenContributor(true);
@@ -162,40 +140,38 @@ export const ContentManagement = () => {
     const posts = await searchPosts(siteId, {
       hashtags: ["travel"],
       kinds: [1],
-      authors: ["7d33ba57d8a6e8869a1f1d5215254597594ac0dbfeb01b690def8c461b82db35"],
-    })
+      authors: [
+        "7d33ba57d8a6e8869a1f1d5215254597594ac0dbfeb01b690def8c461b82db35",
+      ],
+    });
     console.log("found", posts);
+  };
+
+  const handleDateSinceChange = (newValue: Date | null) => {
+    setSelectedDateSince(newValue);
+    if (newValue) {
+      const unixTimestamp = Math.floor(newValue.getTime() / 1000);
+      console.log("Unix Timestamp:", unixTimestamp);
+    }
+  };
+
+  const handleDateUntilChange = (newValue: Date | null) => {
+    setSelectedDateUntil(newValue);
+    if (newValue) {
+      const unixTimestamp = Math.floor(newValue.getTime() / 1000);
+      console.log("Unix Timestamp:", unixTimestamp);
+    }
   };
 
   const FilterContent = () => (
     <Grid container spacing={2} sx={{ marginBottom: "20px" }}>
       <Grid item xs={12} sm={6} md={3}>
+        <Typography variant="body1" component="div">
+          <b>Author</b>
+        </Typography>
         <FormControl fullWidth>
-          <Typography variant="body1" component="div">
-            <b>Author</b>
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            fullWidth
-            onClick={handleOpenAuthor}
-            sx={{ height: "56px" }}
-          >
-            Some author
-          </Button>
+          <AuthorFilter />
         </FormControl>
-        <Menu
-          id="basic-menu"
-          open={isOpenAuthor}
-          anchorEl={anchorEl}
-          onClose={handleCloseAuthor}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-        >
-          {/* MenuItems */}
-        </Menu>
       </Grid>
 
       <Grid item xs={12} sm={6} md={3}>
@@ -203,21 +179,20 @@ export const ContentManagement = () => {
           <Typography variant="body1" component="div">
             <b>Types</b>
           </Typography>
-          <Select value={age} onChange={handleChange} size="medium">
-            <MenuItem value={10}>notes</MenuItem>
-            <MenuItem value={20}>long-form</MenuItem>
-            <MenuItem value={30}>pages</MenuItem>
-          </Select>
+          <TypesFilter />
         </FormControl>
       </Grid>
 
       <Grid item xs={12} sm={6} md={3}>
         <FormControl fullWidth size="small">
           <Typography variant="body1" component="div">
-            <b>From</b>
+            <b>Since</b>
           </Typography>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker />
+            <DatePicker
+              value={selectedDateSince}
+              onChange={handleDateSinceChange}
+            />
           </LocalizationProvider>
         </FormControl>
       </Grid>
@@ -225,10 +200,13 @@ export const ContentManagement = () => {
       <Grid item xs={12} sm={6} md={3}>
         <FormControl fullWidth size="small">
           <Typography variant="body1" component="div">
-            <b>To</b>
+            <b>Until</b>
           </Typography>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker />
+            <DatePicker
+              value={selectedUntilSince}
+              onChange={handleDateUntilChange}
+            />
           </LocalizationProvider>
         </FormControl>
       </Grid>
@@ -238,60 +216,7 @@ export const ContentManagement = () => {
           <Typography variant="body1" component="div">
             <b>Hashtags</b>
           </Typography>
-          <Autocomplete
-            fullWidth
-            value={value}
-            onChange={(event, newValue) => {
-              if (typeof newValue === "string") {
-                setValue({
-                  title: newValue,
-                });
-              } else if (newValue && newValue.inputValue) {
-                setValue({
-                  title: newValue.inputValue,
-                });
-              } else {
-                setValue(newValue);
-              }
-            }}
-            filterOptions={(options, params) => {
-              const filtered = filter(options, params);
-              const { inputValue } = params;
-              const isExisting = options.some(
-                (option) => inputValue === option.title,
-              );
-              if (inputValue !== "" && !isExisting) {
-                filtered.push({
-                  inputValue,
-                  title: `Add "${inputValue}"`,
-                });
-              }
-              return filtered;
-            }}
-            selectOnFocus
-            clearOnBlur
-            handleHomeEndKeys
-            id="free-solo-with-text-demo"
-            options={hashtags}
-            getOptionLabel={(option) => {
-              if (typeof option === "string") {
-                return option;
-              }
-              if (option.inputValue) {
-                return option.inputValue;
-              }
-              return option.title;
-            }}
-            renderOption={(props, option) => <li {...props}>{option.title}</li>}
-            freeSolo
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                size="medium"
-                placeholder="Choice hashtags"
-              />
-            )}
-          />
+          <HashtagsFilter />
         </FormControl>
       </Grid>
 
@@ -433,35 +358,48 @@ export const ContentManagement = () => {
                     variant="body2"
                     color="text.secondary"
                     sx={{ fontWeight: "bold" }}
-                  >
-                    {card.type === "auto-submitted"
-                      ? "Auto-submitted"
-                      : "Manual-submitted"}
-                  </Typography>
+                  ></Typography>
+                  <Chip
+                    icon={<VerifiedOutlinedIcon color="inherit" />}
+                    label={
+                      card.type === "auto-submitted"
+                        ? "Auto-submitted"
+                        : "Manual-submitted"
+                    }
+                    size="small"
+                    sx={{
+                      marginTop: 1,
+                      color: "green",
+                      backgroundColor: "#e2fef0",
+                    }}
+                  />
                   <Box mt={1}>
                     {card.hashtags.map((tag, idx) => (
                       <Chip
                         label={tag}
                         key={idx}
                         size="small"
-                        sx={{ marginRight: 0.5, backgroundColor: "#e0e0e0" }} // Установите фон для чипов
+                        sx={{ marginRight: 0.5, backgroundColor: "#e0e0e0" }}
                       />
                     ))}
                   </Box>
                 </CardContent>
                 <CardActions>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="primary"
-                    href={card.url}
-                    target="_blank"
-                  >
-                    Submit
-                  </Button>
-                  <Button size="small" variant="outlined" color="error">
-                    Delete
-                  </Button>
+                  {card.status === "" ? (
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="primary"
+                      href={card.url}
+                      target="_blank"
+                    >
+                      Submit
+                    </Button>
+                  ) : (
+                    <Button size="small" variant="outlined" color="error">
+                      Delete
+                    </Button>
+                  )}
                   <Button size="small">
                     <MoreVertIcon />
                   </Button>

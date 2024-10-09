@@ -200,7 +200,7 @@ export const SettingPage = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id,
+      (item) => item.id !== input.id
     );
 
     setFieldValue("navigation", navigation);
@@ -238,14 +238,12 @@ export const SettingPage = () => {
         isLoading={isLoading}
       />
 
-      {authed && TESTERS.includes(userPubkey) && (
-        <CustomDomains
-          siteId={values.id}
-          submitForm={submitForm}
-          updateWebSiteAddress={handleUpdateWebSiteAddress}
-          isLoading={isLoading}
-        />
-      )}
+      <CustomDomains
+        siteId={values.id}
+        submitForm={submitForm}
+        updateWebSiteAddress={handleUpdateWebSiteAddress}
+        isLoading={isLoading}
+      />
 
       <TitleDescription
         title={values.title}

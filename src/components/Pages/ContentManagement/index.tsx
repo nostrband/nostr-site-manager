@@ -1,5 +1,3 @@
-/* eslint-disable */
-// @ts-nocheck
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -36,6 +34,7 @@ import { useParams } from "next/navigation";
 import { AuthorFilter } from "./Filter/components/Author";
 import { HashtagsFilter } from "./Filter/components/Hashtags";
 import { TypesFilter } from "./Filter/components/Types";
+import { useSettingsSite } from "@/hooks/useSettingsSite";
 
 const sampleCards = [
   {
@@ -103,6 +102,8 @@ const sampleCards = [
 export const ContentManagement = () => {
   const params = useParams();
   const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const { data } = useSettingsSite(siteId);
+  console.log({ data });
   const [isOpenContributor, setOpenContributor] = useState(false);
   const [isFilterDialogOpen, setFilterDialogOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -170,7 +171,9 @@ export const ContentManagement = () => {
           <b>Author</b>
         </Typography>
         <FormControl fullWidth>
-          <AuthorFilter />
+          <AuthorFilter
+            contributors={data?.contributors ? data?.contributors : []}
+          />
         </FormControl>
       </Grid>
 

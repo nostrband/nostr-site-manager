@@ -40,6 +40,7 @@ import {
   StyledWrapInfo,
 } from "./components/PinnedNote/styled";
 import { userIsDelegated } from "@/services/nostr/nostr";
+import { enqueueSnackbar } from "notistack";
 
 function convertPosts(posts: Post[]) {
   const pins: IPinnedNote[] = [];
@@ -76,13 +77,26 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
     if (!_.isEqual(dataPinnedNotes, originalPinnedNotes)) {
       setLoading(true);
       console.log("saving", dataPinnedNotes);
-      await savePins(
-        siteId,
-        dataPinnedNotes.map((p) => p.id)
-      );
+
+      try {
+        await savePins(
+          siteId,
+          dataPinnedNotes.map((p) => p.id)
+        );
+        setOriginalPinnedNotes(dataPinnedNotes);
+        setIsEdit(false);
+      } catch (e: any) {
+        enqueueSnackbar("Error: " + e.toString(), {
+          autoHideDuration: 3000,
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "bottom",
+          },
+        });
+      }
+
       setLoading(false);
-      setIsEdit(false);
-      setOriginalPinnedNotes(dataPinnedNotes);
     } else {
       if (isEdit) {
         setIsEdit(false);

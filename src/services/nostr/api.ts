@@ -1,4 +1,11 @@
-import { NDKEvent, NostrEvent } from "@nostr-dev-kit/ndk";
+import {
+  NDKEvent,
+  NDKFilter,
+  NDKKind,
+  NDKNip07Signer,
+  NDKRelaySet,
+  NostrEvent,
+} from "@nostr-dev-kit/ndk";
 import { ReturnSettingsSiteDataType } from "../sites.service";
 import {
   KIND_PACKAGE,
@@ -6,10 +13,16 @@ import {
   KIND_SITE,
   NostrParser,
   OUTBOX_RELAYS,
+  Post,
   Site,
   SiteAddr,
+  createSiteFilters,
   fetchEvents,
+  fetchEvent,
   tv,
+  matchPostsToFilters,
+  parseAddr,
+  parseATag,
 } from "libnostrsite";
 import {
   addOnAuth,
@@ -21,14 +34,17 @@ import {
   srm,
   publishSiteEvent,
   fetchWithSession,
-  stv2,
   deleteSiteEvent,
   filterDeleted,
   stv3,
+  userIsDelegated,
 } from "./nostr";
 import { nip19 } from "nostr-tools";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { NPUB_PRO_API, NPUB_PRO_DOMAIN } from "@/consts";
+
+// FIXME reuse decls from libnostrsite
+const KIND_PINNED_ON_SITE = 30516;
 
 const sites: Site[] = [];
 const packageThemes = new Map<string, string>();
@@ -105,7 +121,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
     "settings",
     "core",
     "content_cta_list",
-    data.contentActions.join(","),
+    data.contentActions.join(",")
   );
 
   // nav
@@ -143,7 +159,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   // console.log("domain", domain, "oldDomain", oldDomain);
   if (domain && domain !== oldDomain) {
     const reply = await fetchWithSession(
-      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`,
+      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`
     );
     if (reply.status !== 200) throw new Error("Failed to reserve");
     const r = await reply.json();
@@ -160,7 +176,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   {
     const reply = await fetchWithSession(
       // from=oldDomain - delete the old site after 7 days
-      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`,
+      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`
     );
     if (reply.status !== 200) throw new Error("Failed to deploy");
 
@@ -193,7 +209,7 @@ export async function deleteSite(siteId: string) {
   }
 
   const reply = await fetchWithSession(
-    `${NPUB_PRO_API}/delete?domain=${domain}&site=${siteId}`,
+    `${NPUB_PRO_API}/delete?domain=${domain}&site=${siteId}`
   );
   if (reply.status !== 200) throw new Error("Failed to delete domain");
   const r = await reply.json();
@@ -276,16 +292,13 @@ async function fetchSiteThemes() {
         .map((s) => s.extensions?.[0].event_id || "")
         .filter((id) => !!id),
     },
-    [SITE_RELAY],
+    [SITE_RELAY]
   );
 
   for (const e of events) {
-    const a = tv(e, "a") || "";
-    const naddr = nip19.naddrEncode({
-      kind: parseInt(a.split(":")[0]),
-      pubkey: a.split(":")[1],
-      identifier: a.split(":")[2],
-    });
+    const a = parseATag(tv(e, "a"));
+    if (!a || !a.pubkey) continue;
+    const naddr = nip19.naddrEncode(a);
     packageThemes.set(e.id, naddr);
   }
 }
@@ -293,8 +306,6 @@ async function fetchSiteThemes() {
 function parseSite(ne: NostrEvent) {
   const e = new NDKEvent(ndk, ne);
   const addr: SiteAddr = {
-    // FIXME add typefor lib
-    // @ts-ignore
     identifier: tv(e, "d") || "",
     pubkey: e.pubkey,
     relays: [SITE_RELAY, ...userRelays],
@@ -329,13 +340,13 @@ export async function fetchSites() {
           },
         ],
         relays,
-        5000,
+        5000
       );
       console.log("site events", events);
 
       // sort by timestamp desc
       const array = [...events.values()].sort(
-        (a, b) => b.created_at! - a.created_at!,
+        (a, b) => b.created_at! - a.created_at!
       );
 
       await filterDeleted(array, relays);
@@ -385,7 +396,7 @@ export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
       kinds: [KIND_PROFILE],
       authors: req,
     },
-    OUTBOX_RELAYS,
+    OUTBOX_RELAYS
   );
 
   for (const e of events) {
@@ -410,7 +421,7 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
       search,
       limit: 3,
     },
-    SEARCH_RELAYS,
+    SEARCH_RELAYS
   );
 
   for (const e of events) {
@@ -422,7 +433,7 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
 
 export async function searchSites(
   text: string,
-  until?: number,
+  until?: number
 ): Promise<[ReturnSettingsSiteDataType[], number]> {
   const filter: any = {
     kinds: [KIND_SITE],
@@ -464,7 +475,7 @@ export const fetchCertDomain = async (domain: string) => {
   const reply = await fetchWithSession(
     `${NPUB_PRO_API}/cert?domain=${domain}`,
     undefined,
-    "POST",
+    "POST"
   );
   if (reply.status === 200) return reply.json();
   else throw new Error("Failed to issue certificate");
@@ -480,7 +491,7 @@ export const fetchAttachDomain = async (domain: string, site: string) => {
   const reply = await fetchWithSession(
     `${NPUB_PRO_API}/attach?domain=${domain}&site=${site}`,
     undefined,
-    "POST",
+    "POST"
   );
   if (reply.status === 200) return reply.json();
   else throw new Error("Failed to attach domain");
@@ -488,7 +499,7 @@ export const fetchAttachDomain = async (domain: string, site: string) => {
 
 export const fetchAttachDomainStatus = async (domain: string, site: string) => {
   const reply = await fetchWithSession(
-    `${NPUB_PRO_API}/attach?domain=${domain}&site=${site}`,
+    `${NPUB_PRO_API}/attach?domain=${domain}&site=${site}`
   );
 
   if (reply.status === 200) return reply.json();
@@ -498,4 +509,151 @@ export const fetchAttachDomainStatus = async (domain: string, site: string) => {
 export const fetchDomains = async (site: string) => {
   const reply = await fetchWithSession(`${NPUB_PRO_API}/attach?site=${site}`);
   return reply.json();
+};
+
+export const searchPosts = async (siteId: string, query: string) => {
+  const site = sites.find((s) => s.id === siteId);
+  if (!site) return [];
+
+  const filters = createSiteFilters({
+    settings: site,
+    limit: 10,
+  });
+
+  console.log("search filters", filters);
+
+  const events = await fetchEvents(
+    ndk,
+    filters.map((f) => ({ ...f, search: query })),
+    SEARCH_RELAYS
+  );
+
+  console.log("searched events", events);
+
+  const valid = [...events].filter((e) => matchPostsToFilters(e, filters));
+
+  const posts: Post[] = [];
+  for (const e of valid) {
+    const post = await parser.parseEvent(e);
+    if (post) posts.push(post);
+  }
+
+  return posts;
+};
+
+export const fetchPins = async (siteId: string) => {
+  const site = sites.find((s) => s.id === siteId);
+  if (!site) return [];
+
+  const addr = parseAddr(siteId);
+
+  const pinList = await fetchEvent(
+    ndk,
+    {
+      "#d": [`${KIND_SITE}:${addr.pubkey}:${addr.identifier}`],
+      kinds: [KIND_PINNED_ON_SITE as NDKKind],
+      authors: [site.admin_pubkey],
+    },
+    [...site.admin_relays, ...SEARCH_RELAYS]
+  );
+  console.log("pinList", pinList);
+
+  const idAddrs = new Set<string>();
+  if (pinList) {
+    const ids = parser.parsePins(pinList);
+    for (const id of ids) idAddrs.add(id);
+  }
+  console.log("idAddrs", { idAddrs });
+
+  const pinFilters: NDKFilter[] = [];
+  const idFilter: NDKFilter = {
+    ids: [...idAddrs]
+      .filter((i) => i.startsWith("note"))
+      .map((id) => nip19.decode(id).data) as string[],
+  };
+
+  const addrs = [...idAddrs]
+    .filter((i) => i.startsWith("naddr"))
+    .map((a) => nip19.decode(a).data) as nip19.AddressPointer[];
+
+  const addrFilter: NDKFilter = {
+    authors: [...new Set(addrs.map((a) => a.pubkey))],
+    kinds: [...new Set(addrs.map((a) => a.kind))],
+    "#d": [...new Set(addrs.map((a) => a.identifier))],
+  };
+
+  if (idFilter.ids?.length) pinFilters.push(idFilter);
+  if (addrFilter.authors?.length) pinFilters.push(addrFilter);
+
+  if (!pinFilters.length) return [];
+
+  const pinned = await fetchEvents(ndk, pinFilters, [
+    ...site.contributor_relays,
+    ...SEARCH_RELAYS,
+  ]);
+  console.log("pinned", pinned);
+
+  const siteFilters = createSiteFilters({
+    settings: site,
+    limit: 10,
+  });
+
+  const valid = [...pinned].filter((p) => matchPostsToFilters(p, siteFilters));
+  const posts: Post[] = [];
+  for (const e of valid) {
+    const post = await parser.parseEvent(e);
+    if (post) posts.push(post);
+  }
+
+  return posts;
+};
+
+export const savePins = async (siteId: string, ids: string[]) => {
+  if (userIsDelegated) throw new Error("Can't edit pins in delegated mode");
+
+  const site = sites.find((s) => s.id === siteId);
+  if (!site) return [];
+
+  const addr = parseAddr(siteId);
+
+  const event = {
+    kind: KIND_PINNED_ON_SITE,
+    content: "",
+    created_at: Math.floor(Date.now() / 1000),
+    tags: [["d", `${KIND_SITE}:${addr.pubkey}:${addr.identifier}`]],
+    pubkey: userPubkey,
+  };
+
+  const tags = ids
+    .map((id) => {
+      const { type, data } = nip19.decode(id);
+      switch (type) {
+        case "note":
+          return ["e", data];
+        case "nevent":
+          return ["e", data.id];
+        case "naddr":
+          return ["a", `${data.kind}:${data.pubkey}:${data.identifier}`];
+        default:
+          return undefined;
+      }
+    })
+    .filter(Boolean) as string[][];
+
+  event.tags.push(...tags);
+
+  // sign it
+  const nevent = new NDKEvent(ndk, event);
+  await nevent.sign(new NDKNip07Signer());
+  console.log("signed pins event", nevent);
+
+  // publish
+  const r = await nevent.publish(
+    NDKRelaySet.fromRelayUrls([...site.admin_relays, ...SEARCH_RELAYS], ndk)
+  );
+  console.log(
+    "published pins event to",
+    [...r].map((r) => r.url)
+  );
+  if (!r.size) throw new Error("Failed to publish to relays");
 };

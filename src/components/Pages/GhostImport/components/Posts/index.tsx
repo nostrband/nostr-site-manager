@@ -165,11 +165,11 @@ export const Posts: FC<PostsProps> = ({
       </Stack>
 
       <Stack gap={"1rem"}>
-        {posts.map((post) => (
+        {posts.map((post, i) => (
           <ItemPost
             {...post}
             checked={selectedItems.some((p) => p.id === post.id)}
-            key={post.id}
+            key={i}
             onCheckboxChange={() => handleSelectPost(post)}
           />
         ))}

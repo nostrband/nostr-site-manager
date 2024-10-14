@@ -25,7 +25,7 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider value={authed}>
       <BodyWrapper>
         <Script
-          data-perms="sign_event:30512,sign_event:512,sign_event:30513,sign_event:30514,sign_event:27235,sign_event:5"
+          data-perms="sign_event:30512,sign_event:512,sign_event:30513,sign_event:30514,sign_event:27235,sign_event:5,sign_event:30516"
           data-no-banner="true"
           data-otp-request-url="https://api.npubpro.com/otp"
           data-otp-reply-url="https://api.npubpro.com/authotp"

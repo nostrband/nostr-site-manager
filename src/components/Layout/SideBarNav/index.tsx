@@ -74,11 +74,11 @@ export const SideBarNav = ({ isOpen, handleClose }: ISideBarNav) => {
           {isSettings ? (
             <NavSettings handleCloseSideBar={handleClose} />
           ) : (
-            NAV_CONFIG.map(({ title, path: slug, icon }) => {
+            NAV_CONFIG.map(({ title, path: slug, icon }, i) => {
               const path = `${pathAdmin}/${params.id}/${slug}`;
 
               return (
-                <ListItem key={title}>
+                <ListItem key={i}>
                   <StyledSieBarButton
                     onClick={handleClose}
                     size="large"

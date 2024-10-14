@@ -26,6 +26,7 @@ import { addHttps } from "@/utils";
 import { CustomDomains } from "./components/CustomDomains";
 import { Other } from "./components/Other";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
+import { PinnedNotes } from "./components/PinnedNotes";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -305,6 +306,8 @@ export const SettingPage = () => {
           isLoading={isLoading}
         />
       )}
+
+      <PinnedNotes siteId={values.id} />
 
       <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
         Design

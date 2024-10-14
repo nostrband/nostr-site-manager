@@ -85,7 +85,7 @@ export const Contributors = ({
           </StyledHeadSettingBlock>
 
           <StyledAutorProfileGroup>
-            {contributors.map((el) => {
+            {contributors.map((el, i) => {
               let meta = JSON.parse(el.content);
 
               const npub = el.pubkey
@@ -95,7 +95,7 @@ export const Contributors = ({
               const img = meta.picture || "";
 
               return (
-                <StyledAutorProfile key={el.pubkey}>
+                <StyledAutorProfile key={i}>
                   <Avatar alt={name} src={img} />
 
                   <Typography variant="body1">{name}</Typography>

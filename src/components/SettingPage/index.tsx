@@ -13,7 +13,10 @@ import { DesignBranding } from "@/components/SettingPage/components/DesignBrandi
 import { Recommendation } from "@/components/SettingPage/components/Recommendation";
 import { Icon } from "@/components/SettingPage/components/Icon";
 import { ImageBanner } from "@/components/SettingPage/components/Image";
-import { Navigation } from "@/components/SettingPage/components/Navigation";
+import {
+  Navigation,
+  NavigationModelType,
+} from "@/components/SettingPage/components/Navigation";
 import { editSite } from "@/services/nostr/api";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { Content } from "@/components/SettingPage/components/Content";
@@ -148,6 +151,10 @@ export const SettingPage = () => {
     setFieldValue("navigation", navigation);
   };
 
+  const handleChangeNavigationOrder = (navigation: NavigationModelType) => {
+    setFieldValue("navigation", navigation);
+  };
+
   const handleAddLinkNavigation = (type: "primary" | "secondary") => {
     setFieldValue("navigation", {
       ...values.navigation,
@@ -201,7 +208,7 @@ export const SettingPage = () => {
     const navigation = values.navigation;
 
     navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id
+      (item) => item.id !== input.id,
     );
 
     setFieldValue("navigation", navigation);
@@ -353,6 +360,7 @@ export const SettingPage = () => {
       <Navigation
         navigation={values.navigation}
         handleChangeNavigation={handleChangeNavigation}
+        handleChangeNavigationOrder={handleChangeNavigationOrder}
         submitForm={submitForm}
         isLoading={isLoading}
         handleAddLinkNavigation={handleAddLinkNavigation}

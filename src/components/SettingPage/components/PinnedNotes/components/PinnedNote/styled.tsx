@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import { Typography, Box, ListItem, Avatar } from "@mui/material";
 
-export const StyledIdItem = styled(Typography)(({theme}) => ({
+export const StyledIdItem = styled(Typography)(({ theme }) => ({
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -11,7 +11,7 @@ export const StyledIdItem = styled(Typography)(({theme}) => ({
   },
 }));
 
-export const StyledSummary = styled(Typography)(({theme}) => ({
+export const StyledSummary = styled(Typography)(({ theme }) => ({
   display: "-webkit-box",
   WebkitBoxOrient: "vertical",
   overflow: "hidden",
@@ -23,7 +23,7 @@ export const StyledSummary = styled(Typography)(({theme}) => ({
   },
 }));
 
-export const StyledTitleItem = styled(Typography)(({theme}) => ({
+export const StyledTitleItem = styled(Typography)(({ theme }) => ({
   overflow: "hidden",
   textOverflow: "ellipsis",
   fontWeight: "bold",

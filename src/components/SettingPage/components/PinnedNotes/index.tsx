@@ -30,8 +30,8 @@ import { fetchPins, savePins, searchPosts } from "@/services/nostr/api";
 import { Post } from "libnostrsite";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import {
   StyledItemAvatar,
   StyledItemWrap,
@@ -61,7 +61,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
   const [inputValue, setInputValue] = useState("");
   const [dataPinnedNotes, setDataPinnedNotes] = useState<IPinnedNote[]>([]);
   const [originalPinnedNotes, setOriginalPinnedNotes] = useState<IPinnedNote[]>(
-    []
+    [],
   );
 
   const [options, setOptions] = useState<IPinnedNote[]>([]);
@@ -77,7 +77,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
       console.log("saving", dataPinnedNotes);
       await savePins(
         siteId,
-        dataPinnedNotes.map((p) => p.id)
+        dataPinnedNotes.map((p) => p.id),
       );
       setLoading(false);
       setIsEdit(false);
@@ -106,11 +106,11 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
 
   const handlePin = (
     _: SyntheticEvent<Element, Event>,
-    pinnedNote: IPinnedNote | string | null
+    pinnedNote: IPinnedNote | string | null,
   ) => {
     if (pinnedNote !== null && typeof pinnedNote !== "string") {
       const isAlreadyPinned = dataPinnedNotes.some(
-        (note) => note.id === pinnedNote.id
+        (note) => note.id === pinnedNote.id,
       );
 
       if (!isAlreadyPinned) {
@@ -220,7 +220,9 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
             <Autocomplete
               freeSolo
               disablePortal
-              clearIcon={<CloseOutlinedIcon onClick={() => setInputValue('')} />}
+              clearIcon={
+                <CloseOutlinedIcon onClick={() => setInputValue("")} />
+              }
               loading={isLoading}
               loadingText={"Searching..."}
               options={options}
@@ -232,7 +234,7 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
               }
               renderOption={(props, option) => {
                 const isAlreadyPinned = dataPinnedNotes.some(
-                  (note) => note.id === option.id
+                  (note) => note.id === option.id,
                 );
 
                 return typeof option === "string" ? (
@@ -268,7 +270,9 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
                             label={getDateTime(option.datetime)}
                           />
 
-                          {isAlreadyPinned ? <CheckCircleOutlinedIcon htmlColor="#5bc892" /> : (
+                          {isAlreadyPinned ? (
+                            <CheckCircleOutlinedIcon htmlColor="#5bc892" />
+                          ) : (
                             <PushPinOutlinedIcon color="info" />
                           )}
                         </Box>

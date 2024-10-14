@@ -216,7 +216,7 @@ export const SETTINGS_CONFIG = [
         icon: <PendingTwoToneIcon />,
       },
       {
-        title: "Pinned notes",
+        title: "Pinned content",
         path: HASH_CONFIG.PINNED_NOTES,
         icon: <PushPinTwoToneIcon />,
       },

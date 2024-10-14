@@ -30,8 +30,8 @@ import { fetchPins, savePins, searchPosts } from "@/services/nostr/api";
 import { Post } from "libnostrsite";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import {
   StyledItemAvatar,
   StyledItemWrap,
@@ -39,6 +39,8 @@ import {
   StyledTitleItem,
   StyledWrapInfo,
 } from "./components/PinnedNote/styled";
+import { userIsDelegated } from "@/services/nostr/nostr";
+import { enqueueSnackbar } from "notistack";
 
 function convertPosts(posts: Post[]) {
   const pins: IPinnedNote[] = [];
@@ -75,13 +77,26 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
     if (!_.isEqual(dataPinnedNotes, originalPinnedNotes)) {
       setLoading(true);
       console.log("saving", dataPinnedNotes);
-      await savePins(
-        siteId,
-        dataPinnedNotes.map((p) => p.id)
-      );
+
+      try {
+        await savePins(
+          siteId,
+          dataPinnedNotes.map((p) => p.id)
+        );
+        setOriginalPinnedNotes(dataPinnedNotes);
+        setIsEdit(false);
+      } catch (e: any) {
+        enqueueSnackbar("Error: " + e.toString(), {
+          autoHideDuration: 3000,
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "bottom",
+          },
+        });
+      }
+
       setLoading(false);
-      setIsEdit(false);
-      setOriginalPinnedNotes(dataPinnedNotes);
     } else {
       if (isEdit) {
         setIsEdit(false);
@@ -168,18 +183,25 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
     <StyledSettingCol id={HASH_CONFIG.PINNED_NOTES}>
       <StyledSettingBlock>
         <StyledHeadSettingBlock>
-          <Typography variant="h6">Pinned notes</Typography>
+          <Typography variant="h6">Pinned/Featured content</Typography>
 
-          <SaveButton
-            isEdit={isEdit}
-            isLoading={isLoading}
-            handleAction={handleAction}
-          />
+          {!userIsDelegated && (
+            <SaveButton
+              isEdit={isEdit}
+              isLoading={isLoading}
+              handleAction={handleAction}
+            />
+          )}
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Pinned notes for content, you can change order notes
+          Pin some content to prioritize it on your site
         </Typography>
+        {userIsDelegated && (
+          <Typography variant="body2" sx={{ mb: 1 }} color={"red"}>
+            Please sign-in with your Nostr keys to edit the pinned notes!
+          </Typography>
+        )}
 
         {isLoading && dataPinnedNotes.length === 0 ? (
           <CircularProgress />
@@ -220,7 +242,9 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
             <Autocomplete
               freeSolo
               disablePortal
-              clearIcon={<CloseOutlinedIcon onClick={() => setInputValue('')} />}
+              clearIcon={
+                <CloseOutlinedIcon onClick={() => setInputValue("")} />
+              }
               loading={isLoading}
               loadingText={"Searching..."}
               options={options}
@@ -268,7 +292,9 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
                             label={getDateTime(option.datetime)}
                           />
 
-                          {isAlreadyPinned ? <CheckCircleOutlinedIcon htmlColor="#5bc892" /> : (
+                          {isAlreadyPinned ? (
+                            <CheckCircleOutlinedIcon htmlColor="#5bc892" />
+                          ) : (
                             <PushPinOutlinedIcon color="info" />
                           )}
                         </Box>

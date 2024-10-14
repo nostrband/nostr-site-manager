@@ -1,7 +1,6 @@
-/* eslint-disable */
-// @ts-nocheck
 "use client";
 
+import { fetchTopHashtags } from "@/services/nostr/themes";
 import {
   Autocomplete,
   Checkbox,
@@ -10,26 +9,47 @@ import {
   ListItemText,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const filter = createFilterOptions();
 
-export const HashtagsFilter = () => {
-  const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
+interface IHashtagsFilter {
+  contributors: string[];
+  handleChangeHashtags: (value: string[]) => void;
+  selectedHashtags: string[];
+}
+
+export const HashtagsFilter = ({
+  contributors,
+  selectedHashtags,
+  handleChangeHashtags,
+}: IHashtagsFilter) => {
   const [hashtags, setHashtags] = useState<string[]>([]);
   const mergeHashtags = new Set([...hashtags, ...selectedHashtags]);
   const mergedOptions = Array.from(mergeHashtags).map((el) => ({ title: el }));
   const [hashtagsInputValue, setHashtagsInputValue] = useState("");
-  console.log({ hashtags });
+
+  const getHashtags = useCallback(async () => {
+    const hts = (await fetchTopHashtags(contributors)).map((t) => "#" + t);
+    const allHts = [...new Set([...hts, ...selectedHashtags])];
+    setHashtags(allHts);
+  }, [setHashtags, contributors]);
+
+  useEffect(() => {
+    getHashtags().then();
+  }, [getHashtags]);
+
   return (
     <Autocomplete
       multiple
       options={mergedOptions}
       disableCloseOnSelect
-      freeSolo
+      // @ts-ignore
       value={selectedHashtags}
       inputValue={hashtagsInputValue}
+      // @ts-ignore
       filterOptions={(options, params) => {
+        // @ts-ignore
         const filtered = filter(options, params);
         const { inputValue } = params;
         const isExisting = options.some(
@@ -52,11 +72,12 @@ export const HashtagsFilter = () => {
         const newValues = value.map((v) =>
           typeof v === "string"
             ? newHashtag(v)
-            : newHashtag(Boolean(v.inputValue) ? v.inputValue : v.title),
+            : // @ts-ignore
+              newHashtag(Boolean(v.inputValue) ? v.inputValue : v.title),
         );
 
         const uniqueValues = [...new Set(newValues)];
-        setSelectedHashtags(uniqueValues);
+        handleChangeHashtags(uniqueValues);
         setHashtags((prevHashtags) => [
           ...new Set([...prevHashtags, ...uniqueValues]),
         ]);
@@ -65,28 +86,29 @@ export const HashtagsFilter = () => {
         typeof option === "string" ? option : option.title
       }
       renderOption={(props, option) => {
-        // @ts-ignore
-        console.log({ option });
         const { key, ...optionProps } = props;
         return (
           <ListItem {...optionProps} key={key}>
-            {!Boolean(option.inputValue) && (
-              <Checkbox
-                checked={selectedHashtags.indexOf(option.title) > -1}
-                onClick={(e) => {
-                  const isSelected = selectedHashtags.includes(option.title);
+            {
+              // @ts-ignore
+              !Boolean(option.inputValue) && (
+                <Checkbox
+                  checked={selectedHashtags.indexOf(option.title) > -1}
+                  onClick={(e) => {
+                    const isSelected = selectedHashtags.includes(option.title);
 
-                  if (isSelected) {
-                    e.stopPropagation();
-                    const newSelectedHashtags = selectedHashtags.filter(
-                      (el) => el !== option.title,
-                    );
+                    if (isSelected) {
+                      e.stopPropagation();
+                      const newSelectedHashtags = selectedHashtags.filter(
+                        (el) => el !== option.title,
+                      );
 
-                    setSelectedHashtags(newSelectedHashtags);
-                  }
-                }}
-              />
-            )}
+                      handleChangeHashtags(newSelectedHashtags);
+                    }
+                  }}
+                />
+              )
+            }
             <ListItemText primary={option.title} />
           </ListItem>
         );

@@ -1,25 +1,17 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import {
-  Box,
-  Fab,
-  InputLabel,
-  TextField,
-  Typography,
-  Select,
-  Avatar,
-} from "@mui/material";
+import { Box, Typography, Avatar } from "@mui/material";
 
 export const GroupContributors = styled(Box)(() => ({
   display: "flex",
-  gap: 20,
+  gap: 10,
   flexWrap: "wrap",
   marginBottom: 40,
+  alignItems: "center",
 }));
 
 export const AvatarContributor = styled(Avatar)(() => ({
   backgroundColor: "#9ec4d1",
-  cursor: "pointer",
 }));
 
 export const AvatarAuthor = styled(Avatar)(() => ({
@@ -30,4 +22,8 @@ export const AvatarAuthor = styled(Avatar)(() => ({
 export const TitleSection = styled(Typography)(() => ({
   fontWeight: "bold",
   marginBottom: 15,
+}));
+
+export const TitleSiteName = styled(Typography)(() => ({
+  fontWeight: "bold",
 }));

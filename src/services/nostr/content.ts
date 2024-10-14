@@ -12,23 +12,18 @@ export type SearchPost = Post & {
   status: string;
 };
 
+export type TypeSearchPosts = {
+  authors?: string[];
+  kinds?: number[];
+  hashtags?: string[];
+  since?: number;
+  until?: number;
+  search?: string;
+};
+
 export async function searchPosts(
   siteId: string,
-  {
-    authors,
-    kinds,
-    hashtags,
-    since,
-    until,
-    search,
-  }: {
-    authors?: string[];
-    kinds?: number[];
-    hashtags?: string[];
-    since?: number;
-    until?: number;
-    search?: string;
-  },
+  { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
 ): Promise<SearchPost[]> {
   const site = await getSiteSettings(siteId);
   if (!site) throw new Error("Unknown site");

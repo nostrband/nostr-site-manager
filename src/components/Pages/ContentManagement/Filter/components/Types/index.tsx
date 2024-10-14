@@ -1,95 +1,69 @@
-/* eslint-disable */
-// @ts-nocheck
 "use client";
 
 import {
-  Autocomplete,
   Checkbox,
-  createFilterOptions,
-  ListItem,
   ListItemText,
-  TextField,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-const filter = createFilterOptions();
+const kindsMap: { [key: number]: string } = {
+  1: "Notes",
+  30023: "Long-form posts",
+};
 
-export const TypesFilter = () => {
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [types, setTypes] = useState<string[]>(["notes", "long-form", "pages"]);
-  const mergeTypes = new Set([...types, ...selectedTypes]);
-  const mergedOptions = Array.from(mergeTypes).map((el) => ({ title: el }));
-  const [typesInputValue, setTypesInputValue] = useState("");
+interface ITypesFilter {
+  handleChangeTypes: (value: number[]) => void;
+  selectedTypes: number[];
+}
+
+export const TypesFilter = ({
+  selectedTypes,
+  handleChangeTypes,
+}: ITypesFilter) => {
+  const [types, setTypes] = useState<number[]>([]);
+
+  const handleChange = (event: SelectChangeEvent<number[]>) => {
+    const {
+      target: { value },
+    } = event;
+    handleChangeTypes(
+      typeof value === "string" ? value.split(",").map(Number) : value,
+    );
+  };
+
+  const getKinds = useCallback(async () => {
+    const dataKinds = [1, 30023];
+    setTypes(dataKinds);
+  }, []);
+
+  useEffect(() => {
+    getKinds().then();
+  }, [getKinds]);
 
   return (
-    <Autocomplete
-      multiple
-      options={mergedOptions}
-      disableCloseOnSelect
-      freeSolo
-      value={selectedTypes}
-      inputValue={typesInputValue}
-      filterOptions={(options, params) => {
-        const filtered = filter(options, params);
-        const { inputValue } = params;
-        const isExisting = options.some(
-          (option) => inputValue === option.title,
-        );
-        if (inputValue !== "" && !isExisting) {
-          filtered.push({
-            inputValue,
-            title: `Add "${inputValue}"`,
-          });
+    <>
+      <Select
+        labelId="demo-multiple-checkbox-label"
+        id="demo-multiple-checkbox"
+        multiple
+        value={selectedTypes}
+        onChange={handleChange}
+        input={<OutlinedInput />}
+        renderValue={(selected) =>
+          selected.map((val) => kindsMap[val]).join(", ")
         }
-        return filtered;
-      }}
-      onInputChange={(_, newInputValue) => {
-        setTypesInputValue(newInputValue);
-      }}
-      onChange={(_, value) => {
-        const newHashtag = (s: string) => s;
-
-        const newValues = value.map((v) =>
-          typeof v === "string"
-            ? newHashtag(v)
-            : newHashtag(Boolean(v.inputValue) ? v.inputValue : v.title),
-        );
-
-        const uniqueValues = [...new Set(newValues)];
-        setSelectedTypes(uniqueValues);
-        setTypes((prevTypes) => [...new Set([...prevTypes, ...uniqueValues])]);
-      }}
-      getOptionLabel={(option) =>
-        typeof option === "string" ? option : option.title
-      }
-      renderOption={(props, option) => {
-        // @ts-ignore
-        console.log({ option });
-        const { key, ...optionProps } = props;
-        return (
-          <ListItem {...optionProps} key={key}>
-            {!Boolean(option.inputValue) && (
-              <Checkbox
-                checked={selectedTypes.indexOf(option.title) > -1}
-                onClick={(e) => {
-                  const isSelected = selectedTypes.includes(option.title);
-
-                  if (isSelected) {
-                    e.stopPropagation();
-                    const newSelectedTypes = selectedTypes.filter(
-                      (el) => el !== option.title,
-                    );
-
-                    setSelectedTypes(newSelectedTypes);
-                  }
-                }}
-              />
-            )}
-            <ListItemText primary={option.title} />
-          </ListItem>
-        );
-      }}
-      renderInput={(params) => <TextField {...params} />}
-    />
+      >
+        {types.map((kind) => (
+          <MenuItem key={kind} value={kind}>
+            <Checkbox checked={selectedTypes.indexOf(kind) > -1} />
+            <ListItemText primary={kindsMap[kind]} />
+          </MenuItem>
+        ))}
+      </Select>
+    </>
   );
 };

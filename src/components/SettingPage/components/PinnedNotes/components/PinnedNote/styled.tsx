@@ -1,28 +1,36 @@
 import { styled } from "@mui/material/styles";
 import { Typography, Box, ListItem, Avatar } from "@mui/material";
 
-export const StyledIdItem = styled(Typography)(() => ({
+export const StyledIdItem = styled(Typography)(({theme}) => ({
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
-  maxWidth: "250px",
+  maxWidth: "355px",
+  [theme.breakpoints.down("sm")]: {
+    maxWidth: "250px",
+  },
 }));
 
-export const StyledSummary = styled(Typography)(() => ({
+export const StyledSummary = styled(Typography)(({theme}) => ({
   display: "-webkit-box",
   WebkitBoxOrient: "vertical",
   overflow: "hidden",
   WebkitLineClamp: 2,
   textOverflow: "ellipsis",
-  maxWidth: "250px",
+  maxWidth: "355px",
+  [theme.breakpoints.down("sm")]: {
+    maxWidth: "250px",
+  },
 }));
 
-export const StyledTitleItem = styled(Typography)(() => ({
-  whiteSpace: "nowrap",
+export const StyledTitleItem = styled(Typography)(({theme}) => ({
   overflow: "hidden",
   textOverflow: "ellipsis",
-  maxWidth: "250px",
   fontWeight: "bold",
+  maxWidth: "355px",
+  [theme.breakpoints.down("sm")]: {
+    maxWidth: "250px",
+  },
 }));
 
 export const StyledWrapInfo = styled(Box)(() => ({

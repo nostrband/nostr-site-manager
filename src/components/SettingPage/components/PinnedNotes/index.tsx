@@ -1,4 +1,10 @@
-import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
+import React, {
+  memo,
+  SyntheticEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import _, { debounce } from "lodash";
 import {
   StyledHeadSettingBlock,
@@ -54,7 +60,7 @@ function convertPosts(posts: Post[]) {
   return pins;
 }
 
-export const PinnedNotes = ({ siteId }: { siteId: string }) => {
+export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -306,4 +312,6 @@ export const PinnedNotes = ({ siteId }: { siteId: string }) => {
       </StyledSettingBlock>
     </StyledSettingCol>
   );
-};
+});
+
+PinnedNotes.displayName = "PinnedNotes";

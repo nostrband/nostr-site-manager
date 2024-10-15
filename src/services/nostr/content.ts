@@ -23,7 +23,7 @@ export type TypeSearchPosts = {
 
 export async function searchPosts(
   siteId: string,
-  { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
+  { authors, kinds, hashtags, since, until, search }: TypeSearchPosts
 ): Promise<SearchPost[]> {
   const site = await getSiteSettings(siteId);
   if (!site) throw new Error("Unknown site");
@@ -52,7 +52,7 @@ export async function searchPosts(
       ...f,
       search,
     })),
-    relays,
+    relays
   );
 
   // make sure it matches our other local filter
@@ -63,9 +63,9 @@ export async function searchPosts(
     limit: 1,
     settings: site,
   });
-  // @ts-ignore
   valid.map(
-    (e) => (e.status = matchPostsToFilters(e, autoFilters) ? "auto" : ""),
+    // @ts-ignore
+    (e) => (e.status = matchPostsToFilters(e, autoFilters) ? "auto" : "")
   );
 
   // add hashtags

@@ -465,20 +465,22 @@ export const ContentManagement = () => {
                       color="text.secondary"
                       sx={{ fontWeight: "bold" }}
                     ></Typography>
+                    {card.status && (
                     <Chip
-                      icon={<VerifiedOutlinedIcon color="inherit" />}
-                      label={
-                        card.type === "post"
-                          ? "Auto-submitted"
-                          : "Manual-submitted"
-                      }
-                      size="small"
-                      sx={{
-                        marginTop: 1,
-                        color: "green",
-                        backgroundColor: "#e2fef0",
-                      }}
-                    />
+                    icon={<VerifiedOutlinedIcon color="inherit" />}
+                    label={
+                      card.status === "auto"
+                        ? "Auto-submitted"
+                        : "Manual-submitted"
+                    }
+                    size="small"
+                    sx={{
+                      marginTop: 1,
+                      color: "green",
+                      backgroundColor: "#e2fef0",
+                    }}
+                  />
+                    )}
                     <Box mt={1}>
                       {card.tags.map((tag, idx) => (
                         <Chip

@@ -1,3 +1,4 @@
+"use client";
 import React, {
   memo,
   SyntheticEvent,
@@ -45,6 +46,8 @@ import {
   StyledTitleItem,
   StyledWrapInfo,
 } from "./components/PinnedNote/styled";
+import { userIsDelegated } from "@/services/nostr/nostr";
+import { enqueueSnackbar } from "notistack";
 
 function convertPosts(posts: Post[]) {
   const pins: IPinnedNote[] = [];
@@ -81,13 +84,26 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
     if (!_.isEqual(dataPinnedNotes, originalPinnedNotes)) {
       setLoading(true);
       console.log("saving", dataPinnedNotes);
-      await savePins(
-        siteId,
-        dataPinnedNotes.map((p) => p.id),
-      );
+
+      try {
+        await savePins(
+          siteId,
+          dataPinnedNotes.map((p) => p.id),
+        );
+        setOriginalPinnedNotes(dataPinnedNotes);
+        setIsEdit(false);
+      } catch (e: any) {
+        enqueueSnackbar("Error: " + e.toString(), {
+          autoHideDuration: 3000,
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "bottom",
+          },
+        });
+      }
+
       setLoading(false);
-      setIsEdit(false);
-      setOriginalPinnedNotes(dataPinnedNotes);
     } else {
       if (isEdit) {
         setIsEdit(false);
@@ -174,18 +190,25 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
     <StyledSettingCol id={HASH_CONFIG.PINNED_NOTES}>
       <StyledSettingBlock>
         <StyledHeadSettingBlock>
-          <Typography variant="h6">Pinned notes</Typography>
+          <Typography variant="h6">Pinned/Featured content</Typography>
 
-          <SaveButton
-            isEdit={isEdit}
-            isLoading={isLoading}
-            handleAction={handleAction}
-          />
+          {!userIsDelegated && (
+            <SaveButton
+              isEdit={isEdit}
+              isLoading={isLoading}
+              handleAction={handleAction}
+            />
+          )}
         </StyledHeadSettingBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
-          Pinned notes for content, you can change order notes
+          Pin some content to prioritize it on your site
         </Typography>
+        {userIsDelegated && (
+          <Typography variant="body2" sx={{ mb: 1 }} color={"red"}>
+            Please sign-in with your Nostr keys to edit the pinned notes!
+          </Typography>
+        )}
 
         {isLoading && dataPinnedNotes.length === 0 ? (
           <CircularProgress />

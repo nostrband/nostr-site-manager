@@ -13,6 +13,8 @@ import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
 import { CustomDomainForm } from "../CustomDomainForm";
 import { fetchDomains } from "@/services/nostr/api";
+import { enqueueSnackbar } from "notistack";
+import { userIsReadOnly } from "@/services/nostr/nostr";
 
 interface ICustomDomains extends IBaseSetting {
   siteId: string;
@@ -52,12 +54,23 @@ export const CustomDomains = memo(
     }, [isDisabled]);
 
     const getDomains = async () => {
-      if (siteId) {
-        const res = await fetchDomains(siteId);
-        console.log({ res });
-        console.log("getDomains", res);
-
-        setListDomains(res.domains.map((d: any) => d.domain));
+      if (siteId && !userIsReadOnly) {
+        try {
+          const res = await fetchDomains(siteId);
+          console.log({ res });
+          console.log("getDomains", res);
+          setListDomains(res.domains.map((d: any) => d.domain));
+        } catch (e: any) {
+          enqueueSnackbar("Failed to load custom domains: " + e.toString(), {
+            autoHideDuration: 3000,
+            variant: "error",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "bottom",
+            },
+          });
+          console.log("failed to fetch domains", e);
+        }
       } else {
         setListDomains([]);
       }
@@ -73,12 +86,20 @@ export const CustomDomains = memo(
           <StyledHeadSettingBlock>
             <Typography variant="h6">Custom domains</Typography>
 
-            <SaveButton
-              isEdit={isEdit}
-              isLoading={isLoading}
-              handleAction={handleClick}
-            />
+            {!userIsReadOnly && (
+              <SaveButton
+                isEdit={isEdit}
+                isLoading={isLoading}
+                handleAction={handleClick}
+              />
+            )}
           </StyledHeadSettingBlock>
+
+          {userIsReadOnly && (
+            <Typography variant="body2" color={"red"}>
+              Cannot view custom domains in read only mode
+            </Typography>
+          )}
 
           <Box>
             {Boolean(listDomains.length) ? (

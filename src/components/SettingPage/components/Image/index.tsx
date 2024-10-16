@@ -11,6 +11,7 @@ import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
 import { StyledImgPreview } from "@/components/SettingPage/components/Image/styled";
+import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 
 interface ITitleDescription extends IBaseSetting {
   image: string;
@@ -27,6 +28,7 @@ export const ImageBanner = memo(
     const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDisabled, setDisabled] = useState(false);
+    const [isErrorLoadImage, setErrorLoadImage] = useState(false);
     const handleClick = () => {
       handleAction().then();
       setDisabled((prev) => !prev);
@@ -37,6 +39,19 @@ export const ImageBanner = memo(
         inputRef.current.focus();
       }
     }, [isDisabled]);
+
+    useEffect(() => {
+      const img = new Image();
+      img.src = image;
+
+      img.onload = () => {
+        setErrorLoadImage(true);
+      };
+
+      img.onerror = () => {
+        setErrorLoadImage(false);
+      };
+    }, [image]);
 
     return (
       <StyledSettingCol id={HASH_CONFIG.IMAGE}>
@@ -67,9 +82,14 @@ export const ImageBanner = memo(
               onBlur={handleBlur}
             />
           </StyledFormControl>
+
           <StyledImgPreview>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img alt="Image url" src={image} />
+            {isErrorLoadImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img alt="Image url" src={image} />
+            ) : (
+              <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
+            )}
           </StyledImgPreview>
         </StyledSettingBlock>
       </StyledSettingCol>

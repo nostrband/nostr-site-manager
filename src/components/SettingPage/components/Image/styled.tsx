@@ -9,6 +9,7 @@ export const StyledImgPreview = styled(Box)(({ theme }) => ({
   marginTop: 20,
   borderRadius: theme.shape.borderRadius,
   background: "#ececec",
+  display: "flex",
   img: {
     bottom: 0,
     height: "100%",

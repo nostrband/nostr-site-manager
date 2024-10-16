@@ -22,6 +22,7 @@ import {
   StyledImgPreview,
   StyledBannerPreview,
 } from "@/components/Pages/Design/styled";
+import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import { useFormik } from "formik";
 // import { validationSchemaMakePrivateSite } from "@/validations/rules";
 import { MuiColorInput } from "mui-color-input";
@@ -92,6 +93,7 @@ export const Design = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [activeTab, setActiveTab] = React.useState("site");
   const [customConfig, setCustomConfig] = React.useState<CustomConfigType>({});
+  const [isErrorLoadImage, setErrorLoadImage] = useState(false);
 
   const handleChangeActiveTab = (_: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
@@ -295,6 +297,19 @@ export const Design = () => {
     });
   }, [authed, themeId, siteId, iframeRef, formik.setValues, setLoading]);
 
+  useEffect(() => {
+    const img = new Image();
+    img.src = formik.values.banner;
+
+    img.onload = () => {
+      setErrorLoadImage(true);
+    };
+
+    img.onerror = () => {
+      setErrorLoadImage(false);
+    };
+  }, [formik.values.banner]);
+
   if (!themeId || !siteId) {
     return redirect("/");
   }
@@ -443,8 +458,20 @@ export const Design = () => {
                 />
                 {formik.values.banner && (
                   <StyledBannerPreview>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img alt="Banner url" src={formik.values.banner} />
+                    {isErrorLoadImage ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img alt="Banner url" src={formik.values.banner} />
+                    ) : (
+                      <Box
+                        sx={{
+                          margin: "auto",
+                          paddingBottom: "30px",
+                          paddingTop: "30px",
+                        }}
+                      >
+                        <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
+                      </Box>
+                    )}
                   </StyledBannerPreview>
                 )}
               </StyledFormControl>

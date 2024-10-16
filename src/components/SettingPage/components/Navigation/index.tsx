@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import {
   StyledHeadSettingBlock,
   StyledSettingBlock,
@@ -14,6 +14,12 @@ import {
   Fab,
   Button,
 } from "@mui/material";
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+  Draggable,
+} from "@hello-pangea/dnd";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -23,12 +29,16 @@ import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
 import { StyledItemNavigation } from "@/components/SettingPage/components/Navigation/styled";
+import { reorder } from "./helpers";
+import DehazeOutlinedIcon from "@mui/icons-material/DehazeOutlined";
+
+export type NavigationModelType = {
+  primary: { title: string; link: string; id: string }[];
+  secondary: { title: string; link: string; id: string }[];
+};
 
 interface ITitleDescription extends IBaseSetting {
-  navigation: {
-    primary: { title: string; link: string; id: string }[];
-    secondary: { title: string; link: string; id: string }[];
-  };
+  navigation: NavigationModelType;
   handleChangeNavigation: (input: {
     id: string;
     type: "primary" | "secondary";
@@ -36,187 +46,245 @@ interface ITitleDescription extends IBaseSetting {
     value: string;
   }) => void;
   handleAddLinkNavigation: (type: "primary" | "secondary") => void;
+  handleChangeNavigationOrder: (navigation: NavigationModelType) => void;
   handleRemoveLinkNavigation: (input: {
     id: string;
     type: "primary" | "secondary";
   }) => void;
 }
 
-export const Navigation = ({
-  navigation,
-  handleChangeNavigation,
-  handleAddLinkNavigation,
-  submitForm,
-  isLoading,
-  handleRemoveLinkNavigation,
-}: ITitleDescription) => {
-  const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
-  const [value, setValue] = useState("1");
+export const Navigation = memo(
+  ({
+    navigation,
+    handleChangeNavigation,
+    handleChangeNavigationOrder,
+    handleAddLinkNavigation,
+    submitForm,
+    isLoading,
+    handleRemoveLinkNavigation,
+  }: ITitleDescription) => {
+    const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
+    const [value, setValue] = useState("1");
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+      setValue(newValue);
+    };
 
-  return (
-    <StyledSettingCol id={HASH_CONFIG.NAVIGATION}>
-      <StyledSettingBlock>
-        <StyledHeadSettingBlock>
-          <Typography variant="h6">Navigation</Typography>
+    const onDragEndPrimary = ({ destination, source }: DropResult) => {
+      if (!destination) return;
 
-          <SaveButton
-            isEdit={isEdit}
-            isLoading={isLoading}
-            handleAction={handleAction}
-          />
-        </StyledHeadSettingBlock>
+      const newItems = reorder(
+        navigation.primary,
+        source.index,
+        destination.index,
+      );
 
-        <Typography variant="body2" sx={{ mb: 3 }}>
-          Primary & secondary site navigation
-        </Typography>
+      handleChangeNavigationOrder({ ...navigation, primary: newItems });
+    };
 
-        <TabContext value={value}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList onChange={handleChange} aria-label="lab API tabs example">
-              <Tab label="Primary" value="1" />
-              {/* <Tab label="Secondary" value="2" /> */}
-            </TabList>
-          </Box>
-          <TabPanel value="1">
-            {navigation &&
-              navigation.primary.map((el, i) => {
-                return (
-                  <StyledItemNavigation key={i}>
-                    <FormControl disabled={!isEdit} fullWidth size="small">
-                      <InputLabel htmlFor="title">Title link</InputLabel>
-                      <OutlinedInput
-                        id="title"
-                        name="title"
-                        label="Title link"
-                        onChange={(e) =>
-                          handleChangeNavigation({
-                            id: el.id,
-                            field: "title",
-                            type: "primary",
-                            value: e.target.value,
-                          })
-                        }
-                        value={el.title}
-                      />
-                    </FormControl>
-                    <FormControl disabled={!isEdit} fullWidth size="small">
-                      <InputLabel htmlFor="link">Link</InputLabel>
-                      <OutlinedInput
-                        id="link"
-                        name="link"
-                        label="Link"
-                        onChange={(e) =>
-                          handleChangeNavigation({
-                            id: el.id,
-                            field: "link",
-                            type: "primary",
-                            value: e.target.value,
-                          })
-                        }
-                        value={el.link}
-                      />
-                    </FormControl>
-                    <Fab
-                      disabled={!isEdit}
-                      size="small"
-                      sx={{ width: "100%", maxWidth: "40px" }}
-                      color="error"
-                      onClick={() =>
-                        handleRemoveLinkNavigation({
-                          id: el.id,
-                          type: "primary",
-                        })
-                      }
-                    >
-                      <DeleteTwoToneIcon />
-                    </Fab>
-                  </StyledItemNavigation>
-                );
-              })}
+    return (
+      <StyledSettingCol id={HASH_CONFIG.NAVIGATION}>
+        <StyledSettingBlock>
+          <StyledHeadSettingBlock>
+            <Typography variant="h6">Navigation</Typography>
 
-            {isEdit && (
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={() => handleAddLinkNavigation("primary")}
+            <SaveButton
+              isEdit={isEdit}
+              isLoading={isLoading}
+              handleAction={handleAction}
+            />
+          </StyledHeadSettingBlock>
+
+          <Typography variant="body2" sx={{ mb: 3 }}>
+            Primary & secondary site navigation
+          </Typography>
+
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList
+                onChange={handleChange}
+                aria-label="lab API tabs example"
               >
-                add
-              </Button>
-            )}
-          </TabPanel>
-          <TabPanel value="2">
-            {navigation &&
-              navigation.secondary.map((el, i) => {
-                return (
-                  <StyledItemNavigation key={i}>
-                    <FormControl disabled={!isEdit} fullWidth size="small">
-                      <InputLabel htmlFor="title">Title link</InputLabel>
-                      <OutlinedInput
-                        id="title"
-                        name="title"
-                        label="Title link"
-                        onChange={(e) =>
-                          handleChangeNavigation({
-                            id: el.id,
-                            field: "title",
-                            type: "secondary",
-                            value: e.target.value,
-                          })
-                        }
-                        value={el.title}
-                      />
-                    </FormControl>
-                    <FormControl disabled={!isEdit} fullWidth size="small">
-                      <InputLabel htmlFor="link">Link</InputLabel>
-                      <OutlinedInput
-                        id="link"
-                        name="link"
-                        label="Link"
-                        onChange={(e) =>
-                          handleChangeNavigation({
-                            id: el.id,
-                            field: "link",
-                            type: "secondary",
-                            value: e.target.value,
-                          })
-                        }
-                        value={el.link}
-                      />
-                    </FormControl>
+                <Tab label="Primary" value="1" />
+                {/* <Tab label="Secondary" value="2" /> */}
+              </TabList>
+            </Box>
+            <TabPanel sx={{ paddingLeft: 0, paddingRight: 0 }} value="1">
+              <DragDropContext onDragEnd={onDragEndPrimary}>
+                <Droppable droppableId="droppable-list">
+                  {(provided) => (
+                    <Box ref={provided.innerRef} {...provided.droppableProps}>
+                      {navigation &&
+                        navigation.primary.map((el, i) => {
+                          return (
+                            <Draggable
+                              isDragDisabled={!isEdit}
+                              key={el.id}
+                              draggableId={el.id}
+                              index={i}
+                            >
+                              {(providedItem, snapshot) => (
+                                <StyledItemNavigation
+                                  ref={providedItem.innerRef}
+                                  {...providedItem.draggableProps}
+                                  {...providedItem.dragHandleProps}
+                                  sx={{
+                                    cursor: isEdit ? "grab" : "default",
+                                    opacity: snapshot.isDragging ? "0.5" : "1",
+                                  }}
+                                >
+                                  {isEdit && <DehazeOutlinedIcon />}
+                                  <FormControl
+                                    disabled={!isEdit}
+                                    fullWidth
+                                    size="small"
+                                  >
+                                    <InputLabel htmlFor="title">
+                                      Title link
+                                    </InputLabel>
+                                    <OutlinedInput
+                                      id="title"
+                                      name="title"
+                                      label="Title link"
+                                      onChange={(e) =>
+                                        handleChangeNavigation({
+                                          id: el.id,
+                                          field: "title",
+                                          type: "primary",
+                                          value: e.target.value,
+                                        })
+                                      }
+                                      value={el.title}
+                                    />
+                                  </FormControl>
+                                  <FormControl
+                                    disabled={!isEdit}
+                                    fullWidth
+                                    size="small"
+                                  >
+                                    <InputLabel htmlFor="link">Link</InputLabel>
+                                    <OutlinedInput
+                                      id="link"
+                                      name="link"
+                                      label="Link"
+                                      onChange={(e) =>
+                                        handleChangeNavigation({
+                                          id: el.id,
+                                          field: "link",
+                                          type: "primary",
+                                          value: e.target.value,
+                                        })
+                                      }
+                                      value={el.link}
+                                    />
+                                  </FormControl>
+                                  <Fab
+                                    disabled={!isEdit}
+                                    size="small"
+                                    sx={{ width: "100%", maxWidth: "40px" }}
+                                    color="error"
+                                    onClick={() =>
+                                      handleRemoveLinkNavigation({
+                                        id: el.id,
+                                        type: "primary",
+                                      })
+                                    }
+                                  >
+                                    <DeleteTwoToneIcon />
+                                  </Fab>
+                                </StyledItemNavigation>
+                              )}
+                            </Draggable>
+                          );
+                        })}
+                      {provided.placeholder}
+                    </Box>
+                  )}
+                </Droppable>
+              </DragDropContext>
 
-                    <Fab
-                      disabled={!isEdit}
-                      size="small"
-                      color="error"
-                      sx={{ width: "100%", maxWidth: "40px" }}
-                      onClick={() =>
-                        handleRemoveLinkNavigation({
-                          id: el.id,
-                          type: "secondary",
-                        })
-                      }
-                    >
-                      <DeleteTwoToneIcon />
-                    </Fab>
-                  </StyledItemNavigation>
-                );
-              })}
-            {isEdit && (
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={() => handleAddLinkNavigation("secondary")}
-              >
-                add
-              </Button>
-            )}
-          </TabPanel>
-        </TabContext>
-      </StyledSettingBlock>
-    </StyledSettingCol>
-  );
-};
+              {isEdit && (
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => handleAddLinkNavigation("primary")}
+                >
+                  add
+                </Button>
+              )}
+            </TabPanel>
+            <TabPanel value="2">
+              {navigation &&
+                navigation.secondary.map((el, i) => {
+                  return (
+                    <StyledItemNavigation key={i}>
+                      <FormControl disabled={!isEdit} fullWidth size="small">
+                        <InputLabel htmlFor="title">Title link</InputLabel>
+                        <OutlinedInput
+                          id="title"
+                          name="title"
+                          label="Title link"
+                          onChange={(e) =>
+                            handleChangeNavigation({
+                              id: el.id,
+                              field: "title",
+                              type: "secondary",
+                              value: e.target.value,
+                            })
+                          }
+                          value={el.title}
+                        />
+                      </FormControl>
+                      <FormControl disabled={!isEdit} fullWidth size="small">
+                        <InputLabel htmlFor="link">Link</InputLabel>
+                        <OutlinedInput
+                          id="link"
+                          name="link"
+                          label="Link"
+                          onChange={(e) =>
+                            handleChangeNavigation({
+                              id: el.id,
+                              field: "link",
+                              type: "secondary",
+                              value: e.target.value,
+                            })
+                          }
+                          value={el.link}
+                        />
+                      </FormControl>
+
+                      <Fab
+                        disabled={!isEdit}
+                        size="small"
+                        color="error"
+                        sx={{ width: "100%", maxWidth: "40px" }}
+                        onClick={() =>
+                          handleRemoveLinkNavigation({
+                            id: el.id,
+                            type: "secondary",
+                          })
+                        }
+                      >
+                        <DeleteTwoToneIcon />
+                      </Fab>
+                    </StyledItemNavigation>
+                  );
+                })}
+              {isEdit && (
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => handleAddLinkNavigation("secondary")}
+                >
+                  add
+                </Button>
+              )}
+            </TabPanel>
+          </TabContext>
+        </StyledSettingBlock>
+      </StyledSettingCol>
+    );
+  },
+);
+
+Navigation.displayName = "Navigation";

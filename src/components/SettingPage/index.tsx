@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import _ from "lodash";
 import { Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
@@ -13,7 +13,10 @@ import { DesignBranding } from "@/components/SettingPage/components/DesignBrandi
 import { Recommendation } from "@/components/SettingPage/components/Recommendation";
 import { Icon } from "@/components/SettingPage/components/Icon";
 import { ImageBanner } from "@/components/SettingPage/components/Image";
-import { Navigation } from "@/components/SettingPage/components/Navigation";
+import {
+  Navigation,
+  NavigationModelType,
+} from "@/components/SettingPage/components/Navigation";
 import { editSite } from "@/services/nostr/api";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { Content } from "@/components/SettingPage/components/Content";
@@ -131,81 +134,119 @@ export const SettingPage = () => {
     },
   });
 
-  const handleChangeNavigation = (input: {
-    id: string;
-    type: "primary" | "secondary";
-    field: "title" | "link";
-    value: string;
-  }) => {
-    const navigation = values.navigation;
+  const handleChangeNavigation = useCallback(
+    (input: {
+      id: string;
+      type: "primary" | "secondary";
+      field: "title" | "link";
+      value: string;
+    }) => {
+      const navigation = values.navigation[input.type].map((item) => {
+        if (item.id === input.id) {
+          return {
+            ...item,
+            [input.field]: input.value,
+          };
+        }
 
-    const item = navigation[input.type].find((item) => item.id === input.id);
+        return item;
+      });
 
-    if (item) {
-      item[input.field] = input.value;
-    }
+      setFieldValue(`navigation.${input.type}`, navigation);
+    },
+    [setFieldValue, values.navigation],
+  );
 
-    setFieldValue("navigation", navigation);
-  };
+  const handleChangeNavigationOrder = useCallback(
+    (navigation: NavigationModelType) => {
+      setFieldValue("navigation", navigation);
+    },
+    [setFieldValue],
+  );
 
-  const handleAddLinkNavigation = (type: "primary" | "secondary") => {
-    setFieldValue("navigation", {
-      ...values.navigation,
-      [type]: [
+  const handleAddLinkNavigation = useCallback(
+    (type: "primary" | "secondary") => {
+      setFieldValue(`navigation.${type}`, [
         ...values.navigation[type],
         { title: "", link: "", id: "" + Date.now() },
-      ],
-    });
-  };
+      ]);
+    },
+    [setFieldValue, values.navigation],
+  );
 
-  const handleChangeHashtags = (value: string | string[]) => {
-    setFieldValue("hashtags", value);
-  };
+  const handleChangeHashtags = useCallback(
+    (value: string | string[]) => {
+      setFieldValue("hashtags", value);
+    },
+    [setFieldValue],
+  );
 
-  const handleChangeHashtagsHomePage = (value: string | string[]) => {
-    setFieldValue("hashtags_homepage", value);
-  };
+  const handleChangeHashtagsHomePage = useCallback(
+    (value: string | string[]) => {
+      setFieldValue("hashtags_homepage", value);
+    },
+    [setFieldValue],
+  );
 
-  const handleChangeContributors = (pubkeys: string[]) => {
-    setFieldValue("contributors", pubkeys);
-  };
+  const handleChangeContributors = useCallback(
+    (pubkeys: string[]) => {
+      setFieldValue("contributors", pubkeys);
+    },
+    [setFieldValue],
+  );
 
-  const handleUpdateWebSiteAddress = async (url: string) => {
-    setFieldValue("url", addHttps(url));
-  };
+  const handleUpdateWebSiteAddress = useCallback(
+    async (url: string) => {
+      setFieldValue("url", addHttps(url));
+    },
+    [setFieldValue],
+  );
 
-  const handleChangeContentActions = (value: string[]) => {
-    setFieldValue("contentActions", value);
-  };
+  const handleChangeContentActions = useCallback(
+    (value: string[]) => {
+      setFieldValue("contentActions", value);
+    },
+    [setFieldValue],
+  );
 
-  const handleChangeKinds = (value: number | number[]) => {
-    setFieldValue("kinds", value);
-  };
+  const handleChangeKinds = useCallback(
+    (value: number | number[]) => {
+      setFieldValue("kinds", value);
+    },
+    [setFieldValue],
+  );
 
-  const handleOptionsMainCallAction = (value: string) => {
-    setFieldValue("contentActionMain", value);
-  };
+  const handleOptionsMainCallAction = useCallback(
+    (value: string) => {
+      setFieldValue("contentActionMain", value);
+    },
+    [setFieldValue],
+  );
 
-  const handleChangeKindsHomePage = (value: number | number[]) => {
-    setFieldValue("kinds_homepage", value);
-  };
+  const handleChangeKindsHomePage = useCallback(
+    (value: number | number[]) => {
+      setFieldValue("kinds_homepage", value);
+    },
+    [setFieldValue],
+  );
 
-  const handleChangeColor = (color: string) => {
-    setFieldValue("accentColor", color);
-  };
+  const handleChangeColor = useCallback(
+    (color: string) => {
+      setFieldValue("accentColor", color);
+    },
+    [setFieldValue],
+  );
 
-  const handleRemoveLinkNavigation = (input: {
-    id: string;
-    type: "primary" | "secondary";
-  }) => {
-    const navigation = values.navigation;
+  const handleRemoveLinkNavigation = useCallback(
+    (input: { id: string; type: "primary" | "secondary" }) => {
+      const navigation = values.navigation[input.type].filter(
+        (item) => item.id !== input.id,
+      );
 
-    navigation[input.type] = navigation[input.type].filter(
-      (item) => item.id !== input.id
-    );
-
-    setFieldValue("navigation", navigation);
-  };
+      setFieldValue(`navigation.${[input.type]}`, navigation);
+    },
+    [setFieldValue, values.navigation],
+  );
 
   useEffect(() => {
     if (data) {
@@ -223,7 +264,7 @@ export const SettingPage = () => {
   //     </SpinerWrap>
   //   );
   // }
-  console.log({ values });
+
   return (
     <>
       <Typography variant="h4" sx={{ fontWeight: "bold" }}>
@@ -353,6 +394,7 @@ export const SettingPage = () => {
       <Navigation
         navigation={values.navigation}
         handleChangeNavigation={handleChangeNavigation}
+        handleChangeNavigationOrder={handleChangeNavigationOrder}
         submitForm={submitForm}
         isLoading={isLoading}
         handleAddLinkNavigation={handleAddLinkNavigation}

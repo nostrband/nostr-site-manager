@@ -6,4 +6,5 @@ export const StyledItemNavigation = styled(Box)({
   display: "flex",
   gap: 20,
   marginBottom: 20,
+  alignItems: "center",
 });

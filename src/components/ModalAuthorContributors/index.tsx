@@ -214,7 +214,7 @@ export const ModalAuthorContributors = ({
           disablePortal
           loading={isLoading}
           loadingText={"Searching..."}
-          options={options}
+          options={options.filter(option => !pubkeysContributors.includes(option.pubkey))}
           onChange={handleChangeAuthor}
           inputValue={inputValue}
           filterOptions={(options) => options}

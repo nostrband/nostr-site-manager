@@ -108,6 +108,8 @@ export const WebsiteAddress = memo(
       checkUrlExists(value);
     };
 
+    const isLoadingSaveButton = isEdit && isFetchAddress;
+
     return (
       <StyledSettingCol id={HASH_CONFIG.URL}>
         <StyledSettingBlock>
@@ -115,6 +117,7 @@ export const WebsiteAddress = memo(
             <Typography variant="h6">Website address</Typography>
 
             <SaveButton
+              disabled={isLoadingSaveButton}
               isEdit={isEdit}
               isLoading={isLoading}
               handleAction={handleClick}

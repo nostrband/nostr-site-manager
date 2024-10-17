@@ -1,5 +1,13 @@
 "use client";
-import { FC, forwardRef, memo, ReactNode, useCallback } from "react";
+import {
+  FC,
+  forwardRef,
+  memo,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import Link, { LinkProps } from "next/link";
 import {
   Avatar,
@@ -19,6 +27,7 @@ import {
 } from "./styled";
 import { StyledAvatarSite } from "@/components/shared/styled";
 import LaunchIcon from "@mui/icons-material/Launch";
+import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
@@ -84,6 +93,8 @@ export const PreviewSite = memo(function PreviewSite({
   isPublic = false,
   isLinkToOpenSite = true,
 }: PreviewSitePropsType) {
+  const [isErrorLoadImage, setErrorLoadImage] = useState(false);
+  const [isErrorLoadLogo, setErrorLoadLogo] = useState(false);
   const link = isPublic ? url : `${path}/${id}`;
 
   const WrapCard: FC<{ children: ReactNode }> = useCallback(
@@ -108,14 +119,46 @@ export const PreviewSite = memo(function PreviewSite({
     [isLink, isPublic, link],
   );
 
+  useEffect(() => {
+    const img = new Image();
+    img.src = image;
+
+    img.onload = () => {
+      setErrorLoadImage(true);
+    };
+
+    img.onerror = () => {
+      setErrorLoadImage(false);
+    };
+  }, [image]);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = logo;
+
+    img.onload = () => {
+      setErrorLoadLogo(true);
+    };
+
+    img.onerror = () => {
+      setErrorLoadLogo(false);
+    };
+  }, [logo]);
+
   return (
     <StyledCard>
       <WrapCard>
         <StyledCardHeader
           avatar={
-            <StyledAvatarSite variant="square" src={logo}>
-              {name}
-            </StyledAvatarSite>
+            isErrorLoadLogo ? (
+              <StyledAvatarSite variant="square" src={logo}>
+                {name[0]}
+              </StyledAvatarSite>
+            ) : (
+              <StyledAvatarSite variant="square">
+                <LanguageOutlinedIcon />
+              </StyledAvatarSite>
+            )
           }
           title={
             <Box
@@ -142,7 +185,7 @@ export const PreviewSite = memo(function PreviewSite({
           }
           subheader={<Box>{url}</Box>}
         />
-        {Boolean(image) ? (
+        {isErrorLoadImage ? (
           <CardMedia
             component="img"
             height="194"
@@ -177,7 +220,7 @@ export const PreviewSite = memo(function PreviewSite({
             sx={{ marginTop: "auto" }}
             avatar={
               <Avatar src={isPublic ? adminAvatar : icon}>
-                {isPublic ? adminName : contributors[0]}
+                {isPublic ? adminName[0] : name[0]}
               </Avatar>
             }
             title={

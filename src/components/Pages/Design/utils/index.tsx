@@ -133,8 +133,8 @@ const SelectField: React.FC<FieldProps> = React.memo(
           });
         }}
       >
-        {options.map((option) => (
-          <MenuItem key={option} value={option}>
+        {options.map((option, i) => (
+          <MenuItem key={i} value={option}>
             {option}
           </MenuItem>
         ))}

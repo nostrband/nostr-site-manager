@@ -19,6 +19,7 @@ import PhoneIphoneTwoToneIcon from "@mui/icons-material/PhoneIphoneTwoTone";
 import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
 import DnsTwoToneIcon from "@mui/icons-material/DnsTwoTone";
 import PendingTwoToneIcon from "@mui/icons-material/PendingTwoTone";
+import PushPinTwoToneIcon from "@mui/icons-material/PushPinTwoTone";
 
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
@@ -147,6 +148,7 @@ export const HASH_CONFIG = {
   CONTENT: "content",
   CONTENT_HOMEPAGE: "content-homepage",
   OTHER: "other",
+  PINNED_NOTES: "pinned-notes",
 };
 
 export const SETTINGS_CONFIG = [
@@ -217,6 +219,11 @@ export const SETTINGS_CONFIG = [
         title: "Other",
         path: HASH_CONFIG.OTHER,
         icon: <PendingTwoToneIcon />,
+      },
+      {
+        title: "Pinned content",
+        path: HASH_CONFIG.PINNED_NOTES,
+        icon: <PushPinTwoToneIcon />,
       },
     ],
   },

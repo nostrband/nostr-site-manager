@@ -42,6 +42,7 @@ export let userPubkey: string = "";
 export const userRelays: string[] = [];
 export let userProfile: NDKEvent | undefined = undefined;
 export let userIsDelegated = false;
+export let userIsReadOnly = false;
 export let userToken = "";
 let userTokenPubkey = "";
 
@@ -123,6 +124,7 @@ export async function onAuth(e: any) {
     console.log("pubkey", userPubkey);
 
     userIsDelegated = e.detail.method === "otp";
+    userIsReadOnly = e.detail.method === "readOnly";
     if (userIsDelegated) {
       setUserToken(JSON.parse(e.detail.otpData).token, userPubkey);
     } else if (userTokenPubkey !== userPubkey) {

@@ -20,6 +20,7 @@ import {
   setHtml,
   tags,
   tv,
+  parseATag,
 } from "libnostrsite";
 import {
   fetchWithSession,
@@ -138,13 +139,16 @@ async function ensureSiteTheme(site: NDKEvent) {
   console.log("fetched site theme package", pkg);
   themePackages.push(pkg);
 
-  const themeAddr = (tv(pkg, "a") || "").split(":");
-  if (themeAddr.length !== 3 || themeAddr[0] !== "" + KIND_THEME)
+  const themeAddr = parseATag(tv(pkg, "a"));
+  if (!themeAddr || !themeAddr.pubkey || themeAddr.kind !== KIND_THEME)
     throw new Error("Bad theme addr");
 
   // theme already cached?
   if (
-    themes.find((t) => t.pubkey === themeAddr[1] && tv(t, "d") === themeAddr[2])
+    themes.find(
+      (t) =>
+        t.pubkey === themeAddr.pubkey && tv(t, "d") === themeAddr.identifier,
+    )
   )
     return;
 
@@ -155,8 +159,8 @@ async function ensureSiteTheme(site: NDKEvent) {
     {
       // @ts-ignore
       kinds: [KIND_THEME],
-      authors: [themeAddr[1]],
-      "#d": [themeAddr[2]],
+      authors: [themeAddr.pubkey],
+      "#d": [themeAddr.identifier],
     },
     [SITE_RELAY],
     2000,
@@ -389,7 +393,7 @@ function getThemePackage(id = "") {
   id = id || settings!.themeId;
 
   const theme = themes.find((t) => eventId(t) === id);
-  // console.log("theme", theme, "id", settings!.themeId, "themes", themes);
+  console.log("theme", { theme, id, themes, settings });
   if (!theme) throw new Error("No theme");
 
   const pkg = themePackages.find((p) => p.id === tv(theme, "e"));

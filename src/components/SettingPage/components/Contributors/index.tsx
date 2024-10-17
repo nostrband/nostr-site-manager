@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   StyledHeadSettingBlock,
   StyledSettingBlock,
@@ -24,93 +24,97 @@ interface IContributors extends IBaseSetting {
   handleChangeContributors: (pubkeys: string[]) => void;
 }
 
-export const Contributors = ({
-  contributors: pubkeysContributors,
-  handleChangeContributors,
-  isLoading,
-  submitForm,
-}: IContributors) => {
-  const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
+export const Contributors = memo(
+  ({
+    contributors: pubkeysContributors,
+    handleChangeContributors,
+    isLoading,
+    submitForm,
+  }: IContributors) => {
+    const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
 
-  const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
-  const [contributors, setContributors] = useState<NDKEvent[]>([]);
+    const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
+    const [contributors, setContributors] = useState<NDKEvent[]>([]);
 
-  const handleAuthor = (pubkeyAuthors: string[] | any) => {
-    handleChangeContributors(pubkeyAuthors);
-  };
+    const handleAuthor = (pubkeyAuthors: string[] | any) => {
+      handleChangeContributors(pubkeyAuthors);
+    };
 
-  const handleClose = () => {
-    setOpenModalAuthor(false);
-  };
+    const handleClose = () => {
+      setOpenModalAuthor(false);
+    };
 
-  const handleClick = async () => {
-    await handleAction();
+    const handleClick = async () => {
+      await handleAction();
 
-    if (!isEdit) {
-      setOpenModalAuthor(true);
-    }
-  };
+      if (!isEdit) {
+        setOpenModalAuthor(true);
+      }
+    };
 
-  useEffect(() => {
-    if (pubkeysContributors.length) {
-      fetchProfiles(pubkeysContributors)
-        .then((p) => {
-          if (p.length) {
-            setContributors(p);
-          } else {
+    useEffect(() => {
+      if (pubkeysContributors.length) {
+        fetchProfiles(pubkeysContributors)
+          .then((p) => {
+            if (p.length) {
+              setContributors(p);
+            } else {
+              setContributors([]);
+            }
+          })
+          .catch(() => {
             setContributors([]);
-          }
-        })
-        .catch(() => {
-          setContributors([]);
-        });
-    } else {
-      setContributors([]);
-    }
-  }, [pubkeysContributors]);
+          });
+      } else {
+        setContributors([]);
+      }
+    }, [pubkeysContributors]);
 
-  return (
-    <>
-      <StyledSettingCol id={HASH_CONFIG.CONTRIBUTORS}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">Contributors</Typography>
+    return (
+      <>
+        <StyledSettingCol id={HASH_CONFIG.CONTRIBUTORS}>
+          <StyledSettingBlock>
+            <StyledHeadSettingBlock>
+              <Typography variant="h6">Contributors</Typography>
 
-            <SaveButton
-              isEdit={isEdit}
-              isLoading={isLoading}
-              handleAction={handleClick}
-              text="Change contributors"
-            />
-          </StyledHeadSettingBlock>
+              <SaveButton
+                isEdit={isEdit}
+                isLoading={isLoading}
+                handleAction={handleClick}
+                text="Change contributors"
+              />
+            </StyledHeadSettingBlock>
 
-          <StyledAutorProfileGroup>
-            {contributors.map((el) => {
-              let meta = JSON.parse(el.content);
+            <StyledAutorProfileGroup>
+              {contributors.map((el, i) => {
+                let meta = JSON.parse(el.content);
 
-              const npub = el.pubkey
-                ? nip19.npubEncode(el.pubkey).substring(0, 8) + "..."
-                : "";
-              const name = meta.display_name || meta.name || npub;
-              const img = meta.picture || "";
+                const npub = el.pubkey
+                  ? nip19.npubEncode(el.pubkey).substring(0, 8) + "..."
+                  : "";
+                const name = meta.display_name || meta.name || npub;
+                const img = meta.picture || "";
 
-              return (
-                <StyledAutorProfile key={el.pubkey}>
-                  <Avatar alt={name} src={img} />
+                return (
+                  <StyledAutorProfile key={i}>
+                    <Avatar alt={name} src={img} />
 
-                  <Typography variant="body1">{name}</Typography>
-                </StyledAutorProfile>
-              );
-            })}
-          </StyledAutorProfileGroup>
-        </StyledSettingBlock>
-      </StyledSettingCol>
-      <ModalAuthorContributors
-        pubkeysContributors={pubkeysContributors}
-        isOpen={isOpenModalAuthor}
-        handleClose={handleClose}
-        handleAuthor={handleAuthor}
-      />
-    </>
-  );
-};
+                    <Typography variant="body1">{name}</Typography>
+                  </StyledAutorProfile>
+                );
+              })}
+            </StyledAutorProfileGroup>
+          </StyledSettingBlock>
+        </StyledSettingCol>
+        <ModalAuthorContributors
+          pubkeysContributors={pubkeysContributors}
+          isOpen={isOpenModalAuthor}
+          handleClose={handleClose}
+          handleAuthor={handleAuthor}
+        />
+      </>
+    );
+  },
+);
+
+Contributors.displayName = "Contributors";

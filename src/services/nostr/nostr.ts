@@ -305,6 +305,9 @@ export async function publishSiteEvent(
   } else {
     if (site.pubkey !== userPubkey) throw new Error("Not your site");
 
+    // ensure updated date
+    site.created_at = Math.floor(Date.now() / 1000);
+
     // sign it
     await site.sign(new NDKNip07Signer());
     console.log("signed site event", site);

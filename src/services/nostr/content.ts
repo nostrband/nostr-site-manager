@@ -1,5 +1,5 @@
 import { NDKEvent } from "@nostr-dev-kit/ndk";
-import { getSiteSettings, nostrParser } from "./api";
+import { getSiteSettings, parser } from "./api";
 import { SEARCH_RELAYS, ndk } from "./nostr";
 import {
   fetchEvents,
@@ -71,11 +71,11 @@ export async function searchPosts(
   // add hashtags
   const posts = [];
   for (const e of valid) {
-    const post = (await nostrParser.parseEvent(e)) as SearchPost;
+    const post = (await parser.parseEvent(e)) as SearchPost;
     if (!post) continue;
 
     // FIXME wtf? move to libnostrsite
-    const hashtags = nostrParser.parseHashtags(e);
+    const hashtags = parser.parseHashtags(e);
     // @ts-ignore
     post.tags = hashtags.map((t) => ({
       id: t.toLocaleLowerCase(),

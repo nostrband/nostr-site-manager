@@ -48,7 +48,8 @@ const KIND_PINNED_ON_SITE = 30516;
 
 const sites: Site[] = [];
 const packageThemes = new Map<string, string>();
-export const nostrParser = new NostrParser("http://localhost/");
+// export const nostrParser = new NostrParser("http://localhost/");
+export const parser = new NostrParser("http://localhost/");
 let sitesPromise: Promise<void> | undefined = undefined;
 
 export async function editSite(data: ReturnSettingsSiteDataType) {
@@ -310,7 +311,7 @@ function parseSite(ne: NostrEvent) {
     pubkey: e.pubkey,
     relays: [SITE_RELAY, ...userRelays],
   };
-  return nostrParser.parseSite(addr, e);
+  return parser.parseSite(addr, e);
 }
 
 export async function getSiteSettings(siteId: string) {

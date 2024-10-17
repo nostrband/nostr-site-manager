@@ -6,11 +6,13 @@ interface ISaveButton {
   isLoading: boolean;
   handleAction: () => void;
   text?: string;
+  disabled?: boolean;
 }
 export const SaveButton = ({
   isEdit,
   isLoading,
   handleAction,
+  disabled,
   text = "Edit",
 }: ISaveButton) => (
   <LoadingButton
@@ -18,7 +20,7 @@ export const SaveButton = ({
     variant={isEdit ? "contained" : "outlined"}
     size="small"
     loading={isLoading}
-    disabled={isLoading}
+    disabled={disabled || isLoading}
     onClick={handleAction}
   >
     {isEdit ? "Save" : text}

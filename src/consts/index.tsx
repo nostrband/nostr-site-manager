@@ -20,6 +20,7 @@ import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
 import DnsTwoToneIcon from "@mui/icons-material/DnsTwoTone";
 import PendingTwoToneIcon from "@mui/icons-material/PendingTwoTone";
 import PushPinTwoToneIcon from "@mui/icons-material/PushPinTwoTone";
+import PanoramaTwoToneIcon from '@mui/icons-material/PanoramaTwoTone';
 
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
@@ -144,6 +145,7 @@ export const HASH_CONFIG = {
   CONTENT_HOMEPAGE: "content-homepage",
   OTHER: "other",
   PINNED_NOTES: "pinned-notes",
+  LOGO: "logo",
 };
 
 export const SETTINGS_CONFIG = [
@@ -226,14 +228,14 @@ export const SETTINGS_CONFIG = [
     title: "Design",
     sublist: [
       {
-        title: "Theme",
-        path: HASH_CONFIG.DESIGN_BRANDING,
-        icon: <BrushTwoToneIcon />,
-      },
-      {
         title: "App name",
         path: HASH_CONFIG.APP_NAME,
         icon: <PhoneIphoneTwoToneIcon />,
+      },
+      {
+        title: "Theme",
+        path: HASH_CONFIG.DESIGN_BRANDING,
+        icon: <BrushTwoToneIcon />,
       },
       {
         title: "Accent color",
@@ -246,9 +248,14 @@ export const SETTINGS_CONFIG = [
         icon: <AppsTwoToneIcon />,
       },
       {
+        title: "Logo",
+        path: HASH_CONFIG.LOGO,
+        icon: <ImageTwoToneIcon />,
+      },
+      {
         title: "Image",
         path: HASH_CONFIG.IMAGE,
-        icon: <ImageTwoToneIcon />,
+        icon: <PanoramaTwoToneIcon />,
       },
       {
         title: "Navigation",

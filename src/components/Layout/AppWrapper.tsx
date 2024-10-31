@@ -30,6 +30,7 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
           data-otp-request-url="https://api.npubpro.com/otp"
           data-otp-reply-url="https://api.npubpro.com/authotp"
           src="https://www.unpkg.com/nostr-login@latest/dist/unpkg.js"
+          // src="/nostr-login.js"
         />
         <Script
           defer

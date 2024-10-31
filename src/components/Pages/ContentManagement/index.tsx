@@ -20,10 +20,12 @@ import {
   TitleSection,
   TitleSiteName,
 } from "./styled";
-import { SearchPost } from "@/services/nostr/content";
+import { SearchPost, submitPost } from "@/services/nostr/content";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { Filter } from "./Filter";
 import { ContentCard } from "./ContentCard";
+import { useSnackbar } from "notistack";
+import { SEARCH_RELAYS } from "@/services/nostr/nostr";
 
 export const ContentManagement = memo(
   ({ siteData }: { siteData: ReturnSettingsSiteDataType }) => {
@@ -32,6 +34,7 @@ export const ContentManagement = memo(
     const isMobile = useMediaQuery("(max-width:600px)");
     const [isLoading, setIsLoading] = useState(false);
     const [cards, setCards] = useState<SearchPost[]>([]);
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleOpenFilterDialog = () => {
       setFilterDialogOpen(true);
@@ -54,6 +57,28 @@ export const ContentManagement = memo(
       },
       [setIsLoading],
     );
+
+    const handleSubmit = useCallback(async (card: SearchPost) => {
+      try {
+        await submitPost(siteData.id, {
+          id: card.id,
+          author: card.event.pubkey,
+          kind: card.event.kind!,
+          url: "",
+        });
+        card.status = 'manual';
+      } catch (e: any) {
+        console.log("error", e);
+        enqueueSnackbar("Error: " + e.toString(), {
+          autoHideDuration: 3000,
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "bottom",
+          },
+        });
+      }
+    }, [siteData])
 
     return (
       <>
@@ -135,7 +160,7 @@ export const ContentManagement = memo(
             {cards.map((card, index) => {
               return (
                 <Grid item xs={12} sm={6} md={4} key={index}>
-                  <ContentCard card={card} />
+                  <ContentCard card={card} submit={handleSubmit} />
                 </Grid>
               );
             })}

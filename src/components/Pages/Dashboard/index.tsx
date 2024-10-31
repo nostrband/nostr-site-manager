@@ -24,6 +24,7 @@ export const Dashboard = () => {
   const switchTheme = `/design?siteId=${siteId}&themeId=${getSite?.themeId}`;
 
   const openSettings = `/admin/${siteId}/settings`;
+  const openContent = `/admin/${siteId}/content`;
 
   const handeOpenConfirm = () => {
     setOpenConfirm(true);
@@ -113,6 +114,17 @@ export const Dashboard = () => {
             fullWidth
           >
             Settings
+          </Button>
+
+          <Button
+            LinkComponent={Link}
+            size="medium"
+            variant="outlined"
+            color="decorate"
+            href={openContent}
+            fullWidth
+          >
+            Content
           </Button>
 
           <Button

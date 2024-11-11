@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { MainWrapper } from "@/components/Layout/MainWrapper";
 import { SideBarNav } from "@/components/Layout/SideBarNav";
 import { MainContent } from "@/components/Layout/MainContent";
@@ -11,7 +11,7 @@ import { useListSites } from "@/hooks/useListSites";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { ReturnSitesDataType } from "@/services/sites.service";
 import { Box, Button, Typography } from "@mui/material";
-import { userPubkey } from "@/services/nostr/nostr";
+import { AuthContext } from "@/services/nostr/nostr";
 
 export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const isDesktop = useResponsive("up", "lg");
@@ -21,12 +21,12 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
   const pathAdmin = useFirstPathElement();
-  const { data, isLoading, isFetching } = useListSites();
+  const { data } = useListSites();
+  const { isAuth, isLoading } = useContext(AuthContext);
 
-  const isPathAdmin = pathname === "/admin"
-  const isPathAdminAdd = pathname === "/admin/add"
+  const isPathAdmin = pathname === "/admin";
+  const isPathAdminAdd = pathname === "/admin/add";
   const isHideSideBar = isPathAdmin || isPathAdminAdd;
-  const getUserPubkey = Boolean(userPubkey)
 
   const getValidParamsId = useCallback(
     (list: ReturnSitesDataType[], id: string | string[], url: string) => {
@@ -44,14 +44,14 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    if (getUserPubkey && !isLoading && !isFetching) {
+    if (isAuth && !isLoading) {
       setLogin(true);
     }
 
-    if (!getUserPubkey && !isPathAdmin && !isLoading && !isFetching) {
+    if (!isAuth && !isPathAdmin && !isLoading) {
       return redirect(`/admin`);
     }
-  }, [getUserPubkey, isPathAdmin, isLoading, isFetching]);
+  }, [isAuth, isPathAdmin, isLoading]);
 
   useEffect(() => {
     if (data) {

@@ -22,7 +22,14 @@ import { MIN_POW, minePow } from "./pow";
 import { NPUB_PRO_API } from "@/consts";
 import { nip19 } from "nostr-tools";
 
-export const AuthContext = createContext<boolean>(false);
+export const AuthContext = createContext<{
+  isAuth: boolean;
+  isLoading: boolean;
+}>({
+  isAuth: false,
+  isLoading: false,
+});
+
 export const DEFAULT_RELAYS = [
   "wss://nos.lol",
   "wss://relay.primal.net",

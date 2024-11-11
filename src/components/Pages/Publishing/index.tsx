@@ -25,7 +25,7 @@ const mutex = new Mutex();
 
 export const Publishing = () => {
   const router = useRouter();
-  const authed = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
   const params = useSearchParams();
   const siteId = params.get("siteId");
@@ -61,7 +61,7 @@ export const Publishing = () => {
   }, []);
 
   useEffect(() => {
-    if (state !== "init" || !authed || !themeId || !siteId) return;
+    if (state !== "init" || !isAuth || !themeId || !siteId) return;
 
     mutex.run(async () => {
       if (getPreviewPublishingState() !== "publishing") return;
@@ -99,7 +99,7 @@ export const Publishing = () => {
         });
       }
     });
-  }, [authed, themeId, siteId, state, setState]);
+  }, [isAuth, themeId, siteId, state, setState]);
 
   const tryAgain = () => {
     window.location.reload();

@@ -53,7 +53,7 @@ export const Preview = () => {
     string[] | undefined
   >(undefined);
   const [kindsSelected, setKinds] = useState<number[] | undefined>(undefined);
-  const authed = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const [isLoading, setLoading] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
@@ -65,13 +65,13 @@ export const Preview = () => {
 
   useEffect(() => {
     // init contributor if we're not loading a site
-    if (authed && !contributor && !siteId) setContributor(userPubkey);
-  }, [authed]);
+    if (isAuth && !contributor && !siteId) setContributor(userPubkey);
+  }, [isAuth]);
 
   useEffect(() => {
     if (!themeId || !theme) return;
 
-    if (authed) {
+    if (isAuth) {
       mutex.run(async () => {
         setLoading(true);
 
@@ -136,7 +136,7 @@ export const Preview = () => {
       iframeRef.current!.src = theme.url;
     }
   }, [
-    authed,
+    isAuth,
     themeId,
     theme,
     siteId,
@@ -206,7 +206,7 @@ export const Preview = () => {
 
       <PreviewHeader themeId={themeId} themeName={theme.name} />
 
-      {!authed ? (
+      {!isAuth ? (
         <StyledPreviewTestSiteNotAuth sx={{ paddingBottom: `${height}px` }}>
           <iframe
             ref={iframeRef}

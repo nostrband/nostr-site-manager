@@ -26,10 +26,7 @@ import { AppName } from "./components/AppName";
 import { CustomDomains } from "./components/CustomDomains";
 import { Other } from "./components/Other";
 import { PinnedNotes } from "./components/PinnedNotes";
-import {
-  Navigation,
-  NavigationModelType,
-} from "./components/Navigation";
+import { Navigation, NavigationModelType } from "./components/Navigation";
 import { Logo } from "./components/Logo";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
@@ -79,7 +76,7 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
 };
 
 export const SettingPage = () => {
-  const authed = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const [initialData, setInitialData] = useState(initialSettingValue);
@@ -335,7 +332,7 @@ export const SettingPage = () => {
         isLoading={isLoading}
       />
 
-      {authed && TESTERS.includes(userPubkey) && (
+      {isAuth && TESTERS.includes(userPubkey) && (
         <Other
           postsPerPage={values.postsPerPage}
           contentActionMain={values.contentActionMain}

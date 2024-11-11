@@ -14,7 +14,7 @@ const BodyWrapper = styled("body")({
 export const AppWrapper = ({ children }: { children: ReactNode }) => {
   const [authed, setAuthed] = useState({
     isAuth: false,
-    isLoading: true,
+    isLoading: localStorage.getItem("localUserPubkey") ? true : false,
   });
 
   useEffect(() => {
@@ -39,31 +39,6 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
       }
     });
   }, []);
-
-  useEffect(() => {
-    let counter = 0;
-
-    const interval = setInterval(() => {
-      if (userPubkey) {
-        clearInterval(interval);
-
-        setAuthed((prev) => ({
-          ...prev,
-          isLoading: true,
-        }));
-      } else if (counter >= 3) {
-        clearInterval(interval);
-
-        setAuthed({
-          isAuth: false,
-          isLoading: false,
-        });
-      }
-      counter++;
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [userPubkey]);
 
   return (
     <AuthContext.Provider value={authed}>

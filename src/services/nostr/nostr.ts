@@ -143,11 +143,14 @@ export async function onAuth(e: any) {
     console.log("pubkey relays", userRelays);
 
     userProfile = await fetchProfile(ndk, userPubkey);
+
+    localStorage.setItem("localUserPubkey", userPubkey);
   } else {
     userPubkey = "";
     userRelays.length = 0;
     userProfile = undefined;
     setUserToken("", "");
+    localStorage.removeItem("localUserPubkey");
   }
 
   for (const cb of onAuths) await cb(e.detail.type);

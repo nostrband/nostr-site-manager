@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import _ from "lodash";
 import { Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
@@ -28,6 +28,7 @@ import { Other } from "./components/Other";
 import { PinnedNotes } from "./components/PinnedNotes";
 import { Navigation, NavigationModelType } from "./components/Navigation";
 import { Logo } from "./components/Logo";
+import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -85,7 +86,11 @@ export const SettingPage = () => {
   const params = useParams();
   const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
 
-  const { data } = useSettingsSite(siteId);
+  const {
+    data,
+    isLoading: isLoadingSetting,
+    isFetching,
+  } = useSettingsSite(siteId);
 
   const {
     values,
@@ -255,13 +260,21 @@ export const SettingPage = () => {
     }
   }, [setValues, data]);
 
-  // if (isLoadingSetting || isFetching) {
-  //   return (
-  //     <SpinerWrap>
-  //       <SpinerCircularProgress />
-  //     </SpinerWrap>
-  //   );
-  // }
+  useEffect(() => {
+    if (data) {
+      if (!isLoadingSetting && !isFetching && Object.keys(data).length === 0) {
+        redirect("/admin");
+      }
+    }
+  }, [isLoadingSetting, isFetching, data]);
+
+  if (isLoadingSetting || isFetching) {
+    return (
+      <SpinerWrap>
+        <SpinerCircularProgress />
+      </SpinerWrap>
+    );
+  }
 
   return (
     <>

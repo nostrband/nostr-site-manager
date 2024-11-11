@@ -5,7 +5,7 @@ import { SideBarNav } from "@/components/Layout/SideBarNav";
 import { MainContent } from "@/components/Layout/MainContent";
 import { PageWrapper } from "@/components/Layout/PageWrapper";
 import { Header } from "@/components/Layout/Header";
-import { useParams, useRouter, usePathname } from "next/navigation";
+import { useParams, useRouter, usePathname, redirect } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
 import { useListSites } from "@/hooks/useListSites";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
@@ -22,13 +22,16 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const pathAdmin = useFirstPathElement();
   const { data } = useListSites();
 
-  const isHideSideBar = pathname === "/admin" || pathname === "/admin/add";
+  const isPathAdmin = pathname === "/admin"
+  const isPathAdminAdd = pathname === "/admin/add"
+  const isHideSideBar = isPathAdmin || isPathAdminAdd;
+  const getNip46 = localStorage.getItem("__nostrlogin_nip46")
 
   const getValidParamsId = useCallback(
     (list: ReturnSitesDataType[], id: string | string[], url: string) => {
       const isId = list.find((el) => el.id === id);
 
-      if (url.includes("add")) {
+      if (isPathAdminAdd) {
         return;
       }
 
@@ -36,14 +39,18 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
         router.push(pathAdmin);
       }
     },
-    [pathAdmin, router],
+    [pathAdmin, router, isPathAdminAdd],
   );
 
   useEffect(() => {
-    if (localStorage.getItem("__nostrlogin_nip46")) {
+    if (getNip46) {
       setLogin(true);
     }
-  }, []);
+
+    if (!getNip46 && !isPathAdmin) {
+      return redirect(`/admin`);
+    }
+  }, [getNip46, isPathAdmin]);
 
   useEffect(() => {
     if (data) {

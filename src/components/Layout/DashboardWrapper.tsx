@@ -11,6 +11,7 @@ import { useListSites } from "@/hooks/useListSites";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { ReturnSitesDataType } from "@/services/sites.service";
 import { Box, Button, Typography } from "@mui/material";
+import { userPubkey } from "@/services/nostr/nostr";
 
 export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const isDesktop = useResponsive("up", "lg");
@@ -20,12 +21,12 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
   const pathAdmin = useFirstPathElement();
-  const { data } = useListSites();
+  const { data, isLoading, isFetching } = useListSites();
 
   const isPathAdmin = pathname === "/admin"
   const isPathAdminAdd = pathname === "/admin/add"
   const isHideSideBar = isPathAdmin || isPathAdminAdd;
-  const getNip46 = localStorage.getItem("__nostrlogin_nip46")
+  const getUserPubkey = Boolean(userPubkey)
 
   const getValidParamsId = useCallback(
     (list: ReturnSitesDataType[], id: string | string[], url: string) => {
@@ -43,14 +44,14 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    if (getNip46) {
+    if (getUserPubkey && !isLoading && !isFetching) {
       setLogin(true);
     }
 
-    if (!getNip46 && !isPathAdmin) {
+    if (!getUserPubkey && !isPathAdmin && !isLoading && !isFetching) {
       return redirect(`/admin`);
     }
-  }, [getNip46, isPathAdmin]);
+  }, [getUserPubkey, isPathAdmin, isLoading, isFetching]);
 
   useEffect(() => {
     if (data) {

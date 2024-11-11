@@ -14,10 +14,15 @@ const BodyWrapper = styled("body")({
 export const AppWrapper = ({ children }: { children: ReactNode }) => {
   const [authed, setAuthed] = useState({
     isAuth: false,
-    isLoading: localStorage.getItem("localUserPubkey") ? true : false,
+    isLoading: true,
   });
 
   useEffect(() => {
+    setAuthed((prev) => ({
+      ...prev,
+      isLoading: localStorage.getItem("localUserPubkey") ? true : false,
+    }));
+
     document.addEventListener("nlAuth", async (e: any) => {
       setAuthed((prev) => ({
         ...prev,

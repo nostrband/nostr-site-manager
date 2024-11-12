@@ -1,16 +1,17 @@
 "use client";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { MainWrapper } from "@/components/Layout/MainWrapper";
 import { SideBarNav } from "@/components/Layout/SideBarNav";
 import { MainContent } from "@/components/Layout/MainContent";
 import { PageWrapper } from "@/components/Layout/PageWrapper";
 import { Header } from "@/components/Layout/Header";
-import { useParams, useRouter, usePathname } from "next/navigation";
+import { useParams, useRouter, usePathname, redirect } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
 import { useListSites } from "@/hooks/useListSites";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { ReturnSitesDataType } from "@/services/sites.service";
 import { Box, Button, Typography } from "@mui/material";
+import { AuthContext } from "@/services/nostr/nostr";
 
 export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const isDesktop = useResponsive("up", "lg");
@@ -21,14 +22,17 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const pathAdmin = useFirstPathElement();
   const { data } = useListSites();
+  const { isAuth, isLoading } = useContext(AuthContext);
 
-  const isHideSideBar = pathname === "/admin" || pathname === "/admin/add";
+  const isPathAdmin = pathname === "/admin";
+  const isPathAdminAdd = pathname === "/admin/add";
+  const isHideSideBar = isPathAdmin || isPathAdminAdd;
 
   const getValidParamsId = useCallback(
     (list: ReturnSitesDataType[], id: string | string[], url: string) => {
       const isId = list.find((el) => el.id === id);
 
-      if (url.includes("add")) {
+      if (isPathAdminAdd) {
         return;
       }
 
@@ -36,14 +40,18 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
         router.push(pathAdmin);
       }
     },
-    [pathAdmin, router],
+    [pathAdmin, router, isPathAdminAdd],
   );
 
   useEffect(() => {
-    if (localStorage.getItem("__nostrlogin_nip46")) {
+    if (isAuth && !isLoading) {
       setLogin(true);
     }
-  }, []);
+
+    if (!isAuth && !isPathAdmin && !isLoading) {
+      return redirect(`/admin`);
+    }
+  }, [isAuth, isPathAdmin, isLoading]);
 
   useEffect(() => {
     if (data) {

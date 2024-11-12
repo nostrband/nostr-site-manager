@@ -16,7 +16,7 @@ import { usePathname } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
 
 export const HeaderOnboarding = () => {
-  const authed = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const pathname = usePathname();
   const isDesktop = useResponsive("up", "sm");
 
@@ -52,7 +52,7 @@ export const HeaderOnboarding = () => {
           >
             Discover
           </Button>
-          {authed ? (
+          {isAuth ? (
             <Button
               LinkComponent={Link}
               href="/admin"

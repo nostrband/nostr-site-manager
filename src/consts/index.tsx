@@ -20,7 +20,7 @@ import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
 import DnsTwoToneIcon from "@mui/icons-material/DnsTwoTone";
 import PendingTwoToneIcon from "@mui/icons-material/PendingTwoTone";
 import PushPinTwoToneIcon from "@mui/icons-material/PushPinTwoTone";
-import PanoramaTwoToneIcon from '@mui/icons-material/PanoramaTwoTone';
+import PanoramaTwoToneIcon from "@mui/icons-material/PanoramaTwoTone";
 
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";

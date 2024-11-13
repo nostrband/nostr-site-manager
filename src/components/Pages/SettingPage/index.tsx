@@ -26,10 +26,7 @@ import { AppName } from "./components/AppName";
 import { CustomDomains } from "./components/CustomDomains";
 import { Other } from "./components/Other";
 import { PinnedNotes } from "./components/PinnedNotes";
-import {
-  Navigation,
-  NavigationModelType,
-} from "./components/Navigation";
+import { Navigation, NavigationModelType } from "./components/Navigation";
 import { Logo } from "./components/Logo";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {

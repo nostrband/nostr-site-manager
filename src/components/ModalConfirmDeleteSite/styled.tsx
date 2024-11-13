@@ -1,5 +1,11 @@
 import { styled } from "@mui/material/styles";
-import { Typography, Box, Dialog, DialogContent } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Dialog,
+  DialogContent,
+  FormControl,
+} from "@mui/material";
 
 export const StyledTitle = styled(Typography)(() => ({
   display: "flex",
@@ -25,4 +31,8 @@ export const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
     width: "300px",
   },
+}));
+
+export const StyledFormControl = styled(FormControl)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
 }));

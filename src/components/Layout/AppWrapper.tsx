@@ -9,11 +9,36 @@ import { usePathname } from "next/navigation";
 export const AppWrapper = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const isRedesign = pathname === "/sites"; // private parametrs for redesign
-  const [authed, setAuthed] = useState(false);
+  const [authed, setAuthed] = useState({
+    isAuth: false,
+    isLoading: true,
+  });
 
   useEffect(() => {
+    setAuthed((prev) => ({
+      ...prev,
+      isLoading: localStorage.getItem("localUserPubkey") ? true : false,
+    }));
+
     document.addEventListener("nlAuth", async (e: any) => {
-      setAuthed(await onAuth(e));
+      setAuthed((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+
+      try {
+        const getAuth = await onAuth(e);
+
+        setAuthed({
+          isAuth: getAuth,
+          isLoading: false,
+        });
+      } catch (err) {
+        setAuthed({
+          isAuth: false,
+          isLoading: false,
+        });
+      }
     });
   }, []);
 

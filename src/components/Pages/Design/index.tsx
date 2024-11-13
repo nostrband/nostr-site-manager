@@ -80,7 +80,7 @@ let mounted = false;
 
 export const Design = () => {
   const router = useRouter();
-  const authed = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -234,7 +234,7 @@ export const Design = () => {
   }, []);
 
   useEffect(() => {
-    if (!themeId || !siteId || !authed) return;
+    if (!themeId || !siteId || !isAuth) return;
 
     mutex.run(async () => {
       setLoading(true);
@@ -295,7 +295,7 @@ export const Design = () => {
       }
       setLoading(false);
     });
-  }, [authed, themeId, siteId, iframeRef, formik.setValues, setLoading]);
+  }, [isAuth, themeId, siteId, iframeRef, formik.setValues, setLoading]);
 
   useEffect(() => {
     const img = new Image();

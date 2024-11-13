@@ -13,8 +13,8 @@ import {
   StyledDialog,
   StyledDialogContent,
   StyledActionButton,
+  StyledFormControl,
 } from "@/components/ModalConfirmDeleteSite/styled";
-import { StyledFormControl } from "@/modules/auth/styled";
 import LoadingButton from "@mui/lab/LoadingButton";
 import React, { useState } from "react";
 import { useFormik } from "formik";

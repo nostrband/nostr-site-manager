@@ -21,7 +21,7 @@ import { NDKEvent, NDKNip07Signer, NDKRelaySet } from "@nostr-dev-kit/ndk";
 import Link from "next/link";
 
 export const GhostImport = () => {
-  const authed = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +42,7 @@ export const GhostImport = () => {
           if (!result.db || !result.db.length) return;
           const [data] = result.db;
           const posts = preparePosts(data);
-          if (authed) await updateUrls(posts, publishType);
+          if (isAuth) await updateUrls(posts, publishType);
           console.log("posts", posts);
           setPosts(posts);
           setIsLoading(false);
@@ -61,7 +61,7 @@ export const GhostImport = () => {
       reader.onload = handleLoadFile;
       reader.readAsText(file);
     },
-    [enqueueSnackbar, authed, setIsLoading, setPosts, publishType],
+    [enqueueSnackbar, isAuth, setIsLoading, setPosts, publishType],
   );
 
   const handleImportPosts = async (selectedPosts: ClientPost[]) => {
@@ -112,7 +112,7 @@ export const GhostImport = () => {
   };
 
   let username = undefined;
-  if (authed) {
+  if (isAuth) {
     username = nip19.npubEncode(userPubkey).substring(0, 10) + "...";
     if (userProfile) {
       try {
@@ -124,7 +124,7 @@ export const GhostImport = () => {
 
   const handlePublishTypeChange = async (type: "long" | "short") => {
     setPublishType(type);
-    if (authed && posts) {
+    if (isAuth && posts) {
       // reset urls
       setPosts(posts!.map((p) => ({ ...p, url: "" })));
       await updateUrls(posts, type);

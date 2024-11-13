@@ -17,13 +17,7 @@ interface IIcon extends IBaseSetting {
 }
 
 export const Icon = memo(
-  ({
-    icon,
-    handleChange,
-    handleBlur,
-    submitForm,
-    isLoading,
-  }: IIcon) => {
+  ({ icon, handleChange, handleBlur, submitForm, isLoading }: IIcon) => {
     const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDisabled, setDisabled] = useState(false);

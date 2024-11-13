@@ -22,7 +22,14 @@ import { MIN_POW, minePow } from "./pow";
 import { NPUB_PRO_API } from "@/consts";
 import { nip19 } from "nostr-tools";
 
-export const AuthContext = createContext<boolean>(false);
+export const AuthContext = createContext<{
+  isAuth: boolean;
+  isLoading: boolean;
+}>({
+  isAuth: false,
+  isLoading: false,
+});
+
 export const DEFAULT_RELAYS = [
   "wss://nos.lol",
   "wss://relay.primal.net",
@@ -136,11 +143,14 @@ export async function onAuth(e: any) {
     console.log("pubkey relays", userRelays);
 
     userProfile = await fetchProfile(ndk, userPubkey);
+
+    localStorage.setItem("localUserPubkey", userPubkey);
   } else {
     userPubkey = "";
     userRelays.length = 0;
     userProfile = undefined;
     setUserToken("", "");
+    localStorage.removeItem("localUserPubkey");
   }
 
   for (const cb of onAuths) await cb(e.detail.type);

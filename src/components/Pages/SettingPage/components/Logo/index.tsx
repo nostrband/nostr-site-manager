@@ -17,13 +17,7 @@ interface ILogo extends IBaseSetting {
 }
 
 export const Logo = memo(
-  ({
-    logo,
-    handleChange,
-    handleBlur,
-    submitForm,
-    isLoading,
-  }: ILogo) => {
+  ({ logo, handleChange, handleBlur, submitForm, isLoading }: ILogo) => {
     const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDisabled, setDisabled] = useState(false);

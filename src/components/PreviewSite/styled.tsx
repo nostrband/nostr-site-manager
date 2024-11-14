@@ -28,6 +28,7 @@ export type IStyledCardMedia = ICardMedia & CardMediaProps;
 
 const CARD_PADDING = 16;
 const CARD_MEDIA_HEIGHT = 160;
+const AUTHORS_CONTENT_SPACING = CARD_PADDING
 
 export const StyledCard = styled(
   forwardRef<HTMLDivElement, IStyledCard>(function MainContentName(props, ref) {
@@ -103,7 +104,7 @@ export const StyledCardHeader = styled(CardHeader)(() => ({
   },
   padding: 0,
   ".MuiCardHeader-avatar": {
-    marginRight: 8,
+    marginRight: AUTHORS_CONTENT_SPACING,
   },
   ".MuiCardHeader-content": {
     overflow: "hidden",
@@ -169,7 +170,7 @@ export const StyledCardContent = styled(CardContent)(() => ({
 export const StyledCardWrapAuthors = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
-  gap: 8,
+  gap: AUTHORS_CONTENT_SPACING,
   marginTop: "auto",
   padding: CARD_PADDING,
 }));

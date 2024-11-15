@@ -6,9 +6,9 @@ import { useSnackbar } from "notistack";
 import { useParams } from "next/navigation";
 import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
-import { AuthContext, userPubkey } from "@/services/nostr/nostr";
+import { AuthContext } from "@/services/nostr/nostr";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import { HASH_CONFIG, TESTERS } from "@/consts";
+import { HASH_CONFIG } from "@/consts";
 import { addHttps } from "@/utils";
 import { editSite } from "@/services/nostr/api";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
@@ -79,7 +79,7 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
 };
 
 export const SettingPage = () => {
-  const authed = useContext(AuthContext);
+  // const authed = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const [initialData, setInitialData] = useState(initialSettingValue);
@@ -335,19 +335,17 @@ export const SettingPage = () => {
         isLoading={isLoading}
       />
 
-      {authed && TESTERS.includes(userPubkey) && (
-        <Other
-          postsPerPage={values.postsPerPage}
-          contentActionMain={values.contentActionMain}
-          handleOptionsMainCallAction={handleOptionsMainCallAction}
-          handleChangeContentActions={handleChangeContentActions}
-          handleBlur={handleBlur}
-          handleChange={handleChange}
-          submitForm={submitForm}
-          selectedContentActions={values.contentActions}
-          isLoading={isLoading}
-        />
-      )}
+      <Other
+        postsPerPage={values.postsPerPage}
+        contentActionMain={values.contentActionMain}
+        handleOptionsMainCallAction={handleOptionsMainCallAction}
+        handleChangeContentActions={handleChangeContentActions}
+        handleBlur={handleBlur}
+        handleChange={handleChange}
+        submitForm={submitForm}
+        selectedContentActions={values.contentActions}
+        isLoading={isLoading}
+      />
 
       <PinnedNotes siteId={values.id} />
 

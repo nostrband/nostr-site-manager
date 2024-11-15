@@ -9,14 +9,14 @@ import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 
 export default function Home() {
   const { data, isLoading, isFetching } = useListSites();
-  const authed = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const [pubkey, setPubkey] = useState("");
   useEffect(() => {
     if (pubkey && userPubkey !== pubkey) {
       window.location.reload();
     }
     setPubkey(userPubkey);
-  }, [authed]);
+  }, [isAuth]);
 
   return (
     <Suspense>

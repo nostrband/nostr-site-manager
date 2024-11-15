@@ -3,8 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { SnackbarProvider } from "notistack";
 import { styled } from "@mui/material/styles";
 import Script from "next/script";
-import { AuthContext, onAuth } from "@/services/nostr/nostr";
-import Head from "next/head";
+import { AuthContext, onAuth, userPubkey } from "@/services/nostr/nostr";
 
 const BodyWrapper = styled("body")({
   height: "100%",
@@ -13,11 +12,36 @@ const BodyWrapper = styled("body")({
 });
 
 export const AppWrapper = ({ children }: { children: ReactNode }) => {
-  const [authed, setAuthed] = useState(false);
+  const [authed, setAuthed] = useState({
+    isAuth: false,
+    isLoading: true,
+  });
 
   useEffect(() => {
+    setAuthed((prev) => ({
+      ...prev,
+      isLoading: localStorage.getItem("localUserPubkey") ? true : false,
+    }));
+
     document.addEventListener("nlAuth", async (e: any) => {
-      setAuthed(await onAuth(e));
+      setAuthed((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+
+      try {
+        const getAuth = await onAuth(e);
+
+        setAuthed({
+          isAuth: getAuth,
+          isLoading: false,
+        });
+      } catch (err) {
+        setAuthed({
+          isAuth: false,
+          isLoading: false,
+        });
+      }
     });
   }, []);
 
@@ -29,7 +53,7 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
           data-no-banner="true"
           data-otp-request-url="https://api.npubpro.com/otp"
           data-otp-reply-url="https://api.npubpro.com/authotp"
-//          src="https://www.unpkg.com/nostr-login@latest/dist/unpkg.js"
+          //          src="https://www.unpkg.com/nostr-login@latest/dist/unpkg.js"
           src="/nostr-login.js"
         />
         <Script

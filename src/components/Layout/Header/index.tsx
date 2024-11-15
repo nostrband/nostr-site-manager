@@ -26,7 +26,7 @@ interface IHeader {
 }
 
 export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
-  const authed = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
@@ -39,7 +39,7 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
   };
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    if (authed) {
+    if (isAuth) {
       setAnchorElUser(event.currentTarget);
     }
   };

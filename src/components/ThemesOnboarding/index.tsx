@@ -20,7 +20,7 @@ import { useListSites } from "@/hooks/useListSites";
 export const ThemesOnboarding = () => {
   const { data } = useListSites();
   const router = useRouter();
-  const authed = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const [activeTag, setActiveTag] = useState<TYPES_THEMES_TAG | null>(null);
   const [showAllThemes, setShowAllThemes] = useState(false);
   const [isOpen, setOpen] = useState(false);
@@ -48,7 +48,7 @@ export const ThemesOnboarding = () => {
   };
 
   const handleNavigate = (id: string) => {
-    if (authed && data?.length) {
+    if (isAuth && data?.length) {
       setOpen(true);
       setThemeId(id);
       return;

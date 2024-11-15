@@ -64,7 +64,7 @@ export const PreviewNavigation = ({
   const [isOpenModalAuthor, setOpenModalAuthor] = useState(false);
   const [isOpenModalHashtagsKinds, setOpenModalHashtagsKinds] = useState(false);
   const [profile, setProfile] = useState<NDKEvent | undefined>(undefined);
-  const authed = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const params = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -158,7 +158,7 @@ export const PreviewNavigation = ({
   };
 
   const handleLogin = () => {
-    if (!authed) document.dispatchEvent(new Event("nlLaunch"));
+    if (!isAuth) document.dispatchEvent(new Event("nlLaunch"));
   };
 
   const handleChange = (hashtagsData: string[], kindsData: number[]) => {
@@ -193,7 +193,7 @@ export const PreviewNavigation = ({
 
   let avatar = "";
   let username = "";
-  if (authed) {
+  if (isAuth) {
     username = author;
     if (profile) {
       try {
@@ -250,11 +250,11 @@ export const PreviewNavigation = ({
           <ArrowBackIcon />
         </StyledIconButton>
 
-        {!noContentSettings && authed && (
+        {!noContentSettings && isAuth && (
           <Box
             sx={{
               width: {
-                xs: `${authed ? "calc(100% - 53px)" : "100%"}`,
+                xs: `${isAuth ? "calc(100% - 53px)" : "100%"}`,
                 sm: "auto",
               },
               order: { xs: 0, sm: 1 },
@@ -263,7 +263,7 @@ export const PreviewNavigation = ({
             <StyledButtonHashtagKind
               sx={{
                 height: "42px",
-                width: { xs: `${authed ? "208px" : "100%"}`, sm: "208px" },
+                width: { xs: `${isAuth ? "208px" : "100%"}`, sm: "208px" },
                 justifyContent: "space-between",
               }}
               color="primary"
@@ -281,16 +281,16 @@ export const PreviewNavigation = ({
           variant="contained"
           color="decorate"
           onClick={() => {
-            if (authed) {
+            if (isAuth) {
               onUseTheme();
             } else {
               handleLogin();
             }
           }}
         >
-          {authed ? "Use theme" : "Login to continue"}
+          {isAuth ? "Use theme" : "Login to continue"}
         </Button>
-        {!noContentSettings && authed && (
+        {!noContentSettings && isAuth && (
           <Avatar
             alt={username}
             src={avatar}

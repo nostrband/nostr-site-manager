@@ -1,8 +1,9 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
-import { red } from "@mui/material/colors";
+import { grey, red } from "@mui/material/colors";
 import { Inter } from "@next/font/google";
 import localFont from "next/font/local";
+import shadows from "@mui/material/styles/shadows";
 
 declare module "@mui/material/styles" {
   interface Palette {
@@ -147,7 +148,7 @@ const theme = createTheme({
       main: red.A400,
     },
     customBackground: {
-      light: "#e9e9e9",
+      light: grey[100],
       main: "#F5F5F5",
     },
     buttonSidebarBackground: {
@@ -199,16 +200,21 @@ const theme = createTheme({
       contrastText: "#fff",
     },
   },
+  shadows: [
+    ...shadows.slice(0, 10),
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    ...shadows.slice(11),
+  ] as typeof shadows,
   typography: {
     fontFamily: InterVariable.style.fontFamily,
     allVariants: {
-      color: "#292C34",
+      color: "#000",
     },
     body1: {
-      color: "#292C34",
+      color: "#000",
     },
     body2: {
-      color: "#292C34",
+      color: "#000",
     },
   },
   shape: {
@@ -218,7 +224,7 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.05)",
+          boxShadow: "0px 6px 6px -3px rgba(0, 0, 0, 0.06)", 
         },
         colorPrimary: {
           backgroundColor: "#fff",

@@ -1,9 +1,11 @@
 "use client";
 import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
-import { MainWrapper } from "@/components/Layout/MainWrapper";
 import { SideBarNav } from "@/components/Layout/SideBarNav";
-import { MainContent } from "@/components/Layout/MainContent";
-import { PageWrapper } from "@/components/Layout/PageWrapper";
+import {
+  MainContent,
+  PageWrapper,
+  MainWrapper,
+} from "@/components/Layout/MainContent";
 import { Header } from "@/components/Layout/Header";
 import { useParams, useRouter, usePathname, redirect } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";

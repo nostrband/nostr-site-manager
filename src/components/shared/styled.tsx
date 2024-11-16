@@ -4,4 +4,5 @@ import { Avatar } from "@mui/material";
 
 export const StyledAvatarSite = styled(Avatar)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
+  fontSize: 24,
 }));

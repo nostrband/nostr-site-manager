@@ -12,7 +12,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { nip19 } from "nostr-tools";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
-import { AuthContext, userPubkey } from "@/services/nostr/nostr";
+import {
+  AuthContext,
+  userIsDelegated,
+  userPubkey,
+} from "@/services/nostr/nostr";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { useRouter } from "next/navigation";
 import IconButton from "@mui/material/IconButton";
@@ -28,7 +32,7 @@ interface IHeader {
 export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
   const { isAuth } = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null,
+    null
   );
   const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
   const router = useRouter();
@@ -55,6 +59,13 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
 
   const handleSwitchAccount = () => {
     document.dispatchEvent(new Event("nlLaunch"));
+    handleCloseUserMenu();
+  };
+
+  const handleConnectKeys = () => {
+    document.dispatchEvent(
+      new CustomEvent("nlLaunch", { detail: "import-otp" })
+    );
     handleCloseUserMenu();
   };
 
@@ -112,6 +123,11 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
+            {userIsDelegated && (
+              <MenuItem onClick={handleConnectKeys}>
+                <Typography textAlign="left">Connect keys</Typography>
+              </MenuItem>
+            )}
             <MenuItem onClick={handleSwitchAccount}>
               <Typography textAlign="left">Switch account</Typography>
             </MenuItem>

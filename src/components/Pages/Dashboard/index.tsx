@@ -8,6 +8,7 @@ import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import React, { useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
 import { PreviewSite } from "@/components/PreviewSite";
+import { userIsDelegated } from "@/services/nostr/nostr";
 
 export const Dashboard = () => {
   const [isOpenConfirm, setOpenConfirm] = useState(false);
@@ -32,6 +33,12 @@ export const Dashboard = () => {
   const handeCloseConfirm = (deleted: boolean) => {
     setOpenConfirm(false);
     if (deleted) router.push(`/admin`);
+  };
+
+  const handleConnectKeys = () => {
+    document.dispatchEvent(
+      new CustomEvent("nlLaunch", { detail: "import-otp" })
+    );
   };
 
   if (isLoading || isFetching) {
@@ -114,6 +121,18 @@ export const Dashboard = () => {
           >
             Settings
           </Button>
+
+          {userIsDelegated && (
+            <Button
+              size="medium"
+              variant="outlined"
+              color="decorate"
+              onClick={handleConnectKeys}
+              fullWidth
+            >
+              Connect keys
+            </Button>
+          )}
 
           <Button
             size="medium"

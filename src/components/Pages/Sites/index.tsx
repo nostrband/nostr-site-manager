@@ -41,7 +41,6 @@ export const Sites = () => {
   const [data, setData] = useState<ReturnSettingsSiteDataType[] | undefined>();
   const [until, setUntil] = useState<number>(0);
   const isDesktop = useResponsive("up", "sm");
-  const isShowMoreButton = isMoreButton;
   const isNotFound = data && !data.length && !isFetchSites;
   const isShowLoading = !data && isFetchSites;
 
@@ -150,7 +149,7 @@ export const Sites = () => {
           </StyledWrapListSites>
         )}
 
-        {isShowMoreButton && (
+        {isMoreButton && (
           <StyledShowMore>
             <LoadingButton
               onClick={loadMore}

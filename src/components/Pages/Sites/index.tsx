@@ -130,11 +130,14 @@ export const Sites = () => {
           </StyledEmptyBlock>
         )}
 
-        {data && <StyledWrapListSites><ListSites data={data} /></StyledWrapListSites>}
+        {data && (
+          <StyledWrapListSites>
+            <ListSites data={data} />
+          </StyledWrapListSites>
+        )}
 
         {isShowMoreButton && (
-          <StyledShowMore
-          >
+          <StyledShowMore>
             <LoadingButton
               onClick={loadMore}
               loading={!data || isFetchSites}

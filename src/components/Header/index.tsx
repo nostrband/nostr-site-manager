@@ -35,9 +35,7 @@ export const Header = () => {
               color="primary"
               variant="text"
               sx={{ minWidth: "auto" }}
-              startIcon={
-                isDesktop ? <ArrowLeftIcon /> : undefined
-              }
+              startIcon={isDesktop ? <ArrowLeftIcon /> : undefined}
             >
               {isDesktop ? "Back" : <ArrowLeftIcon fontSize="small" />}
             </Button>

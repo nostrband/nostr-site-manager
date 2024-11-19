@@ -30,20 +30,20 @@ export const StyledSearchField = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const StyledShowMore= styled(Box)(({ theme }) => ({
+export const StyledShowMore = styled(Box)(({ theme }) => ({
   marginBottom: "50px",
   maxWidth: 320,
   marginLeft: "auto",
   marginRight: "auto",
   borderRadius: theme.shape.borderRadius,
-  background: '#fff',
+  background: "#fff",
   padding: 8,
   [theme.breakpoints.down("md")]: {
     marginBottom: 25,
   },
 }));
 
-export const StyledWrapListSites= styled(Box)(({ theme }) => ({
+export const StyledWrapListSites = styled(Box)(({ theme }) => ({
   paddingBottom: 50,
   [theme.breakpoints.down("md")]: {
     paddingBottom: 25,

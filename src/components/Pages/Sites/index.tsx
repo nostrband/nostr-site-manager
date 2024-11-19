@@ -1,21 +1,18 @@
 "use client";
-import { HeaderOnboarding } from "@/components/HeaderOnboarding";
-import { PreviewSite } from "@/components/PreviewSite";
 import {
-  Box,
+  Alert,
   CircularProgress,
   Container,
-  Grid,
   InputAdornment,
-  OutlinedInput,
-  Typography,
 } from "@mui/material";
-import ScreenSearchDesktopTwoToneIcon from "@mui/icons-material/ScreenSearchDesktopTwoTone";
+
 import {
   SpinerWrapSites,
   StyledEmptyBlock,
-  StyledEmptyIcon,
+  StyledSearchField,
+  StyledShowMore,
   StyledTitle,
+  StyledWrapListSites,
 } from "./styled";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
@@ -24,6 +21,10 @@ import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { searchSites } from "@/services/nostr/api";
 import { LoadingButton } from "@mui/lab";
 import useResponsive from "@/hooks/useResponsive";
+import { ListSites } from "./components/ListSites";
+import { InputField } from "@/components/InputField";
+import { NotFoundIcon, SearchIcon } from "@/components/Icons";
+import { Header } from "@/components/Header";
 
 // const debouncedSearchSites = debounce(async (text: string) => {
 //   console.log("searching", text);
@@ -37,6 +38,9 @@ export const Sites = () => {
   const [data, setData] = useState<ReturnSettingsSiteDataType[] | undefined>();
   const [until, setUntil] = useState<number>(0);
   const isDesktop = useResponsive("up", "sm");
+  const isShowMoreButton = Boolean(data && data.length);
+  const isNotFound = data && !data.length && !isFetchSites;
+  const isShowLoading = !data && isFetchSites;
 
   useEffect(() => {
     if (data === undefined) setFetchSites(true);
@@ -89,17 +93,22 @@ export const Sites = () => {
   }, [isDesktop]);
 
   return (
-    <Box sx={{ paddingBottom: "50px" }}>
-      <HeaderOnboarding />
+    <>
+      <Header />
       <Container maxWidth="lg">
-        <StyledTitle variant="h2">Discover sites</StyledTitle>
-        <Box sx={{ maxWidth: "600px", margin: "40px auto" }}>
-          <OutlinedInput
+        <StyledTitle>Discover sites</StyledTitle>
+
+        <StyledSearchField>
+          <InputField
+            id="search-site"
             fullWidth
+            size={isDesktop ? "medium" : "small"}
             inputRef={inputRef}
-            placeholder="Search sites..."
+            label="Search sites"
             onChange={handleChangeWithDebounce}
             value={value}
+            color="success"
+            startIcon={<SearchIcon />}
             endAdornment={
               isFetchSites ? (
                 <InputAdornment position="end">
@@ -108,74 +117,43 @@ export const Sites = () => {
               ) : null
             }
           />
-        </Box>
-      </Container>
+        </StyledSearchField>
 
-      {data && (
-        <Container maxWidth="lg">
-          <Grid
-            sx={{ width: "100%", marginTop: "40px" }}
-            container
-            spacing={{ xs: "24px", md: "30px" }}
-          >
-            {data.map((el, i) => {
-              return (
-                <Grid key={i} item xs={12} sm={6} lg={4}>
-                  <PreviewSite
-                    id={el.id}
-                    icon={el.adminAvatar || ""}
-                    logo={el.logo}
-                    name={el.name}
-                    title={el.title}
-                    url={el.url}
-                    image={el.image}
-                    description={el.description}
-                    accentColor={el.accentColor}
-                    contributors={el.contributors}
-                    adminAvatar={el.adminAvatar}
-                    adminName={el.adminName}
-                    isPublic
-                    isLinkToOpenSite={false}
-                  />
-                </Grid>
-              );
-            })}
-          </Grid>
+        {isNotFound && (
+          <StyledEmptyBlock>
+            <Alert
+              icon={<NotFoundIcon fontSize="inherit" />}
+              severity="warning"
+            >
+              <b>Sites not found</b>
+            </Alert>
+          </StyledEmptyBlock>
+        )}
 
-          <Box
-            sx={{
-              marginTop: "50px",
-              marginBottom: "50px",
-              textAlign: "center",
-            }}
+        {data && <StyledWrapListSites><ListSites data={data} /></StyledWrapListSites>}
+
+        {isShowMoreButton && (
+          <StyledShowMore
           >
             <LoadingButton
               onClick={loadMore}
               loading={!data || isFetchSites}
               variant="contained"
               color="decorate"
-              sx={{ width: "280px", textAlign: "center" }}
+              fullWidth
+              size="large"
             >
               More
             </LoadingButton>
-          </Box>
-        </Container>
-      )}
+          </StyledShowMore>
+        )}
+      </Container>
 
-      {!data && isFetchSites && (
+      {isShowLoading && (
         <SpinerWrapSites>
           <SpinerCircularProgress />
         </SpinerWrapSites>
       )}
-
-      {data && !data.length && !isFetchSites && (
-        <StyledEmptyBlock>
-          <StyledEmptyIcon>
-            <ScreenSearchDesktopTwoToneIcon fontSize="inherit" />
-          </StyledEmptyIcon>
-          <Typography variant="h4">Sites not found</Typography>
-        </StyledEmptyBlock>
-      )}
-    </Box>
+    </>
   );
 };

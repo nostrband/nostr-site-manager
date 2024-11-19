@@ -6,7 +6,7 @@ import PreviewSiteImg from "../../../public/images/storybook/site-card-preview/p
 import { PreviewSite } from "./index";
 
 const meta: Meta<typeof PreviewSite> = {
-  title: "Main/PreviewSite",
+  title: "Components/PreviewSite",
   component: PreviewSite,
   tags: ["autodocs"],
   parameters: {

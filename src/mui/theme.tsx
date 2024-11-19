@@ -1,7 +1,6 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
 import { grey, red } from "@mui/material/colors";
-import { Inter } from "@next/font/google";
 import localFont from "next/font/local";
 import shadows from "@mui/material/styles/shadows";
 
@@ -224,7 +223,7 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          boxShadow: "0px 6px 6px -3px rgba(0, 0, 0, 0.06)", 
+          boxShadow: "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
         },
         colorPrimary: {
           backgroundColor: "#fff",
@@ -242,6 +241,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          fontWeight: "600",
           textTransform: "none",
         },
       },
@@ -255,6 +255,22 @@ const theme = createTheme({
           "& .Mui-disabled": {
             color: "#000 !important",
             WebkitTextFillColor: "#000 !important",
+          },
+
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#FF3ED9",
+          },
+        },
+        sizeSmall: {
+          height: "42px",
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focused": {
+            color: "#FF3ED9",
           },
         },
       },
@@ -275,12 +291,26 @@ const theme = createTheme({
         },
       },
     },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          background: grey[400],
+        },
+      },
+    },
     MuiContainer: {
       styleOverrides: {
         maxWidthLg: {
           maxWidth: "1344px",
+          "@media (min-width: 600px)": {
+            paddingLeft: "24px",
+            paddingRight: "24px",
+          },
+
           "@media (min-width: 1200px)": {
-            maxWidth: "1240px",
+            maxWidth: "1092px",
+            paddingLeft: "0",
+            paddingRight: "0",
           },
         },
         maxWidthMd: {

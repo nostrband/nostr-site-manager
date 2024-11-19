@@ -28,7 +28,7 @@ export type IStyledCardMedia = ICardMedia & CardMediaProps;
 
 const CARD_PADDING = 16;
 const CARD_MEDIA_HEIGHT = 160;
-const AUTHORS_CONTENT_SPACING = CARD_PADDING
+const AUTHORS_CONTENT_SPACING = CARD_PADDING;
 
 export const StyledCard = styled(
   forwardRef<HTMLDivElement, IStyledCard>(function MainContentName(props, ref) {
@@ -42,6 +42,8 @@ export const StyledCard = styled(
 )(({ isLink = false, theme }) => ({
   width: "100%",
   height: "100%",
+  display: isLink ? "block" : "flex",
+  flexDirection: "column",
   boxShadow: theme.shadows[0],
   padding: isLink ? 0 : CARD_PADDING,
   "&:hover": {

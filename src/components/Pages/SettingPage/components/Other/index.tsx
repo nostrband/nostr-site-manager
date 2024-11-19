@@ -38,8 +38,11 @@ const options: { [name: string]: string } = {
   quote: "Quote",
   comment: "Comment",
   highlight: "Highlight",
+  dm: "Direct Message",
 };
-const mainOptions = ["zap", "like", "bookmark", "share", "follow", "open-with"];
+
+// NOTE: some of above options can't be main: comment, hightlight, quote
+const mainOptions = ["zap", "like", "bookmark", "share", "follow", "open-with", "dm"];
 
 export const Other = memo(
   ({

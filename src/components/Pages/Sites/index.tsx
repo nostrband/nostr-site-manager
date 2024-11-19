@@ -36,11 +36,12 @@ import { Header } from "@/components/Header";
 export const Sites = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState<string>("");
+  const [isMoreButton, setIsMoreButton] = useState<boolean>(false);
   const [isFetchSites, setFetchSites] = useState(false);
   const [data, setData] = useState<ReturnSettingsSiteDataType[] | undefined>();
   const [until, setUntil] = useState<number>(0);
   const isDesktop = useResponsive("up", "sm");
-  const isShowMoreButton = Boolean(data && data.length);
+  const isShowMoreButton = isMoreButton;
   const isNotFound = data && !data.length && !isFetchSites;
   const isShowLoading = !data && isFetchSites;
 
@@ -50,7 +51,8 @@ export const Sites = () => {
         async (text: string) => {
           console.log("searching", text);
           setFetchSites(true);
-          const [data, until] = await searchSites(text);
+          const [data, until, isMore] = await searchSites(text);
+          setIsMoreButton(isMore)
           setData(data);
           setUntil(until);
           setFetchSites(false);
@@ -79,7 +81,8 @@ export const Sites = () => {
   const loadMore = useCallback(async () => {
     setFetchSites(true);
     console.log("more", value, until);
-    const [newData, newUntil] = await searchSites(value, until);
+    const [newData, newUntil, isMore] = await searchSites(value, until);
+    setIsMoreButton(isMore)
     setData([...data!, ...newData]);
     setUntil(newUntil);
     setFetchSites(false);
@@ -88,7 +91,8 @@ export const Sites = () => {
   useEffect(() => {
     if (data === undefined) {
       setFetchSites(true);
-      searchSites("").then(([data, until]) => {
+      searchSites("").then(([data, until, isMore]) => {
+        setIsMoreButton(isMore)
         setData(data);
         setUntil(until);
         setFetchSites(false);

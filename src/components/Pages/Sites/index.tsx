@@ -14,7 +14,14 @@ import {
   StyledTitle,
   StyledWrapListSites,
 } from "./styled";
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { debounce } from "lodash";
 import { SpinerCircularProgress } from "@/components/Spiner";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
@@ -25,11 +32,6 @@ import { ListSites } from "./components/ListSites";
 import { InputField } from "@/components/InputField";
 import { NotFoundIcon, SearchIcon } from "@/components/Icons";
 import { Header } from "@/components/Header";
-
-// const debouncedSearchSites = debounce(async (text: string) => {
-//   console.log("searching", text);
-//   return await searchSites(text);
-// }, 300);
 
 export const Sites = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,28 +44,36 @@ export const Sites = () => {
   const isNotFound = data && !data.length && !isFetchSites;
   const isShowLoading = !data && isFetchSites;
 
-  useEffect(() => {
-    if (data === undefined) setFetchSites(true);
-    searchSites("").then(([data, until]) => {
-      setData(data);
-      setUntil(until);
-      setFetchSites(false);
-    });
-  }, []);
+  const fetchSites = useMemo(
+    () =>
+      debounce(
+        async (text: string) => {
+          console.log("searching", text);
+          setFetchSites(true);
+          const [data, until] = await searchSites(text);
+          setData(data);
+          setUntil(until);
+          setFetchSites(false);
+        },
+        300,
+        { trailing: true },
+      ),
+    [],
+  );
 
-  const fetchSites = useCallback(
-    debounce(
-      async (text: string) => {
-        console.log("searching", text);
-        const [data, until] = await searchSites(text);
-        setData(data);
-        setUntil(until);
-        setFetchSites(false);
-      },
-      300,
-      { trailing: true },
-    ),
-    [setData, setUntil, setFetchSites],
+  useEffect(() => {
+    return () => {
+      fetchSites.cancel();
+    };
+  }, [fetchSites]);
+
+  const handleChangeWithDebounce = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const text = event.target.value;
+      setValue(text);
+      fetchSites(text);
+    },
+    [fetchSites],
   );
 
   const loadMore = useCallback(async () => {
@@ -73,22 +83,22 @@ export const Sites = () => {
     setData([...data!, ...newData]);
     setUntil(newUntil);
     setFetchSites(false);
-  }, [setData, setUntil, data, until]);
-
-  const handleChangeWithDebounce = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setValue(event.target.value);
-      setFetchSites(true);
-      fetchSites(event.target.value);
-    },
-    [setValue, fetchSites],
-  );
+  }, [setData, setUntil, data, until, value]);
 
   useEffect(() => {
-    if (isDesktop) {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
+    if (data === undefined) {
+      setFetchSites(true);
+      searchSites("").then(([data, until]) => {
+        setData(data);
+        setUntil(until);
+        setFetchSites(false);
+      });
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (isDesktop && inputRef.current) {
+      inputRef.current.focus();
     }
   }, [isDesktop]);
 

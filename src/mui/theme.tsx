@@ -260,9 +260,10 @@ const theme = createTheme({
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             borderColor: "#FF3ED9",
           },
-        },
-        sizeSmall: {
-          height: "42px",
+
+          "&.MuiInputBase-sizeSmall:not(.MuiInputBase-multiline)": {
+            height: "42px", // Устанавливаем нужную высоту
+          },
         },
       },
     },

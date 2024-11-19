@@ -1,22 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Button, Typography } from "@mui/material";
-
-export const StyledListWrap = styled(Box)(() => ({
-  marginTop: "40px",
-}));
-
-export const StyledTitle = styled(Typography)(({ theme }) => ({
-  fontSize: 48,
-  fontWeight: "bold",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  paddingTop: "10px",
-  [theme.breakpoints.down("md")]: {
-    fontSize: 32,
-  },
-}));
+import { Button, Grid } from "@mui/material";
 
 export const StyledButtonAdd = styled(Button)(({ theme }) => ({
   span: {
@@ -30,4 +14,9 @@ export const StyledButtonAdd = styled(Button)(({ theme }) => ({
       display: "none",
     },
   },
+}));
+
+export const StyledGrid = styled(Grid)(() => ({
+  width: "100%",
+  marginTop: "40px",
 }));

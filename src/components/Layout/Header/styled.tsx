@@ -2,34 +2,17 @@
 import { forwardRef } from "react";
 import { styled } from "@mui/material/styles";
 import { AppBar, AppBarProps, Box, Toolbar } from "@mui/material";
-import { SIDEBAR_WIDTH } from "@/consts";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 
-interface IAppBar {
-  isDesktop?: boolean;
-  isHideSideBar?: boolean;
-}
-
-export type IStyledAppBar = IAppBar & AppBarProps;
-
 export const StyledAppBar = styled(
-  forwardRef<HTMLAnchorElement, IStyledAppBar>(
+  forwardRef<HTMLAnchorElement, AppBarProps>(
     function MainContentName(props, ref) {
-      const exclude = new Set(["isDesktop", "isHideSideBar"]);
-      const omitProps = Object.fromEntries(
-        Object.entries(props).filter((e) => !exclude.has(e[0])),
-      );
-
-      return <AppBar component="nav" ref={ref} {...omitProps} />;
+      return <AppBar component="nav" ref={ref} {...props} />;
     },
   ),
-)(({ isHideSideBar, theme }) => ({
-  width: `calc(100% - ${isHideSideBar ? SIDEBAR_WIDTH : 0}px)`,
-  left: 0,
-  [theme.breakpoints.down("lg")]: {
-    width: "100%",
-  },
+)(() => ({
+  width: "100%",
 }));
 
 export const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -60,10 +43,4 @@ export const StyledUser = styled(Box)(() => ({
 export const StyledUserAvatar = styled(Avatar)(() => ({
   width: 30,
   height: 30,
-}));
-
-export const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  [theme.breakpoints.up("lg")]: {
-    display: "none",
-  },
 }));

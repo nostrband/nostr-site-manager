@@ -435,7 +435,7 @@ export async function searchSites(
   text: string,
   until?: number,
 ): Promise<[ReturnSettingsSiteDataType[], number, boolean]> {
-  const limitFetchSites = 50
+  const limitFetchSites = 50;
   const filter: any = {
     kinds: [KIND_SITE],
     limit: limitFetchSites,
@@ -445,7 +445,7 @@ export async function searchSites(
 
   const events = await fetchEvents(ndk, filter, SEARCH_RELAYS, 5000);
 
-  const isMore = !([...events].length < limitFetchSites)
+  const isMore = !([...events].length < limitFetchSites);
 
   const array = [...events].sort((a, b) => b.created_at! - a.created_at!);
 

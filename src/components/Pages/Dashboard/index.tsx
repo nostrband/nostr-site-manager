@@ -37,7 +37,7 @@ export const Dashboard = () => {
 
   const handleConnectKeys = () => {
     document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "import-otp" })
+      new CustomEvent("nlLaunch", { detail: "import-otp" }),
     );
   };
 

@@ -1,7 +1,5 @@
-import MenuTwoToneIcon from "@mui/icons-material/MenuTwoTone";
 import {
   StyledAppBar,
-  StyledIconButton,
   StyledLogo,
   StyledToolbar,
   StyledUser,
@@ -24,15 +22,10 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Typography } from "@mui/material";
 
-interface IHeader {
-  handleOpen: () => void;
-  hideSideBar: boolean;
-}
-
-export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
+export const Header = () => {
   const { isAuth } = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
+    null,
   );
   const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
   const router = useRouter();
@@ -64,7 +57,7 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
 
   const handleConnectKeys = () => {
     document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "import-otp" })
+      new CustomEvent("nlLaunch", { detail: "import-otp" }),
     );
     handleCloseUserMenu();
   };
@@ -87,23 +80,13 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
   const img = meta?.picture || "";
 
   return (
-    <StyledAppBar isHideSideBar={!hideSideBar}>
+    <StyledAppBar>
       <StyledToolbar>
         <StyledLogo onClick={handleClickBackToHome}>
           <Logo />
         </StyledLogo>
 
         <StyledUser>
-          {!hideSideBar && (
-            <StyledIconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleOpen}
-            >
-              <MenuTwoToneIcon />
-            </StyledIconButton>
-          )}
-
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
             <StyledUserAvatar alt={name} src={img} />
           </IconButton>

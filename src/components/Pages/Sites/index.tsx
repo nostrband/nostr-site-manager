@@ -28,10 +28,10 @@ import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { searchSites } from "@/services/nostr/api";
 import { LoadingButton } from "@mui/lab";
 import useResponsive from "@/hooks/useResponsive";
-import { ListSites } from "./components/ListSites";
 import { InputField } from "@/components/InputField";
 import { NotFoundIcon, SearchIcon } from "@/components/Icons";
 import { Header } from "@/components/Header";
+import { ListSites } from "@/components/ListSites";
 
 export const Sites = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -51,7 +51,7 @@ export const Sites = () => {
           console.log("searching", text);
           setFetchSites(true);
           const [data, until, isMore] = await searchSites(text);
-          setIsMoreButton(isMore)
+          setIsMoreButton(isMore);
           setData(data);
           setUntil(until);
           setFetchSites(false);
@@ -81,7 +81,7 @@ export const Sites = () => {
     setFetchSites(true);
     console.log("more", value, until);
     const [newData, newUntil, isMore] = await searchSites(value, until);
-    setIsMoreButton(isMore)
+    setIsMoreButton(isMore);
     setData([...data!, ...newData]);
     setUntil(newUntil);
     setFetchSites(false);
@@ -91,7 +91,7 @@ export const Sites = () => {
     if (data === undefined) {
       setFetchSites(true);
       searchSites("").then(([data, until, isMore]) => {
-        setIsMoreButton(isMore)
+        setIsMoreButton(isMore);
         setData(data);
         setUntil(until);
         setFetchSites(false);

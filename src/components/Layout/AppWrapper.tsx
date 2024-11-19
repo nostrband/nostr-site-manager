@@ -4,11 +4,8 @@ import { SnackbarProvider } from "notistack";
 import Script from "next/script";
 import { AuthContext, onAuth } from "@/services/nostr/nostr";
 import { BodyWrapper } from "./MainContent";
-import { usePathname } from "next/navigation";
 
 export const AppWrapper = ({ children }: { children: ReactNode }) => {
-  const pathname = usePathname();
-  const isRedesign = pathname === "/sites"; // private parametrs for redesign
   const [authed, setAuthed] = useState({
     isAuth: false,
     isLoading: true,
@@ -44,7 +41,7 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={authed}>
-      <BodyWrapper isRedesign={isRedesign}>
+      <BodyWrapper>
         <Script
           data-perms="sign_event:30512,sign_event:512,sign_event:30513,sign_event:30514,sign_event:27235,sign_event:5,sign_event:30516"
           data-no-banner="true"

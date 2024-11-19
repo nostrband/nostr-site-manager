@@ -72,7 +72,7 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
   const [inputValue, setInputValue] = useState("");
   const [dataPinnedNotes, setDataPinnedNotes] = useState<IPinnedNote[]>([]);
   const [originalPinnedNotes, setOriginalPinnedNotes] = useState<IPinnedNote[]>(
-    []
+    [],
   );
 
   const [options, setOptions] = useState<IPinnedNote[]>([]);
@@ -90,7 +90,7 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
       try {
         await savePins(
           siteId,
-          dataPinnedNotes.map((p) => p.id)
+          dataPinnedNotes.map((p) => p.id),
         );
         setOriginalPinnedNotes(dataPinnedNotes);
         setIsEdit(false);
@@ -130,11 +130,11 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
 
   const handlePin = (
     _: SyntheticEvent<Element, Event>,
-    pinnedNote: IPinnedNote | string | null
+    pinnedNote: IPinnedNote | string | null,
   ) => {
     if (pinnedNote !== null && typeof pinnedNote !== "string") {
       const isAlreadyPinned = dataPinnedNotes.some(
-        (note) => note.id === pinnedNote.id
+        (note) => note.id === pinnedNote.id,
       );
 
       if (!isAlreadyPinned) {
@@ -145,7 +145,7 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
 
   const handleConnectKeys = () => {
     document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "import-otp" })
+      new CustomEvent("nlLaunch", { detail: "import-otp" }),
     );
   };
 
@@ -282,7 +282,7 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
               }
               renderOption={(props, option) => {
                 const isAlreadyPinned = dataPinnedNotes.some(
-                  (note) => note.id === option.id
+                  (note) => note.id === option.id,
                 );
 
                 return typeof option === "string" ? (

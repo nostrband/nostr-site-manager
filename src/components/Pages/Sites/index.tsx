@@ -30,8 +30,8 @@ import { LoadingButton } from "@mui/lab";
 import useResponsive from "@/hooks/useResponsive";
 import { InputField } from "@/components/InputField";
 import { NotFoundIcon, SearchIcon } from "@/components/Icons";
-import { Header } from "@/components/Header";
 import { ListSites } from "@/components/ListSites";
+import { HeaderDiscover } from "./components/Header";
 
 export const Sites = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -107,7 +107,7 @@ export const Sites = () => {
 
   return (
     <>
-      <Header />
+      <HeaderDiscover />
       <Container maxWidth="lg">
         <StyledTitle>Discover sites</StyledTitle>
 

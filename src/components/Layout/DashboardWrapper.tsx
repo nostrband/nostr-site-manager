@@ -1,7 +1,7 @@
 "use client";
 import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { MainWrapper, StyledWrapCenter } from "@/components/Layout/MainContent";
-import { Header } from "@/components/Layout/Header";
+import { HeaderLayout } from "@/components/Layout/HeaderLayout";
 import { useParams, useRouter, usePathname, redirect } from "next/navigation";
 import { useListSites } from "@/hooks/useListSites";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
@@ -59,7 +59,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
 
   return (
     <MainWrapper>
-      <Header />
+      <HeaderLayout />
       {isLogin ? (
         children
       ) : (

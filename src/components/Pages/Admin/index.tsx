@@ -6,12 +6,16 @@ import { GetStarted } from "@/components/GetStarted";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 import { StyledWrapCenter } from "@/components/Layout/MainContent";
 import { Container } from "@mui/material";
-import { StyledTitle } from "./styled";
+import {
+  StyledTitle,
+  StyledButtonAdd,
+  StyledButtonAddWrap,
+  StyledWrapPage,
+} from "./styled";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
-import { StyledButtonAdd } from "@/components/ListSites/styled";
 import Link from "next/link";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { ListSites } from "@/components/ListSites";
+import { PlusIcon } from "@/components/Icons";
 
 export const AdminPage = () => {
   const pathAdmin = useFirstPathElement();
@@ -35,27 +39,33 @@ export const AdminPage = () => {
       ) : (
         <>
           {data?.length ? (
-            <>
+            <StyledWrapPage>
               <Container maxWidth="lg">
                 <StyledTitle>Your websites</StyledTitle>
-                <ListSites
-                  data={data}
-                  path={pathAdmin}
-                  isLinkToOpenSite
-                  isPublic={false}
-                />
+                <div>
+                  <ListSites
+                    data={data}
+                    path={pathAdmin}
+                    isLinkToOpenSite
+                    isPublic={false}
+                  />
+                </div>
               </Container>
 
-              <StyledButtonAdd
-                LinkComponent={Link}
-                href="/admin/add"
-                color="decorate"
-                variant="contained"
-              >
-                <span>Add website</span>
-                <AddCircleOutlineOutlinedIcon fontSize="small" />
-              </StyledButtonAdd>
-            </>
+              <StyledButtonAddWrap>
+                <StyledButtonAdd
+                  LinkComponent={Link}
+                  href="/admin/add"
+                  color="decorate"
+                  variant="contained"
+                  size="large"
+                  fullWidth
+                >
+                  Create new website
+                  <PlusIcon />
+                </StyledButtonAdd>
+              </StyledButtonAddWrap>
+            </StyledWrapPage>
           ) : (
             <StyledWrapCenter>
               <GetStarted />

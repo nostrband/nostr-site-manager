@@ -1,10 +1,4 @@
-import {
-  StyledAppBar,
-  StyledLogo,
-  StyledToolbar,
-  StyledUser,
-  StyledUserAvatar,
-} from "@/components/Layout/Header/styled";
+import { StyledLogo, StyledUser, StyledUserAvatar } from "./styled";
 import { Logo } from "@/components/Logo";
 import React, { useContext, useEffect, useState } from "react";
 import { nip19 } from "nostr-tools";
@@ -21,8 +15,9 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Typography } from "@mui/material";
+import { Header } from "@/components/Header";
 
-export const Header = () => {
+export const HeaderLayout = () => {
   const { isAuth } = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
@@ -80,46 +75,49 @@ export const Header = () => {
   const img = meta?.picture || "";
 
   return (
-    <StyledAppBar>
-      <StyledToolbar>
-        <StyledLogo onClick={handleClickBackToHome}>
-          <Logo />
-        </StyledLogo>
+    <Header>
+      <StyledLogo onClick={handleClickBackToHome}>
+        <Logo />
+      </StyledLogo>
 
-        <StyledUser>
-          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <StyledUserAvatar alt={name} src={img} />
-          </IconButton>
-          <Menu
-            sx={{ mt: "45px" }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            {userIsDelegated && (
-              <MenuItem onClick={handleConnectKeys}>
-                <Typography textAlign="left">Connect keys</Typography>
-              </MenuItem>
-            )}
-            <MenuItem onClick={handleSwitchAccount}>
-              <Typography textAlign="left">Switch account</Typography>
+      <StyledUser>
+        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+          <StyledUserAvatar alt={name} src={img} />
+        </IconButton>
+        <Menu
+          sx={{ mt: "45px" }}
+          id="menu-appbar"
+          anchorEl={anchorElUser}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={Boolean(anchorElUser)}
+          onClose={handleCloseUserMenu}
+          PaperProps={{
+            sx: {
+              boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.05)",
+            },
+          }}
+        >
+          {userIsDelegated && (
+            <MenuItem onClick={handleConnectKeys}>
+              <Typography textAlign="left">Connect keys</Typography>
             </MenuItem>
-            <MenuItem onClick={logout}>
-              <Typography textAlign="left">Logout</Typography>
-            </MenuItem>
-          </Menu>
-        </StyledUser>
-      </StyledToolbar>
-    </StyledAppBar>
+          )}
+          <MenuItem onClick={handleSwitchAccount}>
+            <Typography textAlign="left">Switch account</Typography>
+          </MenuItem>
+          <MenuItem onClick={logout}>
+            <Typography textAlign="left">Logout</Typography>
+          </MenuItem>
+        </Menu>
+      </StyledUser>
+    </Header>
   );
 };

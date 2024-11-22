@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import PreviewLogo from "../../../../../../public/images/storybook/site-card-preview/preview-logo.png";
-import PreviewIcon from "../../../../../../public/images/storybook/site-card-preview/icon.png";
-import PreviewSiteImg from "../../../../../../public/images/storybook/site-card-preview/preview-site.png";
+import PreviewLogo from "../../../public/images/storybook/site-card-preview/preview-logo.png";
+import PreviewIcon from "../../../public/images/storybook/site-card-preview/icon.png";
+import PreviewSiteImg from "../../../public/images/storybook/site-card-preview/preview-site.png";
 
 import { ListSites } from "./index";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";

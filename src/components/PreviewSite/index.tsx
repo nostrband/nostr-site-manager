@@ -1,5 +1,5 @@
 "use client";
-import { FC, memo, ReactNode, useCallback, useEffect, useState } from "react";
+import { FC, memo, ReactNode, useCallback } from "react";
 import { Avatar, AvatarGroup, IconButton } from "@mui/material";
 import {
   StyledCard,
@@ -27,9 +27,8 @@ import {
   IconLink,
   IconPerson,
 } from "@/components/Icons";
-import { NDKEvent } from "@nostr-dev-kit/ndk";
-import { fetchProfiles } from "@/services/nostr/api";
 import { nip19 } from "nostr-tools";
+import useContributors from "@/hooks/useContributors";
 
 type PreviewSiteType = {
   path?: string;
@@ -75,13 +74,11 @@ export const PreviewSite = memo(function PreviewSite({
 }: PreviewSitePropsType) {
   const { isLoaded: isLoadedLogo } = useImageLoader(logo);
   const { isLoaded: isLoadedImage } = useImageLoader(image);
-  const [contributors, setContributors] = useState<NDKEvent[]>([]);
+  const isSeveralAuthor = pubkeysContributors.length > 1;
+  const contributors = useContributors(pubkeysContributors, isSeveralAuthor);
   const prepareContributors =
     contributors.length > 5 ? contributors.slice(0, 5) : contributors;
-
   const link = isPublic ? url : `${path}/${id}`;
-
-  const isSeveralAuthor = pubkeysContributors.length > 1;
 
   const WrapCard: FC<{ children: ReactNode }> = useCallback(
     ({ children }) => {
@@ -92,7 +89,6 @@ export const PreviewSite = memo(function PreviewSite({
               LinkComponent={isLink ? CustomLinkComponent : undefined}
               // @ts-expect-error
               href={isLink ? link : undefined}
-              isPublic={isPublic}
             >
               {children}
             </StyledCardActionArea>
@@ -102,26 +98,8 @@ export const PreviewSite = memo(function PreviewSite({
         </>
       );
     },
-    [isLink, isPublic, link],
+    [isLink, link],
   );
-
-  useEffect(() => {
-    if (isSeveralAuthor) {
-      fetchProfiles(pubkeysContributors)
-        .then((p) => {
-          if (p.length) {
-            setContributors(p);
-          } else {
-            setContributors([]);
-          }
-        })
-        .catch(() => {
-          setContributors([]);
-        });
-    } else {
-      setContributors([]);
-    }
-  }, [pubkeysContributors, isSeveralAuthor]);
 
   return (
     <StyledCard isLink={isLink}>

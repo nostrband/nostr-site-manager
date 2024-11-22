@@ -27,7 +27,7 @@ interface ICardMedia {
 export type IStyledCardMedia = ICardMedia & CardMediaProps;
 
 const CARD_PADDING = 16;
-const CARD_MEDIA_HEIGHT = 160;
+export const CARD_MEDIA_HEIGHT = 160;
 const AUTHORS_CONTENT_SPACING = CARD_PADDING;
 
 export const StyledCard = styled(

@@ -13,10 +13,10 @@ export const SpinerWrapSites = styled(Box)(() => ({
 }));
 
 export const StyledTitle = styled(PageTitle)(({ theme }) => ({
-  marginBottom: 24,
-  marginTop: 40,
+  paddingBottom: 24,
+  paddingTop: 40,
   [theme.breakpoints.down("sm")]: {
-    marginTop: 16,
+    paddingTop: 16,
   },
 }));
 

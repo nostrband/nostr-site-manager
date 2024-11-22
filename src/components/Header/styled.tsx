@@ -1,24 +1,29 @@
 "use client";
+import { forwardRef } from "react";
 import { styled } from "@mui/material/styles";
-import { Box, Container } from "@mui/material";
+import { AppBar, AppBarProps, Toolbar } from "@mui/material";
 
-export const StyledHeaderOnboarding = styled(Box)(() => ({
-  position: "relative",
+export const StyledAppBar = styled(
+  forwardRef<HTMLAnchorElement, AppBarProps>(
+    function MainContentName(props, ref) {
+      return <AppBar component="nav" ref={ref} {...props} />;
+    },
+  ),
+)(() => ({
   width: "100%",
-  padding: "7px 0",
-  background: "#fff",
   boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.05)",
 }));
 
-export const StyledHeaderContainer = styled(Container)(() => ({
+export const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
-  alignItems: "center",
   justifyContent: "space-between",
-  gap: "8px",
-}));
-
-export const StyledHeaderNavigation = styled(Box)(() => ({
-  display: "flex",
   alignItems: "center",
-  gap: "10px",
+  width: "100%",
+  minHeight: "50px",
+  height: "50px",
+  left: 0,
+  [theme.breakpoints.up("sm")]: {
+    minHeight: "50px",
+    height: "50px",
+  },
 }));

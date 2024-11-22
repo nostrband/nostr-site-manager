@@ -8,10 +8,10 @@ import React, { useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
 import { userIsDelegated } from "@/services/nostr/nostr";
 import VpnKeyOutlinedIcon from "@mui/icons-material/VpnKeyOutlined";
-import BrushOutlinedIcon from "@mui/icons-material/BrushOutlined";
 import { StyledActions, StyledTitle, StyledWrapDashboard } from "./styled";
 import {
   ArrowRightIcon,
+  BrushIcon,
   ChevronLeftIcon,
   SettingsIcon,
   TrashIcon,
@@ -107,7 +107,7 @@ export const Dashboard = () => {
                   color="decorate"
                   href={switchTheme}
                   fullWidth
-                  endIcon={<BrushOutlinedIcon />}
+                  endIcon={<BrushIcon />}
                 >
                   Theme settings
                 </Button>

@@ -8,11 +8,16 @@ import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import React, { useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
 import { PreviewSite } from "@/components/PreviewSite";
-import { userIsDelegated } from "@/services/nostr/nostr";
+import {
+  isNeedMigrateKey,
+  migrateToConnectedKey,
+} from "@/services/nostr/migrate";
+import { useSnackbar } from "notistack";
 
 export const Dashboard = () => {
   const [isOpenConfirm, setOpenConfirm] = useState(false);
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   const { data, isLoading, isFetching } = useListSites();
   console.log({
     data,
@@ -35,10 +40,33 @@ export const Dashboard = () => {
     if (deleted) router.push(`/admin`);
   };
 
-  const handleConnectKeys = () => {
-    document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "import-otp" })
-    );
+  const handleConnectKeys = async () => {
+    // FIXME show spinner
+    try {
+      const newSiteId = await migrateToConnectedKey(siteId);
+      enqueueSnackbar("Keys connected!", {
+        autoHideDuration: 3000,
+        variant: "success",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
+      });
+      setTimeout(() => {
+        // FIXME hide spinner
+        router.push(`/admin/${newSiteId}`)
+      }, 500)
+    } catch (e: any) {
+      console.log("error", e);
+      enqueueSnackbar("Error: " + e.toString(), {
+        autoHideDuration: 3000,
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
+      });
+    }
   };
 
   if (isLoading || isFetching) {
@@ -122,7 +150,7 @@ export const Dashboard = () => {
             Settings
           </Button>
 
-          {userIsDelegated && (
+          {isNeedMigrateKey(siteId) && (
             <Button
               size="medium"
               variant="outlined"

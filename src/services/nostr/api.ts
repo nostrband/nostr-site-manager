@@ -51,6 +51,14 @@ const packageThemes = new Map<string, string>();
 const parser = new NostrParser("http://localhost/");
 let sitesPromise: Promise<void> | undefined = undefined;
 
+export function hasSite(id: string) {
+  return sites.findIndex((s) => s.id === id) >= 0;
+}
+
+export function findSiteEvent(id: string) {
+  return sites.find((s) => s.id === id)?.event;
+}
+
 export async function editSite(data: ReturnSettingsSiteDataType) {
   const index = sites.findIndex((s) => s.id === data.id);
   if (index < 0) throw new Error("Unknown site");

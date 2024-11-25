@@ -62,13 +62,6 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
     handleCloseUserMenu();
   };
 
-  const handleConnectKeys = () => {
-    document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "import-otp" })
-    );
-    handleCloseUserMenu();
-  };
-
   useEffect(() => {
     fetchProfiles([userPubkey])
       .then((p) => (p.length ? setAuthor(p[0]) : []))
@@ -123,11 +116,6 @@ export const Header = ({ handleOpen, hideSideBar }: IHeader) => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {userIsDelegated && (
-              <MenuItem onClick={handleConnectKeys}>
-                <Typography textAlign="left">Connect keys</Typography>
-              </MenuItem>
-            )}
             <MenuItem onClick={handleSwitchAccount}>
               <Typography textAlign="left">Switch account</Typography>
             </MenuItem>

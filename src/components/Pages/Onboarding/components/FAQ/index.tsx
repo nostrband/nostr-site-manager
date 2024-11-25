@@ -23,10 +23,10 @@ export const FAQ = () => {
           </Grid>
           <StyledGridItem item xs={12} sm={6}>
             <StyledTitleDescription>
-              Websites are Nostr events, the themes are open-source{" "}
+              Websites are Nostr events, the themes are open-source
               <a href="https://ghost.org" target="_blank">
                 Ghost
-              </a>{" "}
+              </a>
               themes published on relays and Blossom servers. Npub.pro does not
               host your data, it only hosts the code to convert Nostr events to
               web pages. The proposed NIP-512 is here.
@@ -43,7 +43,7 @@ export const FAQ = () => {
           <StyledGridItem item xs={12} sm={6}>
             <StyledTitleDescription>
               Yes, absolutely! The easiest way to do that is using the free
-              Github Pages hosting,{" "}
+              Github Pages hosting,
               <a href="https://blog.npub.pro/post/how-to-self-host-on-github">
                 read more here
               </a>
@@ -64,30 +64,30 @@ export const FAQ = () => {
             <StyledTitleDescription>
               You can use any Nostr client to publish, just make sure your post
               matches the filter you&apos;ve set up for your site (kind and
-              hashtags). For long-form posts you can use{" "}
+              hashtags). For long-form posts you can use
               <a href="https://habla.news" target="_blank">
                 Habla
-              </a>{" "}
-              or{" "}
+              </a>
+              or
               <a href="https://highlighter.com" target="_blank">
                 Highlighter
-              </a>{" "}
-              or{" "}
+              </a>
+              or
               <a href="https://yakihonne.com/" target="_blank">
                 Yakihonne
               </a>
-              , for micro-blog -{" "}
+              , for micro-blog -
               <a href="https://damus.io/" target="_blank">
                 Damus
               </a>
-              ,{" "}
+              ,
               <a href="https://amethyst.social/" target="_blank">
                 Amethyst
               </a>
-              ,{" "}
+              ,
               <a href="https://primal.net" target="_blank">
                 Primal
-              </a>{" "}
+              </a>
               or almost any other Nostr app.
             </StyledTitleDescription>
           </StyledGridItem>
@@ -122,7 +122,7 @@ export const FAQ = () => {
               address. If you want to attach a custom domain and get other
               benefits, you can switch to a <a href="#pro">Pro plan</a>. You can
               also self-host a Nostr site &mdash; all the data is on relays, the
-              engine is{" "}
+              engine is
               <a href="https://github.com/nostrband/nostrsite/" target="_blank">
                 open-source
               </a>

@@ -1,11 +1,11 @@
 import React from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { InputLabel, OutlinedInput, Typography } from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
@@ -25,34 +25,33 @@ export const Language = ({
   const [isEdit, handleAction] = useEditSettingMode(submitForm);
 
   return (
-    <StyledSettingCol id={HASH_CONFIG.LANGUAGE}>
-      <StyledSettingBlock>
-        <StyledHeadSettingBlock>
-          <Typography variant="h6">Publication Language</Typography>
-
+    <StyledSettingBlock id={HASH_CONFIG.LANGUAGE}>
+      <StyledHeadSettingBlock>
+        <StyledTitleBlock>
+          Publication Language
           <SaveButton
             isEdit={isEdit}
             isLoading={isLoading}
             handleAction={handleAction}
           />
-        </StyledHeadSettingBlock>
+        </StyledTitleBlock>
 
-        <Typography variant="body2" sx={{ mb: 1 }}>
+        <StyledDescriptionBlock>
           Set the language/locale which is used on your site
-        </Typography>
+        </StyledDescriptionBlock>
+      </StyledHeadSettingBlock>
 
-        <StyledFormControl disabled={!isEdit} fullWidth size="small">
-          <InputLabel htmlFor="language">Publication Language</InputLabel>
-          <OutlinedInput
-            id="language"
-            name="language"
-            label="Publication Language"
-            onChange={handleChange}
-            value={language}
-            onBlur={handleBlur}
-          />
-        </StyledFormControl>
-      </StyledSettingBlock>
-    </StyledSettingCol>
+      <FormControl disabled={!isEdit} fullWidth size="small">
+        <InputLabel htmlFor="language">Publication Language</InputLabel>
+        <OutlinedInput
+          id="language"
+          name="language"
+          label="Publication Language"
+          onChange={handleChange}
+          value={language}
+          onBlur={handleBlur}
+        />
+      </FormControl>
+    </StyledSettingBlock>
   );
 };

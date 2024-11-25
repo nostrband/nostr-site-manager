@@ -28,7 +28,7 @@ export const IconLink = createSvgIcon(
       d="M10.5 2.25C10.5 1.83579 10.8358 1.5 11.25 1.5H15.75C16.1642 1.5 16.5 1.83579 16.5 2.25V6.75C16.5 7.16421 16.1642 7.5 15.75 7.5C15.3358 7.5 15 7.16421 15 6.75V3H11.25C10.8358 3 10.5 2.66421 10.5 2.25Z"
     />
   </svg>,
-  "IconLink"
+  "IconLink",
 );
 
 export const IconPerson = createSvgIcon(
@@ -52,7 +52,31 @@ export const IconPerson = createSvgIcon(
       d="M9.00089 13C7.33815 13 5.73913 13.7585 4.80204 14.9004C4.32645 15.48 3.99211 16.1971 3.96299 16.9919C3.93326 17.8036 4.22625 18.5958 4.83048 19.2871C6.30304 20.9716 8.65416 22 12.0009 22C15.3476 22 17.6987 20.9716 19.1713 19.2871C19.7755 18.5958 20.0685 17.8036 20.0388 16.9919C20.0097 16.1971 19.6753 15.48 19.1997 14.9004C18.2627 13.7585 16.6636 13 15.0009 13H9.00089Z"
     />
   </svg>,
-  "IconPerson"
+  "IconPerson",
+);
+
+export const IconPersonOutlined = createSvgIcon(
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M3.33301 15.8333C3.33301 13.5321 5.19849 11.6667 7.49967 11.6667H12.4997C14.8009 11.6667 16.6663 13.5321 16.6663 15.8333C16.6663 17.214 15.5471 18.3333 14.1663 18.3333H5.83301C4.4523 18.3333 3.33301 17.214 3.33301 15.8333ZM7.49967 13.3333C6.11896 13.3333 4.99967 14.4526 4.99967 15.8333C4.99967 16.2936 5.37277 16.6667 5.83301 16.6667H14.1663C14.6266 16.6667 14.9997 16.2936 14.9997 15.8333C14.9997 14.4526 13.8804 13.3333 12.4997 13.3333H7.49967Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M9.99967 3.33332C8.61896 3.33332 7.49967 4.45261 7.49967 5.83332C7.49967 7.21404 8.61896 8.33332 9.99967 8.33332C11.3804 8.33332 12.4997 7.21404 12.4997 5.83332C12.4997 4.45261 11.3804 3.33332 9.99967 3.33332ZM5.83301 5.83332C5.83301 3.53214 7.69849 1.66666 9.99967 1.66666C12.3009 1.66666 14.1663 3.53214 14.1663 5.83332C14.1663 8.13451 12.3009 9.99999 9.99967 9.99999C7.69849 9.99999 5.83301 8.13451 5.83301 5.83332Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "IconPersonOutlined",
 );
 
 export const BrokenBigIcon = createSvgIcon(
@@ -70,7 +94,7 @@ export const BrokenBigIcon = createSvgIcon(
       d="M65.073 61.1466H4.962C2.2329 61.1466 0 58.899 0 56.1519V5.8481C0 3.10101 2.2329 0.853398 4.962 0.853398L61.1816 0.853394H65.0777C67.796 0.853394 69.9996 3.05699 69.9996 5.77527V56.1519C70.035 58.899 67.8021 61.1466 65.073 61.1466ZM8.15185 5.8481C6.37971 5.8481 4.96199 7.27516 4.96199 9.05898V51.5943L26.5467 24.8993C27.5391 23.6863 29.3467 23.6863 30.3391 24.8993L38.1719 34.6033C39.1289 35.7806 40.901 35.8163 41.8934 34.6747L44.3035 31.9276C45.2605 30.8216 46.9972 30.8216 47.9541 31.9276L65.0376 51.5139L65.0376 9.12935C65.0376 7.31717 63.5685 5.8481 61.7563 5.8481H8.15185Z"
     />
   </svg>,
-  "BrokenBigIcon"
+  "BrokenBigIcon",
 );
 
 export const BrokenIcon = createSvgIcon(
@@ -86,7 +110,7 @@ export const BrokenIcon = createSvgIcon(
       d="M21 19.5V5.5C21 4.4 20.1 3.5 19 3.5H5C3.9 3.5 3 4.4 3 5.5V19.5C3 20.6 3.9 21.5 5 21.5H19C20.1 21.5 21 20.6 21 19.5ZM8.11812 14.491C8.31425 14.2388 8.69331 14.2327 8.89743 14.4785L10.6021 16.531C10.8064 16.7769 11.1858 16.7706 11.3818 16.5181L14.0982 13.0177C14.3005 12.7571 14.6953 12.7604 14.8932 13.0243L19 18.5H5L8.11812 14.491Z"
     />
   </svg>,
-  "BrokenIcon"
+  "BrokenIcon",
 );
 
 export const SearchIcon = createSvgIcon(
@@ -110,7 +134,7 @@ export const SearchIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "SearchIcon"
+  "SearchIcon",
 );
 
 export const NotFoundIcon = createSvgIcon(
@@ -140,7 +164,7 @@ export const NotFoundIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "NotFoundIcon"
+  "NotFoundIcon",
 );
 
 export const ArrowLeftIcon = createSvgIcon(
@@ -158,7 +182,7 @@ export const ArrowLeftIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ArrowLeftIcon"
+  "ArrowLeftIcon",
 );
 
 export const WebIcon = createSvgIcon(
@@ -194,7 +218,7 @@ export const WebIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "WebIcon"
+  "WebIcon",
 );
 
 export const PlusIcon = createSvgIcon(
@@ -218,7 +242,7 @@ export const PlusIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PlusIcon"
+  "PlusIcon",
 );
 
 export const ChevronLeftIcon = createSvgIcon(
@@ -236,7 +260,7 @@ export const ChevronLeftIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ChevronLeftIcon"
+  "ChevronLeftIcon",
 );
 
 export const ArrowRightIcon = createSvgIcon(
@@ -254,7 +278,7 @@ export const ArrowRightIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ArrowRightIcon"
+  "ArrowRightIcon",
 );
 
 export const SettingsIcon = createSvgIcon(
@@ -278,7 +302,7 @@ export const SettingsIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "SettingsIcon"
+  "SettingsIcon",
 );
 
 export const TrashIcon = createSvgIcon(
@@ -308,7 +332,7 @@ export const TrashIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "TrashIcon"
+  "TrashIcon",
 );
 
 export const AddImageIcon = createSvgIcon(
@@ -332,7 +356,7 @@ export const AddImageIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "AddImageIcon"
+  "AddImageIcon",
 );
 
 export const BrushIcon = createSvgIcon(
@@ -352,5 +376,101 @@ export const BrushIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "BrushIcon"
+  "BrushIcon",
+);
+
+export const EditIcon = createSvgIcon(
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M15.0147 4.16667C14.7976 4.16667 14.5893 4.25292 14.4358 4.40645L5.35422 13.488C5.03382 13.8084 4.80653 14.2099 4.69663 14.6495L4.47866 15.5214L5.35055 15.3034C5.79013 15.1935 6.19158 14.9662 6.51198 14.6458L15.5936 5.5642C15.6696 5.48818 15.7299 5.39793 15.771 5.29861C15.8122 5.19929 15.8334 5.09283 15.8334 4.98532C15.8334 4.87782 15.8122 4.77136 15.771 4.67204C15.7299 4.57271 15.6696 4.48247 15.5936 4.40645C15.5176 4.33043 15.4273 4.27012 15.328 4.22898C15.2287 4.18784 15.1222 4.16667 15.0147 4.16667ZM13.2573 3.22793C13.7234 2.76185 14.3555 2.5 15.0147 2.5C15.3411 2.5 15.6643 2.56428 15.9658 2.68918C16.2673 2.81408 16.5413 2.99715 16.7721 3.22793C17.0029 3.45872 17.1859 3.7327 17.3108 4.03423C17.4357 4.33577 17.5 4.65895 17.5 4.98532C17.5 5.3117 17.4357 5.63488 17.3108 5.93642C17.1859 6.23795 17.0029 6.51193 16.7721 6.74271L7.69049 15.8243C7.15649 16.3583 6.48741 16.7371 5.75478 16.9203L3.53546 17.4751C3.25148 17.5461 2.95108 17.4629 2.7441 17.2559C2.53711 17.0489 2.4539 16.7485 2.5249 16.4646L3.07973 14.2452C3.26289 13.5126 3.64171 12.8435 4.17571 12.3095L13.2573 3.22793Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M13.5771 8.92259L11.0771 6.42259L12.2557 5.24408L14.7557 7.74408L13.5771 8.92259Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M10 16.6667C10 16.2064 10.3731 15.8333 10.8333 15.8333L16.6667 15.8333C17.1269 15.8333 17.5 16.2064 17.5 16.6667C17.5 17.1269 17.1269 17.5 16.6667 17.5L10.8333 17.5C10.3731 17.5 10 17.1269 10 16.6667Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "EditIcon",
+);
+
+export const CheckIcon = createSvgIcon(
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M16.3818 5.2062C16.7281 5.50927 16.7632 6.03573 16.4602 6.3821L9.1685 14.7154C8.86655 15.0605 8.34255 15.0968 7.99589 14.7967L3.62089 11.0088C3.27295 10.7076 3.23509 10.1813 3.53634 9.83334C3.83759 9.48539 4.36387 9.44754 4.71182 9.74879L8.4601 12.9941L15.2059 5.28459C15.5089 4.93823 16.0354 4.90313 16.3818 5.2062Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "CheckIcon",
+);
+
+export const GrabIcon = createSvgIcon(
+  <svg
+    width="30"
+    height="30"
+    viewBox="0 0 30 30"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M20.833 18.3334L9.16634 18.3334C8.7061 18.3334 8.33301 17.9603 8.33301 17.5001C8.33301 17.0398 8.7061 16.6667 9.16634 16.6667L20.833 16.6667C21.2932 16.6667 21.6663 17.0398 21.6663 17.5001C21.6663 17.9603 21.2932 18.3334 20.833 18.3334Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M20.833 13.3334L9.16634 13.3334C8.7061 13.3334 8.33301 12.9603 8.33301 12.5001C8.33301 12.0398 8.7061 11.6667 9.16634 11.6667L20.833 11.6667C21.2932 11.6667 21.6663 12.0398 21.6663 12.5001C21.6663 12.9603 21.2932 13.3334 20.833 13.3334Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "GrabIcon",
+);
+
+export const PlusCircleIcon = createSvgIcon(
+  <svg
+    width="25"
+    height="24"
+    viewBox="0 0 25 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M2.5 12C2.5 6.47715 6.97715 2 12.5 2C18.0228 2 22.5 6.47715 22.5 12C22.5 17.5228 18.0228 22 12.5 22C6.97715 22 2.5 17.5228 2.5 12ZM12.5 4C8.08172 4 4.5 7.58172 4.5 12C4.5 16.4183 8.08172 20 12.5 20C16.9183 20 20.5 16.4183 20.5 12C20.5 7.58172 16.9183 4 12.5 4Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12.5 7C13.0523 7 13.5 7.44772 13.5 8V11H16.5C17.0523 11 17.5 11.4477 17.5 12C17.5 12.5523 17.0523 13 16.5 13H13.5V16C13.5 16.5523 13.0523 17 12.5 17C11.9477 17 11.5 16.5523 11.5 16V13H8.5C7.94772 13 7.5 12.5523 7.5 12C7.5 11.4477 7.94772 11 8.5 11H11.5V8C11.5 7.44772 11.9477 7 12.5 7Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "PlusCircleIcon",
 );

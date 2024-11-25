@@ -2,12 +2,13 @@ import React, { memo } from "react";
 import {
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { Typography } from "@mui/material";
 import { HASH_CONFIG } from "@/consts";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useRouter } from "next/navigation";
+import { BrushIcon } from "@/components/Icons";
+import { StyledText } from "./styled";
 
 export const DesignBranding = memo(
   ({
@@ -26,25 +27,26 @@ export const DesignBranding = memo(
     };
 
     return (
-      <StyledSettingCol id={HASH_CONFIG.DESIGN_BRANDING}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">Theme</Typography>
+      <StyledSettingBlock id={HASH_CONFIG.DESIGN_BRANDING}>
+        <StyledHeadSettingBlock>
+          <StyledTitleBlock>
+            Theme
             <LoadingButton
               color="decorate"
-              variant="outlined"
-              size="small"
+              variant="text"
+              size="medium"
               onClick={switchTheme}
+              startIcon={<BrushIcon />}
             >
               Theme settings
             </LoadingButton>
-          </StyledHeadSettingBlock>
+          </StyledTitleBlock>
+        </StyledHeadSettingBlock>
 
-          <Typography variant="body1">
-            Current theme: <b>{themeName}</b>
-          </Typography>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+        <StyledText variant="body2">
+          Current theme: <b>{themeName}</b>
+        </StyledText>
+      </StyledSettingBlock>
     );
   },
 );

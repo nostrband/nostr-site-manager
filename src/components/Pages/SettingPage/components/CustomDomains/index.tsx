@@ -1,12 +1,12 @@
 "use client";
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { Typography, Button, Box } from "@mui/material";
+import { Typography, Button, FormControl } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
@@ -81,11 +81,10 @@ export const CustomDomains = memo(
     }, [siteId]);
 
     return (
-      <StyledSettingCol id={HASH_CONFIG.CUSTOM_DOMAINS}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">Custom domains</Typography>
-
+      <StyledSettingBlock id={HASH_CONFIG.CUSTOM_DOMAINS}>
+        <StyledHeadSettingBlock>
+          <StyledTitleBlock>
+            Custom domains
             {!userIsReadOnly && (
               <SaveButton
                 isEdit={isEdit}
@@ -93,55 +92,48 @@ export const CustomDomains = memo(
                 handleAction={handleClick}
               />
             )}
-          </StyledHeadSettingBlock>
+          </StyledTitleBlock>
 
           {userIsReadOnly && (
-            <Typography variant="body2" color={"red"}>
+            <StyledDescriptionBlock color="red">
               Cannot view custom domains in read only mode
-            </Typography>
+            </StyledDescriptionBlock>
           )}
 
-          <Box>
-            {Boolean(listDomains.length) ? (
-              <>
-                {listDomains.map((el, i) => (
-                  <Typography key={i} variant="body2">
-                    {el}
-                  </Typography>
-                ))}
-              </>
-            ) : (
-              <Typography variant="body2">
-                You do not have custom domains yet.
-              </Typography>
-            )}
-          </Box>
+          {Boolean(listDomains.length) ? (
+            <>
+              {listDomains.map((el, i) => (
+                <Typography key={i} variant="body2">
+                  {el}
+                </Typography>
+              ))}
+            </>
+          ) : (
+            <StyledDescriptionBlock>
+              You do not have custom domains yet.
+            </StyledDescriptionBlock>
+          )}
+        </StyledHeadSettingBlock>
 
-          <StyledFormControl
+        <FormControl sx={{ mt: 1 }} disabled={!isEdit} fullWidth size="small">
+          <Button
             sx={{ mt: 1 }}
+            variant="contained"
             disabled={!isEdit}
-            fullWidth
-            size="small"
+            color="primary"
+            onClick={handleOpenCustomDomain}
           >
-            <Button
-              sx={{ mt: 1 }}
-              variant="contained"
-              disabled={!isEdit}
-              color="primary"
-              onClick={handleOpenCustomDomain}
-            >
-              Add custom domain
-            </Button>
+            Add custom domain
+          </Button>
 
-            <CustomDomainForm
-              onClose={handleCloseCustomDomain}
-              isOpen={isOpenCustomDomain}
-              siteId={siteId}
-              updateWebSiteAddress={handleUpdateWebSiteAddress}
-            />
-          </StyledFormControl>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+          <CustomDomainForm
+            onClose={handleCloseCustomDomain}
+            isOpen={isOpenCustomDomain}
+            siteId={siteId}
+            updateWebSiteAddress={handleUpdateWebSiteAddress}
+          />
+        </FormControl>
+      </StyledSettingBlock>
     );
   },
 );

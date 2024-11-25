@@ -3,7 +3,6 @@
 import {
   Alert,
   Box,
-  Button,
   Chip,
   CircularProgress,
   Dialog,
@@ -14,15 +13,8 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
-  Paper,
   Radio,
   RadioGroup,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -394,7 +386,7 @@ export const CustomDomainForm = ({
               >
                 Continue
               </LoadingButton>
-            </StyledFormControl>{" "}
+            </StyledFormControl>
           </StyledDialogContent>
         )}
 
@@ -613,7 +605,7 @@ export const CustomDomainForm = ({
               }}
               variant="body2"
             >
-              <span>Type</span>{" "}
+              <span>Type</span>
               {`www.${domainValues.domain}` === valueOption
                 ? "CNAME"
                 : "CNAME/ALIAS/ANAME"}

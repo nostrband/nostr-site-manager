@@ -42,14 +42,13 @@ export const AdminPage = () => {
             <StyledWrapPage>
               <Container maxWidth="lg">
                 <StyledTitle>Your websites</StyledTitle>
-                <div>
-                  <ListSites
-                    data={data}
-                    path={pathAdmin}
-                    isLinkToOpenSite
-                    isPublic={false}
-                  />
-                </div>
+
+                <ListSites
+                  data={data}
+                  path={pathAdmin}
+                  isLinkToOpenSite
+                  isPublic={false}
+                />
               </Container>
 
               <StyledButtonAddWrap>

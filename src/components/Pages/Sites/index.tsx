@@ -44,6 +44,8 @@ export const Sites = () => {
   const isNotFound = data && !data.length && !isFetchSites;
   const isShowLoading = !data && isFetchSites;
 
+  const sizeField = isDesktop ? "medium" : "small";
+
   const fetchSites = useMemo(
     () =>
       debounce(
@@ -115,7 +117,7 @@ export const Sites = () => {
           <InputField
             id="search-site"
             fullWidth
-            size={isDesktop ? "medium" : "small"}
+            size={sizeField}
             inputRef={inputRef}
             label="Search sites"
             onChange={handleChangeWithDebounce}

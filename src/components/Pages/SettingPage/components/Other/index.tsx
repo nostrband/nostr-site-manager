@@ -1,24 +1,26 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
+  StyledFormFields,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
 import {
   Checkbox,
+  FormControl,
   InputLabel,
   ListItemText,
   MenuItem,
   OutlinedInput,
   Select,
   SelectChangeEvent,
-  Typography,
 } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
+import useResponsive from "@/hooks/useResponsive";
 
 interface IOther extends IBaseSetting {
   postsPerPage: string;
@@ -67,6 +69,10 @@ export const Other = memo(
     const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDisabled, setDisabled] = useState(false);
+
+    const isDesktop = useResponsive("up", "sm");
+    const sizeField = isDesktop ? "medium" : "small";
+
     const handleClick = () => {
       handleAction().then();
       setDisabled((prev) => !prev);
@@ -94,23 +100,24 @@ export const Other = memo(
     };
 
     return (
-      <StyledSettingCol id={HASH_CONFIG.OTHER}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">Other settings</Typography>
-
+      <StyledSettingBlock id={HASH_CONFIG.OTHER}>
+        <StyledHeadSettingBlock>
+          <StyledTitleBlock>
+            Other settings
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
               handleAction={handleClick}
             />
-          </StyledHeadSettingBlock>
+          </StyledTitleBlock>
 
-          <Typography variant="body2" sx={{ mb: 1 }}>
+          <StyledDescriptionBlock>
             Other content and plugin settings
-          </Typography>
+          </StyledDescriptionBlock>
+        </StyledHeadSettingBlock>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
+        <StyledFormFields>
+          <FormControl disabled={!isEdit} fullWidth size={sizeField}>
             <InputLabel htmlFor="posts-per-page">Posts per page</InputLabel>
             <OutlinedInput
               inputRef={inputRef}
@@ -122,9 +129,9 @@ export const Other = memo(
               value={postsPerPage}
               onBlur={handleBlur}
             />
-          </StyledFormControl>
+          </FormControl>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
+          <FormControl disabled={!isEdit} fullWidth size={sizeField}>
             <InputLabel id="main-call-to-action">
               Main call to action
             </InputLabel>
@@ -141,9 +148,9 @@ export const Other = memo(
                 </MenuItem>
               ))}
             </Select>
-          </StyledFormControl>
+          </FormControl>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
+          <FormControl disabled={!isEdit} fullWidth size={sizeField}>
             <InputLabel id="demo-multiple-checkbox-label">
               Content actions
             </InputLabel>
@@ -168,9 +175,9 @@ export const Other = memo(
                 </MenuItem>
               ))}
             </Select>
-          </StyledFormControl>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+          </FormControl>
+        </StyledFormFields>
+      </StyledSettingBlock>
     );
   },
 );

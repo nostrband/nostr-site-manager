@@ -1,17 +1,20 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { InputLabel, OutlinedInput, Typography } from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
 import { StyledImgPreview } from "../Image/styled";
 import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
+import useImageLoader from "@/hooks/useImageLoader";
+import useResponsive from "@/hooks/useResponsive";
+import { BrokenBigIcon } from "@/components/Icons";
 
 interface ITitleDescription extends IBaseSetting {
   image: string;
@@ -28,7 +31,12 @@ export const ImageBanner = memo(
     const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDisabled, setDisabled] = useState(false);
-    const [isErrorLoadImage, setErrorLoadImage] = useState(false);
+
+    const { isLoaded } = useImageLoader(image);
+
+    const isDesktop = useResponsive("up", "sm");
+    const sizeField = isDesktop ? "medium" : "small";
+
     const handleClick = () => {
       handleAction().then();
       setDisabled((prev) => !prev);
@@ -40,59 +48,43 @@ export const ImageBanner = memo(
       }
     }, [isDisabled]);
 
-    useEffect(() => {
-      const img = new Image();
-      img.src = image;
-
-      img.onload = () => {
-        setErrorLoadImage(true);
-      };
-
-      img.onerror = () => {
-        setErrorLoadImage(false);
-      };
-    }, [image]);
-
     return (
-      <StyledSettingCol id={HASH_CONFIG.IMAGE}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">Image</Typography>
-
+      <StyledSettingBlock id={HASH_CONFIG.IMAGE}>
+        <StyledHeadSettingBlock>
+          <StyledTitleBlock>
+            Image
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
               handleAction={handleClick}
             />
-          </StyledHeadSettingBlock>
+          </StyledTitleBlock>
 
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            Website cover image
-          </Typography>
+          <StyledDescriptionBlock>Website cover image</StyledDescriptionBlock>
+        </StyledHeadSettingBlock>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
-            <InputLabel htmlFor="image">Image url</InputLabel>
-            <OutlinedInput
-              inputRef={inputRef}
-              id="image"
-              name="image"
-              label="Image url"
-              onChange={handleChange}
-              value={image}
-              onBlur={handleBlur}
-            />
-          </StyledFormControl>
+        <FormControl disabled={!isEdit} fullWidth size={sizeField}>
+          <InputLabel htmlFor="image">Image url</InputLabel>
+          <OutlinedInput
+            inputRef={inputRef}
+            id="image"
+            name="image"
+            label="Image url"
+            onChange={handleChange}
+            value={image}
+            onBlur={handleBlur}
+          />
+        </FormControl>
 
-          <StyledImgPreview>
-            {isErrorLoadImage ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img alt="Image url" src={image} />
-            ) : (
-              <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
-            )}
-          </StyledImgPreview>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+        <StyledImgPreview>
+          {isLoaded ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img alt="Image url" src={image} />
+          ) : (
+            <BrokenBigIcon fontSize="inherit" sx={{ margin: "auto" }} />
+          )}
+        </StyledImgPreview>
+      </StyledSettingBlock>
     );
   },
 );

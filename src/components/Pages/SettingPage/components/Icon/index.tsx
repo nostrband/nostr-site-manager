@@ -1,16 +1,20 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
+  StyledFieldIconImage,
   StyledHeadSettingBlock,
+  StyledIconImage,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { InputLabel, OutlinedInput, Typography } from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
 import { HASH_CONFIG } from "@/consts";
-import { StyledIconPreview } from "../Icon/styled";
+import useResponsive from "@/hooks/useResponsive";
+import { BrokenIcon } from "@/components/Icons";
+import useImageLoader from "@/hooks/useImageLoader";
 
 interface IIcon extends IBaseSetting {
   icon: string;
@@ -21,6 +25,12 @@ export const Icon = memo(
     const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDisabled, setDisabled] = useState(false);
+
+    const { isLoaded } = useImageLoader(icon);
+
+    const isDesktop = useResponsive("up", "sm");
+    const sizeField = isDesktop ? "medium" : "small";
+
     const handleClick = () => {
       handleAction().then();
       setDisabled((prev) => !prev);
@@ -33,24 +43,24 @@ export const Icon = memo(
     }, [isDisabled]);
 
     return (
-      <StyledSettingCol id={HASH_CONFIG.ICON}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">Icon</Typography>
-
+      <StyledSettingBlock id={HASH_CONFIG.ICON}>
+        <StyledHeadSettingBlock>
+          <StyledTitleBlock>
+            Icon
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
               handleAction={handleClick}
             />
-          </StyledHeadSettingBlock>
+          </StyledTitleBlock>
 
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            Website icon
-          </Typography>
+          <StyledDescriptionBlock>Website icon</StyledDescriptionBlock>
+        </StyledHeadSettingBlock>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
+        <StyledFieldIconImage>
+          <FormControl disabled={!isEdit} fullWidth size={sizeField}>
             <InputLabel htmlFor="icon">Icon url</InputLabel>
+
             <OutlinedInput
               inputRef={inputRef}
               id="icon"
@@ -60,13 +70,17 @@ export const Icon = memo(
               value={icon}
               onBlur={handleBlur}
             />
-          </StyledFormControl>
-          <StyledIconPreview>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img alt="Icon url" src={icon} />
-          </StyledIconPreview>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+          </FormControl>
+
+          {isLoaded ? (
+            <StyledIconImage src={icon} alt="Icon url" />
+          ) : (
+            <StyledIconImage alt="Icon url" variant="square">
+              <BrokenIcon fontSize="inherit" />
+            </StyledIconImage>
+          )}
+        </StyledFieldIconImage>
+      </StyledSettingBlock>
     );
   },
 );

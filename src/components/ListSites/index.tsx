@@ -31,7 +31,7 @@ export const ListSites = memo(function ListSites({
             <PreviewSite
               id={el.id}
               path={path}
-              icon={el.adminAvatar || ""}
+              icon={el.adminAvatar || el.icon || ""}
               logo={el.logo}
               name={el.name}
               title={el.title}

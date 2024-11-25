@@ -213,7 +213,7 @@ const theme = createTheme({
       color: "#000",
     },
     body2: {
-      color: "#000",
+      color: "rgba(0, 0, 0, 0.6)",
     },
   },
   shape: {
@@ -253,8 +253,12 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           "& .Mui-disabled": {
-            color: "#000 !important",
-            WebkitTextFillColor: "#000 !important",
+            color: "rgba(0, 0, 0, 0.38) !important",
+            WebkitTextFillColor: "rgba(0, 0, 0, 0.38) !important",
+          },
+
+          "&.Mui-disabled .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(0, 0, 0, 0.23)",
           },
 
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -262,7 +266,7 @@ const theme = createTheme({
           },
 
           "&.MuiInputBase-sizeSmall:not(.MuiInputBase-multiline)": {
-            height: "42px", // Устанавливаем нужную высоту
+            height: "42px",
           },
         },
       },

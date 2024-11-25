@@ -5,7 +5,7 @@ import ColorizeTwoToneIcon from "@mui/icons-material/ColorizeTwoTone";
 // import SegmentTwoToneIcon from "@mui/icons-material/SegmentTwoTone";
 // import TagIcon from "@mui/icons-material/Tag";
 // import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
-import GridOnTwoToneIcon from "@mui/icons-material/GridOnTwoTone";
+// import GridOnTwoToneIcon from "@mui/icons-material/GridOnTwoTone";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import AltRouteTwoToneIcon from "@mui/icons-material/AltRouteTwoTone";
 import BrushTwoToneIcon from "@mui/icons-material/BrushTwoTone";
@@ -13,7 +13,7 @@ import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import LinkTwoToneIcon from "@mui/icons-material/LinkTwoTone";
 import ImageTwoToneIcon from "@mui/icons-material/ImageTwoTone";
 import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
-import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
+// import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import CodeTwoToneIcon from "@mui/icons-material/CodeTwoTone";
 import PhoneIphoneTwoToneIcon from "@mui/icons-material/PhoneIphoneTwoTone";
 import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
@@ -61,30 +61,6 @@ import vitorsDemo from "../../public/images/preview-theme/vitors-demo.npub.pro.p
 
 export const NPUB_PRO_DOMAIN = "npub.pro";
 export const NPUB_PRO_API = "https://api.npubpro.com";
-
-export const SIDEBAR_WIDTH = 280;
-export const NAV_CONFIG = [
-  {
-    title: "Dashboard",
-    path: "dashboard",
-    icon: <GridOnTwoToneIcon />,
-  },
-  // {
-  //   title: "View site",
-  //   path: "view-site",
-  //   icon: <WebTwoToneIcon />,
-  // },
-  {
-    title: "Theme settings",
-    path: "switchTheme",
-    icon: <BrushTwoToneIcon />,
-  },
-  {
-    title: "Settings",
-    path: "settings",
-    icon: <SettingsTwoToneIcon />,
-  },
-];
 
 export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
   1: "Notes",

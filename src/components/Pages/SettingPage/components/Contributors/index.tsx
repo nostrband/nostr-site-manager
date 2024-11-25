@@ -2,11 +2,10 @@ import React, { memo, useEffect, useState } from "react";
 import {
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
 import { Typography } from "@mui/material";
 import { HASH_CONFIG } from "@/consts";
-import Avatar from "@mui/material/Avatar";
 import {
   StyledAutorProfile,
   StyledAutorProfileGroup,
@@ -18,6 +17,8 @@ import { ModalAuthorContributors } from "@/components/ModalAuthorContributors";
 import { SaveButton } from "../SaveButton";
 import { IBaseSetting } from "@/types/setting.types";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
+import { IconPersonOutlined } from "@/components/Icons";
+import { ContributorAvatar } from "./components/Contributor";
 
 interface IContributors extends IBaseSetting {
   contributors: string[];
@@ -72,40 +73,41 @@ export const Contributors = memo(
 
     return (
       <>
-        <StyledSettingCol id={HASH_CONFIG.CONTRIBUTORS}>
-          <StyledSettingBlock>
-            <StyledHeadSettingBlock>
-              <Typography variant="h6">Contributors</Typography>
-
+        <StyledSettingBlock id={HASH_CONFIG.CONTRIBUTORS}>
+          <StyledHeadSettingBlock>
+            <StyledTitleBlock>
+              Contributors
               <SaveButton
                 isEdit={isEdit}
                 isLoading={isLoading}
                 handleAction={handleClick}
-                text="Change contributors"
+                text="Change"
+                startIcon={<IconPersonOutlined />}
               />
-            </StyledHeadSettingBlock>
+            </StyledTitleBlock>
+          </StyledHeadSettingBlock>
 
-            <StyledAutorProfileGroup>
-              {contributors.map((el, i) => {
-                let meta = JSON.parse(el.content);
+          <StyledAutorProfileGroup>
+            {contributors.map((el, i) => {
+              let meta = JSON.parse(el.content);
 
-                const npub = el.pubkey
-                  ? nip19.npubEncode(el.pubkey).substring(0, 8) + "..."
-                  : "";
-                const name = meta.display_name || meta.name || npub;
-                const img = meta.picture || "";
+              const npub = el.pubkey
+                ? nip19.npubEncode(el.pubkey).substring(0, 8) + "..."
+                : "";
+              const name = meta.display_name || meta.name || npub;
+              const img = meta.picture || "";
 
-                return (
-                  <StyledAutorProfile key={i}>
-                    <Avatar alt={name} src={img} />
+              return (
+                <StyledAutorProfile key={i}>
+                  <ContributorAvatar alt={name} src={img} />
 
-                    <Typography variant="body1">{name}</Typography>
-                  </StyledAutorProfile>
-                );
-              })}
-            </StyledAutorProfileGroup>
-          </StyledSettingBlock>
-        </StyledSettingCol>
+                  <Typography variant="body1">{name}</Typography>
+                </StyledAutorProfile>
+              );
+            })}
+          </StyledAutorProfileGroup>
+        </StyledSettingBlock>
+
         <ModalAuthorContributors
           pubkeysContributors={pubkeysContributors}
           isOpen={isOpenModalAuthor}

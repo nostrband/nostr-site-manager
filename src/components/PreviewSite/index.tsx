@@ -143,6 +143,7 @@ export const PreviewSite = memo(function PreviewSite({
             <BrokenBigIcon fontSize="inherit" sx={{ margin: "auto" }} />
           </StyledCardNoImage>
         )}
+
         <StyledWrapFooter sx={{ background: `${accentColor}` }}>
           <StyledCardContent>
             <StyledCardDescription

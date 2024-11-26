@@ -302,6 +302,8 @@ export const SettingPage = () => {
 
       if (element) {
         element.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        setChoiceSetting(null)
       }
     }
   }, [choiceSetting]);

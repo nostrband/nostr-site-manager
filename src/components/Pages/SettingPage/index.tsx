@@ -499,7 +499,3 @@ export const SettingPage = () => {
     </Container>
   );
 };
-
-// contributor modal
-
-// delete modal

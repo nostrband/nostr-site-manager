@@ -90,9 +90,11 @@ export const SearchSettingsField: FC<SearchSettingsFieldProps> = ({
       )}
 
       <Autocomplete
+        blurOnSelect
         disablePortal
         options={options}
         size={sizeField}
+        value={null}
         onChange={handleChoice}
         filterOptions={filterOptions}
         getOptionLabel={(option) => option.title}

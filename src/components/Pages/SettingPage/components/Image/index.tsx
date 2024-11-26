@@ -9,9 +9,8 @@ import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import { StyledImgPreview } from "../Image/styled";
-import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import useImageLoader from "@/hooks/useImageLoader";
 import useResponsive from "@/hooks/useResponsive";
 import { BrokenBigIcon } from "@/components/Icons";
@@ -49,10 +48,10 @@ export const ImageBanner = memo(
     }, [isDisabled]);
 
     return (
-      <StyledSettingBlock id={HASH_CONFIG.IMAGE}>
+      <StyledSettingBlock id={SETTINGS_CONFIG.image.anchor}>
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
-            Image
+            {SETTINGS_CONFIG.image.title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
@@ -60,7 +59,9 @@ export const ImageBanner = memo(
             />
           </StyledTitleBlock>
 
-          <StyledDescriptionBlock>Website cover image</StyledDescriptionBlock>
+          <StyledDescriptionBlock>
+            {SETTINGS_CONFIG.image.description}
+          </StyledDescriptionBlock>
         </StyledHeadSettingBlock>
 
         <FormControl disabled={!isEdit} fullWidth size={sizeField}>

@@ -1,21 +1,12 @@
 "use client";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Alert,
   Autocomplete,
   Avatar,
-  Box,
   Button,
-  DialogTitle,
-  Fab,
   ListItem,
   TextField,
-  Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import {
@@ -23,7 +14,10 @@ import {
   StyledTitle,
   StyledDialog,
   StyledDialogContent,
-  StyledActionContributor,
+  StyledAuthorWrap,
+  StyledAuthorName,
+  StyledDialogTitle,
+  StyledAuthorGroup,
 } from "@/components/ModalAuthorContributors/styled";
 import { debounce } from "lodash";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -31,6 +25,8 @@ import ListItemText from "@mui/material/ListItemText";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { nip19 } from "nostr-tools";
 import { fetchProfiles, searchProfiles } from "@/services/nostr/api";
+import useResponsive from "@/hooks/useResponsive";
+import { CrossIcon, TrashIcon } from "../Icons";
 
 export const ModalAuthorContributors = ({
   isOpen,
@@ -49,6 +45,9 @@ export const ModalAuthorContributors = ({
   >([]);
   const [isLoading, setLoading] = useState(false);
   const [contributors, setContributors] = useState<NDKEvent[]>([]);
+
+  const isDesktop = useResponsive("up", "sm");
+  const sizeField = isDesktop ? "medium" : "small";
 
   useEffect(() => {
     if (pubkeysContributors.length) {
@@ -138,22 +137,22 @@ export const ModalAuthorContributors = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle component="div" id="alert-dialog-title">
+      <StyledDialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
           Contributors
-          <Fab
+          <Button
             onClick={handleCancel}
-            size="small"
-            color="primary"
-            aria-label="close"
+            variant="text"
+            color="secondary"
+            sx={{ minWidth: "auto" }}
           >
-            <CloseIcon />
-          </Fab>
+            <CrossIcon color="inherit" />
+          </Button>
         </StyledTitle>
-      </DialogTitle>
+      </StyledDialogTitle>
       <StyledDialogContent>
         {contributors.length ? (
-          <Box sx={{ marginBottom: "15px" }}>
+          <StyledAuthorGroup>
             {contributors.map((el, i) => {
               const dataContributor = JSON.parse(el.content);
               const npubContributor =
@@ -165,40 +164,31 @@ export const ModalAuthorContributors = ({
               const imgContributor = dataContributor?.picture || "";
 
               return (
-                <Accordion elevation={0} key={el.pubkey}>
-                  <AccordionSummary
-                    sx={{ paddingLeft: 0, paddingRight: 0 }}
-                    expandIcon={<ExpandMoreOutlinedIcon />}
-                    aria-controls={el.pubkey}
-                    id={el.pubkey}
-                  >
+                <>
+                  <StyledAuthorWrap>
                     <StyledAuthor key={i}>
                       <Avatar
                         alt={nameContributor}
                         src={imgContributor}
-                        sx={{ width: 43, height: 43 }}
+                        sx={{ width: 40, height: 40 }}
                       />
-                      <Typography variant="body2" component="div">
-                        <b>{nameContributor}</b>
-                      </Typography>
+                      <StyledAuthorName>{nameContributor}</StyledAuthorName>
                     </StyledAuthor>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ paddingLeft: 0, paddingRight: 0 }}>
-                    <StyledActionContributor>
-                      <Button
-                        onClick={() => handleDeleteContributor(el.pubkey)}
-                        variant="outlined"
-                        color="error"
-                        disabled={contributors.length === 1}
-                      >
-                        Delete
-                      </Button>
-                    </StyledActionContributor>
-                  </AccordionDetails>
-                </Accordion>
+
+                    <Button
+                      onClick={() => handleDeleteContributor(el.pubkey)}
+                      variant="text"
+                      color="error"
+                      sx={{ minWidth: "auto" }}
+                      disabled={contributors.length === 1}
+                    >
+                      <TrashIcon color="inherit" />
+                    </Button>
+                  </StyledAuthorWrap>
+                </>
               );
             })}
-          </Box>
+          </StyledAuthorGroup>
         ) : (
           <Alert
             sx={{ marginBottom: "15px" }}
@@ -213,6 +203,7 @@ export const ModalAuthorContributors = ({
           freeSolo
           disablePortal
           loading={isLoading}
+          size={sizeField}
           loadingText={"Searching..."}
           options={options.filter(
             (option) => !pubkeysContributors.includes(option.pubkey),
@@ -240,6 +231,7 @@ export const ModalAuthorContributors = ({
               {...params}
               variant="outlined"
               placeholder="Add another contributors"
+              label="Name"
               onChange={(event) => setInputValue(event.target.value)}
             />
           )}

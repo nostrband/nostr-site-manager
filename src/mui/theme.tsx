@@ -137,12 +137,12 @@ const theme = createTheme({
     secondary: {
       main: "#696F7D",
     },
-    // info: {
-    //   light: blue[500],
-    //   main: blue[900],
-    //   dark: blue[900],
-    //   contrastText: blue[900]
-    // },
+    info: {
+      light: "#0000EE",
+      main: "#0000EE",
+      dark: "#0000EE",
+      contrastText: "#0000EE",
+    },
     error: {
       main: red.A400,
     },

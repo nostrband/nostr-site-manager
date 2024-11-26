@@ -10,7 +10,7 @@ import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import useResponsive from "@/hooks/useResponsive";
 
 interface ITitleDescription extends IBaseSetting {
@@ -46,10 +46,10 @@ export const TitleDescription = memo(
     }, [isDisabled]);
 
     return (
-      <StyledSettingBlock id={HASH_CONFIG.TITLE_DESCRIPTION}>
+      <StyledSettingBlock id={SETTINGS_CONFIG.titleDescription.anchor}>
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
-            Title & Description
+            {SETTINGS_CONFIG.titleDescription.title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
@@ -58,7 +58,7 @@ export const TitleDescription = memo(
           </StyledTitleBlock>
 
           <StyledDescriptionBlock>
-            The details used to identify your publication around the web
+            {SETTINGS_CONFIG.titleDescription.description}
           </StyledDescriptionBlock>
         </StyledHeadSettingBlock>
 

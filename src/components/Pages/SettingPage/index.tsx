@@ -1,13 +1,13 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import _ from "lodash";
-import { Button, Container, Typography } from "@mui/material";
+import { Button, Container } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { redirect, useParams } from "next/navigation";
 import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import { addHttps } from "@/utils";
 import { editSite } from "@/services/nostr/api";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
@@ -29,6 +29,7 @@ import { Navigation, NavigationModelType } from "./components/Navigation";
 import { Logo } from "./components/Logo";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import {
+  SearchSettingsFieldWrap,
   StyledTitle,
   StyledWrap,
   StyledWrapSectionSettings,
@@ -37,6 +38,7 @@ import {
 import Link from "next/link";
 import { ChevronLeftIcon } from "@/components/Icons";
 import { PageTitle } from "@/components/shared/styled";
+import { SearchSettingsField, Setting } from "./components/SearchSettingsField";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -87,6 +89,7 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
 export const SettingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [initialData, setInitialData] = useState(initialSettingValue);
+  const [choiceSetting, setChoiceSetting] = useState<Setting | null>(null);
   const { enqueueSnackbar } = useSnackbar();
   const params = useParams();
   const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
@@ -97,6 +100,10 @@ export const SettingPage = () => {
   } = useSettingsSite(siteId);
 
   const backToDashboardLink = `/admin/${siteId}/dashboard`;
+
+  const handleChoiceSetting = (setting: Setting | null) => {
+    setChoiceSetting(setting);
+  };
 
   const {
     values,
@@ -279,14 +286,25 @@ export const SettingPage = () => {
       if (hash) {
         const elementId = hash.substring(1);
         const element = document.getElementById(elementId);
+
         if (element) {
           setTimeout(() => {
-            element.scrollIntoView({ behavior: "smooth" });
-          }, 0);
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 100);
         }
       }
     }
   }, [isLoadingSetting, isFetching, data]);
+
+  useEffect(() => {
+    if (choiceSetting) {
+      const element = document.getElementById(choiceSetting.anchor);
+
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, [choiceSetting]);
 
   if (isLoadingSetting || isFetching) {
     return (
@@ -299,6 +317,13 @@ export const SettingPage = () => {
   return (
     <Container maxWidth="lg">
       <StyledWrap>
+        <SearchSettingsFieldWrap>
+          <SearchSettingsField
+            choiceSetting={choiceSetting}
+            handleChoiceSetting={handleChoiceSetting}
+          />
+        </SearchSettingsFieldWrap>
+
         <StyledTitle>
           <Button
             LinkComponent={Link}
@@ -356,7 +381,7 @@ export const SettingPage = () => {
             />
 
             <Content
-              anchor={HASH_CONFIG.CONTENT}
+              anchor={SETTINGS_CONFIG.content.anchor}
               handleChangeHashtags={handleChangeHashtags}
               contributors={values.contributors}
               selectedHashtags={values.hashtags}
@@ -364,8 +389,8 @@ export const SettingPage = () => {
               selectedKinds={values.kinds}
               submitForm={submitForm}
               isLoading={isLoading}
-              title="Content filters"
-              description="Choose event kinds and hashtags that will be displayed on this site"
+              title={SETTINGS_CONFIG.content.title}
+              description={SETTINGS_CONFIG.content.description}
             />
 
             <Plugins
@@ -454,7 +479,7 @@ export const SettingPage = () => {
           <PageTitle>Homepage</PageTitle>
 
           <Content
-            anchor={HASH_CONFIG.CONTENT_HOMEPAGE}
+            anchor={SETTINGS_CONFIG.homepageContent.anchor}
             handleChangeHashtags={handleChangeHashtagsHomePage}
             handleChangeKinds={handleChangeKindsHomePage}
             contributors={values.contributors}
@@ -462,8 +487,8 @@ export const SettingPage = () => {
             selectedKinds={values.kinds_homepage}
             submitForm={submitForm}
             isLoading={isLoading}
-            title="Homepage content"
-            description="Choose event kinds and hashtags that will be displayed on the homepage"
+            title={SETTINGS_CONFIG.homepageContent.title}
+            description={SETTINGS_CONFIG.homepageContent.description}
           />
 
           <PageTitle>Growth</PageTitle>
@@ -475,7 +500,6 @@ export const SettingPage = () => {
   );
 };
 
-// reset settings to initial without reload page
 // contributor modal
+
 // delete modal
-// Pinned/Featured content

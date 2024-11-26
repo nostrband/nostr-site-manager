@@ -19,7 +19,7 @@ import {
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import useResponsive from "@/hooks/useResponsive";
 
 interface IOther extends IBaseSetting {
@@ -100,10 +100,10 @@ export const Other = memo(
     };
 
     return (
-      <StyledSettingBlock id={HASH_CONFIG.OTHER}>
+      <StyledSettingBlock id={SETTINGS_CONFIG.other.anchor}>
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
-            Other settings
+            {SETTINGS_CONFIG.other.title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
@@ -112,7 +112,7 @@ export const Other = memo(
           </StyledTitleBlock>
 
           <StyledDescriptionBlock>
-            Other content and plugin settings
+            {SETTINGS_CONFIG.other.description}
           </StyledDescriptionBlock>
         </StyledHeadSettingBlock>
 

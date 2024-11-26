@@ -15,7 +15,7 @@ import {
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG, NPUB_PRO_DOMAIN } from "@/consts";
+import { NPUB_PRO_DOMAIN, SETTINGS_CONFIG } from "@/consts";
 import { debounce } from "lodash";
 import { checkNpubProDomain } from "@/services/nostr/themes";
 import useResponsive from "@/hooks/useResponsive";
@@ -116,10 +116,10 @@ export const WebsiteAddress = memo(
     const isLoadingSaveButton = isEdit && isFetchAddress;
 
     return (
-      <StyledSettingBlock id={HASH_CONFIG.URL}>
+      <StyledSettingBlock id={SETTINGS_CONFIG.websiteAddress.anchor}>
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
-            Website address
+            {SETTINGS_CONFIG.websiteAddress.title}
             <SaveButton
               disabled={isLoadingSaveButton}
               isEdit={isEdit}

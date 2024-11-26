@@ -10,7 +10,7 @@ import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 
 interface IPlugins extends IBaseSetting {
   codeinjectionHead: string;
@@ -41,10 +41,10 @@ export const Plugins = memo(
     }, [isDisabled]);
 
     return (
-      <StyledSettingBlock id={HASH_CONFIG.PLUGINS}>
+      <StyledSettingBlock id={SETTINGS_CONFIG.plugins.anchor}>
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
-            Plugins
+            {SETTINGS_CONFIG.plugins.title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
@@ -53,8 +53,7 @@ export const Plugins = memo(
           </StyledTitleBlock>
 
           <StyledDescriptionBlock>
-            You can add custom html/css/js code into the header and footer of
-            your website
+            {SETTINGS_CONFIG.plugins.description}
           </StyledDescriptionBlock>
         </StyledHeadSettingBlock>
 

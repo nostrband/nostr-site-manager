@@ -9,7 +9,7 @@ import { FormControl } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import { MuiColorInput } from "mui-color-input";
 import { memo } from "react";
 import useResponsive from "@/hooks/useResponsive";
@@ -30,10 +30,10 @@ export const AccentColor = memo(
     };
 
     return (
-      <StyledSettingBlock id={HASH_CONFIG.ACCENT_COLOR}>
+      <StyledSettingBlock id={SETTINGS_CONFIG.accentColor.anchor}>
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
-            Accent color
+            {SETTINGS_CONFIG.accentColor.title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
@@ -42,7 +42,7 @@ export const AccentColor = memo(
           </StyledTitleBlock>
 
           <StyledDescriptionBlock>
-            Accent color for theme and PWA
+            {SETTINGS_CONFIG.accentColor.description}
           </StyledDescriptionBlock>
         </StyledHeadSettingBlock>
 

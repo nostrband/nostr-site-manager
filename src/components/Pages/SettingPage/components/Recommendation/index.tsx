@@ -5,12 +5,14 @@ import {
   StyledSettingBlock,
   StyledTitleBlock,
 } from "../../styled";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 export const Recommendation = () => {
   return (
-    <StyledSettingBlock id={HASH_CONFIG.RECOMMENDATION}>
+    <StyledSettingBlock id={SETTINGS_CONFIG.recommendations.anchor}>
       <StyledHeadSettingBlock>
-        <StyledTitleBlock>Recommendation</StyledTitleBlock>
+        <StyledTitleBlock>
+          {SETTINGS_CONFIG.recommendations.title}
+        </StyledTitleBlock>
       </StyledHeadSettingBlock>
 
       <StyledComingSoonProfile>Coming soon</StyledComingSoonProfile>

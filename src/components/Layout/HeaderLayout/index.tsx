@@ -1,4 +1,12 @@
-import { StyledLogo, StyledUser, StyledUserAvatar } from "./styled";
+import {
+  StyledBadge,
+  StyledBadgeAvatar,
+  StyledBadgeTitle,
+  StyledBadgeWrap,
+  StyledLogo,
+  StyledUser,
+  StyledUserAvatar,
+} from "./styled";
 import { Logo } from "@/components/Logo";
 import React, { useContext, useEffect, useState } from "react";
 import { nip19 } from "nostr-tools";
@@ -10,12 +18,14 @@ import {
   userPubkey,
 } from "@/services/nostr/nostr";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { Typography } from "@mui/material";
+import { Avatar, Badge, Box, Typography } from "@mui/material";
 import { Header } from "@/components/Header";
+import { WebIcon } from "@/components/Icons";
+import { useListSites } from "@/hooks/useListSites";
 
 export const HeaderLayout = () => {
   const { isAuth } = useContext(AuthContext);
@@ -25,6 +35,11 @@ export const HeaderLayout = () => {
   const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
   const router = useRouter();
   const pathAdmin = useFirstPathElement();
+
+  const params = useParams();
+  const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const { data } = useListSites();
+  const getSite = data?.find((el) => el.id === siteId);
 
   const handleClickBackToHome = () => {
     router.push(pathAdmin);
@@ -80,10 +95,27 @@ export const HeaderLayout = () => {
         <Logo />
       </StyledLogo>
 
+      {Boolean(siteId && getSite) && (
+        <StyledBadgeWrap>
+          <StyledBadge
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            variant="dot"
+          >
+            <StyledBadgeAvatar>
+              <WebIcon fontSize="inherit" color="inherit" />
+            </StyledBadgeAvatar>
+          </StyledBadge>
+
+          <StyledBadgeTitle variant="body2">{getSite?.name}</StyledBadgeTitle>
+        </StyledBadgeWrap>
+      )}
+
       <StyledUser>
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
           <StyledUserAvatar alt={name} src={img} />
         </IconButton>
+
         <Menu
           sx={{ mt: "45px" }}
           id="menu-appbar"

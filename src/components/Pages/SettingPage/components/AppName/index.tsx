@@ -9,7 +9,7 @@ import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import useResponsive from "@/hooks/useResponsive";
 
 interface IAppName extends IBaseSetting {
@@ -37,10 +37,10 @@ export const AppName = memo(
     }, [isDisabled]);
 
     return (
-      <StyledSettingBlock id={HASH_CONFIG.APP_NAME}>
+      <StyledSettingBlock id={SETTINGS_CONFIG.appName.anchor}>
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
-            App name
+            {SETTINGS_CONFIG.appName.title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
@@ -49,7 +49,7 @@ export const AppName = memo(
           </StyledTitleBlock>
 
           <StyledDescriptionBlock>
-            Short name for your site, displayed when users add it to homescreen
+            {SETTINGS_CONFIG.appName.description}
           </StyledDescriptionBlock>
         </StyledHeadSettingBlock>
 

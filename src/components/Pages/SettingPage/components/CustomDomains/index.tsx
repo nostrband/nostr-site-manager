@@ -10,7 +10,7 @@ import { Typography, Button, FormControl } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import { CustomDomainForm } from "../CustomDomainForm";
 import { fetchDomains } from "@/services/nostr/api";
 import { enqueueSnackbar } from "notistack";
@@ -81,10 +81,10 @@ export const CustomDomains = memo(
     }, [siteId]);
 
     return (
-      <StyledSettingBlock id={HASH_CONFIG.CUSTOM_DOMAINS}>
+      <StyledSettingBlock id={SETTINGS_CONFIG.customDomains.anchor}>
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
-            Custom domains
+            {SETTINGS_CONFIG.customDomains.title}
             {!userIsReadOnly && (
               <SaveButton
                 isEdit={isEdit}
@@ -110,7 +110,7 @@ export const CustomDomains = memo(
             </>
           ) : (
             <StyledDescriptionBlock>
-              You do not have custom domains yet.
+              {SETTINGS_CONFIG.customDomains.description}
             </StyledDescriptionBlock>
           )}
         </StyledHeadSettingBlock>

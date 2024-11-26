@@ -4,11 +4,11 @@ import {
   StyledSettingBlock,
   StyledTitleBlock,
 } from "../../styled";
-import { HASH_CONFIG } from "@/consts";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { SETTINGS_CONFIG } from "@/consts";
 import { useRouter } from "next/navigation";
 import { BrushIcon } from "@/components/Icons";
 import { StyledText } from "./styled";
+import { SaveButton } from "../SaveButton";
 
 export const DesignBranding = memo(
   ({
@@ -27,19 +27,18 @@ export const DesignBranding = memo(
     };
 
     return (
-      <StyledSettingBlock id={HASH_CONFIG.DESIGN_BRANDING}>
+      <StyledSettingBlock id={SETTINGS_CONFIG.theme.anchor}>
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
-            Theme
-            <LoadingButton
-              color="decorate"
-              variant="text"
-              size="medium"
-              onClick={switchTheme}
+            {SETTINGS_CONFIG.theme.title}
+
+            <SaveButton
+              isEdit={false}
+              isLoading={false}
               startIcon={<BrushIcon />}
-            >
-              Theme settings
-            </LoadingButton>
+              text="Theme settings"
+              handleAction={switchTheme}
+            />
           </StyledTitleBlock>
         </StyledHeadSettingBlock>
 

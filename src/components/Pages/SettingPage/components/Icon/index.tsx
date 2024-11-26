@@ -11,7 +11,7 @@ import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import useResponsive from "@/hooks/useResponsive";
 import { BrokenIcon } from "@/components/Icons";
 import useImageLoader from "@/hooks/useImageLoader";
@@ -43,10 +43,10 @@ export const Icon = memo(
     }, [isDisabled]);
 
     return (
-      <StyledSettingBlock id={HASH_CONFIG.ICON}>
+      <StyledSettingBlock id={SETTINGS_CONFIG.icon.anchor}>
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
-            Icon
+            {SETTINGS_CONFIG.icon.title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
@@ -54,7 +54,9 @@ export const Icon = memo(
             />
           </StyledTitleBlock>
 
-          <StyledDescriptionBlock>Website icon</StyledDescriptionBlock>
+          <StyledDescriptionBlock>
+            {SETTINGS_CONFIG.icon.description}
+          </StyledDescriptionBlock>
         </StyledHeadSettingBlock>
 
         <StyledFieldIconImage>

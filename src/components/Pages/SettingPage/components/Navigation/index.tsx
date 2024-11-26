@@ -5,7 +5,7 @@ import {
   StyledSettingBlock,
   StyledTitleBlock,
 } from "../../styled";
-import { Box, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import {
   DragDropContext,
   Droppable,
@@ -15,14 +15,14 @@ import {
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import {
   StyledItemNavigation,
   StyledNavigationWrap,
 } from "../Navigation/styled";
 import { reorder } from "./helpers";
 import { ItemNavigation } from "./components/ItemNavigation";
-import { PlusCircleIcon, PlusIcon } from "@/components/Icons";
+import { PlusCircleIcon } from "@/components/Icons";
 
 export type NavigationModelType = {
   primary: { title: string; link: string; id: string }[];
@@ -70,10 +70,10 @@ export const Navigation = memo(
     };
 
     return (
-      <StyledSettingBlock id={HASH_CONFIG.NAVIGATION}>
+      <StyledSettingBlock id={SETTINGS_CONFIG.navigation.anchor}>
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
-            Navigation
+            {SETTINGS_CONFIG.navigation.title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
@@ -82,7 +82,7 @@ export const Navigation = memo(
           </StyledTitleBlock>
 
           <StyledDescriptionBlock>
-            Primary site navigation
+            {SETTINGS_CONFIG.navigation.description}
           </StyledDescriptionBlock>
         </StyledHeadSettingBlock>
 

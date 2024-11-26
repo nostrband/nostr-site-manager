@@ -29,7 +29,7 @@ import { DropResult } from "@hello-pangea/dnd";
 import CloseIcon from "@mui/icons-material/Close";
 import { SaveButton } from "../SaveButton";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import { IPinnedNote } from "./types";
 import { PinnedNote } from "./components/PinnedNote";
 import { StyledDialog, StyledDialogContent, StyledTitle } from "./styled";
@@ -195,10 +195,10 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
   }, [inputValue, debouncedFetchData, setOptions, siteId]);
 
   return (
-    <StyledSettingBlock id={HASH_CONFIG.PINNED_NOTES}>
+    <StyledSettingBlock id={SETTINGS_CONFIG.pinnedContent.anchor}>
       <StyledHeadSettingBlock>
         <StyledTitleBlock>
-          Pinned/Featured content
+          {SETTINGS_CONFIG.pinnedContent.title}
           {!userIsDelegated && (
             <SaveButton
               isEdit={isEdit}
@@ -209,7 +209,7 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
         </StyledTitleBlock>
 
         <StyledDescriptionBlock>
-          Pin some content to prioritize it on your site
+          {SETTINGS_CONFIG.pinnedContent.description}
         </StyledDescriptionBlock>
 
         {userIsDelegated && (

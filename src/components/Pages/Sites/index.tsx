@@ -40,10 +40,10 @@ export const Sites = () => {
   const [isFetchSites, setFetchSites] = useState(false);
   const [data, setData] = useState<ReturnSettingsSiteDataType[] | undefined>();
   const [until, setUntil] = useState<number>(0);
-  const isDesktop = useResponsive("up", "sm");
   const isNotFound = data && !data.length && !isFetchSites;
   const isShowLoading = !data && isFetchSites;
 
+  const isDesktop = useResponsive("up", "sm");
   const sizeField = isDesktop ? "medium" : "small";
 
   const fetchSites = useMemo(

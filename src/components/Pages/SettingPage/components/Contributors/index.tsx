@@ -5,7 +5,7 @@ import {
   StyledTitleBlock,
 } from "../../styled";
 import { Typography } from "@mui/material";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import {
   StyledAutorProfile,
   StyledAutorProfileGroup,
@@ -73,10 +73,10 @@ export const Contributors = memo(
 
     return (
       <>
-        <StyledSettingBlock id={HASH_CONFIG.CONTRIBUTORS}>
+        <StyledSettingBlock id={SETTINGS_CONFIG.contributors.anchor}>
           <StyledHeadSettingBlock>
             <StyledTitleBlock>
-              Contributors
+              {SETTINGS_CONFIG.contributors.title}
               <SaveButton
                 isEdit={isEdit}
                 isLoading={isLoading}

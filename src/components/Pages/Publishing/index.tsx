@@ -46,7 +46,7 @@ export const Publishing = () => {
   const description =
     state === "done" ? (
       <>
-        You can manage your website settings in your
+        You can manage your website settings in your{" "}
         <Link href={`/admin/${siteId}`}>dashboard</Link>.
       </>
     ) : (

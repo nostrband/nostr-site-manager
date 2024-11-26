@@ -1,14 +1,13 @@
 "use client";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import _ from "lodash";
-import { Typography } from "@mui/material";
+import { Button, Container } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { redirect, useParams } from "next/navigation";
 import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
-import { AuthContext } from "@/services/nostr/nostr";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import { addHttps } from "@/utils";
 import { editSite } from "@/services/nostr/api";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
@@ -29,6 +28,17 @@ import { PinnedNotes } from "./components/PinnedNotes";
 import { Navigation, NavigationModelType } from "./components/Navigation";
 import { Logo } from "./components/Logo";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
+import {
+  SearchSettingsFieldWrap,
+  StyledTitle,
+  StyledWrap,
+  StyledWrapSectionSettings,
+  StyledWrapSettings,
+} from "./styled";
+import Link from "next/link";
+import { ChevronLeftIcon } from "@/components/Icons";
+import { PageTitle } from "@/components/shared/styled";
+import { SearchSettingsField, Setting } from "./components/SearchSettingsField";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -77,20 +87,23 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
 };
 
 export const SettingPage = () => {
-  // const authed = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
-
   const [initialData, setInitialData] = useState(initialSettingValue);
-
+  const [choiceSetting, setChoiceSetting] = useState<Setting | null>(null);
   const { enqueueSnackbar } = useSnackbar();
   const params = useParams();
   const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
-
   const {
     data,
     isLoading: isLoadingSetting,
     isFetching,
   } = useSettingsSite(siteId);
+
+  const backToDashboardLink = `/admin/${siteId}/dashboard`;
+
+  const handleChoiceSetting = (setting: Setting | null) => {
+    setChoiceSetting(setting);
+  };
 
   const {
     values,
@@ -273,14 +286,25 @@ export const SettingPage = () => {
       if (hash) {
         const elementId = hash.substring(1);
         const element = document.getElementById(elementId);
+
         if (element) {
           setTimeout(() => {
-            element.scrollIntoView({ behavior: "smooth" });
-          }, 0);
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 100);
         }
       }
     }
   }, [isLoadingSetting, isFetching, data]);
+
+  useEffect(() => {
+    if (choiceSetting) {
+      const element = document.getElementById(choiceSetting.anchor);
+
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, [choiceSetting]);
 
   if (isLoadingSetting || isFetching) {
     return (
@@ -291,37 +315,56 @@ export const SettingPage = () => {
   }
 
   return (
-    <>
-      <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-        General settings
-      </Typography>
+    <Container maxWidth="lg">
+      <StyledWrap>
+        <SearchSettingsFieldWrap>
+          <SearchSettingsField
+            choiceSetting={choiceSetting}
+            handleChoiceSetting={handleChoiceSetting}
+          />
+        </SearchSettingsFieldWrap>
 
-      <WebsiteAddress
-        url={values.url}
-        siteId={values.id}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
+        <StyledTitle>
+          <Button
+            LinkComponent={Link}
+            href={backToDashboardLink}
+            color="primary"
+            variant="text"
+            sx={{ minWidth: "auto" }}
+          >
+            <ChevronLeftIcon />
+          </Button>
+          General settings
+        </StyledTitle>
 
-      <CustomDomains
-        siteId={values.id}
-        submitForm={submitForm}
-        updateWebSiteAddress={handleUpdateWebSiteAddress}
-        isLoading={isLoading}
-      />
+        <StyledWrapSettings>
+          <StyledWrapSectionSettings>
+            <WebsiteAddress
+              url={values.url}
+              siteId={values.id}
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              isLoading={isLoading}
+            />
 
-      <TitleDescription
-        title={values.title}
-        description={values.description}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
+            <CustomDomains
+              siteId={values.id}
+              submitForm={submitForm}
+              updateWebSiteAddress={handleUpdateWebSiteAddress}
+              isLoading={isLoading}
+            />
 
-      {/* <MetaData
+            <TitleDescription
+              title={values.title}
+              description={values.description}
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              isLoading={isLoading}
+            />
+
+            {/* <MetaData
         title={values.metaTitle}
         description={values.metaDescription}
         handleBlur={handleBlur}
@@ -330,130 +373,133 @@ export const SettingPage = () => {
         isLoading={isLoading}
       /> */}
 
-      <Contributors
-        handleChangeContributors={handleChangeContributors}
-        contributors={values.contributors}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
+            <Contributors
+              handleChangeContributors={handleChangeContributors}
+              contributors={values.contributors}
+              submitForm={submitForm}
+              isLoading={isLoading}
+            />
 
-      <Content
-        anchor={HASH_CONFIG.CONTENT}
-        handleChangeHashtags={handleChangeHashtags}
-        contributors={values.contributors}
-        selectedHashtags={values.hashtags}
-        handleChangeKinds={handleChangeKinds}
-        selectedKinds={values.kinds}
-        submitForm={submitForm}
-        isLoading={isLoading}
-        title="Content filters"
-        description="Choose event kinds and hashtags that will be displayed on this site"
-      />
+            <Content
+              anchor={SETTINGS_CONFIG.content.anchor}
+              handleChangeHashtags={handleChangeHashtags}
+              contributors={values.contributors}
+              selectedHashtags={values.hashtags}
+              handleChangeKinds={handleChangeKinds}
+              selectedKinds={values.kinds}
+              submitForm={submitForm}
+              isLoading={isLoading}
+              title={SETTINGS_CONFIG.content.title}
+              description={SETTINGS_CONFIG.content.description}
+            />
 
-      <Plugins
-        codeinjectionHead={values.codeinjection_head}
-        codeinjectionFoot={values.codeinjection_foot}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
+            <Plugins
+              codeinjectionHead={values.codeinjection_head}
+              codeinjectionFoot={values.codeinjection_foot}
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              isLoading={isLoading}
+            />
 
-      <Other
-        postsPerPage={values.postsPerPage}
-        contentActionMain={values.contentActionMain}
-        handleOptionsMainCallAction={handleOptionsMainCallAction}
-        handleChangeContentActions={handleChangeContentActions}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        selectedContentActions={values.contentActions}
-        isLoading={isLoading}
-      />
+            <Other
+              postsPerPage={values.postsPerPage}
+              contentActionMain={values.contentActionMain}
+              handleOptionsMainCallAction={handleOptionsMainCallAction}
+              handleChangeContentActions={handleChangeContentActions}
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              selectedContentActions={values.contentActions}
+              isLoading={isLoading}
+            />
 
-      <PinnedNotes siteId={values.id} />
+            <PinnedNotes siteId={values.id} />
+          </StyledWrapSectionSettings>
 
-      <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
-        Design
-      </Typography>
+          <PageTitle>Design</PageTitle>
 
-      <AppName
-        name={values.name}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
+          <StyledWrapSectionSettings>
+            <AppName
+              name={values.name}
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              isLoading={isLoading}
+            />
 
-      <DesignBranding
-        siteId={values.id}
-        themeName={values.themeName}
-        themeId={values.themeId}
-      />
+            <DesignBranding
+              siteId={values.id}
+              themeName={values.themeName}
+              themeId={values.themeId}
+            />
 
-      <AccentColor
-        handleChangeColor={handleChangeColor}
-        color={values.accentColor}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
+            <AccentColor
+              handleChangeColor={handleChangeColor}
+              color={values.accentColor}
+              submitForm={submitForm}
+              isLoading={isLoading}
+            />
 
-      <Icon
-        icon={values.icon}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
+            <Icon
+              icon={values.icon}
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              isLoading={isLoading}
+            />
 
-      <Logo
-        logo={values.logo}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
+            <Logo
+              logo={values.logo}
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              isLoading={isLoading}
+            />
 
-      <ImageBanner
-        image={values.image}
-        handleBlur={handleBlur}
-        handleChange={handleChange}
-        submitForm={submitForm}
-        isLoading={isLoading}
-      />
+            <ImageBanner
+              image={values.image}
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              isLoading={isLoading}
+            />
 
-      <Navigation
-        navigation={values.navigation}
-        handleChangeNavigation={handleChangeNavigation}
-        handleChangeNavigationOrder={handleChangeNavigationOrder}
-        submitForm={submitForm}
-        isLoading={isLoading}
-        handleAddLinkNavigation={handleAddLinkNavigation}
-        handleRemoveLinkNavigation={handleRemoveLinkNavigation}
-      />
+            <Navigation
+              navigation={values.navigation}
+              handleChangeNavigation={handleChangeNavigation}
+              handleChangeNavigationOrder={handleChangeNavigationOrder}
+              submitForm={submitForm}
+              isLoading={isLoading}
+              handleAddLinkNavigation={handleAddLinkNavigation}
+              handleRemoveLinkNavigation={handleRemoveLinkNavigation}
+            />
+          </StyledWrapSectionSettings>
 
-      <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
-        Homepage
-      </Typography>
+          <PageTitle>Homepage</PageTitle>
 
-      <Content
-        anchor={HASH_CONFIG.CONTENT_HOMEPAGE}
-        handleChangeHashtags={handleChangeHashtagsHomePage}
-        handleChangeKinds={handleChangeKindsHomePage}
-        contributors={values.contributors}
-        selectedHashtags={values.hashtags_homepage}
-        selectedKinds={values.kinds_homepage}
-        submitForm={submitForm}
-        isLoading={isLoading}
-        title="Homepage content"
-        description="Choose event kinds and hashtags that will be displayed on the homepage"
-      />
+          <Content
+            anchor={SETTINGS_CONFIG.homepageContent.anchor}
+            handleChangeHashtags={handleChangeHashtagsHomePage}
+            handleChangeKinds={handleChangeKindsHomePage}
+            contributors={values.contributors}
+            selectedHashtags={values.hashtags_homepage}
+            selectedKinds={values.kinds_homepage}
+            submitForm={submitForm}
+            isLoading={isLoading}
+            title={SETTINGS_CONFIG.homepageContent.title}
+            description={SETTINGS_CONFIG.homepageContent.description}
+          />
 
-      <Typography variant="h4" sx={{ fontWeight: "bold", mt: 5 }}>
-        Growth
-      </Typography>
+          <PageTitle>Growth</PageTitle>
 
-      <Recommendation />
-    </>
+          <Recommendation />
+        </StyledWrapSettings>
+      </StyledWrap>
+    </Container>
   );
 };
+
+// contributor modal
+
+// delete modal

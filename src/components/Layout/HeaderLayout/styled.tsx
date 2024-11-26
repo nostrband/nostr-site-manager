@@ -1,7 +1,8 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box } from "@mui/material";
+import { Badge, Box, Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import { grey } from "@mui/material/colors";
 
 export const StyledLogo = styled(Box)(() => ({
   width: "34px",
@@ -19,4 +20,39 @@ export const StyledUser = styled(Box)(() => ({
 export const StyledUserAvatar = styled(Avatar)(() => ({
   width: 32,
   height: 32,
+}));
+
+export const StyledBadgeWrap = styled(Box)(() => ({
+  background: grey[100],
+  padding: "4px 6px",
+  display: "flex",
+  alignItems: "center",
+  gap: "4px",
+  borderRadius: "8px",
+}));
+
+export const StyledBadge = styled(Badge)(() => ({
+  "& .MuiBadge-dot": {
+    backgroundColor: "#4CAF50",
+    height: "6px",
+    minWidth: "6px",
+    border: "1px solid",
+    borderColor: grey[100],
+    bottom: "17%",
+    right: "20%",
+  },
+}));
+
+export const StyledBadgeAvatar = styled(Avatar)(({ theme }) => ({
+  width: "17px",
+  height: "17px",
+  background: "inherit",
+  fontSize: "16px",
+  color: theme.palette.decorate.main,
+}));
+
+export const StyledBadgeTitle = styled(Typography)(() => ({
+  fontSize: "10px",
+  lineHeight: "14px",
+  fontWeight: "500",
 }));

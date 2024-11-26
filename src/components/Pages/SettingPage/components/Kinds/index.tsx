@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { InputLabel, OutlinedInput, Typography } from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
@@ -52,43 +52,41 @@ export const Kinds = ({
   }, [getKinds]);
 
   return (
-    <StyledSettingCol id={HASH_CONFIG.KINDS}>
-      <StyledSettingBlock>
-        <StyledHeadSettingBlock>
-          <Typography variant="h6">Kinds</Typography>
+    <StyledSettingBlock id={HASH_CONFIG.KINDS}>
+      <StyledHeadSettingBlock>
+        <StyledTitleBlock>
+          Kinds
           <SaveButton
             isEdit={isEdit}
             isLoading={isLoading}
             handleAction={handleClick}
           />
-        </StyledHeadSettingBlock>
+        </StyledTitleBlock>
 
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          Published event kinds
-        </Typography>
+        <StyledDescriptionBlock>Published event kinds</StyledDescriptionBlock>
+      </StyledHeadSettingBlock>
 
-        <StyledFormControl disabled={!isEdit} fullWidth size="small">
-          <InputLabel id="demo-multiple-checkbox-label">Kinds</InputLabel>
-          <Select
-            labelId="demo-multiple-checkbox-label"
-            id="demo-multiple-checkbox"
-            multiple
-            value={selectedKinds}
-            onChange={handleChange}
-            input={<OutlinedInput label="Kinds" />}
-            renderValue={(selected) =>
-              selected.map((val) => SUPPORTED_KIND_NAMES[val]).join(", ")
-            }
-          >
-            {kinds.map((kind, i) => (
-              <MenuItem key={i} value={kind}>
-                <Checkbox checked={selectedKinds.indexOf(kind) > -1} />
-                <ListItemText primary={SUPPORTED_KIND_NAMES[kind]} />
-              </MenuItem>
-            ))}
-          </Select>
-        </StyledFormControl>
-      </StyledSettingBlock>
-    </StyledSettingCol>
+      <FormControl disabled={!isEdit} fullWidth size="small">
+        <InputLabel id="demo-multiple-checkbox-label">Kinds</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={selectedKinds}
+          onChange={handleChange}
+          input={<OutlinedInput label="Kinds" />}
+          renderValue={(selected) =>
+            selected.map((val) => SUPPORTED_KIND_NAMES[val]).join(", ")
+          }
+        >
+          {kinds.map((kind, i) => (
+            <MenuItem key={i} value={kind}>
+              <Checkbox checked={selectedKinds.indexOf(kind) > -1} />
+              <ListItemText primary={SUPPORTED_KIND_NAMES[kind]} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </StyledSettingBlock>
   );
 };

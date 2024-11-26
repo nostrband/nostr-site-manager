@@ -137,12 +137,12 @@ const theme = createTheme({
     secondary: {
       main: "#696F7D",
     },
-    // info: {
-    //   light: blue[500],
-    //   main: blue[900],
-    //   dark: blue[900],
-    //   contrastText: blue[900]
-    // },
+    info: {
+      light: "#0000EE",
+      main: "#0000EE",
+      dark: "#0000EE",
+      contrastText: "#0000EE",
+    },
     error: {
       main: red.A400,
     },
@@ -213,7 +213,7 @@ const theme = createTheme({
       color: "#000",
     },
     body2: {
-      color: "#000",
+      color: "rgba(0, 0, 0, 0.6)",
     },
   },
   shape: {
@@ -253,8 +253,12 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           "& .Mui-disabled": {
-            color: "#000 !important",
-            WebkitTextFillColor: "#000 !important",
+            color: "rgba(0, 0, 0, 0.38) !important",
+            WebkitTextFillColor: "rgba(0, 0, 0, 0.38) !important",
+          },
+
+          "&.Mui-disabled .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(0, 0, 0, 0.23)",
           },
 
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -262,7 +266,7 @@ const theme = createTheme({
           },
 
           "&.MuiInputBase-sizeSmall:not(.MuiInputBase-multiline)": {
-            height: "42px", // Устанавливаем нужную высоту
+            height: "42px",
           },
         },
       },

@@ -143,10 +143,10 @@ export const GhostImport = () => {
           {(!posts || !posts.length) && (
             <>
               <StyledTitle variant="h6">
-                First,{" "}
+                First,
                 <Link href="https://ghost.org/help/exports/" target="_blank">
                   export your posts
-                </Link>{" "}
+                </Link>
                 from Ghost, then:
               </StyledTitle>
 
@@ -186,10 +186,10 @@ export const GhostImport = () => {
                 <br />
                 Re-publishing will update, not duplicate the posts.
                 <br />
-                You can edit posts after publishing using{" "}
+                You can edit posts after publishing using
                 <Link href={"https://habla.news"} target="_blank">
                   Habla.news
-                </Link>{" "}
+                </Link>
                 or other Nostr apps.
               </Typography>
             </>

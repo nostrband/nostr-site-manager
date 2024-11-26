@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import {
+  StyledDescriptionBlock,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { Autocomplete, TextField, Typography } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { IBaseSetting } from "@/types/setting.types";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
@@ -33,47 +34,46 @@ export const Timezone = ({
   const [inputValue, setInputValue] = useState("");
 
   return (
-    <StyledSettingCol id={HASH_CONFIG.TIMEZONE}>
-      <StyledSettingBlock>
-        <StyledHeadSettingBlock>
-          <Typography variant="h6">Site timezone</Typography>
-
+    <StyledSettingBlock id={HASH_CONFIG.TIMEZONE}>
+      <StyledHeadSettingBlock>
+        <StyledTitleBlock>
+          Site timezone
           <SaveButton
             isEdit={isEdit}
             isLoading={isLoading}
             handleAction={handleAction}
           />
-        </StyledHeadSettingBlock>
+        </StyledTitleBlock>
 
-        <Typography variant="body2" sx={{ mb: 4 }}>
+        <StyledDescriptionBlock>
           Set the time and date of your publication, used for all published
           posts
-        </Typography>
+        </StyledDescriptionBlock>
+      </StyledHeadSettingBlock>
 
-        <Autocomplete
-          value={timezone.label !== "" ? timezone : null}
-          getOptionLabel={(option) => option.label}
-          onChange={(
-            _,
-            newValue: {
-              name: string;
-              label: string;
-            } | null,
-          ) => {
-            handleChangeTimezone(newValue);
-          }}
-          inputValue={inputValue}
-          onInputChange={(_, newInputValue) => {
-            setInputValue(newInputValue);
-          }}
-          size="small"
-          disabled={!isEdit}
-          disablePortal
-          options={TIMEZONE_LIST}
-          renderInput={(params) => <TextField {...params} label="Timezone" />}
-          isOptionEqualToValue={(option, value) => option.name === value.name}
-        />
-      </StyledSettingBlock>
-    </StyledSettingCol>
+      <Autocomplete
+        value={timezone.label !== "" ? timezone : null}
+        getOptionLabel={(option) => option.label}
+        onChange={(
+          _,
+          newValue: {
+            name: string;
+            label: string;
+          } | null,
+        ) => {
+          handleChangeTimezone(newValue);
+        }}
+        inputValue={inputValue}
+        onInputChange={(_, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
+        size="small"
+        disabled={!isEdit}
+        disablePortal
+        options={TIMEZONE_LIST}
+        renderInput={(params) => <TextField {...params} label="Timezone" />}
+        isOptionEqualToValue={(option, value) => option.name === value.name}
+      />
+    </StyledSettingBlock>
   );
 };

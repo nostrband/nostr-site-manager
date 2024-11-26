@@ -1,26 +1,20 @@
-// import WebTwoToneIcon from "@mui/icons-material/WebTwoTone";
-// import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
-import TitleTwoToneIcon from "@mui/icons-material/TitleTwoTone";
-import ColorizeTwoToneIcon from "@mui/icons-material/ColorizeTwoTone";
-// import SegmentTwoToneIcon from "@mui/icons-material/SegmentTwoTone";
-// import TagIcon from "@mui/icons-material/Tag";
-// import LineWeightTwoToneIcon from "@mui/icons-material/LineWeightTwoTone";
-import GridOnTwoToneIcon from "@mui/icons-material/GridOnTwoTone";
-import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
-import AltRouteTwoToneIcon from "@mui/icons-material/AltRouteTwoTone";
-import BrushTwoToneIcon from "@mui/icons-material/BrushTwoTone";
-import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
-import LinkTwoToneIcon from "@mui/icons-material/LinkTwoTone";
-import ImageTwoToneIcon from "@mui/icons-material/ImageTwoTone";
-import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
-import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
-import CodeTwoToneIcon from "@mui/icons-material/CodeTwoTone";
-import PhoneIphoneTwoToneIcon from "@mui/icons-material/PhoneIphoneTwoTone";
-import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
-import DnsTwoToneIcon from "@mui/icons-material/DnsTwoTone";
-import PendingTwoToneIcon from "@mui/icons-material/PendingTwoTone";
 import PushPinTwoToneIcon from "@mui/icons-material/PushPinTwoTone";
-import PanoramaTwoToneIcon from "@mui/icons-material/PanoramaTwoTone";
+import {
+  BrushIcon,
+  CodeIcon,
+  FIleTextIcon,
+  HomeIcon,
+  ImageIcon,
+  IosSmartphoneIcon,
+  LinkIcon,
+  MessageIcon,
+  NavigationIcon,
+  PipetteIcon,
+  StarIcon,
+  TitleIcon,
+  UserCircleIcon,
+  WebIcon,
+} from "@/components/Icons";
 
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
@@ -51,40 +45,8 @@ import sourceDemo from "../../public/images/preview-theme/source-demo.npub.pro.p
 import mnmlDemo from "../../public/images/preview-theme/mnml-demo.npub.pro.png";
 import vitorsDemo from "../../public/images/preview-theme/vitors-demo.npub.pro.png";
 
-// import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
-// import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
-// import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
-// import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
-// import CloseTwoToneIcon from "@mui/icons-material/CloseTwoTone";
-// import TranslateTwoToneIcon from "@mui/icons-material/TranslateTwoTone";
-// import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
-
 export const NPUB_PRO_DOMAIN = "npub.pro";
 export const NPUB_PRO_API = "https://api.npubpro.com";
-
-export const SIDEBAR_WIDTH = 280;
-export const NAV_CONFIG = [
-  {
-    title: "Dashboard",
-    path: "dashboard",
-    icon: <GridOnTwoToneIcon />,
-  },
-  // {
-  //   title: "View site",
-  //   path: "view-site",
-  //   icon: <WebTwoToneIcon />,
-  // },
-  {
-    title: "Theme settings",
-    path: "switchTheme",
-    icon: <BrushTwoToneIcon />,
-  },
-  {
-    title: "Settings",
-    path: "settings",
-    icon: <SettingsTwoToneIcon />,
-  },
-];
 
 export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
   1: "Notes",
@@ -148,143 +110,132 @@ export const HASH_CONFIG = {
   LOGO: "logo",
 };
 
-export const SETTINGS_CONFIG = [
-  {
-    title: "General settings",
-    sublist: [
-      {
-        title: "Website address",
-        path: HASH_CONFIG.URL,
-        icon: <LinkTwoToneIcon />,
-      },
-      {
-        title: "Custom domains",
-        path: HASH_CONFIG.CUSTOM_DOMAINS,
-        icon: <DnsTwoToneIcon />,
-      },
-      {
-        title: "Title & Description",
-        path: HASH_CONFIG.TITLE_DESCRIPTION,
-        icon: <TitleTwoToneIcon />,
-      },
-      // {
-      //   title: "Timezone",
-      //   path: HASH_CONFIG.TIMEZONE,
-      //   icon: <AccessTimeTwoToneIcon />,
-      // },
-      // {
-      //   title: "Publication language",
-      //   path: HASH_CONFIG.LANGUAGE,
-      //   icon: <TranslateTwoToneIcon />,
-      // },
-      // {
-      //   title: "Meta data",
-      //   path: HASH_CONFIG.META_DATA,
-      //   icon: <LineWeightTwoToneIcon />,
-      // },
-      // {
-      //   title: "X card",
-      //   path: HASH_CONFIG.X_CARD,
-      //   icon: <CloseTwoToneIcon />,
-      // },
-      // {
-      //   title: "Facebook card",
-      //   path: HASH_CONFIG.FACEBOOK_CARD,
-      //   icon: <FacebookTwoToneIcon />,
-      // },
-      // {
-      //   title: "Social accounts",
-      //   path: HASH_CONFIG.SOCIAL_ACCOUNTS,
-      //   icon: <ThumbUpTwoToneIcon />,
-      // },
-      {
-        title: "Contributors",
-        path: HASH_CONFIG.CONTRIBUTORS,
-        icon: <AccountCircleTwoToneIcon />,
-      },
-      {
-        title: "Content",
-        path: HASH_CONFIG.CONTENT,
-        icon: <ArticleTwoToneIcon />,
-      },
-      {
-        title: "Plugins",
-        path: HASH_CONFIG.PLUGINS,
-        icon: <CodeTwoToneIcon />,
-      },
-      {
-        title: "Other",
-        path: HASH_CONFIG.OTHER,
-        icon: <PendingTwoToneIcon />,
-      },
-      {
-        title: "Pinned content",
-        path: HASH_CONFIG.PINNED_NOTES,
-        icon: <PushPinTwoToneIcon />,
-      },
-    ],
+export const SETTINGS_CONFIG = {
+  websiteAddress: {
+    title: "Website address",
+    anchor: HASH_CONFIG.URL,
+    icon: <LinkIcon />,
+    group: "General settings",
+    description: "",
   },
-  {
-    title: "Design",
-    sublist: [
-      {
-        title: "App name",
-        path: HASH_CONFIG.APP_NAME,
-        icon: <PhoneIphoneTwoToneIcon />,
-      },
-      {
-        title: "Theme",
-        path: HASH_CONFIG.DESIGN_BRANDING,
-        icon: <BrushTwoToneIcon />,
-      },
-      {
-        title: "Accent color",
-        path: HASH_CONFIG.ACCENT_COLOR,
-        icon: <ColorizeTwoToneIcon />,
-      },
-      {
-        title: "Icon",
-        path: HASH_CONFIG.ICON,
-        icon: <AppsTwoToneIcon />,
-      },
-      {
-        title: "Logo",
-        path: HASH_CONFIG.LOGO,
-        icon: <ImageTwoToneIcon />,
-      },
-      {
-        title: "Image",
-        path: HASH_CONFIG.IMAGE,
-        icon: <PanoramaTwoToneIcon />,
-      },
-      {
-        title: "Navigation",
-        path: HASH_CONFIG.NAVIGATION,
-        icon: <AltRouteTwoToneIcon />,
-      },
-    ],
+  customDomains: {
+    title: "Custom domains",
+    anchor: HASH_CONFIG.CUSTOM_DOMAINS,
+    icon: <WebIcon />,
+    group: "General settings",
+    description: "You do not have custom domains yet.",
   },
-  {
-    title: "Homepage",
-    sublist: [
-      {
-        title: "Homepage content",
-        path: HASH_CONFIG.CONTENT_HOMEPAGE,
-        icon: <ArticleTwoToneIcon />,
-      },
-    ],
+  titleDescription: {
+    title: "Title & Description",
+    anchor: HASH_CONFIG.TITLE_DESCRIPTION,
+    icon: <TitleIcon />,
+    group: "General settings",
+    description: "The details used to identify your publication around the web",
   },
-  {
-    title: "Growth",
-    sublist: [
-      {
-        title: "Recommendations",
-        path: HASH_CONFIG.RECOMMENDATION,
-        icon: <FavoriteTwoToneIcon />,
-      },
-    ],
+  contributors: {
+    title: "Contributors",
+    anchor: HASH_CONFIG.CONTRIBUTORS,
+    icon: <UserCircleIcon />,
+    group: "General settings",
+    description: "",
   },
-];
+  content: {
+    title: "Content filters",
+    anchor: HASH_CONFIG.CONTENT,
+    icon: <FIleTextIcon />,
+    group: "General settings",
+    description:
+      "Choose event kinds and hashtags that will be displayed on this site",
+  },
+  plugins: {
+    title: "Plugins",
+    anchor: HASH_CONFIG.PLUGINS,
+    icon: <CodeIcon />,
+    group: "General settings",
+    description:
+      "You can add custom html/css/js code into the header and footer of your website",
+  },
+  other: {
+    title: "Other settings",
+    anchor: HASH_CONFIG.OTHER,
+    icon: <FIleTextIcon />,
+    group: "General settings",
+    description: "Other content and plugin settings",
+  },
+  pinnedContent: {
+    title: "Pinned / Featured content",
+    anchor: HASH_CONFIG.PINNED_NOTES,
+    icon: <PushPinTwoToneIcon />,
+    group: "General settings",
+    description: "Pin some content to prioritize it on your site",
+  },
+  appName: {
+    title: "App name",
+    anchor: HASH_CONFIG.APP_NAME,
+    icon: <IosSmartphoneIcon />,
+    group: "Design",
+    description:
+      "Short name for your site, displayed when users add it to homescreen",
+  },
+  theme: {
+    title: "Theme",
+    anchor: HASH_CONFIG.DESIGN_BRANDING,
+    icon: <BrushIcon />,
+    group: "Design",
+    description: "",
+  },
+  accentColor: {
+    title: "Accent color",
+    anchor: HASH_CONFIG.ACCENT_COLOR,
+    icon: <PipetteIcon />,
+    group: "Design",
+    description: "Accent color for theme and PWA",
+  },
+  icon: {
+    title: "Icon",
+    anchor: HASH_CONFIG.ICON,
+    icon: <StarIcon />,
+    group: "Design",
+    description: "Website icon",
+  },
+  logo: {
+    title: "Logo",
+    anchor: HASH_CONFIG.LOGO,
+    icon: <StarIcon />,
+    group: "Design",
+    description: "Website logo",
+  },
+  image: {
+    title: "Image",
+    anchor: HASH_CONFIG.IMAGE,
+    icon: <ImageIcon />,
+    group: "Design",
+    description: "Website cover image",
+  },
+  navigation: {
+    title: "Navigation",
+    anchor: HASH_CONFIG.NAVIGATION,
+    icon: <NavigationIcon />,
+    group: "Design",
+    description: "Primary site navigation",
+  },
+  homepageContent: {
+    title: "Homepage content",
+    anchor: HASH_CONFIG.CONTENT_HOMEPAGE,
+    icon: <HomeIcon />,
+    group: "Homepage",
+    description:
+      "Choose event kinds and hashtags that will be displayed on the homepage",
+  },
+  recommendations: {
+    title: "Recommendations",
+    anchor: HASH_CONFIG.RECOMMENDATION,
+    icon: <MessageIcon />,
+    group: "Growth",
+    description: "",
+    isComingSoon: true,
+  },
+};
 
 export const TIMEZONE_LIST = [
   {

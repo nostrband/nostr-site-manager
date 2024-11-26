@@ -1,15 +1,16 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { InputLabel, OutlinedInput, Typography } from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
+import useResponsive from "@/hooks/useResponsive";
 
 interface IAppName extends IBaseSetting {
   name: string;
@@ -20,6 +21,10 @@ export const AppName = memo(
     const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDisabled, setDisabled] = useState(false);
+
+    const isDesktop = useResponsive("up", "sm");
+    const sizeField = isDesktop ? "medium" : "small";
+
     const handleClick = () => {
       handleAction().then();
       setDisabled((prev) => !prev);
@@ -32,36 +37,35 @@ export const AppName = memo(
     }, [isDisabled]);
 
     return (
-      <StyledSettingCol id={HASH_CONFIG.APP_NAME}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">App name</Typography>
-
+      <StyledSettingBlock id={SETTINGS_CONFIG.appName.anchor}>
+        <StyledHeadSettingBlock>
+          <StyledTitleBlock>
+            {SETTINGS_CONFIG.appName.title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
               handleAction={handleClick}
             />
-          </StyledHeadSettingBlock>
+          </StyledTitleBlock>
 
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            Short name for your site, displayed when users add it to homescreen
-          </Typography>
+          <StyledDescriptionBlock>
+            {SETTINGS_CONFIG.appName.description}
+          </StyledDescriptionBlock>
+        </StyledHeadSettingBlock>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
-            <InputLabel htmlFor="app-name">Name</InputLabel>
-            <OutlinedInput
-              inputRef={inputRef}
-              id="app-name"
-              name="name"
-              label="App name"
-              onChange={handleChange}
-              value={name}
-              onBlur={handleBlur}
-            />
-          </StyledFormControl>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+        <FormControl disabled={!isEdit} fullWidth size={sizeField}>
+          <InputLabel htmlFor="app-name">Name</InputLabel>
+          <OutlinedInput
+            inputRef={inputRef}
+            id="app-name"
+            name="name"
+            label="App name"
+            onChange={handleChange}
+            value={name}
+            onBlur={handleBlur}
+          />
+        </FormControl>
+      </StyledSettingBlock>
     );
   },
 );

@@ -100,7 +100,7 @@ export const HeaderLayout = () => {
 
       {Boolean(siteId && getSite) && (
         <StyledBadgeWrap>
-          {!isLoaded ? (
+          {isLoaded ? (
             <StyledBadgeAvatar variant="rounded" src={getSite?.icon}>
               {getSite?.name[0]}
             </StyledBadgeAvatar>

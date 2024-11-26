@@ -44,6 +44,7 @@ import scriptorDemo from "../../public/images/preview-theme/scriptor-demo.npub.p
 import sourceDemo from "../../public/images/preview-theme/source-demo.npub.pro.png";
 import mnmlDemo from "../../public/images/preview-theme/mnml-demo.npub.pro.png";
 import vitorsDemo from "../../public/images/preview-theme/vitors-demo.npub.pro.png";
+import microLieblingDemo from "../../public/images/preview-theme/micro-liebling-demo.png";
 
 export const NPUB_PRO_DOMAIN = "npub.pro";
 export const NPUB_PRO_API = "https://api.npubpro.com";
@@ -710,5 +711,12 @@ export const THEMES_PREVIEW = [
     name: "Vitors",
     url: "https://amethyst-demo.npub.pro/",
     preview: vitorsDemo,
+  },
+  {
+    id: "naddr1qq8x66trwfhj6mrfv43xc6twvupzqz82megd75w6ffp0thqytc6mxuvs9crdd2q9y9d7c0tjm358ejcyqvzqqqrhxglg6mpp",
+    tag: TYPES_THEMES_TAG.MICROBLOG,
+    name: "Micro-liebling",
+    url: "https://intuitive-guy-demo.npub.pro/",
+    preview: microLieblingDemo,
   },
 ];

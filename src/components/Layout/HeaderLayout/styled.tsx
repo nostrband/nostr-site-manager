@@ -46,7 +46,7 @@ export const StyledBadge = styled(Badge)(() => ({
 export const StyledBadgeAvatar = styled(Avatar)(() => ({
   width: "18px",
   height: "18px",
-  fontSize: "16px",
+  fontSize: "10px",
   background: grey[400],
 }));
 

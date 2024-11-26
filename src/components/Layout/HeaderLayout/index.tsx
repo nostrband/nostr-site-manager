@@ -22,9 +22,9 @@ import { useParams, useRouter } from "next/navigation";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { Avatar, Badge, Box, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { Header } from "@/components/Header";
-import { BrokenIcon, WebIcon } from "@/components/Icons";
+import { BrokenIcon } from "@/components/Icons";
 import { useListSites } from "@/hooks/useListSites";
 import useImageLoader from "@/hooks/useImageLoader";
 
@@ -101,11 +101,11 @@ export const HeaderLayout = () => {
       {Boolean(siteId && getSite) && (
         <StyledBadgeWrap>
           {isLoaded ? (
-            <StyledBadgeAvatar variant="rounded" src={getSite?.icon}>
+            <StyledBadgeAvatar variant="square" src={getSite?.icon}>
               {getSite?.name[0]}
             </StyledBadgeAvatar>
           ) : (
-            <StyledBadgeAvatar variant="rounded">
+            <StyledBadgeAvatar variant="square">
               <BrokenIcon fontSize="inherit" />
             </StyledBadgeAvatar>
           )}

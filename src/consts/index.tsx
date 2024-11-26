@@ -1,4 +1,3 @@
-import PushPinTwoToneIcon from "@mui/icons-material/PushPinTwoTone";
 import {
   BrushIcon,
   CodeIcon,
@@ -9,6 +8,7 @@ import {
   LinkIcon,
   MessageIcon,
   NavigationIcon,
+  PinIcon,
   PipetteIcon,
   StarIcon,
   TitleIcon,
@@ -166,7 +166,7 @@ export const SETTINGS_CONFIG = {
   pinnedContent: {
     title: "Pinned / Featured content",
     anchor: HASH_CONFIG.PINNED_NOTES,
-    icon: <PushPinTwoToneIcon />,
+    icon: <PinIcon />,
     group: "General settings",
     description: "Pin some content to prioritize it on your site",
   },

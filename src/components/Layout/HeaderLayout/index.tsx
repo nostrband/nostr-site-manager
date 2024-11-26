@@ -24,8 +24,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Avatar, Badge, Box, Typography } from "@mui/material";
 import { Header } from "@/components/Header";
-import { WebIcon } from "@/components/Icons";
+import { BrokenIcon, WebIcon } from "@/components/Icons";
 import { useListSites } from "@/hooks/useListSites";
+import useImageLoader from "@/hooks/useImageLoader";
 
 export const HeaderLayout = () => {
   const { isAuth } = useContext(AuthContext);
@@ -40,6 +41,8 @@ export const HeaderLayout = () => {
   const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
   const { data } = useListSites();
   const getSite = data?.find((el) => el.id === siteId);
+
+  const { isLoaded } = useImageLoader(getSite ? getSite.icon : "");
 
   const handleClickBackToHome = () => {
     router.push(pathAdmin);
@@ -97,15 +100,15 @@ export const HeaderLayout = () => {
 
       {Boolean(siteId && getSite) && (
         <StyledBadgeWrap>
-          <StyledBadge
-            overlap="circular"
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            variant="dot"
-          >
-            <StyledBadgeAvatar>
-              <WebIcon fontSize="inherit" color="inherit" />
+          {isLoaded ? (
+            <StyledBadgeAvatar variant="rounded" src={getSite?.icon}>
+              {getSite?.name[0]}
             </StyledBadgeAvatar>
-          </StyledBadge>
+          ) : (
+            <StyledBadgeAvatar variant="rounded">
+              <BrokenIcon fontSize="inherit" />
+            </StyledBadgeAvatar>
+          )}
 
           <StyledBadgeTitle variant="body2">{getSite?.name}</StyledBadgeTitle>
         </StyledBadgeWrap>

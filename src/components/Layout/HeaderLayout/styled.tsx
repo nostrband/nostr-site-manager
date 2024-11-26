@@ -43,12 +43,11 @@ export const StyledBadge = styled(Badge)(() => ({
   },
 }));
 
-export const StyledBadgeAvatar = styled(Avatar)(({ theme }) => ({
-  width: "17px",
-  height: "17px",
-  background: "inherit",
+export const StyledBadgeAvatar = styled(Avatar)(() => ({
+  width: "18px",
+  height: "18px",
   fontSize: "16px",
-  color: theme.palette.decorate.main,
+  background: grey[400],
 }));
 
 export const StyledBadgeTitle = styled(Typography)(() => ({

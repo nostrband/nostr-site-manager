@@ -1,5 +1,5 @@
 "use client";
-import React, { SyntheticEvent, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import _ from "lodash";
 import { Button, Container } from "@mui/material";
 import { useSnackbar } from "notistack";
@@ -31,13 +31,13 @@ import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import {
   SearchSettingsFieldWrap,
   StyledTitle,
+  StyledTitleSection,
   StyledWrap,
   StyledWrapSectionSettings,
   StyledWrapSettings,
 } from "./styled";
 import Link from "next/link";
 import { ChevronLeftIcon } from "@/components/Icons";
-import { PageTitle } from "@/components/shared/styled";
 import { SearchSettingsField, Setting } from "./components/SearchSettingsField";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
@@ -303,7 +303,7 @@ export const SettingPage = () => {
       if (element) {
         element.scrollIntoView({ behavior: "smooth", block: "start" });
 
-        setChoiceSetting(null)
+        setChoiceSetting(null);
       }
     }
   }, [choiceSetting]);
@@ -319,13 +319,6 @@ export const SettingPage = () => {
   return (
     <Container maxWidth="lg">
       <StyledWrap>
-        <SearchSettingsFieldWrap>
-          <SearchSettingsField
-            choiceSetting={choiceSetting}
-            handleChoiceSetting={handleChoiceSetting}
-          />
-        </SearchSettingsFieldWrap>
-
         <StyledTitle>
           <Button
             LinkComponent={Link}
@@ -336,10 +329,19 @@ export const SettingPage = () => {
           >
             <ChevronLeftIcon />
           </Button>
-          General settings
+          Settings
         </StyledTitle>
 
+        <SearchSettingsFieldWrap>
+          <SearchSettingsField
+            choiceSetting={choiceSetting}
+            handleChoiceSetting={handleChoiceSetting}
+          />
+        </SearchSettingsFieldWrap>
+
         <StyledWrapSettings>
+          <StyledTitleSection>General settings</StyledTitleSection>
+
           <StyledWrapSectionSettings>
             <WebsiteAddress
               url={values.url}
@@ -419,7 +421,7 @@ export const SettingPage = () => {
             <PinnedNotes siteId={values.id} />
           </StyledWrapSectionSettings>
 
-          <PageTitle>Design</PageTitle>
+          <StyledTitleSection>Design</StyledTitleSection>
 
           <StyledWrapSectionSettings>
             <AppName
@@ -478,7 +480,7 @@ export const SettingPage = () => {
             />
           </StyledWrapSectionSettings>
 
-          <PageTitle>Homepage</PageTitle>
+          <StyledTitleSection>Homepage</StyledTitleSection>
 
           <Content
             anchor={SETTINGS_CONFIG.homepageContent.anchor}
@@ -493,7 +495,7 @@ export const SettingPage = () => {
             description={SETTINGS_CONFIG.homepageContent.description}
           />
 
-          <PageTitle>Growth</PageTitle>
+          <StyledTitleSection>Growth</StyledTitleSection>
 
           <Recommendation />
         </StyledWrapSettings>

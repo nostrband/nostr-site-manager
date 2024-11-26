@@ -64,12 +64,27 @@ export const StyledComingSoonProfile = styled(Box)(() => ({
   textAlign: "center",
 }));
 
-export const StyledTitle = styled(PageTitle)(() => ({
+export const StyledTitle = styled(PageTitle)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   paddingBottom: 24,
   gap: 8,
-  paddingTop: 24,
+  paddingTop: 40,
+  [theme.breakpoints.down("sm")]: {
+    paddingTop: 16,
+  },
+}));
+
+export const StyledTitleSection = styled(PageTitle)(({ theme }) => ({
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "20px",
+    lineHeight: "26px",
+  },
+
+  [theme.breakpoints.up("sm")]: {
+    fontSize: "24px",
+    lineHeight: "31px",
+  },
 }));
 
 export const StyledWrap = styled(Box)(() => ({
@@ -104,10 +119,7 @@ export const StyledIconImage = styled(Avatar)(({ theme }) => ({
 }));
 
 export const SearchSettingsFieldWrap = styled(Box)(({ theme }) => ({
-  paddingTop: 40,
-  [theme.breakpoints.down("sm")]: {
-    paddingTop: 16,
-  },
+  paddingBottom: "24px",
 }));
 
 export const StyledFieldIconImage = styled(Box)(() => ({

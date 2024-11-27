@@ -1,11 +1,12 @@
 import React from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
+  StyledFormFields,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { InputLabel, OutlinedInput, Typography } from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
@@ -27,24 +28,25 @@ export const SocialAccounts = ({
   const [isEdit, handleAction] = useEditSettingMode(submitForm);
 
   return (
-    <StyledSettingCol id={HASH_CONFIG.SOCIAL_ACCOUNTS}>
-      <StyledSettingBlock>
-        <StyledHeadSettingBlock>
-          <Typography variant="h6">Social accounts</Typography>
-
+    <StyledSettingBlock id={HASH_CONFIG.SOCIAL_ACCOUNTS}>
+      <StyledHeadSettingBlock>
+        <StyledTitleBlock>
+          Social accounts
           <SaveButton
             isEdit={isEdit}
             isLoading={isLoading}
             handleAction={handleAction}
           />
-        </StyledHeadSettingBlock>
+        </StyledTitleBlock>
 
-        <Typography variant="body2" sx={{ mb: 1 }}>
+        <StyledDescriptionBlock>
           Link your social accounts for full structured data and rich card
           support
-        </Typography>
+        </StyledDescriptionBlock>
+      </StyledHeadSettingBlock>
 
-        <StyledFormControl disabled={!isEdit} fullWidth size="small">
+      <StyledFormFields>
+        <FormControl disabled={!isEdit} fullWidth size="small">
           <InputLabel htmlFor="socialAccountFaceBook">
             URL of your publication Facebook Page
           </InputLabel>
@@ -56,9 +58,9 @@ export const SocialAccounts = ({
             value={socialAccountFaceBook}
             onBlur={handleBlur}
           />
-        </StyledFormControl>
+        </FormControl>
 
-        <StyledFormControl disabled={!isEdit} fullWidth size="small">
+        <FormControl disabled={!isEdit} fullWidth size="small">
           <InputLabel htmlFor="socialAccountX">
             URL of your X (formerly Twitter) profile
           </InputLabel>
@@ -70,8 +72,8 @@ export const SocialAccounts = ({
             value={socialAccountX}
             onBlur={handleBlur}
           />
-        </StyledFormControl>
-      </StyledSettingBlock>
-    </StyledSettingCol>
+        </FormControl>
+      </StyledFormFields>
+    </StyledSettingBlock>
   );
 };

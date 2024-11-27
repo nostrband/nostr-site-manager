@@ -1,8 +1,8 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
-import { red } from "@mui/material/colors";
-import { Inter } from "@next/font/google";
+import { grey, red } from "@mui/material/colors";
 import localFont from "next/font/local";
+import shadows from "@mui/material/styles/shadows";
 
 declare module "@mui/material/styles" {
   interface Palette {
@@ -137,17 +137,17 @@ const theme = createTheme({
     secondary: {
       main: "#696F7D",
     },
-    // info: {
-    //   light: blue[500],
-    //   main: blue[900],
-    //   dark: blue[900],
-    //   contrastText: blue[900]
-    // },
+    info: {
+      light: "#0000EE",
+      main: "#0000EE",
+      dark: "#0000EE",
+      contrastText: "#0000EE",
+    },
     error: {
       main: red.A400,
     },
     customBackground: {
-      light: "#e9e9e9",
+      light: grey[100],
       main: "#F5F5F5",
     },
     buttonSidebarBackground: {
@@ -199,16 +199,21 @@ const theme = createTheme({
       contrastText: "#fff",
     },
   },
+  shadows: [
+    ...shadows.slice(0, 10),
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    ...shadows.slice(11),
+  ] as typeof shadows,
   typography: {
     fontFamily: InterVariable.style.fontFamily,
     allVariants: {
-      color: "#292C34",
+      color: "#000",
     },
     body1: {
-      color: "#292C34",
+      color: "#000",
     },
     body2: {
-      color: "#292C34",
+      color: "rgba(0, 0, 0, 0.6)",
     },
   },
   shape: {
@@ -218,7 +223,7 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.05)",
+          boxShadow: "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
         },
         colorPrimary: {
           backgroundColor: "#fff",
@@ -236,6 +241,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          fontWeight: "600",
           textTransform: "none",
         },
       },
@@ -247,8 +253,29 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           "& .Mui-disabled": {
-            color: "#000 !important",
-            WebkitTextFillColor: "#000 !important",
+            color: "rgba(0, 0, 0, 0.38) !important",
+            WebkitTextFillColor: "rgba(0, 0, 0, 0.38) !important",
+          },
+
+          "&.Mui-disabled .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(0, 0, 0, 0.23)",
+          },
+
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#FF3ED9",
+          },
+
+          "&.MuiInputBase-sizeSmall:not(.MuiInputBase-multiline)": {
+            height: "42px",
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focused": {
+            color: "#FF3ED9",
           },
         },
       },
@@ -269,12 +296,26 @@ const theme = createTheme({
         },
       },
     },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          background: grey[400],
+        },
+      },
+    },
     MuiContainer: {
       styleOverrides: {
         maxWidthLg: {
           maxWidth: "1344px",
+          "@media (min-width: 600px)": {
+            paddingLeft: "24px",
+            paddingRight: "24px",
+          },
+
           "@media (min-width: 1200px)": {
-            maxWidth: "1240px",
+            maxWidth: "1092px",
+            paddingLeft: "0",
+            paddingRight: "0",
           },
         },
         maxWidthMd: {

@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
+  StyledFormFields,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { InputLabel, OutlinedInput, Typography } from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
@@ -39,23 +40,24 @@ export const MetaData = ({
   }, [isDisabled]);
 
   return (
-    <StyledSettingCol id={HASH_CONFIG.META_DATA}>
-      <StyledSettingBlock>
-        <StyledHeadSettingBlock>
-          <Typography variant="h6">Meta data</Typography>
-
+    <StyledSettingBlock id={HASH_CONFIG.META_DATA}>
+      <StyledHeadSettingBlock>
+        <StyledTitleBlock>
+          Meta data
           <SaveButton
             isEdit={isEdit}
             isLoading={isLoading}
             handleAction={handleClick}
           />
-        </StyledHeadSettingBlock>
+        </StyledTitleBlock>
 
-        <Typography variant="body2" sx={{ mb: 1 }}>
+        <StyledDescriptionBlock>
           Extra content for search engines
-        </Typography>
+        </StyledDescriptionBlock>
+      </StyledHeadSettingBlock>
 
-        <StyledFormControl disabled={!isEdit} fullWidth size="small">
+      <StyledFormFields>
+        <FormControl disabled={!isEdit} fullWidth size="small">
           <InputLabel htmlFor="metaTitle">Meta title</InputLabel>
           <OutlinedInput
             inputRef={inputRef}
@@ -66,9 +68,9 @@ export const MetaData = ({
             value={title}
             onBlur={handleBlur}
           />
-        </StyledFormControl>
+        </FormControl>
 
-        <StyledFormControl disabled={!isEdit} fullWidth size="small">
+        <FormControl disabled={!isEdit} fullWidth size="small">
           <InputLabel htmlFor="metaDescription">Meta description</InputLabel>
           <OutlinedInput
             id="metaDescription"
@@ -78,8 +80,8 @@ export const MetaData = ({
             value={description}
             onBlur={handleBlur}
           />
-        </StyledFormControl>
-      </StyledSettingBlock>
-    </StyledSettingCol>
+        </FormControl>
+      </StyledFormFields>
+    </StyledSettingBlock>
   );
 };

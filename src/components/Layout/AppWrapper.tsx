@@ -1,15 +1,9 @@
 "use client";
 import { ReactNode, useEffect, useState } from "react";
 import { SnackbarProvider } from "notistack";
-import { styled } from "@mui/material/styles";
 import Script from "next/script";
-import { AuthContext, onAuth, userPubkey } from "@/services/nostr/nostr";
-
-const BodyWrapper = styled("body")({
-  height: "100%",
-  lineHeight: "initial",
-  color: "initial",
-});
+import { AuthContext, onAuth } from "@/services/nostr/nostr";
+import { BodyWrapper } from "./MainContent";
 
 export const AppWrapper = ({ children }: { children: ReactNode }) => {
   const [authed, setAuthed] = useState({
@@ -53,8 +47,8 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
           data-no-banner="true"
           data-otp-request-url="https://api.npubpro.com/otp"
           data-otp-reply-url="https://api.npubpro.com/authotp"
-          //          src="https://www.unpkg.com/nostr-login@latest/dist/unpkg.js"
-          src="/nostr-login.js"
+          src="https://www.unpkg.com/nostr-login@latest/dist/unpkg.js"
+          // src="/nostr-login.js"
         />
         <Script
           defer

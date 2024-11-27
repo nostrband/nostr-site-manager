@@ -1,19 +1,13 @@
 "use client";
-import {
-  DialogTitle,
-  Fab,
-  FormHelperText,
-  InputLabel,
-  OutlinedInput,
-  Typography,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Button, FormHelperText, OutlinedInput } from "@mui/material";
 import {
   StyledTitle,
   StyledDialog,
   StyledDialogContent,
   StyledActionButton,
   StyledFormControl,
+  StyledDialogTitle,
+  StyledText,
 } from "@/components/ModalConfirmDeleteSite/styled";
 import LoadingButton from "@mui/lab/LoadingButton";
 import React, { useState } from "react";
@@ -21,6 +15,8 @@ import { useFormik } from "formik";
 import { validationSchemaConfirmDelete } from "@/validations/rules";
 import { deleteSite } from "@/services/nostr/api";
 import { useSnackbar } from "notistack";
+import { CrossIcon } from "../Icons";
+import useResponsive from "@/hooks/useResponsive";
 
 export const ModalConfirmDeleteSite = ({
   isOpen,
@@ -33,6 +29,9 @@ export const ModalConfirmDeleteSite = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+
+  const isDesktop = useResponsive("up", "sm");
+  const sizeField = isDesktop ? "medium" : "small";
 
   const initialValues = {
     confirmText: "",
@@ -84,27 +83,28 @@ export const ModalConfirmDeleteSite = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle component="div" id="alert-dialog-title">
+      <StyledDialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
           Confirm for delete
-          <Fab
+          <Button
             onClick={handleCancel}
-            size="small"
-            color="primary"
-            aria-label="close"
+            variant="text"
+            color="secondary"
+            sx={{ minWidth: "auto" }}
           >
-            <CloseIcon />
-          </Fab>
+            <CrossIcon color="inherit" />
+          </Button>
         </StyledTitle>
-      </DialogTitle>
+      </StyledDialogTitle>
       <StyledDialogContent>
-        <Typography variant="body1" gutterBottom>
+        <StyledText variant="body2">
           {/* eslint-disable-next-line react/no-unescaped-entities */}
           Please type "delete" to delete this site
-        </Typography>
+        </StyledText>
         <form onSubmit={handleSubmit}>
           <StyledFormControl
             fullWidth
+            size={sizeField}
             error={touched.confirmText && Boolean(errors.confirmText)}
           >
             <OutlinedInput
@@ -121,8 +121,8 @@ export const ModalConfirmDeleteSite = ({
 
           <StyledActionButton>
             <LoadingButton
-              color="primary"
-              variant="contained"
+              color="decorate"
+              variant="outlined"
               fullWidth
               size="large"
               disabled={isLoading}
@@ -132,7 +132,7 @@ export const ModalConfirmDeleteSite = ({
             </LoadingButton>
 
             <LoadingButton
-              color="error"
+              color="decorate"
               variant="contained"
               type="submit"
               fullWidth

@@ -1,22 +1,23 @@
 "use client";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
+  StyledFormFields,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
 import {
   Autocomplete,
   ListItem,
   TextField,
-  Typography,
   Button,
   SelectChangeEvent,
   InputLabel,
   Select,
   OutlinedInput,
   MenuItem,
+  FormControl,
 } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
@@ -24,6 +25,7 @@ import { IBaseSetting } from "@/types/setting.types";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import { fetchTopHashtags } from "@/services/nostr/themes";
+import useResponsive from "@/hooks/useResponsive";
 
 interface ITitleDescription extends IBaseSetting {
   selectedHashtags: string[];
@@ -58,6 +60,9 @@ export const Content = memo(
     const [hashtags, setHashtags] = useState<string[]>([]);
     const [kinds, setKinds] = useState<number[]>([]);
     const [inputValue, setInputValue] = useState("");
+    const isDesktop = useResponsive("up", "sm");
+    const sizeField = isDesktop ? "medium" : "small";
+    const sizeButton = isDesktop ? "large" : "medium";
 
     const handleClick = () => {
       setInputValue("");
@@ -116,23 +121,22 @@ export const Content = memo(
     }, [getKinds]);
 
     return (
-      <StyledSettingCol id={anchor}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">{title}</Typography>
-
+      <StyledSettingBlock id={anchor}>
+        <StyledHeadSettingBlock>
+          <StyledTitleBlock>
+            {title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
               handleAction={handleClick}
             />
-          </StyledHeadSettingBlock>
+          </StyledTitleBlock>
 
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            {description}
-          </Typography>
+          <StyledDescriptionBlock>{description}</StyledDescriptionBlock>
+        </StyledHeadSettingBlock>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
+        <StyledFormFields>
+          <FormControl disabled={!isEdit} fullWidth>
             <Autocomplete
               multiple
               options={mergedOptions}
@@ -141,9 +145,7 @@ export const Content = memo(
               freeSolo
               value={selectedHashtags}
               inputValue={inputValue}
-              onInputChange={(event, newInputValue) =>
-                setInputValue(newInputValue)
-              }
+              onInputChange={(_, newInputValue) => setInputValue(newInputValue)}
               onChange={(_, value) => {
                 const newHashtag = (s: string) =>
                   s.startsWith("#") ? s : `#${s}`;
@@ -197,15 +199,17 @@ export const Content = memo(
                   disabled={!isEdit}
                   onClick={handleAddHashtag}
                   variant="contained"
+                  size={sizeButton}
                   sx={{ mt: 1 }}
                 >
                   Add {inputValue}
                 </Button>
               )}
-          </StyledFormControl>
+          </FormControl>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="medium">
+          <FormControl disabled={!isEdit} fullWidth size={sizeField}>
             <InputLabel id="demo-multiple-checkbox-label">Kinds</InputLabel>
+
             <Select
               labelId="demo-multiple-checkbox-label"
               id="demo-multiple-checkbox"
@@ -224,9 +228,9 @@ export const Content = memo(
                 </MenuItem>
               ))}
             </Select>
-          </StyledFormControl>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+          </FormControl>
+        </StyledFormFields>
+      </StyledSettingBlock>
     );
   },
 );

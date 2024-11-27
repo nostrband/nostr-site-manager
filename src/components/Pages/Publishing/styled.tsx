@@ -10,6 +10,7 @@ export const StyledWrap = styled(Box)(() => ({
   width: "100%",
   height: "100%",
   padding: 15,
+  background: "#fff",
 }));
 
 export const StyledTitle = styled(Typography)(() => ({

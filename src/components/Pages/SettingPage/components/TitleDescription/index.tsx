@@ -1,15 +1,17 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
+  StyledFormFields,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { InputLabel, OutlinedInput, Typography } from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
+import useResponsive from "@/hooks/useResponsive";
 
 interface ITitleDescription extends IBaseSetting {
   title: string;
@@ -28,6 +30,10 @@ export const TitleDescription = memo(
     const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDisabled, setDisabled] = useState(false);
+
+    const isDesktop = useResponsive("up", "sm");
+    const sizeField = isDesktop ? "medium" : "small";
+
     const handleClick = () => {
       handleAction().then();
       setDisabled((prev) => !prev);
@@ -40,23 +46,24 @@ export const TitleDescription = memo(
     }, [isDisabled]);
 
     return (
-      <StyledSettingCol id={HASH_CONFIG.TITLE_DESCRIPTION}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">Title & Description</Typography>
-
+      <StyledSettingBlock id={SETTINGS_CONFIG.titleDescription.anchor}>
+        <StyledHeadSettingBlock>
+          <StyledTitleBlock>
+            {SETTINGS_CONFIG.titleDescription.title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
               handleAction={handleClick}
             />
-          </StyledHeadSettingBlock>
+          </StyledTitleBlock>
 
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            The details used to identify your publication around the web
-          </Typography>
+          <StyledDescriptionBlock>
+            {SETTINGS_CONFIG.titleDescription.description}
+          </StyledDescriptionBlock>
+        </StyledHeadSettingBlock>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
+        <StyledFormFields>
+          <FormControl disabled={!isEdit} fullWidth size={sizeField}>
             <InputLabel htmlFor="title">Title</InputLabel>
             <OutlinedInput
               inputRef={inputRef}
@@ -67,9 +74,9 @@ export const TitleDescription = memo(
               value={title}
               onBlur={handleBlur}
             />
-          </StyledFormControl>
+          </FormControl>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
+          <FormControl disabled={!isEdit} fullWidth size={sizeField}>
             <InputLabel htmlFor="description">Description</InputLabel>
             <OutlinedInput
               id="description"
@@ -81,9 +88,9 @@ export const TitleDescription = memo(
               value={description}
               onBlur={handleBlur}
             />
-          </StyledFormControl>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+          </FormControl>
+        </StyledFormFields>
+      </StyledSettingBlock>
     );
   },
 );

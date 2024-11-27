@@ -1,36 +1,34 @@
 "use client";
-import {
-  FC,
-  forwardRef,
-  memo,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-import Link, { LinkProps } from "next/link";
-import {
-  Avatar,
-  Box,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { FC, memo, ReactNode, useCallback } from "react";
+import { Avatar, AvatarGroup, IconButton } from "@mui/material";
 import {
   StyledCard,
   StyledWrapFooter,
   StyledCardActionArea,
   StyledCardNoImage,
   StyledCardHeader,
+  StyledCardHeaderWrap,
+  StyledCardSubHeader,
+  StyledCardTitle,
+  StyledCardMedia,
+  StyledCardDescription,
+  StyledCardContent,
+  StyledCardWrapAuthors,
+  StyledCardAuthorName,
 } from "./styled";
 import { StyledAvatarSite } from "@/components/shared/styled";
-import LaunchIcon from "@mui/icons-material/Launch";
-import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
+import useImageLoader from "@/hooks/useImageLoader";
+import { CustomLinkComponent } from "./components/CustomLinkComponent";
+import {
+  BrokenBigIcon,
+  BrokenIcon,
+  IconLink,
+  IconPerson,
+} from "@/components/Icons";
+import { nip19 } from "nostr-tools";
+import useContributors from "@/hooks/useContributors";
 
 type PreviewSiteType = {
   path?: string;
@@ -40,7 +38,7 @@ type PreviewSiteType = {
   id?: string;
 };
 
-type PreviewSitePropsType = PreviewSiteType &
+export type PreviewSitePropsType = PreviewSiteType &
   Pick<
     ReturnSettingsSiteDataType,
     | "icon"
@@ -56,25 +54,6 @@ type PreviewSitePropsType = PreviewSiteType &
     | "title"
   >;
 
-interface CustomLinkComponentProps extends Omit<LinkProps, "href"> {
-  href: LinkProps["href"];
-  isPublic?: boolean;
-}
-
-const CustomLinkComponent = forwardRef<
-  HTMLAnchorElement,
-  CustomLinkComponentProps
->(({ href, isPublic, ...props }, ref) => (
-  <Link
-    href={href}
-    {...props}
-    target={isPublic ? "_blank" : "_self"}
-    ref={ref}
-  />
-));
-
-CustomLinkComponent.displayName = "CustomLinkComponent";
-
 export const PreviewSite = memo(function PreviewSite({
   id,
   path,
@@ -84,7 +63,7 @@ export const PreviewSite = memo(function PreviewSite({
   title,
   url,
   image,
-  contributors,
+  contributors: pubkeysContributors,
   accentColor,
   description,
   adminAvatar = "",
@@ -93,8 +72,12 @@ export const PreviewSite = memo(function PreviewSite({
   isPublic = false,
   isLinkToOpenSite = true,
 }: PreviewSitePropsType) {
-  const [isErrorLoadImage, setErrorLoadImage] = useState(false);
-  const [isErrorLoadLogo, setErrorLoadLogo] = useState(false);
+  const { isLoaded: isLoadedLogo } = useImageLoader(logo);
+  const { isLoaded: isLoadedImage } = useImageLoader(image);
+  const isSeveralAuthor = pubkeysContributors.length > 1;
+  const contributors = useContributors(pubkeysContributors, isSeveralAuthor);
+  const prepareContributors =
+    contributors.length > 5 ? contributors.slice(0, 5) : contributors;
   const link = isPublic ? url : `${path}/${id}`;
 
   const WrapCard: FC<{ children: ReactNode }> = useCallback(
@@ -106,7 +89,6 @@ export const PreviewSite = memo(function PreviewSite({
               LinkComponent={isLink ? CustomLinkComponent : undefined}
               // @ts-expect-error
               href={isLink ? link : undefined}
-              isPublic={isPublic}
             >
               {children}
             </StyledCardActionArea>
@@ -116,127 +98,111 @@ export const PreviewSite = memo(function PreviewSite({
         </>
       );
     },
-    [isLink, isPublic, link],
+    [isLink, link],
   );
 
-  useEffect(() => {
-    const img = new Image();
-    img.src = image;
-
-    img.onload = () => {
-      setErrorLoadImage(true);
-    };
-
-    img.onerror = () => {
-      setErrorLoadImage(false);
-    };
-  }, [image]);
-
-  useEffect(() => {
-    const img = new Image();
-    img.src = logo;
-
-    img.onload = () => {
-      setErrorLoadLogo(true);
-    };
-
-    img.onerror = () => {
-      setErrorLoadLogo(false);
-    };
-  }, [logo]);
-
   return (
-    <StyledCard>
+    <StyledCard isLink={isLink}>
       <WrapCard>
-        <StyledCardHeader
-          avatar={
-            isErrorLoadLogo ? (
-              <StyledAvatarSite variant="square" src={logo}>
-                {name[0]}
-              </StyledAvatarSite>
-            ) : (
-              <StyledAvatarSite variant="square">
-                <LanguageOutlinedIcon />
-              </StyledAvatarSite>
-            )
-          }
-          title={
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <b>{title}</b>{" "}
-              {isLinkToOpenSite && (
-                <IconButton
-                  aria-label="delete"
-                  size="small"
-                  onClick={(e) => {
-                    e.stopPropagation();
-
-                    window.open(url);
-                  }}
-                >
-                  <LaunchIcon fontSize="inherit" />
-                </IconButton>
-              )}
-            </Box>
-          }
-          subheader={<Box>{url}</Box>}
-        />
-        {isErrorLoadImage ? (
-          <CardMedia
-            component="img"
-            height="194"
-            image={image}
-            alt={name}
-            sx={{ flex: "0 0 194px" }}
+        <StyledCardHeaderWrap>
+          <StyledCardHeader
+            avatar={
+              isLoadedLogo ? (
+                <StyledAvatarSite variant="square" src={logo}>
+                  {name[0]}
+                </StyledAvatarSite>
+              ) : (
+                <StyledAvatarSite variant="square">
+                  <BrokenIcon fontSize="inherit" />
+                </StyledAvatarSite>
+              )
+            }
+            title={<StyledCardTitle>{title}</StyledCardTitle>}
+            subheader={<StyledCardSubHeader>{url}</StyledCardSubHeader>}
           />
+          {isLinkToOpenSite && (
+            <IconButton
+              aria-label={`open site ${name}`}
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+
+                window.open(url);
+              }}
+              sx={{ color: "#696F7D" }}
+            >
+              <IconLink fontSize="inherit" />
+            </IconButton>
+          )}
+        </StyledCardHeaderWrap>
+
+        {isLoadedImage ? (
+          <StyledCardMedia component="img" image={image} alt={name} />
         ) : (
           <StyledCardNoImage>
-            <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
+            <BrokenBigIcon fontSize="inherit" sx={{ margin: "auto" }} />
           </StyledCardNoImage>
         )}
+
         <StyledWrapFooter sx={{ background: `${accentColor}` }}>
-          <CardContent>
-            <Typography
+          <StyledCardContent>
+            <StyledCardDescription
               variant="body2"
               color={getContrastingTextColor(accentColor)}
-              sx={{
-                width: "100%",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                display: "-webkit-box",
-                WebkitLineClamp: "2",
-                WebkitBoxOrient: "vertical",
-                wordWrap: "break-word",
-              }}
             >
               {description}
-            </Typography>
-          </CardContent>
-          <CardHeader
-            sx={{ marginTop: "auto" }}
-            avatar={
-              <Avatar src={isPublic ? adminAvatar : icon}>
-                {isPublic ? adminName[0] : name[0]}
-              </Avatar>
-            }
-            title={
-              <Box
+            </StyledCardDescription>
+          </StyledCardContent>
+
+          {isSeveralAuthor ? (
+            <StyledCardWrapAuthors>
+              <AvatarGroup spacing={20.5}>
+                {contributors.length
+                  ? prepareContributors.map((el, i) => {
+                      let meta = JSON.parse(el.content);
+
+                      const npub = el.pubkey
+                        ? nip19.npubEncode(el.pubkey).substring(0, 8) + "..."
+                        : "";
+                      const nameAuthor = meta.display_name || meta.name || npub;
+                      const img = meta.picture || "";
+
+                      return (
+                        <Avatar key={i} alt={nameAuthor} src={img}>
+                          <IconPerson />
+                        </Avatar>
+                      );
+                    })
+                  : pubkeysContributors.map((_, i) => {
+                      return (
+                        <Avatar key={i}>
+                          <IconPerson />
+                        </Avatar>
+                      );
+                    })}
+              </AvatarGroup>
+              <StyledCardAuthorName
                 sx={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  maxWidth: "140px",
                   color: getContrastingTextColor(accentColor),
                 }}
               >
-                <b>{isPublic ? adminName : name}</b>
-              </Box>
-            }
-          />
+                {pubkeysContributors.length} authors
+              </StyledCardAuthorName>
+            </StyledCardWrapAuthors>
+          ) : (
+            <StyledCardWrapAuthors>
+              <Avatar src={isPublic ? adminAvatar : icon}>
+                <IconPerson />
+              </Avatar>
+              <StyledCardAuthorName
+                sx={{
+                  color: getContrastingTextColor(accentColor),
+                }}
+              >
+                {isPublic ? adminName : name}
+              </StyledCardAuthorName>
+            </StyledCardWrapAuthors>
+          )}
         </StyledWrapFooter>
       </WrapCard>
     </StyledCard>

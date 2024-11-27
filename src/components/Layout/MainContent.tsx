@@ -1,30 +1,24 @@
 "use client";
-import { forwardRef } from "react";
+import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Box, BoxProps } from "@mui/material";
 
-interface IBox {
-  isDesktop?: boolean;
-}
-
-export type IMainContent = IBox & BoxProps;
-
-export const MainContent = styled(
-  forwardRef<HTMLAnchorElement, IMainContent>(
-    function MainContentName(props, ref) {
-      const exclude = new Set(["isDesktop"]);
-      const omitProps = Object.fromEntries(
-        Object.entries(props).filter((e) => !exclude.has(e[0])),
-      );
-
-      return <Box ref={ref} {...omitProps} />;
-    },
-  ),
-)(({ isDesktop = false }) => ({
+export const MainWrapper = styled("div")(() => ({
   position: "relative",
-  flexGrow: 1,
-  overflow: "auto",
-  minHeight: "100%",
-  padding: isDesktop ? 32 : 15,
-  paddingTop: isDesktop ? 32 : 64,
+  height: "100%",
+}));
+
+export const BodyWrapper = styled("body")(({ theme }) => ({
+  height: "100%",
+  lineHeight: "initial",
+  color: "initial",
+  background: theme.palette.customBackground.light,
+}));
+
+export const StyledWrapCenter = styled(Box)(() => ({
+  height: "100%",
+  width: "100%",
+  position: "relative",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 }));

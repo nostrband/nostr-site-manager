@@ -1,14 +1,22 @@
 "use client";
 import Link from "next/link";
-import { Box, Button } from "@mui/material";
+import { Button, Container } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
 import { useParams, useRouter } from "next/navigation";
-import { TitleAdmin } from "@/components/TitleAdmin";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import React, { useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
-import { PreviewSite } from "@/components/PreviewSite";
 import { userIsDelegated } from "@/services/nostr/nostr";
+import VpnKeyOutlinedIcon from "@mui/icons-material/VpnKeyOutlined";
+import { StyledActions, StyledTitle, StyledWrapDashboard } from "./styled";
+import {
+  ArrowRightIcon,
+  BrushIcon,
+  ChevronLeftIcon,
+  SettingsIcon,
+  TrashIcon,
+} from "@/components/Icons";
+import { PreviewDashboardSite } from "./components/PreviewDashboardSite";
 
 export const Dashboard = () => {
   const [isOpenConfirm, setOpenConfirm] = useState(false);
@@ -37,7 +45,7 @@ export const Dashboard = () => {
 
   const handleConnectKeys = () => {
     document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "import-otp" })
+      new CustomEvent("nlLaunch", { detail: "import-otp" }),
     );
   };
 
@@ -50,106 +58,106 @@ export const Dashboard = () => {
   }
 
   return (
-    <>
-      <TitleAdmin>Dashboard</TitleAdmin>
-
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "10px",
-        }}
-      >
-        <Box sx={{ maxWidth: "400px", width: "100%" }}>
-          {getSite && (
-            <PreviewSite
-              icon={getSite.icon}
-              logo={getSite.logo}
-              name={getSite.name}
-              title={getSite.title}
-              url={getSite.url}
-              image={getSite.image}
-              description={getSite.description}
-              accentColor={getSite.accentColor}
-              contributors={getSite.contributors}
-              isLink={false}
-              isLinkToOpenSite={false}
-            />
-          )}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            maxWidth: "400px",
-            width: "100%",
-            gap: "10px",
-            flexDirection: "column",
-          }}
-        >
-          {/* @ts-expect-error */}
-          <Button
-            target="_blank"
-            LinkComponent={Link}
-            size="medium"
-            variant="outlined"
-            color="decorate"
-            href={getSite?.url}
-            fullWidth
-          >
-            Open website
-          </Button>
-
+    <Container maxWidth="lg">
+      <StyledWrapDashboard>
+        <StyledTitle>
           <Button
             LinkComponent={Link}
-            size="medium"
-            variant="outlined"
-            color="decorate"
-            href={switchTheme}
-            fullWidth
+            href="/admin"
+            color="primary"
+            variant="text"
+            sx={{ minWidth: "auto" }}
           >
-            Theme settings
+            <ChevronLeftIcon />
           </Button>
+          Dashboard
+        </StyledTitle>
 
-          <Button
-            LinkComponent={Link}
-            size="medium"
-            variant="outlined"
-            color="decorate"
-            href={openSettings}
-            fullWidth
-          >
-            Settings
-          </Button>
+        {getSite && (
+          <PreviewDashboardSite
+            settingsLink={openSettings}
+            icon={getSite.icon}
+            logo={getSite.logo}
+            name={getSite.name}
+            title={getSite.title}
+            url={getSite.url}
+            image={getSite.image}
+            description={getSite.description}
+            accentColor={getSite.accentColor}
+            contributors={getSite.contributors}
+            actions={
+              <StyledActions>
+                <Button
+                  target="_blank"
+                  LinkComponent={Link}
+                  size="large"
+                  variant="contained"
+                  color="decorate"
+                  href={getSite?.url}
+                  fullWidth
+                  endIcon={<ArrowRightIcon />}
+                >
+                  Open website
+                </Button>
 
-          {userIsDelegated && (
-            <Button
-              size="medium"
-              variant="outlined"
-              color="decorate"
-              onClick={handleConnectKeys}
-              fullWidth
-            >
-              Connect keys
-            </Button>
-          )}
+                <Button
+                  LinkComponent={Link}
+                  size="large"
+                  variant="outlined"
+                  color="decorate"
+                  href={switchTheme}
+                  fullWidth
+                  endIcon={<BrushIcon />}
+                >
+                  Theme settings
+                </Button>
 
-          <Button
-            size="medium"
-            variant="outlined"
-            color="error"
-            onClick={handeOpenConfirm}
-            fullWidth
-          >
-            Delete
-          </Button>
-        </Box>
-      </Box>
-      <ModalConfirmDeleteSite
-        isOpen={isOpenConfirm}
-        siteId={siteId}
-        handleClose={handeCloseConfirm}
-      />
-    </>
+                <Button
+                  LinkComponent={Link}
+                  size="large"
+                  variant="outlined"
+                  color="decorate"
+                  href={openSettings}
+                  fullWidth
+                  endIcon={<SettingsIcon />}
+                >
+                  Settings
+                </Button>
+
+                {userIsDelegated && (
+                  <Button
+                    size="large"
+                    variant="outlined"
+                    color="decorate"
+                    onClick={handleConnectKeys}
+                    fullWidth
+                    endIcon={<VpnKeyOutlinedIcon />}
+                  >
+                    Connect keys
+                  </Button>
+                )}
+
+                <Button
+                  size="large"
+                  variant="outlined"
+                  color="error"
+                  onClick={handeOpenConfirm}
+                  fullWidth
+                  endIcon={<TrashIcon />}
+                >
+                  Delete
+                </Button>
+              </StyledActions>
+            }
+          />
+        )}
+
+        <ModalConfirmDeleteSite
+          isOpen={isOpenConfirm}
+          siteId={siteId}
+          handleClose={handeCloseConfirm}
+        />
+      </StyledWrapDashboard>
+    </Container>
   );
 };

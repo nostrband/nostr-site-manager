@@ -5,6 +5,8 @@ import {
   Dialog,
   DialogContent,
   FormControl,
+  DialogTitle,
+  DialogTitleProps,
 } from "@mui/material";
 
 export const StyledTitle = styled(Typography)(() => ({
@@ -12,13 +14,27 @@ export const StyledTitle = styled(Typography)(() => ({
   justifyContent: "space-between",
   alignItems: "center",
   fontWeight: "bold",
+  fontSize: "16px",
+  lineHeight: "20px",
+}));
+
+export const StyledText = styled(Typography)(() => ({
+  marginBottom: 16,
+  fontSize: 14,
+  lineHeight: "22px",
 }));
 
 export const StyledActionButton = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
-  gap: 10,
+  gap: 16,
 }));
+
+export const StyledDialogTitle = styled((props: DialogTitleProps) => {
+  return <DialogTitle {...props} />;
+})({
+  padding: 16,
+});
 
 export const StyledDialog = styled(Dialog)(() => ({
   "& .MuiPaper-root": {
@@ -27,7 +43,8 @@ export const StyledDialog = styled(Dialog)(() => ({
 }));
 
 export const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
-  width: "400px",
+  width: "348px",
+  padding: 16,
   [theme.breakpoints.down("sm")]: {
     width: "300px",
   },

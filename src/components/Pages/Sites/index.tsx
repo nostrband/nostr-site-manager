@@ -1,105 +1,129 @@
 "use client";
-import { HeaderOnboarding } from "@/components/HeaderOnboarding";
-import { PreviewSite } from "@/components/PreviewSite";
 import {
-  Box,
+  Alert,
   CircularProgress,
   Container,
-  Grid,
   InputAdornment,
-  OutlinedInput,
-  Typography,
 } from "@mui/material";
-import ScreenSearchDesktopTwoToneIcon from "@mui/icons-material/ScreenSearchDesktopTwoTone";
+
 import {
   SpinerWrapSites,
   StyledEmptyBlock,
-  StyledEmptyIcon,
+  StyledSearchField,
+  StyledShowMore,
   StyledTitle,
+  StyledWrapListSites,
 } from "./styled";
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { debounce } from "lodash";
 import { SpinerCircularProgress } from "@/components/Spiner";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { searchSites } from "@/services/nostr/api";
 import { LoadingButton } from "@mui/lab";
 import useResponsive from "@/hooks/useResponsive";
-
-// const debouncedSearchSites = debounce(async (text: string) => {
-//   console.log("searching", text);
-//   return await searchSites(text);
-// }, 300);
+import { InputField } from "@/components/InputField";
+import { NotFoundIcon, SearchIcon } from "@/components/Icons";
+import { ListSites } from "@/components/ListSites";
+import { HeaderDiscover } from "./components/Header";
 
 export const Sites = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState<string>("");
+  const [isMoreButton, setIsMoreButton] = useState<boolean>(false);
   const [isFetchSites, setFetchSites] = useState(false);
   const [data, setData] = useState<ReturnSettingsSiteDataType[] | undefined>();
   const [until, setUntil] = useState<number>(0);
+  const isNotFound = data && !data.length && !isFetchSites;
+  const isShowLoading = !data && isFetchSites;
+
   const isDesktop = useResponsive("up", "sm");
+  const sizeField = isDesktop ? "medium" : "small";
+
+  const fetchSites = useMemo(
+    () =>
+      debounce(
+        async (text: string) => {
+          console.log("searching", text);
+          setFetchSites(true);
+          const [data, until, isMore] = await searchSites(text);
+          setIsMoreButton(isMore);
+          setData(data);
+          setUntil(until);
+          setFetchSites(false);
+        },
+        300,
+        { trailing: true },
+      ),
+    [],
+  );
 
   useEffect(() => {
-    if (data === undefined) setFetchSites(true);
-    searchSites("").then(([data, until]) => {
-      setData(data);
-      setUntil(until);
-      setFetchSites(false);
-    });
-  }, []);
+    return () => {
+      fetchSites.cancel();
+    };
+  }, [fetchSites]);
 
-  const fetchSites = useCallback(
-    debounce(
-      async (text: string) => {
-        console.log("searching", text);
-        const [data, until] = await searchSites(text);
-        setData(data);
-        setUntil(until);
-        setFetchSites(false);
-      },
-      300,
-      { trailing: true },
-    ),
-    [setData, setUntil, setFetchSites],
+  const handleChangeWithDebounce = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const text = event.target.value;
+      setValue(text);
+      fetchSites(text);
+    },
+    [fetchSites],
   );
 
   const loadMore = useCallback(async () => {
     setFetchSites(true);
     console.log("more", value, until);
-    const [newData, newUntil] = await searchSites(value, until);
+    const [newData, newUntil, isMore] = await searchSites(value, until);
+    setIsMoreButton(isMore);
     setData([...data!, ...newData]);
     setUntil(newUntil);
     setFetchSites(false);
-  }, [setData, setUntil, data, until]);
-
-  const handleChangeWithDebounce = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setValue(event.target.value);
-      setFetchSites(true);
-      fetchSites(event.target.value);
-    },
-    [setValue, fetchSites],
-  );
+  }, [setData, setUntil, data, until, value]);
 
   useEffect(() => {
-    if (isDesktop) {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
+    if (data === undefined) {
+      setFetchSites(true);
+      searchSites("").then(([data, until, isMore]) => {
+        setIsMoreButton(isMore);
+        setData(data);
+        setUntil(until);
+        setFetchSites(false);
+      });
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (isDesktop && inputRef.current) {
+      inputRef.current.focus();
     }
   }, [isDesktop]);
 
   return (
-    <Box sx={{ paddingBottom: "50px" }}>
-      <HeaderOnboarding />
+    <>
+      <HeaderDiscover />
       <Container maxWidth="lg">
-        <StyledTitle variant="h2">Discover sites</StyledTitle>
-        <Box sx={{ maxWidth: "600px", margin: "40px auto" }}>
-          <OutlinedInput
+        <StyledTitle>Discover sites</StyledTitle>
+
+        <StyledSearchField>
+          <InputField
+            id="search-site"
             fullWidth
+            size={sizeField}
             inputRef={inputRef}
-            placeholder="Search sites..."
+            label="Search sites"
             onChange={handleChangeWithDebounce}
             value={value}
+            color="success"
+            startIcon={<SearchIcon />}
             endAdornment={
               isFetchSites ? (
                 <InputAdornment position="end">
@@ -108,74 +132,46 @@ export const Sites = () => {
               ) : null
             }
           />
-        </Box>
-      </Container>
+        </StyledSearchField>
 
-      {data && (
-        <Container maxWidth="lg">
-          <Grid
-            sx={{ width: "100%", marginTop: "40px" }}
-            container
-            spacing={{ xs: "24px", md: "30px" }}
-          >
-            {data.map((el, i) => {
-              return (
-                <Grid key={i} item xs={12} sm={6} lg={4}>
-                  <PreviewSite
-                    id={el.id}
-                    icon={el.adminAvatar || ""}
-                    logo={el.logo}
-                    name={el.name}
-                    title={el.title}
-                    url={el.url}
-                    image={el.image}
-                    description={el.description}
-                    accentColor={el.accentColor}
-                    contributors={el.contributors}
-                    adminAvatar={el.adminAvatar}
-                    adminName={el.adminName}
-                    isPublic
-                    isLinkToOpenSite={false}
-                  />
-                </Grid>
-              );
-            })}
-          </Grid>
+        {isNotFound && (
+          <StyledEmptyBlock>
+            <Alert
+              icon={<NotFoundIcon fontSize="inherit" />}
+              severity="warning"
+            >
+              <b>Sites not found</b>
+            </Alert>
+          </StyledEmptyBlock>
+        )}
 
-          <Box
-            sx={{
-              marginTop: "50px",
-              marginBottom: "50px",
-              textAlign: "center",
-            }}
-          >
+        {data && (
+          <StyledWrapListSites>
+            <ListSites data={data} />
+          </StyledWrapListSites>
+        )}
+
+        {isMoreButton && (
+          <StyledShowMore>
             <LoadingButton
               onClick={loadMore}
               loading={!data || isFetchSites}
               variant="contained"
               color="decorate"
-              sx={{ width: "280px", textAlign: "center" }}
+              fullWidth
+              size="large"
             >
               More
             </LoadingButton>
-          </Box>
-        </Container>
-      )}
+          </StyledShowMore>
+        )}
+      </Container>
 
-      {!data && isFetchSites && (
+      {isShowLoading && (
         <SpinerWrapSites>
           <SpinerCircularProgress />
         </SpinerWrapSites>
       )}
-
-      {data && !data.length && !isFetchSites && (
-        <StyledEmptyBlock>
-          <StyledEmptyIcon>
-            <ScreenSearchDesktopTwoToneIcon fontSize="inherit" />
-          </StyledEmptyIcon>
-          <Typography variant="h4">Sites not found</Typography>
-        </StyledEmptyBlock>
-      )}
-    </Box>
+    </>
   );
 };

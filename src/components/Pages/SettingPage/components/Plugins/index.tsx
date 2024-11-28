@@ -1,15 +1,16 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
-  StyledFormControl,
+  StyledDescriptionBlock,
+  StyledFormFields,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { InputLabel, OutlinedInput, Typography } from "@mui/material";
+import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 
 interface IPlugins extends IBaseSetting {
   codeinjectionHead: string;
@@ -40,24 +41,24 @@ export const Plugins = memo(
     }, [isDisabled]);
 
     return (
-      <StyledSettingCol id={HASH_CONFIG.PLUGINS}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">Plugins</Typography>
-
+      <StyledSettingBlock id={SETTINGS_CONFIG.plugins.anchor}>
+        <StyledHeadSettingBlock>
+          <StyledTitleBlock>
+            {SETTINGS_CONFIG.plugins.title}
             <SaveButton
               isEdit={isEdit}
               isLoading={isLoading}
               handleAction={handleClick}
             />
-          </StyledHeadSettingBlock>
+          </StyledTitleBlock>
 
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            You can add custom html/css/js code into the header and footer of
-            your website
-          </Typography>
+          <StyledDescriptionBlock>
+            {SETTINGS_CONFIG.plugins.description}
+          </StyledDescriptionBlock>
+        </StyledHeadSettingBlock>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
+        <StyledFormFields>
+          <FormControl disabled={!isEdit} fullWidth size="small">
             <InputLabel htmlFor="codeinjection_head">
               Code injection in header
             </InputLabel>
@@ -67,14 +68,14 @@ export const Plugins = memo(
               name="codeinjection_head"
               label="Code injection in header"
               multiline
-              rows={5}
+              rows={3}
               onChange={handleChange}
               value={codeinjectionHead}
               onBlur={handleBlur}
             />
-          </StyledFormControl>
+          </FormControl>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
+          <FormControl disabled={!isEdit} fullWidth size="small">
             <InputLabel htmlFor="codeinjection_foot">
               Code injection in footer
             </InputLabel>
@@ -83,14 +84,14 @@ export const Plugins = memo(
               name="codeinjection_foot"
               label="Code injection in footer"
               multiline
-              rows={5}
+              rows={3}
               onChange={handleChange}
               value={codeinjectionFoot}
               onBlur={handleBlur}
             />
-          </StyledFormControl>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+          </FormControl>
+        </StyledFormFields>
+      </StyledSettingBlock>
     );
   },
 );

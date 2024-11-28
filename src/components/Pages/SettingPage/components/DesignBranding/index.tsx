@@ -2,12 +2,13 @@ import React, { memo } from "react";
 import {
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
-import { Typography } from "@mui/material";
-import { HASH_CONFIG } from "@/consts";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { SETTINGS_CONFIG } from "@/consts";
 import { useRouter } from "next/navigation";
+import { BrushIcon } from "@/components/Icons";
+import { StyledText } from "./styled";
+import { SaveButton } from "../SaveButton";
 
 export const DesignBranding = memo(
   ({
@@ -26,25 +27,25 @@ export const DesignBranding = memo(
     };
 
     return (
-      <StyledSettingCol id={HASH_CONFIG.DESIGN_BRANDING}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">Theme</Typography>
-            <LoadingButton
-              color="decorate"
-              variant="outlined"
-              size="small"
-              onClick={switchTheme}
-            >
-              Theme settings
-            </LoadingButton>
-          </StyledHeadSettingBlock>
+      <StyledSettingBlock id={SETTINGS_CONFIG.theme.anchor}>
+        <StyledHeadSettingBlock>
+          <StyledTitleBlock>
+            {SETTINGS_CONFIG.theme.title}
 
-          <Typography variant="body1">
-            Current theme: <b>{themeName}</b>
-          </Typography>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+            <SaveButton
+              isEdit={false}
+              isLoading={false}
+              startIcon={<BrushIcon />}
+              text="Theme settings"
+              handleAction={switchTheme}
+            />
+          </StyledTitleBlock>
+        </StyledHeadSettingBlock>
+
+        <StyledText variant="body2">
+          Current theme: <b>{themeName}</b>
+        </StyledText>
+      </StyledSettingBlock>
     );
   },
 );

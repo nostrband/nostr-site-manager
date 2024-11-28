@@ -1,28 +1,51 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import { PageTitle } from "@/components/shared/styled";
 
 export const StyledEmptyBlock = styled(Box)(() => ({
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  flexDirection: "column",
-}));
-
-export const StyledEmptyIcon = styled(Box)(() => ({
-  fontSize: 40,
-  lineHeight: "40px",
+  maxWidth: 187,
+  margin: "0 auto",
 }));
 
 export const SpinerWrapSites = styled(Box)(() => ({
   display: "flex",
 }));
 
-export const StyledTitle = styled(Typography)(({ theme }) => ({
-  textAlign: "center",
-  margin: "40px 0",
+export const StyledTitle = styled(PageTitle)(({ theme }) => ({
+  paddingBottom: 24,
+  paddingTop: 40,
   [theme.breakpoints.down("sm")]: {
-    fontSize: "30px",
-    margin: "0",
+    paddingTop: 16,
+  },
+}));
+
+export const StyledSearchField = styled(Box)(({ theme }) => ({
+  marginBottom: 24,
+  maxWidth: 600,
+  marginLeft: "auto",
+  marginRight: "auto",
+  [theme.breakpoints.down("md")]: {
+    maxWidth: "100%",
+  },
+}));
+
+export const StyledShowMore = styled(Box)(({ theme }) => ({
+  marginBottom: "50px",
+  maxWidth: 320,
+  marginLeft: "auto",
+  marginRight: "auto",
+  borderRadius: theme.shape.borderRadius,
+  background: "#fff",
+  padding: 8,
+  [theme.breakpoints.down("md")]: {
+    marginBottom: 25,
+  },
+}));
+
+export const StyledWrapListSites = styled(Box)(({ theme }) => ({
+  paddingBottom: 50,
+  [theme.breakpoints.down("md")]: {
+    paddingBottom: 25,
   },
 }));

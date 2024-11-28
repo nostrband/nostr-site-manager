@@ -14,7 +14,7 @@ export const BeautifulThemesBenefit = () => {
     <StyledWrap>
       <StyledTitle>
         <span className="light-text">Beautiful Themes.</span> Choose from
-        hundreds of{" "}
+        hundreds of
         <span className="decorate-text">open source Ghost themes</span> that are
         easy to customize to your needs.
       </StyledTitle>

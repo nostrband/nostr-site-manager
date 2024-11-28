@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState, ChangeEvent, memo } from "react";
 import {
-  StyledFormControl,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
 import {
   InputLabel,
@@ -11,13 +10,15 @@ import {
   Typography,
   CircularProgress,
   InputAdornment,
+  FormControl,
 } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG, NPUB_PRO_DOMAIN } from "@/consts";
+import { NPUB_PRO_DOMAIN, SETTINGS_CONFIG } from "@/consts";
 import { debounce } from "lodash";
 import { checkNpubProDomain } from "@/services/nostr/themes";
+import useResponsive from "@/hooks/useResponsive";
 
 interface ITitleDescription extends IBaseSetting {
   url: string;
@@ -38,6 +39,8 @@ export const WebsiteAddress = memo(
     const [isDisabled, setDisabled] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isFetchAddress, setFetchAddress] = useState(false);
+    const isDesktop = useResponsive("up", "sm");
+    const sizeField = isDesktop ? "medium" : "small";
 
     const handleClick = () => {
       if (error) return;
@@ -71,6 +74,7 @@ export const WebsiteAddress = memo(
         return;
 
       const sub = newDomain.split("." + NPUB_PRO_DOMAIN)[0];
+
       if (!sub || sub.includes(".")) {
         setError("Bad sub domain");
         return;
@@ -101,52 +105,52 @@ export const WebsiteAddress = memo(
 
     const handleChangeWithDebounce = (event: ChangeEvent<HTMLInputElement>) => {
       const { value } = event.target;
+
+      checkUrlExists(value);
+
       if (handleChange) {
         handleChange(event);
       }
-
-      checkUrlExists(value);
     };
 
     const isLoadingSaveButton = isEdit && isFetchAddress;
 
     return (
-      <StyledSettingCol id={HASH_CONFIG.URL}>
-        <StyledSettingBlock>
-          <StyledHeadSettingBlock>
-            <Typography variant="h6">Website address</Typography>
-
+      <StyledSettingBlock id={SETTINGS_CONFIG.websiteAddress.anchor}>
+        <StyledHeadSettingBlock>
+          <StyledTitleBlock>
+            {SETTINGS_CONFIG.websiteAddress.title}
             <SaveButton
               disabled={isLoadingSaveButton}
               isEdit={isEdit}
               isLoading={isLoading}
               handleAction={handleClick}
             />
-          </StyledHeadSettingBlock>
+          </StyledTitleBlock>
+        </StyledHeadSettingBlock>
 
-          <StyledFormControl disabled={!isEdit} fullWidth size="small">
-            <InputLabel htmlFor="url">URL</InputLabel>
-            <OutlinedInput
-              inputRef={inputRef}
-              id="url"
-              name="url"
-              label="URL"
-              onChange={handleChangeWithDebounce}
-              value={url}
-              onBlur={handleBlur}
-              error={!!error}
-              endAdornment={
-                isFetchAddress ? (
-                  <InputAdornment position="end">
-                    <CircularProgress size={20} />
-                  </InputAdornment>
-                ) : null
-              }
-            />
-            {error && <Typography color="error">{error}</Typography>}
-          </StyledFormControl>
-        </StyledSettingBlock>
-      </StyledSettingCol>
+        <FormControl disabled={!isEdit} fullWidth size={sizeField}>
+          <InputLabel htmlFor="url">URL</InputLabel>
+          <OutlinedInput
+            inputRef={inputRef}
+            id="url"
+            name="url"
+            label="URL"
+            onChange={handleChangeWithDebounce}
+            value={url}
+            onBlur={handleBlur}
+            error={!!error}
+            endAdornment={
+              isFetchAddress ? (
+                <InputAdornment position="end">
+                  <CircularProgress size={20} />
+                </InputAdornment>
+              ) : null
+            }
+          />
+          {error && <Typography color="error">{error}</Typography>}
+        </FormControl>
+      </StyledSettingBlock>
     );
   },
 );

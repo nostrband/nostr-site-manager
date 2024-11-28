@@ -416,6 +416,7 @@ export async function filterDeleted(events: NDKEvent[], relays: string[]) {
   const filters = [];
   if (idFilter.ids.length) filters.push(idFilter);
   if (addrFilter["#a"].length) filters.push(addrFilter);
+  if (!filters.length) return;
 
   const dels = await fetchEvents(ndk, filters, relays, 3000);
   for (const d of dels.values()) {

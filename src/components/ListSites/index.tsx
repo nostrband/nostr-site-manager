@@ -1,64 +1,54 @@
 "use client";
-import * as React from "react";
-import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import {
-  StyledButtonAdd,
-  StyledListWrap,
-  StyledTitle,
-} from "@/components/ListSites/styled";
-import { useFirstPathElement } from "@/hooks/useFirstPathElement";
-import { Grid } from "@mui/material";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { PreviewSite } from "@/components/PreviewSite";
-import Link from "next/link";
 
-type ListSitesType = {
-  data: ReturnSettingsSiteDataType[];
-};
-export const ListSites = ({ data }: ListSitesType) => {
-  const pathAdmin = useFirstPathElement();
+import { Grid } from "@mui/material";
+import { StyledGrid } from "./styled";
+import { PreviewSite } from "@/components/PreviewSite";
+import { ReturnSettingsSiteDataType } from "@/services/sites.service";
+import { memo } from "react";
+
+export const ListSites = memo(function ListSites({
+  data,
+  isLinkToOpenSite = false,
+  isLink = true,
+  isPublic = true,
+  path = "",
+}: {
+  data: ReturnSettingsSiteDataType[] | undefined;
+  isLink?: boolean;
+  isPublic?: boolean;
+  isLinkToOpenSite?: boolean;
+  path?: string;
+}) {
+  if (!data || data.length === 0) {
+    return null;
+  }
 
   return (
-    <>
-      <StyledTitle variant="h4">
-        Your websites
-        <StyledButtonAdd
-          LinkComponent={Link}
-          href="/admin/add"
-          color="decorate"
-          variant="contained"
-        >
-          <span>Add website</span>
-          <AddCircleOutlineOutlinedIcon fontSize="small" />
-        </StyledButtonAdd>
-      </StyledTitle>
-      <StyledListWrap>
-        <Grid
-          sx={{ width: "100%", marginTop: "40px" }}
-          container
-          spacing={{ xs: "24px", md: "30px" }}
-        >
-          {data.map((el, i) => {
-            return (
-              <Grid key={i} item xs={12} sm={6} lg={4}>
-                <PreviewSite
-                  id={el.id}
-                  path={pathAdmin}
-                  icon={el.icon}
-                  logo={el.logo}
-                  name={el.name}
-                  title={el.title}
-                  url={el.url}
-                  image={el.image}
-                  description={el.description}
-                  accentColor={el.accentColor}
-                  contributors={el.contributors}
-                />
-              </Grid>
-            );
-          })}
-        </Grid>
-      </StyledListWrap>
-    </>
+    <StyledGrid container spacing={{ xs: "16px", sm: "24px" }}>
+      {data.map((el, i) => {
+        return (
+          <Grid key={i} item xs={12} sm={6} lg={4}>
+            <PreviewSite
+              id={el.id}
+              path={path}
+              icon={el.adminAvatar || el.icon || ""}
+              logo={el.logo}
+              name={el.name}
+              title={el.title}
+              url={el.url}
+              image={el.image}
+              description={el.description}
+              accentColor={el.accentColor}
+              contributors={el.contributors}
+              adminAvatar={el.adminAvatar}
+              adminName={el.adminName}
+              isPublic={isPublic}
+              isLink={isLink}
+              isLinkToOpenSite={isLinkToOpenSite}
+            />
+          </Grid>
+        );
+      })}
+    </StyledGrid>
   );
-};
+});

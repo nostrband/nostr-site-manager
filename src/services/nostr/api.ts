@@ -442,15 +442,18 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
 export async function searchSites(
   text: string,
   until?: number,
-): Promise<[ReturnSettingsSiteDataType[], number]> {
+): Promise<[ReturnSettingsSiteDataType[], number, boolean]> {
+  const limitFetchSites = 50;
   const filter: any = {
     kinds: [KIND_SITE],
-    limit: 50,
+    limit: limitFetchSites,
   };
   if (text) filter.search = text;
   if (until) filter.until = until - 1;
 
   const events = await fetchEvents(ndk, filter, SEARCH_RELAYS, 5000);
+
+  const isMore = !([...events].length < limitFetchSites);
 
   const array = [...events].sort((a, b) => b.created_at! - a.created_at!);
 
@@ -476,7 +479,7 @@ export async function searchSites(
     }
   });
 
-  return [res, array.length ? array[sites.length - 1].created_at! : 0];
+  return [res, array.length ? array[sites.length - 1].created_at! : 0, isMore];
 }
 
 export const fetchCertDomain = async (domain: string) => {

@@ -13,11 +13,7 @@ import {
 } from "./nostr";
 import { KIND_SITE, SITE_RELAY, eventId, tv } from "libnostrsite";
 import { nip19 } from "nostr-tools";
-import {
-  fetchSites,
-  findSiteEvent,
-  resetSites,
-} from "./api";
+import { fetchSites, findSiteEvent, resetSites } from "./api";
 import { NPUB_PRO_API } from "@/consts";
 
 export function isNeedMigrateKey(siteId: string) {
@@ -31,7 +27,7 @@ export async function migrateToConnectedKey(siteId: string) {
   // is user authed with OTP?
   if (userIsDelegated || userIsReadOnly) {
     document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "import-otp" })
+      new CustomEvent("nlLaunch", { detail: "import-otp" }),
     );
 
     console.log("key migration, old pubkey", pubkey);
@@ -101,7 +97,7 @@ export async function migrateToConnectedKey(siteId: string) {
       "from old site",
       siteEvent,
       "to",
-      relays
+      relays,
     );
     const newSite = await publishSiteEvent(event, relays);
     console.log("published new site event", newSite);
@@ -113,12 +109,12 @@ export async function migrateToConnectedKey(siteId: string) {
       "from",
       siteId,
       "to",
-      newSiteId
+      newSiteId,
     );
 
     // migrate
     const reply = await fetchWithSession(
-      `${NPUB_PRO_API}/migrate?from=${siteId}&to=${newSiteId}&fromId=${siteEvent.id}&relays=${relays}`
+      `${NPUB_PRO_API}/migrate?from=${siteId}&to=${newSiteId}&fromId=${siteEvent.id}&relays=${relays}`,
     );
     if (reply.status !== 200) throw new Error("Failed to migrate");
     const r = await reply.json();

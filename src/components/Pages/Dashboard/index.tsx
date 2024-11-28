@@ -1,21 +1,31 @@
 "use client";
 import Link from "next/link";
-import { Box, Button } from "@mui/material";
+import { Button, Container } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
 import { useParams, useRouter } from "next/navigation";
-import { TitleAdmin } from "@/components/TitleAdmin";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import React, { useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
-import { PreviewSite } from "@/components/PreviewSite";
+
 import {
   isNeedMigrateKey,
   migrateToConnectedKey,
 } from "@/services/nostr/migrate";
 import { useSnackbar } from "notistack";
+import { StyledActions, StyledTitle, StyledWrapDashboard } from "./styled";
+import {
+  ArrowRightIcon,
+  BrushIcon,
+  ChevronLeftIcon,
+  SettingsIcon,
+  TrashIcon,
+} from "@/components/Icons";
+import { PreviewDashboardSite } from "./components/PreviewDashboardSite";
+import { LoadingButton } from "@mui/lab";
 
 export const Dashboard = () => {
   const [isOpenConfirm, setOpenConfirm] = useState(false);
+  const [isLoadingConnectKeys, setLoadingConnectKeys] = useState(false);
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { data, isLoading, isFetching } = useListSites();
@@ -41,7 +51,8 @@ export const Dashboard = () => {
   };
 
   const handleConnectKeys = async () => {
-    // FIXME show spinner
+    setLoadingConnectKeys(true);
+
     try {
       const newSiteId = await migrateToConnectedKey(siteId);
       enqueueSnackbar("Keys connected!", {
@@ -53,10 +64,13 @@ export const Dashboard = () => {
         },
       });
       setTimeout(() => {
-        // FIXME hide spinner
-        router.push(`/admin/${newSiteId}`)
-      }, 500)
+        setLoadingConnectKeys(false);
+
+        router.push(`/admin/${newSiteId}`);
+      }, 500);
     } catch (e: any) {
+      setLoadingConnectKeys(false);
+
       console.log("error", e);
       enqueueSnackbar("Error: " + e.toString(), {
         autoHideDuration: 3000,
@@ -78,106 +92,109 @@ export const Dashboard = () => {
   }
 
   return (
-    <>
-      <TitleAdmin>Dashboard</TitleAdmin>
-
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "10px",
-        }}
-      >
-        <Box sx={{ maxWidth: "400px", width: "100%" }}>
-          {getSite && (
-            <PreviewSite
-              icon={getSite.icon}
-              logo={getSite.logo}
-              name={getSite.name}
-              title={getSite.title}
-              url={getSite.url}
-              image={getSite.image}
-              description={getSite.description}
-              accentColor={getSite.accentColor}
-              contributors={getSite.contributors}
-              isLink={false}
-              isLinkToOpenSite={false}
-            />
-          )}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            maxWidth: "400px",
-            width: "100%",
-            gap: "10px",
-            flexDirection: "column",
-          }}
-        >
-          {/* @ts-expect-error */}
-          <Button
-            target="_blank"
-            LinkComponent={Link}
-            size="medium"
-            variant="outlined"
-            color="decorate"
-            href={getSite?.url}
-            fullWidth
-          >
-            Open website
-          </Button>
-
+    <Container maxWidth="lg">
+      <StyledWrapDashboard>
+        <StyledTitle>
           <Button
             LinkComponent={Link}
-            size="medium"
-            variant="outlined"
-            color="decorate"
-            href={switchTheme}
-            fullWidth
+            href="/admin"
+            color="primary"
+            variant="text"
+            sx={{ minWidth: "auto" }}
           >
-            Theme settings
+            <ChevronLeftIcon />
           </Button>
+          Dashboard
+        </StyledTitle>
 
-          <Button
-            LinkComponent={Link}
-            size="medium"
-            variant="outlined"
-            color="decorate"
-            href={openSettings}
-            fullWidth
-          >
-            Settings
-          </Button>
+        {getSite && (
+          <PreviewDashboardSite
+            settingsLink={openSettings}
+            icon={getSite.icon}
+            logo={getSite.logo}
+            name={getSite.name}
+            title={getSite.title}
+            url={getSite.url}
+            image={getSite.image}
+            description={getSite.description}
+            accentColor={getSite.accentColor}
+            contributors={getSite.contributors}
+            actions={
+              <StyledActions>
+                <Button
+                  target="_blank"
+                  LinkComponent={Link}
+                  size="large"
+                  variant="contained"
+                  color="decorate"
+                  href={getSite?.url}
+                  fullWidth
+                  endIcon={<ArrowRightIcon />}
+                >
+                  Open website
+                </Button>
 
-          {isNeedMigrateKey(siteId) && (
-            <Button
-              size="medium"
-              variant="outlined"
-              color="decorate"
-              onClick={handleConnectKeys}
-              fullWidth
-            >
-              Connect keys
-            </Button>
-          )}
+                <Button
+                  LinkComponent={Link}
+                  size="large"
+                  variant="outlined"
+                  color="decorate"
+                  href={switchTheme}
+                  fullWidth
+                  endIcon={<BrushIcon />}
+                >
+                  Theme settings
+                </Button>
 
-          <Button
-            size="medium"
-            variant="outlined"
-            color="error"
-            onClick={handeOpenConfirm}
-            fullWidth
-          >
-            Delete
-          </Button>
-        </Box>
-      </Box>
-      <ModalConfirmDeleteSite
-        isOpen={isOpenConfirm}
-        siteId={siteId}
-        handleClose={handeCloseConfirm}
-      />
-    </>
+                <Button
+                  LinkComponent={Link}
+                  size="large"
+                  variant="outlined"
+                  color="decorate"
+                  href={openSettings}
+                  fullWidth
+                  endIcon={<SettingsIcon />}
+                >
+                  Settings
+                </Button>
+
+                {isNeedMigrateKey(siteId) && (
+                  <LoadingButton
+                    color="decorate"
+                    variant="outlined"
+                    type="submit"
+                    fullWidth
+                    size="large"
+                    loading={isLoadingConnectKeys}
+                    disabled={isLoadingConnectKeys}
+                    endIcon={<SettingsIcon />}
+                    onClick={handleConnectKeys}
+                  >
+                    Connect keys
+                  </LoadingButton>
+                )}
+
+                <Button
+                  size="large"
+                  variant="outlined"
+                  color="error"
+                  onClick={handeOpenConfirm}
+                  fullWidth
+                  endIcon={<TrashIcon />}
+                >
+                  Delete
+                </Button>
+              </StyledActions>
+            }
+          />
+        )}
+
+        <ModalConfirmDeleteSite
+          isOpen={isOpenConfirm}
+          siteId={siteId}
+          handleClose={handeCloseConfirm}
+        />
+      </StyledWrapDashboard>
+    </Container>
   );
 };

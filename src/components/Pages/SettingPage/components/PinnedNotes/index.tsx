@@ -8,9 +8,10 @@ import React, {
 } from "react";
 import _, { debounce } from "lodash";
 import {
+  StyledDescriptionBlock,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledSettingCol,
+  StyledTitleBlock,
 } from "../../styled";
 import {
   Autocomplete,
@@ -20,7 +21,6 @@ import {
   CircularProgress,
   DialogTitle,
   Fab,
-  Link,
   List,
   TextField,
   Typography,
@@ -29,7 +29,7 @@ import { DropResult } from "@hello-pangea/dnd";
 import CloseIcon from "@mui/icons-material/Close";
 import { SaveButton } from "../SaveButton";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
-import { HASH_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG } from "@/consts";
 import { IPinnedNote } from "./types";
 import { PinnedNote } from "./components/PinnedNote";
 import { StyledDialog, StyledDialogContent, StyledTitle } from "./styled";
@@ -72,7 +72,7 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
   const [inputValue, setInputValue] = useState("");
   const [dataPinnedNotes, setDataPinnedNotes] = useState<IPinnedNote[]>([]);
   const [originalPinnedNotes, setOriginalPinnedNotes] = useState<IPinnedNote[]>(
-    []
+    [],
   );
 
   const [options, setOptions] = useState<IPinnedNote[]>([]);
@@ -90,7 +90,7 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
       try {
         await savePins(
           siteId,
-          dataPinnedNotes.map((p) => p.id)
+          dataPinnedNotes.map((p) => p.id),
         );
         setOriginalPinnedNotes(dataPinnedNotes);
         setIsEdit(false);
@@ -130,11 +130,11 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
 
   const handlePin = (
     _: SyntheticEvent<Element, Event>,
-    pinnedNote: IPinnedNote | string | null
+    pinnedNote: IPinnedNote | string | null,
   ) => {
     if (pinnedNote !== null && typeof pinnedNote !== "string") {
       const isAlreadyPinned = dataPinnedNotes.some(
-        (note) => note.id === pinnedNote.id
+        (note) => note.id === pinnedNote.id,
       );
 
       if (!isAlreadyPinned) {
@@ -188,11 +188,10 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
   }, [inputValue, debouncedFetchData, setOptions, siteId]);
 
   return (
-    <StyledSettingCol id={HASH_CONFIG.PINNED_NOTES}>
-      <StyledSettingBlock>
-        <StyledHeadSettingBlock>
-          <Typography variant="h6">Pinned/Featured content</Typography>
-
+    <StyledSettingBlock id={SETTINGS_CONFIG.pinnedContent.anchor}>
+      <StyledHeadSettingBlock>
+        <StyledTitleBlock>
+          {SETTINGS_CONFIG.pinnedContent.title}
           {!userIsDelegated && (
             <SaveButton
               isEdit={isEdit}
@@ -200,7 +199,11 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
               handleAction={handleAction}
             />
           )}
-        </StyledHeadSettingBlock>
+        </StyledTitleBlock>
+
+        <StyledDescriptionBlock>
+          {SETTINGS_CONFIG.pinnedContent.description}
+        </StyledDescriptionBlock>
 
         <Typography variant="body2" sx={{ mb: 1 }}>
           Pin some content to prioritize it on your site
@@ -209,9 +212,10 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
             so we keep "connect keys" separate for now
         {userIsDelegated && (
           <>
-            <Typography variant="body2" sx={{ mb: 1 }} color={"red"}>
+            <StyledDescriptionBlock color="red">
               Please connect your Nostr keys to edit the pinned notes!
-            </Typography>
+            </StyledDescriptionBlock>
+
             <Button
               size="medium"
               variant="outlined"
@@ -223,131 +227,128 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
             </Button>
           </>
         )} */}
+      </StyledHeadSettingBlock>
+      {isLoading && dataPinnedNotes.length === 0 ? (
+        <CircularProgress />
+      ) : (
+        <List sx={{ p: 0 }}>
+          {dataPinnedNotes.map((el) => (
+            <PinnedNote
+              key={el.id}
+              id={el.id}
+              title={el.title}
+              summary={el.summary}
+              picture={el.picture}
+              datetime={el.datetime}
+            />
+          ))}
+        </List>
+      )}
 
-        {isLoading && dataPinnedNotes.length === 0 ? (
-          <CircularProgress />
-        ) : (
-          <List sx={{ p: 0 }}>
-            {dataPinnedNotes.map((el) => (
-              <PinnedNote
-                key={el.id}
-                id={el.id}
-                title={el.title}
-                summary={el.summary}
-                picture={el.picture}
-                datetime={el.datetime}
-              />
-            ))}
-          </List>
-        )}
+      <StyledDialog onClose={handleClose} open={isOpen}>
+        <DialogTitle>
+          <StyledTitle variant="body1">
+            Manage pinned posts
+            <Fab
+              onClick={handleClose}
+              size="small"
+              color="primary"
+              aria-label="close"
+            >
+              <CloseIcon />
+            </Fab>
+          </StyledTitle>
+        </DialogTitle>
+        <StyledDialogContent>
+          <Typography sx={{ mt: 1, mb: 1 }} variant="body2">
+            Pin posts to always show them at the top and to mark them as
+            <em>featured</em>, if supported by your theme.
+          </Typography>
+          <Autocomplete
+            freeSolo
+            disablePortal
+            clearIcon={<CloseOutlinedIcon onClick={() => setInputValue("")} />}
+            loading={isLoading}
+            loadingText={"Searching..."}
+            options={options}
+            onChange={handlePin}
+            inputValue={inputValue}
+            filterOptions={(options) => options}
+            getOptionLabel={(option) =>
+              typeof option === "string" ? option : option.title
+            }
+            renderOption={(props, option) => {
+              const isAlreadyPinned = dataPinnedNotes.some(
+                (note) => note.id === option.id,
+              );
 
-        <StyledDialog onClose={handleClose} open={isOpen}>
-          <DialogTitle>
-            <StyledTitle variant="body1">
-              Manage pinned posts
-              <Fab
-                onClick={handleClose}
-                size="small"
-                color="primary"
-                aria-label="close"
-              >
-                <CloseIcon />
-              </Fab>
-            </StyledTitle>
-          </DialogTitle>
-          <StyledDialogContent>
-            <Typography sx={{ mt: 1, mb: 1 }} variant="body2">
-              Pin posts to always show them at the top and to mark them as{" "}
-              <em>featured</em>, if supported by your theme.
-            </Typography>
-            <Autocomplete
-              freeSolo
-              disablePortal
-              clearIcon={
-                <CloseOutlinedIcon onClick={() => setInputValue("")} />
-              }
-              loading={isLoading}
-              loadingText={"Searching..."}
-              options={options}
-              onChange={handlePin}
-              inputValue={inputValue}
-              filterOptions={(options) => options}
-              getOptionLabel={(option) =>
-                typeof option === "string" ? option : option.title
-              }
-              renderOption={(props, option) => {
-                const isAlreadyPinned = dataPinnedNotes.some(
-                  (note) => note.id === option.id
-                );
+              return typeof option === "string" ? (
+                option
+              ) : (
+                <>
+                  <StyledItemWrap {...props} key={option.id}>
+                    <StyledItemAvatar
+                      variant="rounded"
+                      alt={option.title}
+                      src={option.picture}
+                    >
+                      <InsertPhotoOutlinedIcon />
+                    </StyledItemAvatar>
 
-                return typeof option === "string" ? (
-                  option
-                ) : (
-                  <>
-                    <StyledItemWrap {...props} key={option.id}>
-                      <StyledItemAvatar
-                        variant="rounded"
-                        alt={option.title}
-                        src={option.picture}
+                    <StyledWrapInfo>
+                      <StyledTitleItem>{option.title}</StyledTitleItem>
+                      <StyledSummary variant="body2">
+                        {option.summary}
+                      </StyledSummary>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          aliginItems: "center",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          width: "100%",
+                        }}
                       >
-                        <InsertPhotoOutlinedIcon />
-                      </StyledItemAvatar>
+                        <Chip
+                          size="small"
+                          icon={<AccessTimeOutlinedIcon />}
+                          label={getDateTime(option.datetime)}
+                        />
 
-                      <StyledWrapInfo>
-                        <StyledTitleItem>{option.title}</StyledTitleItem>
-                        <StyledSummary variant="body2">
-                          {option.summary}
-                        </StyledSummary>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            aliginItems: "center",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            width: "100%",
-                          }}
-                        >
-                          <Chip
-                            size="small"
-                            icon={<AccessTimeOutlinedIcon />}
-                            label={getDateTime(option.datetime)}
-                          />
-
-                          {isAlreadyPinned ? (
-                            <CheckCircleOutlinedIcon htmlColor="#5bc892" />
-                          ) : (
-                            <PushPinOutlinedIcon color="info" />
-                          )}
-                        </Box>
-                      </StyledWrapInfo>
-                    </StyledItemWrap>
-                  </>
-                );
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  placeholder="Search posts"
-                  onChange={(event) => setInputValue(event.target.value)}
-                />
-              )}
-            />
-
-            <ListPinnedNote
-              handleRemove={handleRemove}
-              items={dataPinnedNotes}
-              onDragEnd={onDragEnd}
-            />
-            {Boolean(dataPinnedNotes.length) && (
-              <Typography sx={{ mt: 1 }} variant="body2">
-                Drag & drop to change the order
-              </Typography>
+                        {isAlreadyPinned ? (
+                          <CheckCircleOutlinedIcon htmlColor="#5bc892" />
+                        ) : (
+                          <PushPinOutlinedIcon color="info" />
+                        )}
+                      </Box>
+                    </StyledWrapInfo>
+                  </StyledItemWrap>
+                </>
+              );
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                placeholder="Search posts"
+                onChange={(event) => setInputValue(event.target.value)}
+              />
             )}
-          </StyledDialogContent>
-        </StyledDialog>
-      </StyledSettingBlock>
-    </StyledSettingCol>
+          />
+
+          <ListPinnedNote
+            handleRemove={handleRemove}
+            items={dataPinnedNotes}
+            onDragEnd={onDragEnd}
+          />
+          {Boolean(dataPinnedNotes.length) && (
+            <Typography sx={{ mt: 1 }} variant="body2">
+              Drag & drop to change the order
+            </Typography>
+          )}
+        </StyledDialogContent>
+      </StyledDialog>
+    </StyledSettingBlock>
   );
 });
 

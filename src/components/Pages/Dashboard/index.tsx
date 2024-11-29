@@ -17,6 +17,7 @@ import {
   ArrowRightIcon,
   BrushIcon,
   ChevronLeftIcon,
+  KeyIcon,
   SettingsIcon,
   TrashIcon,
 } from "@/components/Icons";
@@ -167,7 +168,7 @@ export const Dashboard = () => {
                     size="large"
                     loading={isLoadingConnectKeys}
                     disabled={isLoadingConnectKeys}
-                    endIcon={<SettingsIcon />}
+                    endIcon={<KeyIcon />}
                     onClick={handleConnectKeys}
                   >
                     Connect keys

@@ -6,21 +6,29 @@ import { useParams, useRouter } from "next/navigation";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import React, { useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
-import { userIsDelegated } from "@/services/nostr/nostr";
-import VpnKeyOutlinedIcon from "@mui/icons-material/VpnKeyOutlined";
+
+import {
+  isNeedMigrateKey,
+  migrateToConnectedKey,
+} from "@/services/nostr/migrate";
+import { useSnackbar } from "notistack";
 import { StyledActions, StyledTitle, StyledWrapDashboard } from "./styled";
 import {
   ArrowRightIcon,
   BrushIcon,
   ChevronLeftIcon,
+  KeyIcon,
   SettingsIcon,
   TrashIcon,
 } from "@/components/Icons";
 import { PreviewDashboardSite } from "./components/PreviewDashboardSite";
+import { LoadingButton } from "@mui/lab";
 
 export const Dashboard = () => {
   const [isOpenConfirm, setOpenConfirm] = useState(false);
+  const [isLoadingConnectKeys, setLoadingConnectKeys] = useState(false);
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   const { data, isLoading, isFetching } = useListSites();
   console.log({
     data,
@@ -43,10 +51,37 @@ export const Dashboard = () => {
     if (deleted) router.push(`/admin`);
   };
 
-  const handleConnectKeys = () => {
-    document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "import-otp" }),
-    );
+  const handleConnectKeys = async () => {
+    setLoadingConnectKeys(true);
+
+    try {
+      const newSiteId = await migrateToConnectedKey(siteId);
+      enqueueSnackbar("Keys connected!", {
+        autoHideDuration: 3000,
+        variant: "success",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
+      });
+      setTimeout(() => {
+        setLoadingConnectKeys(false);
+
+        router.push(`/admin/${newSiteId}`);
+      }, 500);
+    } catch (e: any) {
+      setLoadingConnectKeys(false);
+
+      console.log("error", e);
+      enqueueSnackbar("Error: " + e.toString(), {
+        autoHideDuration: 3000,
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
+      });
+    }
   };
 
   if (isLoading || isFetching) {
@@ -124,17 +159,20 @@ export const Dashboard = () => {
                   Settings
                 </Button>
 
-                {userIsDelegated && (
-                  <Button
-                    size="large"
-                    variant="outlined"
+                {isNeedMigrateKey(siteId) && (
+                  <LoadingButton
                     color="decorate"
-                    onClick={handleConnectKeys}
+                    variant="outlined"
+                    type="submit"
                     fullWidth
-                    endIcon={<VpnKeyOutlinedIcon />}
+                    size="large"
+                    loading={isLoadingConnectKeys}
+                    disabled={isLoadingConnectKeys}
+                    endIcon={<KeyIcon />}
+                    onClick={handleConnectKeys}
                   >
                     Connect keys
-                  </Button>
+                  </LoadingButton>
                 )}
 
                 <Button

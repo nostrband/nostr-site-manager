@@ -15,6 +15,7 @@ import { CustomDomainForm } from "../CustomDomainForm";
 import { fetchDomains } from "@/services/nostr/api";
 import { enqueueSnackbar } from "notistack";
 import { userIsReadOnly } from "@/services/nostr/nostr";
+import { PlusCircleIcon, PlusIcon } from "@/components/Icons";
 
 interface ICustomDomains extends IBaseSetting {
   siteId: string;
@@ -100,39 +101,39 @@ export const CustomDomains = memo(
             </StyledDescriptionBlock>
           )}
 
-          {Boolean(listDomains.length) ? (
-            <>
-              {listDomains.map((el, i) => (
-                <Typography key={i} variant="body2">
-                  {el}
-                </Typography>
-              ))}
-            </>
-          ) : (
-            <StyledDescriptionBlock>
-              {SETTINGS_CONFIG.customDomains.description}
-            </StyledDescriptionBlock>
-          )}
+          <StyledDescriptionBlock>
+            {Boolean(listDomains.length) ? (
+              <>
+                {listDomains.map((el, i) => (
+                  <Typography key={i} variant="body2">
+                    {el}
+                  </Typography>
+                ))}
+              </>
+            ) : (
+              SETTINGS_CONFIG.customDomains.description
+            )}
+          </StyledDescriptionBlock>
         </StyledHeadSettingBlock>
 
-        <FormControl sx={{ mt: 1 }} disabled={!isEdit} fullWidth size="small">
-          <Button
-            sx={{ mt: 1 }}
-            variant="contained"
-            disabled={!isEdit}
-            color="primary"
-            onClick={handleOpenCustomDomain}
-          >
-            Add custom domain
-          </Button>
+        <Button
+          variant="contained"
+          disabled={!isEdit}
+          color="decorate"
+          size="large"
+          fullWidth
+          onClick={handleOpenCustomDomain}
+          endIcon={<PlusCircleIcon fontSize="inherit" />}
+        >
+          Add custom domain
+        </Button>
 
-          <CustomDomainForm
-            onClose={handleCloseCustomDomain}
-            isOpen={isOpenCustomDomain}
-            siteId={siteId}
-            updateWebSiteAddress={handleUpdateWebSiteAddress}
-          />
-        </FormControl>
+        <CustomDomainForm
+          onClose={handleCloseCustomDomain}
+          isOpen={isOpenCustomDomain}
+          siteId={siteId}
+          updateWebSiteAddress={handleUpdateWebSiteAddress}
+        />
       </StyledSettingBlock>
     );
   },

@@ -14,7 +14,7 @@ export const reorder = <T>(
 
 export const getDateTime = (dateString: string) => {
   const date = parseISO(dateString);
-  const formattedDate = format(date, "d MMMM yyyy, HH:mm");
+  const formattedDate = format(date, "MMM d, yyyy HH:mm");
 
   return formattedDate;
 };

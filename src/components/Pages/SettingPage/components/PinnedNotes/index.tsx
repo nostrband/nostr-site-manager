@@ -15,41 +15,38 @@ import {
 } from "../../styled";
 import {
   Autocomplete,
-  Box,
   Button,
-  Chip,
   CircularProgress,
-  DialogTitle,
-  Fab,
-  List,
+  IconButton,
+  ListItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { DropResult } from "@hello-pangea/dnd";
-import CloseIcon from "@mui/icons-material/Close";
 import { SaveButton } from "../SaveButton";
-import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 import { SETTINGS_CONFIG } from "@/consts";
 import { IPinnedNote } from "./types";
 import { PinnedNote } from "./components/PinnedNote";
-import { StyledDialog, StyledDialogContent, StyledTitle } from "./styled";
-import { getDateTime, reorder } from "./helpers";
+import {
+  StyledDescription,
+  StyledDescriptionBottom,
+  StyledDialog,
+  StyledDialogContent,
+  StyledDialogTitle,
+  StyledList,
+  StyledTitle,
+} from "./styled";
+import { reorder } from "./helpers";
 import { ListPinnedNote } from "./components/ListPinnedNote";
 import { fetchPins, savePins, searchPosts } from "@/services/nostr/api";
 import { Post } from "libnostrsite";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import {
-  StyledItemAvatar,
-  StyledItemWrap,
-  StyledSummary,
-  StyledTitleItem,
-  StyledWrapInfo,
-} from "./components/PinnedNote/styled";
+import { StyledItemWrapDiv } from "./components/PinnedNote/styled";
 import { userIsDelegated } from "@/services/nostr/nostr";
 import { enqueueSnackbar } from "notistack";
+import { PinnedNoteContent } from "./components/PinnedNoteContent";
+import { CrossIcon, PinFillIcon, PinIcon } from "@/components/Icons";
+import useResponsive from "@/hooks/useResponsive";
 
 function convertPosts(posts: Post[]) {
   const pins: IPinnedNote[] = [];
@@ -76,6 +73,9 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
   );
 
   const [options, setOptions] = useState<IPinnedNote[]>([]);
+
+  const isDesktop = useResponsive("up", "sm");
+  const sizeField = isDesktop ? "medium" : "small";
 
   const handleRemove = (id: string) => {
     const updatedNotes = dataPinnedNotes.filter((note) => note.id !== id);
@@ -231,7 +231,7 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
       {isLoading && dataPinnedNotes.length === 0 ? (
         <CircularProgress />
       ) : (
-        <List sx={{ p: 0 }}>
+        <StyledList>
           {dataPinnedNotes.map((el) => (
             <PinnedNote
               key={el.id}
@@ -242,31 +242,32 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
               datetime={el.datetime}
             />
           ))}
-        </List>
+        </StyledList>
       )}
 
       <StyledDialog onClose={handleClose} open={isOpen}>
-        <DialogTitle>
+        <StyledDialogTitle>
           <StyledTitle variant="body1">
             Manage pinned posts
-            <Fab
+            <Button
               onClick={handleClose}
-              size="small"
-              color="primary"
-              aria-label="close"
+              variant="text"
+              color="secondary"
+              sx={{ minWidth: "auto" }}
             >
-              <CloseIcon />
-            </Fab>
+              <CrossIcon color="inherit" />
+            </Button>
           </StyledTitle>
-        </DialogTitle>
+        </StyledDialogTitle>
         <StyledDialogContent>
-          <Typography sx={{ mt: 1, mb: 1 }} variant="body2">
+          <StyledDescription variant="body2">
             Pin posts to always show them at the top and to mark them as
-            <em>featured</em>, if supported by your theme.
-          </Typography>
+            featured, if supported by your theme.
+          </StyledDescription>
           <Autocomplete
             freeSolo
             disablePortal
+            size={sizeField}
             clearIcon={<CloseOutlinedIcon onClick={() => setInputValue("")} />}
             loading={isLoading}
             loadingText={"Searching..."}
@@ -285,52 +286,42 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
               return typeof option === "string" ? (
                 option
               ) : (
-                <>
-                  <StyledItemWrap {...props} key={option.id}>
-                    <StyledItemAvatar
-                      variant="rounded"
-                      alt={option.title}
-                      src={option.picture}
-                    >
-                      <InsertPhotoOutlinedIcon />
-                    </StyledItemAvatar>
-
-                    <StyledWrapInfo>
-                      <StyledTitleItem>{option.title}</StyledTitleItem>
-                      <StyledSummary variant="body2">
-                        {option.summary}
-                      </StyledSummary>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          aliginItems: "center",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          width: "100%",
-                        }}
-                      >
-                        <Chip
+                <ListItem
+                  sx={{ padding: "0 !important" }}
+                  {...props}
+                  key={option.id}
+                >
+                  <StyledItemWrapDiv>
+                    <PinnedNoteContent
+                      id={option.id}
+                      title={option.title}
+                      summary={option.summary}
+                      picture={option.picture}
+                      datetime={option.datetime}
+                      secondaryAction={
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          color="decorate"
                           size="small"
-                          icon={<AccessTimeOutlinedIcon />}
-                          label={getDateTime(option.datetime)}
-                        />
-
-                        {isAlreadyPinned ? (
-                          <CheckCircleOutlinedIcon htmlColor="#5bc892" />
-                        ) : (
-                          <PushPinOutlinedIcon color="info" />
-                        )}
-                      </Box>
-                    </StyledWrapInfo>
-                  </StyledItemWrap>
-                </>
+                        >
+                          {isAlreadyPinned ? (
+                            <PinFillIcon fontSize="inherit" />
+                          ) : (
+                            <PinIcon fontSize="inherit" />
+                          )}
+                        </IconButton>
+                      }
+                    />
+                  </StyledItemWrapDiv>
+                </ListItem>
               );
             }}
             renderInput={(params) => (
               <TextField
                 {...params}
                 variant="outlined"
-                placeholder="Search posts"
+                label="Search"
                 onChange={(event) => setInputValue(event.target.value)}
               />
             )}
@@ -341,10 +332,11 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
             items={dataPinnedNotes}
             onDragEnd={onDragEnd}
           />
+
           {Boolean(dataPinnedNotes.length) && (
-            <Typography sx={{ mt: 1 }} variant="body2">
+            <StyledDescriptionBottom variant="body2">
               Drag & drop to change the order
-            </Typography>
+            </StyledDescriptionBottom>
           )}
         </StyledDialogContent>
       </StyledDialog>

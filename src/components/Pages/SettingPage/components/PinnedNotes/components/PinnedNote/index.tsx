@@ -1,20 +1,9 @@
 "use client";
 import { Draggable } from "@hello-pangea/dnd";
-import { Chip } from "@mui/material";
 import { IPinnedNote } from "../../types";
 import React from "react";
-import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import {
-  StyledIdItem,
-  StyledItemAvatar,
-  StyledItemWrap,
-  StyledSecondaryAction,
-  StyledSummary,
-  StyledTitleItem,
-  StyledWrapInfo,
-} from "./styled";
-import { getDateTime } from "../../helpers";
+import { StyledItemWrap } from "./styled";
+import { PinnedNoteContent } from "../PinnedNoteContent";
 
 interface PinnedNoteItem extends IPinnedNote {
   secondaryAction?: React.ReactNode;
@@ -46,26 +35,14 @@ export const PinnedNote = ({
               opacity: snapshot.isDragging ? "0.5" : "1",
             }}
           >
-            <StyledItemAvatar variant="rounded" alt={title} src={picture}>
-              <InsertPhotoOutlinedIcon />
-            </StyledItemAvatar>
-
-            <StyledWrapInfo>
-              <StyledTitleItem>{title}</StyledTitleItem>
-              <StyledSummary variant="body2">{summary}</StyledSummary>
-              <Chip
-                size="small"
-                icon={<AccessTimeOutlinedIcon />}
-                label={getDateTime(datetime)}
-              />
-              <StyledIdItem variant="body2">
-                <small>{id}</small>
-              </StyledIdItem>
-
-              {secondaryAction ? (
-                <StyledSecondaryAction>{secondaryAction}</StyledSecondaryAction>
-              ) : null}
-            </StyledWrapInfo>
+            <PinnedNoteContent
+              datetime={datetime}
+              title={title}
+              picture={picture}
+              secondaryAction={secondaryAction}
+              summary={summary}
+              id={id}
+            />
           </StyledItemWrap>
         )}
       </Draggable>
@@ -74,26 +51,14 @@ export const PinnedNote = ({
 
   return (
     <StyledItemWrap alignItems="flex-start">
-      <StyledItemAvatar variant="rounded" alt={title} src={picture}>
-        <InsertPhotoOutlinedIcon />
-      </StyledItemAvatar>
-
-      <StyledWrapInfo>
-        <StyledTitleItem>{title}</StyledTitleItem>
-        <StyledSummary variant="body2">{summary}</StyledSummary>
-        <Chip
-          size="small"
-          icon={<AccessTimeOutlinedIcon />}
-          label={getDateTime(datetime)}
-        />
-        <StyledIdItem variant="body2">
-          <small>{id}</small>
-        </StyledIdItem>
-
-        {secondaryAction ? (
-          <StyledSecondaryAction>{secondaryAction}</StyledSecondaryAction>
-        ) : null}
-      </StyledWrapInfo>
+      <PinnedNoteContent
+        datetime={datetime}
+        title={title}
+        picture={picture}
+        secondaryAction={secondaryAction}
+        summary={summary}
+        id={id}
+      />
     </StyledItemWrap>
   );
 };

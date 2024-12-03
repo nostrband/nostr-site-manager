@@ -143,13 +143,6 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
     }
   };
 
-  const handleConnectKeys = () => {
-    document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "import-otp" }),
-    );
-  };
-
-  console.log("siteId", siteId);
   useEffect(() => {
     setLoading(true);
     fetchPins(siteId)
@@ -212,6 +205,11 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
           {SETTINGS_CONFIG.pinnedContent.description}
         </StyledDescriptionBlock>
 
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Pin some content to prioritize it on your site
+        </Typography>
+        {/* requires passing in a site, and might be confusing,
+            so we keep "connect keys" separate for now
         {userIsDelegated && (
           <>
             <StyledDescriptionBlock color="red">
@@ -228,9 +226,8 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
               Connect keys
             </Button>
           </>
-        )}
+        )} */}
       </StyledHeadSettingBlock>
-
       {isLoading && dataPinnedNotes.length === 0 ? (
         <CircularProgress />
       ) : (

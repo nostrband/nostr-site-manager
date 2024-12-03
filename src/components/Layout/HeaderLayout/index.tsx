@@ -12,11 +12,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { nip19 } from "nostr-tools";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
-import {
-  AuthContext,
-  userIsDelegated,
-  userPubkey,
-} from "@/services/nostr/nostr";
+import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { useParams, useRouter } from "next/navigation";
 import IconButton from "@mui/material/IconButton";
@@ -65,13 +61,6 @@ export const HeaderLayout = () => {
 
   const handleSwitchAccount = () => {
     document.dispatchEvent(new Event("nlLaunch"));
-    handleCloseUserMenu();
-  };
-
-  const handleConnectKeys = () => {
-    document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "import-otp" }),
-    );
     handleCloseUserMenu();
   };
 
@@ -140,11 +129,6 @@ export const HeaderLayout = () => {
             },
           }}
         >
-          {userIsDelegated && (
-            <MenuItem onClick={handleConnectKeys}>
-              <Typography textAlign="left">Connect keys</Typography>
-            </MenuItem>
-          )}
           <MenuItem onClick={handleSwitchAccount}>
             <Typography textAlign="left">Switch account</Typography>
           </MenuItem>

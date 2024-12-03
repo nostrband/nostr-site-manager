@@ -13,8 +13,8 @@ export const StyledTitle = styled(Typography)(() => ({
   justifyContent: "space-between",
   alignItems: "center",
   fontWeight: "bold",
-  fontSize: "16px",
-  lineHeight: "20px",
+  fontSize: "20px",
+  lineHeight: "26px",
 }));
 
 export const StyledAuthorWrap = styled(Box)(() => ({

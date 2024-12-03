@@ -3,11 +3,10 @@
 import {
   Alert,
   Box,
+  Button,
   Chip,
   CircularProgress,
-  Dialog,
-  DialogTitle,
-  Fab,
+  Divider,
   FormControl,
   FormControlLabel,
   InputAdornment,
@@ -17,19 +16,20 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import {
+  StyledDialog,
   StyledDialogContent,
-  StyledDialogContentTable,
-  StyledFormControl,
+  StyledDialogSubDescription,
+  StyledDialogSubTitle,
+  StyledDialogTitle,
+  StyledNotifyWhenLoading,
   StyledTitle,
 } from "./styled";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useFormik } from "formik";
 import { enqueueSnackbar } from "notistack";
 import { validationSchemaDomain } from "@/validations/rules";
-import CheckIcon from "@mui/icons-material/Check";
 import {
   fetchCertDomain,
   fetchCertDomainStatus,
@@ -38,6 +38,8 @@ import {
 } from "@/services/nostr/api";
 import { ReadOnlyInput } from "./components/ReadOnlyInput";
 import { DomainInfo, parseDomain } from "@/utils/web/domain-suffixes";
+import { ArrowRightIcon, CrossIcon, CheckIcon } from "@/components/Icons";
+import useResponsive from "@/hooks/useResponsive";
 
 export const CustomDomainForm = ({
   siteId,
@@ -62,6 +64,9 @@ export const CustomDomainForm = ({
     | "choose-options-error"
   >("enter-domain");
 
+  const isDesktop = useResponsive("up", "sm");
+  const sizeField = isDesktop ? "medium" : "small";
+
   const [dataDns, setDataDns] = useState<{
     domain: string;
     status: string;
@@ -83,6 +88,8 @@ export const CustomDomainForm = ({
   const handleChangeOption = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValueOption((event.target as HTMLInputElement).value);
   };
+
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const {
     values: domainValues,
@@ -243,6 +250,22 @@ export const CustomDomainForm = ({
   };
 
   useEffect(() => {
+    if (
+      (contentRef.current && isLoading) ||
+      (contentRef.current && stepForm === "edit-dns-success")
+    ) {
+      contentRef.current.scrollIntoView({ behavior: "instant", block: "end" });
+    }
+
+    if (contentRef.current && stepForm === "choose-options" && !isLoading) {
+      contentRef.current.scrollIntoView({
+        behavior: "instant",
+        block: "start",
+      });
+    }
+  }, [contentRef, isLoading, stepForm]);
+
+  useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -253,226 +276,184 @@ export const CustomDomainForm = ({
     i: number,
   ) {
     return (
-      <Box key={i} sx={{ mb: 5 }}>
-        <Typography variant="body1">
-          <b> DNS record #{i + 1}</b>
-        </Typography>
+      <Fragment key={i}>
+        <StyledDialogSubTitle>DNS record #{i + 1}</StyledDialogSubTitle>
 
-        <Typography
-          sx={{
-            mb: 1,
-            pb: 2,
-            pt: 2,
-            borderBottom: "1px solid #ccc",
-            alignItems: "flex-start",
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-            maxWidth: "400px",
-          }}
-          variant="body2"
-          component="div"
-        >
-          <span>Type</span>
-          <ReadOnlyInput value={dns.type} />
-        </Typography>
+        <ReadOnlyInput label="Type" value={dns.type} />
 
-        <Typography
-          sx={{
-            mb: 1,
-            pb: 2,
-            pt: 2,
-            borderBottom: "1px solid #ccc",
-            alignItems: "flex-start",
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-            maxWidth: "400px",
-          }}
-          component="div"
-          variant="body2"
-        >
-          <span>Name</span>
-          {dns.name && <ReadOnlyInput value={dns.name} />}
-          {!dns.name && (
-            <span style={{ color: "#aaa" }}>&lt;Leave blank or use @&gt;</span>
-          )}
-        </Typography>
+        {dns.name && <ReadOnlyInput label="Name" value={dns.name} />}
 
-        <Typography
-          sx={{
-            mb: 1,
-            pb: 2,
-            pt: 2,
-            borderBottom: "1px solid #ccc",
-            alignItems: "flex-start",
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-            maxWidth: "400px",
-          }}
-          component="div"
-          variant="body2"
-        >
-          <span>Value</span>
-          <ReadOnlyInput value={dns.value} />
-        </Typography>
-      </Box>
+        {!dns.name && (
+          <ReadOnlyInput
+            isHideCopy
+            label="Name"
+            value="&lt;Leave blank or use @&gt;"
+          />
+        )}
+
+        <ReadOnlyInput label="Value" value={dns.value} />
+      </Fragment>
     );
   }
 
   return (
-    <Dialog
+    <StyledDialog
       open={isOpen}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle component="div" id="alert-dialog-title">
-        <StyledTitle variant="body1">
-          Custom domain
-          <Fab
+      <Box ref={contentRef}>
+        <StyledDialogTitle>
+          <StyledTitle variant="body1">Custom domain</StyledTitle>
+
+          <Button
             onClick={onClose}
-            size="small"
-            color="primary"
-            aria-label="close"
+            variant="text"
+            color="secondary"
+            sx={{ minWidth: "auto" }}
           >
-            <CloseIcon />
-          </Fab>
-        </StyledTitle>
+            <CrossIcon color="inherit" />
+          </Button>
+        </StyledDialogTitle>
 
-        {stepForm === "enter-domain" && (
-          <StyledDialogContent>
-            <StyledFormControl
-              fullWidth
-              size="small"
-              disabled={isLoading}
-              error={Boolean(domainErrors.domain)}
-            >
-              <InputLabel htmlFor="domain">Enter domain</InputLabel>
-              <OutlinedInput
-                inputRef={inputRef}
-                id="domain"
-                name="domain"
+        <StyledDialogContent>
+          {stepForm === "enter-domain" && (
+            <>
+              <FormControl
+                fullWidth
+                size={sizeField}
                 disabled={isLoading}
-                label="Enter domain"
-                endAdornment={
-                  isLoading ? (
-                    <InputAdornment position="end">
-                      <CircularProgress size={20} />
-                    </InputAdornment>
-                  ) : null
-                }
-                onChange={domainHandleChange}
-                value={domainValues.domain}
-                onBlur={domainHandleBlur}
-                error={!!domainErrors.domain}
-              />
+                error={Boolean(domainErrors.domain)}
+              >
+                <InputLabel htmlFor="domain">Enter domain</InputLabel>
 
-              {domainErrors.domain && (
-                <Typography variant="body2" color="error">
-                  {domainErrors.domain}
-                </Typography>
-              )}
-            </StyledFormControl>
-            <StyledFormControl fullWidth size="medium">
+                <OutlinedInput
+                  inputRef={inputRef}
+                  id="domain"
+                  name="domain"
+                  disabled={isLoading}
+                  label="Enter domain"
+                  endAdornment={
+                    isLoading ? (
+                      <InputAdornment position="end">
+                        <CircularProgress size={20} />
+                      </InputAdornment>
+                    ) : null
+                  }
+                  onChange={domainHandleChange}
+                  value={domainValues.domain}
+                  onBlur={domainHandleBlur}
+                  error={!!domainErrors.domain}
+                />
+
+                {domainErrors.domain && (
+                  <Typography variant="body2" color="error">
+                    {domainErrors.domain}
+                  </Typography>
+                )}
+              </FormControl>
+
               <LoadingButton
                 fullWidth
-                color="primary"
+                color="decorate"
                 variant="contained"
-                size="medium"
+                size="large"
+                endIcon={<ArrowRightIcon fontSize="inherit" />}
                 loading={isLoading}
                 disabled={isLoading}
                 onClick={() => domainSubmitForm()}
               >
                 Continue
               </LoadingButton>
-            </StyledFormControl>
-          </StyledDialogContent>
-        )}
+            </>
+          )}
 
-        {(stepForm === "edit-dns" ||
-          stepForm === "edit-dns-success" ||
-          stepForm === "edit-dns-error") && (
-          <StyledDialogContentTable>
-            <Typography sx={{ mb: 1 }} variant="h5">
-              Update DNS settings
-            </Typography>
-            <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
-              Please edit DNS records of <b>{domainInfo!.apex}</b>. We need this
-              to make sure you own this domain and to issue SSL certificate.
-            </Typography>
+          {(stepForm === "edit-dns" ||
+            stepForm === "edit-dns-success" ||
+            stepForm === "edit-dns-error") && (
+            <>
+              <StyledDialogSubTitle>Update DNS settings</StyledDialogSubTitle>
+              <StyledDialogSubDescription variant="body2">
+                Please edit DNS records of <b>{domainInfo!.apex}</b>. We need
+                this to make sure you own this domain and to issue SSL
+                certificate.
+              </StyledDialogSubDescription>
 
-            {dataDns &&
-              dataDns.dnsValidation.map((dns, i) =>
-                renderDNS(
-                  {
-                    ...dns,
-                    name: domainInfo!.isApex
-                      ? dns.name
-                      : [dns.name, domainInfo!.sub]
-                          .filter((s) => !!s)
-                          .join("."),
-                  },
-                  i,
-                ),
+              {dataDns &&
+                dataDns.dnsValidation.map((dns, i) => (
+                  <>
+                    {renderDNS(
+                      {
+                        ...dns,
+                        name: domainInfo!.isApex
+                          ? dns.name
+                          : [dns.name, domainInfo!.sub]
+                              .filter((s) => !!s)
+                              .join("."),
+                      },
+                      i,
+                    )}
+                    {dataDns.dnsValidation.length !== i + 1 && <Divider />}
+                  </>
+                ))}
+
+              {stepForm === "edit-dns-success" && (
+                <Alert
+                  icon={<CheckIcon fontSize="inherit" />}
+                  severity="success"
+                  sx={{ justifyContent: "center" }}
+                >
+                  SSL certificate is ready!
+                </Alert>
               )}
 
-            {stepForm === "edit-dns-success" && (
-              <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
-                SSL certificate is ready!
-              </Alert>
-            )}
-
-            <StyledFormControl fullWidth size="medium">
               {stepForm === "edit-dns" && (
                 <>
-                  {isLoading && (
-                    <Typography
-                      sx={{
-                        marginBottom: 1,
-                        textAlign: "center",
-                        color: "#cd1fa6",
-                      }}
-                      variant="body2"
-                    >
-                      Waiting for SSL certificate...
-                    </Typography>
-                  )}
                   <LoadingButton
                     fullWidth
-                    color="primary"
+                    color="decorate"
                     variant="contained"
-                    size="medium"
+                    size="large"
                     loading={isLoading}
                     disabled={isLoading}
                     onClick={handleSubmitDns}
+                    endIcon={<ArrowRightIcon fontSize="inherit" />}
                   >
                     I updated DNS records
                   </LoadingButton>
+
+                  {isLoading && (
+                    <StyledNotifyWhenLoading variant="body2">
+                      Waiting for SSL certificate...
+                    </StyledNotifyWhenLoading>
+                  )}
                 </>
-              )}
-              {stepForm === "edit-dns-success" && (
-                <LoadingButton
-                  fullWidth
-                  color="primary"
-                  variant="contained"
-                  size="medium"
-                  loading={isLoading}
-                  disabled={isLoading}
-                  onClick={handleToChoiceOptions}
-                >
-                  Continue
-                </LoadingButton>
               )}
               {stepForm === "edit-dns-error" && (
                 <Alert
-                  sx={{ marginBottom: 1 }}
-                  icon={<CloseIcon fontSize="inherit" />}
+                  sx={{ justifyContent: "center" }}
+                  icon={<CrossIcon fontSize="inherit" />}
                   severity="error"
                 >
                   Failed, please retry
                 </Alert>
               )}
+
+              {stepForm === "edit-dns-success" && (
+                <LoadingButton
+                  fullWidth
+                  color="decorate"
+                  variant="contained"
+                  size="large"
+                  loading={isLoading}
+                  disabled={isLoading}
+                  onClick={handleToChoiceOptions}
+                  endIcon={<ArrowRightIcon fontSize="inherit" />}
+                >
+                  Continue
+                </LoadingButton>
+              )}
+
               {stepForm === "edit-dns-error" && (
                 <LoadingButton
                   fullWidth
@@ -486,204 +467,128 @@ export const CustomDomainForm = ({
                   Go to first step to retry
                 </LoadingButton>
               )}
-            </StyledFormControl>
-          </StyledDialogContentTable>
-        )}
+            </>
+          )}
 
-        {(stepForm === "choose-options" ||
-          stepForm === "choose-options-error") && (
-          <StyledDialogContentTable>
-            {domainInfo!.isApex && (
-              <>
-                <Typography sx={{ mb: 1 }} variant="h6">
-                  Choose main address
-                </Typography>
-                <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
-                  Main site address will be used as canonical, and the
-                  alternative name will be redirected to the main address.
-                </Typography>
-                <FormControl sx={{ paddingLeft: "0px" }}>
-                  <RadioGroup
-                    aria-labelledby="demo-controlled-radio-buttons-group"
-                    name="controlled-radio-buttons-group"
-                    value={valueOption}
-                    onChange={handleChangeOption}
-                  >
-                    <FormControlLabel
-                      disabled={isLoading}
-                      value={`www.${domainValues.domain}`}
-                      control={<Radio />}
-                      label={
-                        <>
-                          {`www.${domainValues.domain}`}
-                          <Chip
-                            sx={{ marginLeft: 1 }}
-                            size="small"
-                            label="Recommended"
-                            color="decorate"
-                          />
-                        </>
-                      }
-                    />
-                    <Typography sx={{ mb: 1 }} variant="body2">
-                      Supported by all DNS providers
-                    </Typography>
-                    <FormControlLabel
-                      disabled={isLoading}
-                      value={domainValues.domain}
-                      control={<Radio />}
-                      label={domainValues.domain}
-                    />
-                    <Typography sx={{ mb: 1 }} variant="body2">
-                      Supported by limited number of DNS providers
-                    </Typography>
-                  </RadioGroup>
-                </FormControl>
-                {/* <Box>
-              <Button color="info" href="#" target="_blank">
-                Learn more
-                </Button>
-              </Box> */}
-
-                {renderDNS(
-                  {
-                    type: "CNAME",
-                    name:
-                      `www.${domainValues.domain}` === valueOption ? "www" : "",
-                    value: redirectionOptions!.cnameDomain!,
-                  },
-                  0,
-                )}
-
-                {renderDNS(
-                  {
-                    type: "A",
-                    name:
-                      `www.${domainValues.domain}` === valueOption ? "" : "www",
-                    value: redirectionOptions!.redirectIps[0]!,
-                  },
-                  1,
-                )}
-              </>
-            )}
-
-            {!domainInfo!.isApex && (
-              <>
-                <Typography sx={{ mb: 1 }} variant="h6">
-                  Almost done
-                </Typography>
-                <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
-                  Your SSL certificate is issued, set these DNS records to start
-                  serving your site on <b>{domainInfo!.domain}</b>.
-                </Typography>
-                {renderDNS(
-                  {
-                    type: "CNAME",
-                    name: domainInfo!.sub,
-                    value: redirectionOptions!.cnameDomain!,
-                  },
-                  0,
-                )}
-                <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
-                  Make sure to remove other CNAME and A records for this name,
-                  if they existed.
-                </Typography>
-              </>
-            )}
-
-            {/* <Typography
-              sx={{
-                mb: 1,
-                pb: 2,
-                pt: 2,
-                borderBottom: "1px dashed #000",
-                alignItems: "end",
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-                maxWidth: "400px",
-              }}
-              variant="body2"
-            >
-              <span>Type</span>
-              {`www.${domainValues.domain}` === valueOption
-                ? "CNAME"
-                : "CNAME/ALIAS/ANAME"}
-            </Typography>
-
-            <Typography
-              sx={{
-                mb: 1,
-                pb: 2,
-                pt: 2,
-                borderBottom: "1px dashed #000",
-                display: "flex",
-                alignItems: "end",
-                justifyContent: "space-between",
-                width: "100%",
-                maxWidth: "400px",
-              }}
-              variant="body2"
-            >
-              <span>Name</span>
-              {`www.${domainValues.domain}` === valueOption ? "@" : "www"}
-            </Typography>
-
-            <Typography
-              sx={{
-                mb: 1,
-                pb: 2,
-                pt: 2,
-                borderBottom: "1px dashed #000",
-                display: "flex",
-                alignItems: "end",
-                justifyContent: "space-between",
-                width: "100%",
-                maxWidth: "400px",
-              }}
-              variant="body2"
-            >
-              <span>cnameDomain</span>
-              {redirectionOptions?.redirectIps.join(" ")}
-            </Typography> */}
-
-            {stepForm === "choose-options-error" && (
-              <Alert
-                sx={{ marginBottom: 1 }}
-                icon={<CloseIcon fontSize="inherit" />}
-                severity="error"
-              >
-                Failed, please retry
-              </Alert>
-            )}
-
-            <StyledFormControl fullWidth size="medium">
-              {stepForm === "choose-options-error" ? (
-                <LoadingButton
-                  fullWidth
-                  color="primary"
-                  variant="contained"
-                  size="medium"
-                  loading={isLoading}
-                  disabled={isLoading}
-                  onClick={handleToFirstStep}
-                >
-                  Go to first step to retry
-                </LoadingButton>
-              ) : (
+          {(stepForm === "choose-options" ||
+            stepForm === "choose-options-error") && (
+            <>
+              {domainInfo!.isApex && (
                 <>
-                  {isLoading && (
-                    <Typography
-                      sx={{
-                        marginBottom: 1,
-                        textAlign: "center",
-                        color: "#cd1fa6",
-                      }}
-                      variant="body2"
-                    >
-                      Waiting for deployment...
-                    </Typography>
+                  <StyledDialogSubTitle>
+                    Choose main address
+                  </StyledDialogSubTitle>
+                  <StyledDialogSubDescription variant="body2">
+                    Main site address will be used as canonical, and the
+                    alternative name will be redirected to the main address.
+                  </StyledDialogSubDescription>
+
+                  <Box>
+                    <Chip
+                      sx={{ marginBottom: "8px" }}
+                      size="small"
+                      label="Recommended"
+                      color="default"
+                    />
+
+                    <FormControl sx={{ paddingLeft: "0px" }}>
+                      <RadioGroup
+                        aria-labelledby="demo-controlled-radio-buttons-group"
+                        name="controlled-radio-buttons-group"
+                        value={valueOption}
+                        onChange={handleChangeOption}
+                      >
+                        <FormControlLabel
+                          color="info"
+                          disabled={isLoading}
+                          value={`www.${domainValues.domain}`}
+                          control={<Radio />}
+                          label={`www.${domainValues.domain}`}
+                        />
+                        <StyledDialogSubDescription
+                          sx={{ mb: "16px", marginTop: "8px" }}
+                          variant="body2"
+                        >
+                          Supported by all DNS providers
+                        </StyledDialogSubDescription>
+                        <FormControlLabel
+                          disabled={isLoading}
+                          value={domainValues.domain}
+                          control={<Radio />}
+                          label={domainValues.domain}
+                        />
+                        <StyledDialogSubDescription
+                          sx={{ marginTop: "8px" }}
+                          variant="body2"
+                        >
+                          Supported by limited number of DNS providers
+                        </StyledDialogSubDescription>
+                      </RadioGroup>
+                    </FormControl>
+                  </Box>
+
+                  {renderDNS(
+                    {
+                      type: "CNAME",
+                      name:
+                        `www.${domainValues.domain}` === valueOption
+                          ? "www"
+                          : "",
+                      value: redirectionOptions!.cnameDomain!,
+                    },
+                    0,
                   )}
+                  <Divider />
+                  {renderDNS(
+                    {
+                      type: "A",
+                      name:
+                        `www.${domainValues.domain}` === valueOption
+                          ? ""
+                          : "www",
+                      value: redirectionOptions!.redirectIps[0]!,
+                    },
+                    1,
+                  )}
+                </>
+              )}
+
+              {!domainInfo!.isApex && (
+                <>
+                  <Typography sx={{ mb: 1 }} variant="h6">
+                    Almost done
+                  </Typography>
+                  <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
+                    Your SSL certificate is issued, set these DNS records to
+                    start serving your site on <b>{domainInfo!.domain}</b>.
+                  </Typography>
+                  {renderDNS(
+                    {
+                      type: "CNAME",
+                      name: domainInfo!.sub,
+                      value: redirectionOptions!.cnameDomain!,
+                    },
+                    0,
+                  )}
+                  <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
+                    Make sure to remove other CNAME and A records for this name,
+                    if they existed.
+                  </Typography>
+                </>
+              )}
+
+              {stepForm === "choose-options-error" && (
+                <Alert
+                  sx={{ justifyContent: "center" }}
+                  icon={<CrossIcon fontSize="inherit" />}
+                  severity="error"
+                >
+                  Failed, please retry
+                </Alert>
+              )}
+
+              <FormControl fullWidth size="medium">
+                {stepForm === "choose-options-error" ? (
                   <LoadingButton
                     fullWidth
                     color="primary"
@@ -691,40 +596,61 @@ export const CustomDomainForm = ({
                     size="medium"
                     loading={isLoading}
                     disabled={isLoading}
-                    onClick={handleSubmitOption}
+                    onClick={handleToFirstStep}
                   >
-                    I updated DNS settings
+                    Go to first step to retry
                   </LoadingButton>
-                </>
+                ) : (
+                  <>
+                    <LoadingButton
+                      fullWidth
+                      color="decorate"
+                      variant="contained"
+                      size="large"
+                      loading={isLoading}
+                      disabled={isLoading}
+                      endIcon={<ArrowRightIcon />}
+                      onClick={handleSubmitOption}
+                    >
+                      I updated DNS settings
+                    </LoadingButton>
+                  </>
+                )}
+              </FormControl>
+
+              {isLoading && (
+                <StyledNotifyWhenLoading variant="body2">
+                  Waiting for deployment...
+                </StyledNotifyWhenLoading>
               )}
-            </StyledFormControl>
-          </StyledDialogContentTable>
-        )}
+            </>
+          )}
 
-        {stepForm === "success-edit-dns" && (
-          <StyledDialogContentTable>
-            <Alert
-              sx={{ width: "250px" }}
-              icon={<CheckIcon fontSize="inherit" />}
-              severity="success"
-            >
-              DNS settings are correct
-            </Alert>
-
-            <StyledFormControl fullWidth size="medium">
-              <LoadingButton
-                fullWidth
-                color="primary"
-                variant="contained"
-                size="medium"
-                onClick={handleUpdateWebSiteAddress}
+          {stepForm === "success-edit-dns" && (
+            <>
+              <Alert
+                icon={<CheckIcon fontSize="inherit" />}
+                severity="success"
+                sx={{ justifyContent: "center" }}
               >
-                Update website address
-              </LoadingButton>
-            </StyledFormControl>
-          </StyledDialogContentTable>
-        )}
-      </DialogTitle>
-    </Dialog>
+                DNS settings are correct
+              </Alert>
+
+              <FormControl fullWidth size="medium">
+                <LoadingButton
+                  fullWidth
+                  color="decorate"
+                  variant="contained"
+                  size="large"
+                  onClick={handleUpdateWebSiteAddress}
+                >
+                  Update website address
+                </LoadingButton>
+              </FormControl>
+            </>
+          )}
+        </StyledDialogContent>
+      </Box>
+    </StyledDialog>
   );
 };

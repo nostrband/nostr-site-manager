@@ -4,14 +4,23 @@ import {
   FormControl,
   IconButton,
   InputAdornment,
+  InputLabel,
   OutlinedInput,
 } from "@mui/material";
 import { useState } from "react";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { CheckCircleIcon, CopyIcon } from "@/components/Icons";
 
-export const ReadOnlyInput = ({ value }: { value: string }) => {
+export const ReadOnlyInput = ({
+  value,
+  label,
+  isHideCopy = false,
+}: {
+  value: string;
+  label: string;
+  isHideCopy?: boolean;
+}) => {
   const [isCopied, setCopied] = useState(false);
+  const id = `${label}-${value}`;
 
   const handleCopyValue = async () => {
     try {
@@ -28,29 +37,33 @@ export const ReadOnlyInput = ({ value }: { value: string }) => {
   };
 
   return (
-    <FormControl size="small">
+    <FormControl disabled fullWidth size="small">
+      <InputLabel htmlFor={id}>{label}</InputLabel>
+
       <OutlinedInput
         value={value}
-        id="outlined-adornment-password"
+        id={id}
         type="text"
         disabled
+        label={label}
         multiline={true}
         endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              size="small"
-              disabled={isCopied}
-              aria-label="toggle password visibility"
-              onClick={handleCopyValue}
-              edge="end"
-            >
-              {isCopied ? (
-                <CheckCircleOutlineIcon color="success" fontSize="inherit" />
-              ) : (
-                <ContentCopyIcon fontSize="inherit" />
-              )}
-            </IconButton>
-          </InputAdornment>
+          !isHideCopy ? (
+            <InputAdornment position="end">
+              <IconButton
+                size="small"
+                disabled={isCopied}
+                onClick={handleCopyValue}
+                edge="end"
+              >
+                {isCopied ? (
+                  <CheckCircleIcon color="success" fontSize="inherit" />
+                ) : (
+                  <CopyIcon fontSize="inherit" htmlColor="#696F7D" />
+                )}
+              </IconButton>
+            </InputAdornment>
+          ) : null
         }
       />
     </FormControl>

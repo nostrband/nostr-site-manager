@@ -39,6 +39,7 @@ declare module "@mui/material/AppBar" {
 declare module "@mui/material/Chip" {
   interface ChipPropsColorOverrides {
     decorate: true;
+    lightInfo: true;
     primary: true;
   }
 }
@@ -77,6 +78,7 @@ declare module "@mui/material/IconButton" {
   interface IconButtonPropsColorOverrides {
     textColorDanger: true;
     primary: true;
+    decorate: true;
   }
 }
 
@@ -188,7 +190,7 @@ const theme = createTheme({
     },
     lightInfo: {
       light: "#fff",
-      main: "#B8B2B7",
+      main: "rgba(105, 111, 125, 0.08)",
       dark: "#A5A1A4",
       contrastText: "#fff",
     },
@@ -275,6 +277,15 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           "&.Mui-focused": {
+            color: "#FF3ED9",
+          },
+        },
+      },
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          "&.Mui-checked": {
             color: "#FF3ED9",
           },
         },

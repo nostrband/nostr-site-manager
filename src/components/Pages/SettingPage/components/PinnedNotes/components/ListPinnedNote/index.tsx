@@ -4,10 +4,11 @@ import {
   Droppable,
   OnDragEndResponder,
 } from "@hello-pangea/dnd";
-import { IconButton, List } from "@mui/material";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { IconButton } from "@mui/material";
 import { PinnedNote } from "../PinnedNote";
 import { IPinnedNote } from "../../types";
+import { StyledList } from "../../styled";
+import { TrashIcon } from "@/components/Icons";
 
 export type Props = {
   items: IPinnedNote[];
@@ -21,7 +22,7 @@ export const ListPinnedNote: FC<Props> = React.memo(
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable-list">
           {(provided) => (
-            <List ref={provided.innerRef} {...provided.droppableProps}>
+            <StyledList ref={provided.innerRef} {...provided.droppableProps}>
               {items.map((el, index) => (
                 <PinnedNote
                   key={el.id}
@@ -38,14 +39,15 @@ export const ListPinnedNote: FC<Props> = React.memo(
                       edge="end"
                       aria-label="delete"
                       color="error"
+                      size="small"
                     >
-                      <DeleteOutlineOutlinedIcon />
+                      <TrashIcon fontSize="inherit" />
                     </IconButton>
                   }
                 />
               ))}
               {provided.placeholder}
-            </List>
+            </StyledList>
           )}
         </Droppable>
       </DragDropContext>

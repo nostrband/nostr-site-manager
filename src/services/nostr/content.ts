@@ -403,7 +403,7 @@ async function getSubmitEvent(pubkey: string, id: string) {
   };
 }
 
-export async function submitEvent(
+export async function submitPost(
   siteId: string,
   {
     id,

@@ -23,7 +23,7 @@ import { nip19 } from "nostr-tools";
 export const preparePosts = (db: DBReturnType): ClientPost[] => {
   const { posts, users, posts_authors, tags, posts_tags } = db.data;
 
-  return posts.map((post) => {
+  return posts.filter(post => !!post.plaintext).map((post) => {
     post.published_at = post.published_at || post.created_at;
     post.summary =
       post.custom_excerpt || post.plaintext.trim().substring(0, 100);

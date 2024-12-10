@@ -323,7 +323,9 @@ export async function publishSiteEvent(
     console.log("signed site event", site);
 
     // publish
-    const r = await site.publish(NDKRelaySet.fromRelayUrls(relays, ndk));
+    const set = NDKRelaySet.fromRelayUrls(relays, ndk);
+    console.log("publishing to relays", relays, set);
+    const r = await site.publish(set);
     console.log(
       "published site event to",
       [...r].map((r) => r.url),

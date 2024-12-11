@@ -1,8 +1,9 @@
 "use client";
-import { redirect, useParams } from "next/navigation";
+import { useGetSiteId } from "@/hooks/useGetSiteId";
+import { redirect } from "next/navigation";
 
 export default function Dashboard() {
-  const params = useParams();
+  const { siteId } = useGetSiteId()
 
-  return redirect(`/admin/${params.id}/dashboard`);
+  return redirect(`/admin/${siteId}/dashboard`);
 }

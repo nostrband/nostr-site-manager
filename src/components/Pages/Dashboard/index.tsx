@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Button, Container } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import React, { useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
@@ -23,6 +23,7 @@ import {
 } from "@/components/Icons";
 import { PreviewDashboardSite } from "./components/PreviewDashboardSite";
 import { LoadingButton } from "@mui/lab";
+import { useGetSiteId } from "@/hooks/useGetSiteId";
 
 export const Dashboard = () => {
   const [isOpenConfirm, setOpenConfirm] = useState(false);
@@ -33,14 +34,14 @@ export const Dashboard = () => {
   console.log({
     data,
   });
-  const params = useParams();
-  const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const { siteId } = useGetSiteId()
 
   const getSite = data?.find((el) => el.id === siteId);
 
   const switchTheme = `/design?siteId=${siteId}&themeId=${getSite?.themeId}`;
 
   const openSettings = `/admin/${siteId}/settings`;
+  const openPostManagement = `/admin/${siteId}/post-management`;
 
   const handeOpenConfirm = () => {
     setOpenConfirm(true);
@@ -133,6 +134,18 @@ export const Dashboard = () => {
                   endIcon={<ArrowRightIcon />}
                 >
                   Open website
+                </Button>
+
+                <Button
+                  LinkComponent={Link}
+                  size="large"
+                  variant="contained"
+                  color="decorate"
+                  href={openPostManagement}
+                  fullWidth
+                  endIcon={<ArrowRightIcon />}
+                >
+                  Post management
                 </Button>
 
                 <Button

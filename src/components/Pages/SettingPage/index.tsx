@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import _ from "lodash";
 import { Button, Container } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { redirect, useParams } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
@@ -39,6 +39,7 @@ import {
 import Link from "next/link";
 import { ChevronLeftIcon } from "@/components/Icons";
 import { SearchSettingsField, Setting } from "./components/SearchSettingsField";
+import { useGetSiteId } from "@/hooks/useGetSiteId";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -91,8 +92,8 @@ export const SettingPage = () => {
   const [initialData, setInitialData] = useState(initialSettingValue);
   const [choiceSetting, setChoiceSetting] = useState<Setting | null>(null);
   const { enqueueSnackbar } = useSnackbar();
-  const params = useParams();
-  const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const { siteId } = useGetSiteId()
+
   const {
     data,
     isLoading: isLoadingSetting,

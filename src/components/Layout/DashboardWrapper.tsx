@@ -2,16 +2,17 @@
 import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { MainWrapper, StyledWrapCenter } from "@/components/Layout/MainContent";
 import { HeaderLayout } from "@/components/Layout/HeaderLayout";
-import { useParams, useRouter, usePathname, redirect } from "next/navigation";
+import { useRouter, usePathname, redirect } from "next/navigation";
 import { useListSites } from "@/hooks/useListSites";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
 import { ReturnSitesDataType } from "@/services/sites.service";
 import { Box, Button, Typography } from "@mui/material";
 import { AuthContext } from "@/services/nostr/nostr";
+import { useGetSiteId } from "@/hooks/useGetSiteId";
 
 export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const [isLogin, setLogin] = useState(false);
-  const params = useParams();
+  const { siteId } = useGetSiteId()
   const pathname = usePathname();
   const router = useRouter();
   const pathAdmin = useFirstPathElement();
@@ -48,9 +49,9 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (data) {
-      getValidParamsId(data, params.id, pathname);
+      getValidParamsId(data, siteId, pathname);
     }
-  }, [data, getValidParamsId, params.id, pathname]);
+  }, [data, getValidParamsId, siteId, pathname]);
 
   const login = async () => {
     await window.nostr!.getPublicKey();

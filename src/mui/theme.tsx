@@ -202,7 +202,7 @@ const theme = createTheme({
     },
   },
   shadows: [
-    'none',
+    "none",
     "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
     "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
     "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
@@ -273,7 +273,7 @@ const theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          color: 'inherit',
+          color: "inherit",
           "& .Mui-disabled": {
             color: "rgba(0, 0, 0, 0.38) !important",
             WebkitTextFillColor: "rgba(0, 0, 0, 0.38) !important",
@@ -296,7 +296,7 @@ const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          color: 'inherit',
+          color: "inherit",
           "&.Mui-focused": {
             color: "#FF3ED9",
           },

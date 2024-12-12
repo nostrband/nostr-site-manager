@@ -17,14 +17,16 @@ interface IHashtagsFilter {
   contributors: string[];
   handleChangeHashtags: (value: string[]) => void;
   selectedHashtags: string[];
-  label: string
+  label: string;
+  size: "small" | "medium";
 }
 
 export const HashtagsFilter = ({
   contributors,
   selectedHashtags,
   handleChangeHashtags,
-  label
+  label,
+  size,
 }: IHashtagsFilter) => {
   const [hashtags, setHashtags] = useState<string[]>([]);
   const mergeHashtags = new Set([...hashtags, ...selectedHashtags]);
@@ -49,6 +51,7 @@ export const HashtagsFilter = ({
       options={mergedOptions}
       disableCloseOnSelect
       freeSolo
+      size={size}
       value={selectedHashtags}
       inputValue={hashtagsInputValue}
       // @ts-ignore

@@ -18,15 +18,15 @@ const kindsMap: { [key: number]: string } = {
 interface ITypesFilter {
   handleChangeTypes: (value: number[]) => void;
   selectedTypes: number[];
-  label: string
-  id: string
+  label: string;
+  id: string;
 }
 
 export const TypesFilter = ({
   selectedTypes,
   handleChangeTypes,
   label,
-  id
+  id,
 }: ITypesFilter) => {
   const [types, setTypes] = useState<number[]>([]);
 
@@ -51,7 +51,7 @@ export const TypesFilter = ({
   return (
     <>
       <Select
-      label={label}
+        label={label}
         labelId={id}
         multiple
         value={selectedTypes}

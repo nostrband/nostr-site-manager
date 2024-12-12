@@ -92,7 +92,7 @@ export const SettingPage = () => {
   const [initialData, setInitialData] = useState(initialSettingValue);
   const [choiceSetting, setChoiceSetting] = useState<Setting | null>(null);
   const { enqueueSnackbar } = useSnackbar();
-  const { siteId } = useGetSiteId()
+  const { siteId } = useGetSiteId();
 
   const {
     data,

@@ -17,7 +17,7 @@ export const StyledTitle = styled(PageTitle)(({ theme }) => ({
 export const StyledAlert = styled(Alert)(() => ({
   color: "#014361",
   backgroundColor: "#E5F6FD",
-  marginBottom: 24
+  marginBottom: 24,
 }));
 
 export const StyledAlertTitle = styled(AlertTitle)(() => ({
@@ -25,5 +25,6 @@ export const StyledAlertTitle = styled(AlertTitle)(() => ({
 }));
 
 export const StyledButtonInfo = styled(IconButton)(() => ({
-marginLeft: "auto", fontSize: "24px"
+  marginLeft: "auto",
+  fontSize: "24px",
 }));

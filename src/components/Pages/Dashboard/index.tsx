@@ -17,6 +17,7 @@ import {
   ArrowRightIcon,
   BrushIcon,
   ChevronLeftIcon,
+  FIleTextIcon,
   KeyIcon,
   SettingsIcon,
   TrashIcon,
@@ -34,7 +35,7 @@ export const Dashboard = () => {
   console.log({
     data,
   });
-  const { siteId } = useGetSiteId()
+  const { siteId } = useGetSiteId();
 
   const getSite = data?.find((el) => el.id === siteId);
 
@@ -139,11 +140,11 @@ export const Dashboard = () => {
                 <Button
                   LinkComponent={Link}
                   size="large"
-                  variant="contained"
+                  variant="outlined"
                   color="decorate"
                   href={openPostManagement}
                   fullWidth
-                  endIcon={<ArrowRightIcon />}
+                  endIcon={<FIleTextIcon />}
                 >
                   Post management
                 </Button>

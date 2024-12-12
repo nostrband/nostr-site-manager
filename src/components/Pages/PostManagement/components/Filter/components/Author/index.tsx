@@ -25,11 +25,19 @@ interface IAuthorFilter {
   handleChangeAuthors: (value: OptionAuthorType[]) => void;
   selectedAuthors: OptionAuthorType[];
   label: string;
-  id: string
+  id: string;
+  size: "small" | "medium";
 }
 
 export const AuthorFilter = memo(
-  ({ contributors, selectedAuthors, handleChangeAuthors, label, id }: IAuthorFilter) => {
+  ({
+    contributors,
+    selectedAuthors,
+    handleChangeAuthors,
+    label,
+    id,
+    size,
+  }: IAuthorFilter) => {
     const [authors, setAuthors] = useState<OptionAuthorType[]>([]);
     const [authorsInputValue, setAuthorsInputValue] = useState("");
 
@@ -138,10 +146,13 @@ export const AuthorFilter = memo(
 
     return (
       <Autocomplete
-      id={id}
+        id={id}
         multiple
-        limitTags={2}
+        limitTags={size === "small" ? 1 : 2}
         options={mergeAuthors}
+        disableClearable
+        freeSolo
+        size={size}
         disableCloseOnSelect
         value={selectedAuthors}
         inputValue={authorsInputValue}

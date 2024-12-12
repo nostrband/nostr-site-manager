@@ -1,6 +1,16 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Button, ButtonProps, FormControl, InputLabel, Popper, Select, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonProps,
+  DialogContent,
+  FormControl,
+  InputLabel,
+  Popper,
+  Select,
+  Typography,
+} from "@mui/material";
 import { forwardRef } from "react";
 
 interface ICollapseButton {
@@ -15,7 +25,7 @@ export const StyledWrapFilter = styled(Box)(({ theme }) => ({
   background: "#fff",
 }));
 
-export const StyledTitleFilter = styled(Typography)(({theme}) => ({
+export const StyledTitleFilter = styled(Typography)(({ theme }) => ({
   fontSize: 24,
   fontWeight: "700",
   lineHeight: "31px",
@@ -42,23 +52,21 @@ export const StyledCollapseButtonFilter = styled(
     },
   ),
 )(({ isOpenMoreFilter, theme }) => ({
-  '.collapseButtonIcon': {
-        transform: `${isOpenMoreFilter ? "rotate(90deg)" : "rotate(-90deg)"}`,
-        transition: "0.3s",
+  ".collapseButtonIcon": {
+    transform: `${isOpenMoreFilter ? "rotate(90deg)" : "rotate(-90deg)"}`,
+    transition: "0.3s",
   },
   [theme.breakpoints.down("sm")]: {
-    display: 'none'
+    display: "none",
   },
 }));
 
-
-export const StyledCloseFilterButton = styled(Button)(({theme}) => ({
+export const StyledCloseFilterButton = styled(Button)(({ theme }) => ({
   minWidth: "auto",
   [theme.breakpoints.up("sm")]: {
-    display: 'none'
+    display: "none",
   },
 }));
-
 
 export const StyledFormControl = styled(FormControl)(() => ({
   color: "rgba(0, 0, 0, 0.6)",
@@ -66,4 +74,39 @@ export const StyledFormControl = styled(FormControl)(() => ({
 
 export const StyledFormControlLabel = styled(InputLabel)(() => ({
   color: "inherit",
+}));
+
+export const StyledWrapField = styled(Box)(({ theme }) => ({
+  paddingTop: "16px",
+  [theme.breakpoints.down("sm")]: {
+    paddingTop: "24px",
+  },
+}));
+
+export const StyledDialogContent = styled(DialogContent)({
+  padding: 0,
+  paddingTop: "50px",
+});
+
+export const StyledActionsButtonWrap = styled(Box)(({ theme }) => ({
+  position: "fixed",
+  padding: 8,
+  borderRadius: theme.shape.borderRadius,
+  background: "#fff",
+  maxWidth: 348,
+  left: 0,
+  right: 0,
+  marginLeft: "auto",
+  marginRight: "auto",
+  bottom: 5,
+  display: "flex",
+  alignItems: "center",
+  gap: "16px",
+  zIndex: "1",
+  [theme.breakpoints.down("sm")]: {
+    bottom: 0,
+    borderRadius: 0,
+    maxWidth: "100%",
+    padding: "8px 16px",
+  },
 }));

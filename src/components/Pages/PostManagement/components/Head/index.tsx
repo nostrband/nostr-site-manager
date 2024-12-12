@@ -3,7 +3,12 @@ import { ChevronLeftIcon, CrossIcon, InfoIcon } from "@/components/Icons";
 import { Button, Collapse, IconButton } from "@mui/material";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { StyledAlert, StyledAlertTitle, StyledButtonInfo, StyledTitle } from "./styled";
+import {
+  StyledAlert,
+  StyledAlertTitle,
+  StyledButtonInfo,
+  StyledTitle,
+} from "./styled";
 
 export const Head = ({ siteId }: { siteId: string }) => {
   const flagAlert = "isOpenAlertInfo";
@@ -71,9 +76,7 @@ export const Head = ({ siteId }: { siteId: string }) => {
             </IconButton>
           }
         >
-          <StyledAlertTitle>
-            Content management section
-          </StyledAlertTitle>
+          <StyledAlertTitle>Content management section</StyledAlertTitle>
           In this section you will find any posts, and manage your content
         </StyledAlert>
       </Collapse>

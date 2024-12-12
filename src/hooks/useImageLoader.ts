@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 
-function useImageLoader(src: string) {
+function useImageLoader(src: string | null) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setHasError] = useState(false);
 
   useEffect(() => {
-    if (!Boolean(src)) {
+    if (!Boolean(src) || src === null) {
       setIsLoaded(false);
       setHasError(true);
     } else {

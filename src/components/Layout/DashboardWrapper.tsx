@@ -12,7 +12,7 @@ import { useGetSiteId } from "@/hooks/useGetSiteId";
 
 export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const [isLogin, setLogin] = useState(false);
-  const { siteId } = useGetSiteId()
+  const { siteId } = useGetSiteId();
   const pathname = usePathname();
   const router = useRouter();
   const pathAdmin = useFirstPathElement();

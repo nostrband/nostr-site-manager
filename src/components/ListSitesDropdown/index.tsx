@@ -22,7 +22,7 @@ export const ListSitesDropdown = ({
   const { data, isLoading, isFetching } = useListSites();
 
   const router = useRouter();
-  const { siteId } = useGetSiteId()
+  const { siteId } = useGetSiteId();
   const path = usePathname();
   const pathAdmin = useFirstPathElement();
 

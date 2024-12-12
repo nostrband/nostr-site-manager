@@ -34,7 +34,7 @@ export const HeaderLayout = () => {
   const router = useRouter();
   const pathAdmin = useFirstPathElement();
 
-  const { siteId } = useGetSiteId()
+  const { siteId } = useGetSiteId();
   const { data } = useListSites();
   const getSite = data?.find((el) => el.id === siteId);
 

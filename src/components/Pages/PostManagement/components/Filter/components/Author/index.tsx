@@ -1,24 +1,19 @@
 "use client";
 
-import { fetchProfiles } from "@/services/nostr/api";
+import { fetchProfiles, searchProfiles } from "@/services/nostr/api";
 import {
   Autocomplete,
   Avatar,
   Checkbox,
+  createFilterOptions,
   ListItem,
   ListItemAvatar,
   ListItemText,
   TextField,
 } from "@mui/material";
 import { nip19 } from "nostr-tools";
-import { memo, useEffect, useState } from "react";
-
-export type OptionAuthorType = {
-  title: string;
-  id: string;
-  img: string;
-  pubkey: string;
-};
+import { debounce } from "lodash";
+import { useEffect, useMemo, useState } from "react";
 
 interface IAuthorFilter {
   contributors: string[];
@@ -29,148 +24,229 @@ interface IAuthorFilter {
   size: "small" | "medium";
 }
 
-export const AuthorFilter = memo(
-  ({
-    contributors,
-    selectedAuthors,
-    handleChangeAuthors,
-    label,
-    id,
-    size,
-  }: IAuthorFilter) => {
-    const [authors, setAuthors] = useState<OptionAuthorType[]>([]);
-    const [authorsInputValue, setAuthorsInputValue] = useState("");
+export type OptionAuthorType = {
+  title: string;
+  id: string;
+  inputValue: string;
+  img: string;
+  pubkey: string;
+};
 
-    const mergeAuthors = [...authors, ...selectedAuthors].filter(
-      (author, index, self) =>
-        index === self.findIndex((a) => a.id === author.id),
-    );
+const filter = createFilterOptions<OptionAuthorType>();
 
-    useEffect(() => {
-      if (contributors.length) {
-        fetchProfiles(contributors)
-          .then((profiles) => {
-            if (profiles.length) {
-              const dataAuthors = profiles.map((author) => {
-                let meta;
+export const AuthorFilter = ({
+  contributors,
+  selectedAuthors,
+  handleChangeAuthors,
+  label,
+  id,
+  size,
+}: IAuthorFilter) => {
+  const [authors, setAuthors] = useState<OptionAuthorType[]>([]);
+  const [authorsInputValue, setAuthorsInputValue] = useState("");
+  const [optionsDataAuthor, setOptionsDataAuthor] = useState<
+    { id: string; pubkey: string; name: string; img: string }[]
+  >([]);
+  const [isLoading, setLoading] = useState(false);
+  const [fetchValueAuthor, setFetchValueAuthor] = useState("");
 
-                try {
-                  meta = JSON.parse(author.content);
-                } catch (error) {
-                  console.error("Error parsing author content:", error);
-                  meta = {};
-                }
+  const mergeAuthors = [...authors, ...selectedAuthors].filter(
+    (author, index, self) =>
+      index === self.findIndex((a) => a.id === author.id),
+  );
 
-                const npub = author.pubkey
-                  ? nip19.npubEncode(author.pubkey).substring(0, 8) + "..."
-                  : "";
-                const name = meta.display_name || meta.name || npub;
-                const img = meta.picture || "";
+  useEffect(() => {
+    if (contributors.length) {
+      fetchProfiles(contributors)
+        .then((profiles) => {
+          if (profiles.length) {
+            const dataAuthors = profiles.map((author) => {
+              let meta;
 
-                return {
-                  img,
-                  title: name,
-                  id: author.id,
-                  pubkey: author.pubkey,
-                };
-              });
+              try {
+                meta = JSON.parse(author.content);
+              } catch (error) {
+                console.error("Error parsing author content:", error);
+                meta = {};
+              }
 
-              setAuthors(dataAuthors);
-            } else {
-              setAuthors([]);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching profiles:", error);
+              const npub = author.pubkey
+                ? nip19.npubEncode(author.pubkey).substring(0, 8) + "..."
+                : "";
+              const name = meta.display_name || meta.name || npub;
+              const img = meta.picture || "";
+
+              return {
+                img,
+                title: name,
+                id: author.id,
+                inputValue: "",
+                pubkey: author.pubkey,
+              };
+            });
+
+            setAuthors(dataAuthors);
+          } else {
             setAuthors([]);
-          });
-      } else {
-        setAuthors([]);
-      }
-    }, [contributors]);
-
-    console.log("render author");
-
-    const handleInputChange = (
-      _: React.ChangeEvent<{}>,
-      newInputValue: string,
-    ) => {
-      setAuthorsInputValue(newInputValue);
-    };
-
-    const handleChange = (
-      _: React.ChangeEvent<{}>,
-      value: (OptionAuthorType | string)[],
-    ) => {
-      const newValues = value as OptionAuthorType[];
-
-      function removeDuplicatesById<T extends { id: string }>(array: T[]): T[] {
-        const uniqueItems = array.reduce((acc, current) => {
-          if (!acc.some((item) => item.id === current.id)) {
-            acc.push(current);
           }
-          return acc;
-        }, [] as T[]);
+        })
+        .catch((error) => {
+          console.error("Error fetching profiles:", error);
+          setAuthors([]);
+        });
+    } else {
+      setAuthors([]);
+    }
+  }, [contributors]);
 
-        return uniqueItems;
-      }
+  const handleInputChange = (
+    _: React.ChangeEvent<{}>,
+    newInputValue: string,
+  ) => {
+    setAuthorsInputValue(newInputValue);
+  };
 
-      const uniqueNewValues = removeDuplicatesById(newValues);
+  const handleChange = (
+    _: React.ChangeEvent<{}>,
+    value: (OptionAuthorType | string)[],
+  ) => {
+    const newValues = value as OptionAuthorType[];
 
-      handleChangeAuthors([
-        ...uniqueNewValues.map((author) => ({
+    function removeDuplicatesById<T extends { id: string }>(array: T[]): T[] {
+      const uniqueItems = array.reduce((acc, current) => {
+        if (!acc.some((item) => item.id === current.id)) {
+          acc.push(current);
+        }
+        return acc;
+      }, [] as T[]);
+
+      return uniqueItems;
+    }
+
+    const uniqueNewValues = removeDuplicatesById(newValues);
+
+    handleChangeAuthors([
+      ...uniqueNewValues.map((author) => ({
+        id: author.id,
+        title: author.inputValue ? author.inputValue : author.title,
+        img: author.img,
+        inputValue: "",
+        pubkey: author.pubkey,
+      })),
+    ]);
+
+    setAuthors((prevAuthors) => [
+      ...prevAuthors,
+      ...uniqueNewValues
+        .filter((newAuthor: OptionAuthorType) =>
+          prevAuthors.every(
+            (author: OptionAuthorType) => author.id !== newAuthor.id,
+          ),
+        )
+        .map((author) => ({
           id: author.id,
-          title: author.title,
+          title: author.inputValue ? author.inputValue : author.title,
           img: author.img,
           inputValue: "",
           pubkey: author.pubkey,
         })),
-      ]);
+    ]);
+  };
 
-      setAuthors((prevAuthors) => [
-        ...prevAuthors,
-        ...uniqueNewValues
-          .filter((newAuthor: OptionAuthorType) =>
-            prevAuthors.every(
-              (author: OptionAuthorType) => author.id !== newAuthor.id,
-            ),
-          )
-          .map((author) => ({
-            id: author.id,
-            title: author.title,
-            img: author.img,
-            pubkey: author.pubkey,
-          })),
-      ]);
-    };
+  const fetchData = async (query: string) => {
+    try {
+      setLoading(true);
+      setOptionsDataAuthor([]);
+      const profiles = await searchProfiles(query);
 
-    return (
-      <Autocomplete
-        id={id}
-        multiple
-        limitTags={size === "small" ? 1 : 2}
-        options={mergeAuthors}
-        disableClearable
-        freeSolo
-        size={size}
-        disableCloseOnSelect
-        value={selectedAuthors}
-        inputValue={authorsInputValue}
-        onInputChange={handleInputChange}
-        onChange={handleChange}
-        getOptionLabel={(option) =>
-          typeof option === "string" ? option : option.title
+      const options = profiles
+        .map((e) => {
+          try {
+            const meta = JSON.parse(e.content);
+            return {
+              id: e.id,
+              pubkey: e.pubkey,
+              name: meta?.display_name || meta?.name || e.pubkey,
+              img: meta?.picture || "",
+            };
+          } catch {
+            return undefined;
+          }
+        })
+        .filter((p) => !!p);
+
+      setLoading(false);
+
+      setOptionsDataAuthor(options);
+    } catch (error) {
+      setLoading(false);
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const debouncedFetchData = useMemo(() => debounce(fetchData, 300), []);
+
+  useEffect(() => {
+    if (fetchValueAuthor) {
+      debouncedFetchData(fetchValueAuthor);
+    } else {
+      setOptionsDataAuthor([]);
+    }
+  }, [fetchValueAuthor, debouncedFetchData, setOptionsDataAuthor]);
+
+  return (
+    <Autocomplete
+      id={id}
+      multiple
+      loading={isLoading}
+      options={mergeAuthors}
+      disableCloseOnSelect
+      freeSolo
+      size={size}
+      value={selectedAuthors}
+      inputValue={authorsInputValue}
+      filterOptions={(options, params) => {
+        let filtered = filter(options, params);
+
+        const { inputValue } = params;
+
+        const isExisting = options.some(
+          (option) => inputValue === option.title,
+        );
+
+        if (inputValue !== "" && !isExisting) {
+          setFetchValueAuthor(inputValue);
+
+          filtered = [
+            ...filtered,
+            ...optionsDataAuthor.map((el) => ({
+              inputValue: el.name,
+              title: `Add "${el.name}"`,
+              img: el.img,
+              id: el.id,
+              pubkey: el.pubkey,
+            })),
+          ];
         }
-        renderOption={(props, option) => (
-          <ListItem
-            {...props}
-            key={option.id}
-            onClick={(e) => {
-              e.stopPropagation();
-              const isSelected = selectedAuthors.some(
-                (selected) => selected.title === option.title,
-              );
 
+        return filtered as OptionAuthorType[];
+      }}
+      onInputChange={handleInputChange}
+      onChange={handleChange}
+      getOptionLabel={(option) =>
+        typeof option === "string" ? option : option.title
+      }
+      renderOption={(props, option) => (
+        <ListItem
+          {...props}
+          key={option.id}
+          onClick={(e) => {
+            e.stopPropagation();
+            const isSelected = selectedAuthors.some(
+              (selected) => selected.title === option.title,
+            );
+
+            if (!Boolean(option.inputValue)) {
               if (isSelected) {
                 const newSelectedAuthors = selectedAuthors.filter(
                   (el) => el.title !== option.title,
@@ -179,282 +255,26 @@ export const AuthorFilter = memo(
               } else {
                 handleChangeAuthors([...selectedAuthors, option]);
               }
-            }}
-          >
+            } else {
+              handleChange(e, [...selectedAuthors, option]);
+              setAuthorsInputValue("");
+            }
+          }}
+        >
+          {!Boolean(option.inputValue) && (
             <Checkbox
               checked={selectedAuthors.some(
                 (selected) => selected.title === option.title,
               )}
             />
-            <ListItemAvatar>
-              <Avatar alt={option.title} src={option.img} />
-            </ListItemAvatar>
-            <ListItemText primary={option.title} />
-          </ListItem>
-        )}
-        renderInput={(params) => <TextField label={label} {...params} />}
-      />
-    );
-  },
-);
-
-AuthorFilter.displayName = "AuthorFilter";
-
-// Implementation with request
-
-// "use client";
-
-// import { fetchProfiles, searchProfiles } from "@/services/nostr/api";
-// import {
-//   Autocomplete,
-//   Avatar,
-//   Checkbox,
-//   createFilterOptions,
-//   ListItem,
-//   ListItemAvatar,
-//   ListItemText,
-//   TextField,
-// } from "@mui/material";
-// import { nip19 } from "nostr-tools";
-// import { debounce } from "lodash";
-// import { useEffect, useMemo, useState } from "react";
-
-// interface IAuthorFilter {
-//   contributors: string[];
-// }
-
-// type OptionAuthorType = {
-//   title: string;
-//   id: string;
-//   inputValue: string;
-//   img: string;
-// };
-
-// const filter = createFilterOptions<OptionType>();
-
-// export const AuthorFilter = ({ contributors }: IAuthorFilter) => {
-//   const [selectedAuthors, setSelectedAuthors] = useState<OptionType[]>([]);
-//   const [authors, setAuthors] = useState<OptionType[]>([]);
-//   const [authorsInputValue, setAuthorsInputValue] = useState("");
-
-//   const [optionsDataAuthor, setOptionsDataAuthor] = useState<
-//     { id: string; pubkey: string; name: string; img: string }[]
-//   >([]);
-//   const [isLoading, setLoading] = useState(false);
-//   const [fetchValueAuthor, setFetchValueAuthor] = useState("");
-
-//   const mergeAuthors = [...authors, ...selectedAuthors].filter(
-//     (author, index, self) =>
-//       index === self.findIndex((a) => a.id === author.id),
-//   );
-
-//   useEffect(() => {
-//     if (contributors.length) {
-//       fetchProfiles(contributors)
-//         .then((profiles) => {
-//           if (profiles.length) {
-//             const dataAuthors = profiles.map((author) => {
-//               let meta;
-
-//               try {
-//                 meta = JSON.parse(author.content);
-//               } catch (error) {
-//                 console.error("Error parsing author content:", error);
-//                 meta = {};
-//               }
-
-//               const npub = author.pubkey
-//                 ? nip19.npubEncode(author.pubkey).substring(0, 8) + "..."
-//                 : "";
-//               const name = meta.display_name || meta.name || npub;
-//               const img = meta.picture || "";
-
-//               return { img, title: name, id: author.id, inputValue: "" };
-//             });
-
-//             setAuthors(dataAuthors);
-//           } else {
-//             setAuthors([]);
-//           }
-//         })
-//         .catch((error) => {
-//           console.error("Error fetching profiles:", error);
-//           setAuthors([]);
-//         });
-//     } else {
-//       setAuthors([]);
-//     }
-//   }, [contributors]);
-
-//   const handleInputChange = (
-//     _: React.ChangeEvent<{}>,
-//     newInputValue: string,
-//   ) => {
-//     setAuthorsInputValue(newInputValue);
-//   };
-
-//   const handleChange = (
-//     _: React.ChangeEvent<{}>,
-//     value: (OptionType | string)[],
-//   ) => {
-//     const newValues = value as OptionType[];
-
-//     function removeDuplicatesById<T extends { id: string }>(array: T[]): T[] {
-//       const uniqueItems = array.reduce((acc, current) => {
-//         if (!acc.some((item) => item.id === current.id)) {
-//           acc.push(current);
-//         }
-//         return acc;
-//       }, [] as T[]);
-
-//       return uniqueItems;
-//     }
-
-//     const uniqueNewValues = removeDuplicatesById(newValues);
-
-//     setSelectedAuthors([
-//       ...uniqueNewValues.map((author) => ({
-//         id: author.id,
-//         title: author.inputValue ? author.inputValue : author.title,
-//         img: author.img,
-//         inputValue: "",
-//       })),
-//     ]);
-
-//     setAuthors((prevAuthors) => [
-//       ...prevAuthors,
-//       ...uniqueNewValues
-//         .filter((newAuthor: OptionType) =>
-//           prevAuthors.every((author: OptionType) => author.id !== newAuthor.id),
-//         )
-//         .map((author) => ({
-//           id: author.id,
-//           title: author.inputValue ? author.inputValue : author.title,
-//           img: author.img,
-//           inputValue: "",
-//         })),
-//     ]);
-//   };
-
-//   const fetchData = async (query: string) => {
-//     try {
-//       setLoading(true);
-//       setOptionsDataAuthor([]);
-//       const profiles = await searchProfiles(query);
-
-//       const options = profiles
-//         .map((e) => {
-//           try {
-//             const meta = JSON.parse(e.content);
-//             return {
-//               id: e.id,
-//               pubkey: e.pubkey,
-//               name: meta?.display_name || meta?.name || e.pubkey,
-//               img: meta?.picture || "",
-//             };
-//           } catch {
-//             return undefined;
-//           }
-//         })
-//         .filter((p) => !!p);
-
-//       setLoading(false);
-
-//       setOptionsDataAuthor(options);
-//     } catch (error) {
-//       setLoading(false);
-//       console.error("Error fetching data:", error);
-//     }
-//   };
-
-//   const debouncedFetchData = useMemo(() => debounce(fetchData, 300), []);
-
-//   useEffect(() => {
-//     if (fetchValueAuthor) {
-//       debouncedFetchData(fetchValueAuthor);
-//     } else {
-//       setOptionsDataAuthor([]);
-//     }
-//   }, [fetchValueAuthor, debouncedFetchData, setOptionsDataAuthor]);
-
-//   return (
-//     <Autocomplete
-//       multiple
-//       loading={isLoading}
-//       options={mergeAuthors}
-//       disableCloseOnSelect
-//       freeSolo
-//       value={selectedAuthors}
-//       inputValue={authorsInputValue}
-//       filterOptions={(options, params) => {
-//         let filtered = filter(options, params);
-
-//         const { inputValue } = params;
-
-//         const isExisting = options.some(
-//           (option) => inputValue === option.title,
-//         );
-
-//         if (inputValue !== "" && !isExisting) {
-//           setFetchValueAuthor(inputValue);
-
-//           filtered = [
-//             ...filtered,
-//             ...optionsDataAuthor.map((el) => ({
-//               inputValue: el.name,
-//               title: `Add "${el.name}"`,
-//               img: el.img,
-//               id: el.id,
-//             })),
-//           ];
-//         }
-
-//         return filtered as OptionType[];
-//       }}
-//       onInputChange={handleInputChange}
-//       onChange={handleChange}
-//       getOptionLabel={(option) =>
-//         typeof option === "string" ? option : option.title
-//       }
-//       renderOption={(props, option) => (
-//         <ListItem
-//           {...props}
-//           key={option.id}
-//           onClick={(e) => {
-//             e.stopPropagation();
-//             const isSelected = selectedAuthors.some(
-//               (selected) => selected.title === option.title,
-//             );
-
-//             if (!Boolean(option.inputValue)) {
-//               if (isSelected) {
-//                 const newSelectedAuthors = selectedAuthors.filter(
-//                   (el) => el.title !== option.title,
-//                 );
-//                 setSelectedAuthors(newSelectedAuthors);
-//               } else {
-//                 setSelectedAuthors((prev) => [...prev, option]);
-//               }
-//             } else {
-//               handleChange(e, [...selectedAuthors, option]);
-//               setAuthorsInputValue("");
-//             }
-//           }}
-//         >
-//           {!Boolean(option.inputValue) && (
-//             <Checkbox
-//               checked={selectedAuthors.some(
-//                 (selected) => selected.title === option.title,
-//               )}
-//             />
-//           )}
-//           <ListItemAvatar>
-//             <Avatar alt={option.title} src={option.img} />
-//           </ListItemAvatar>
-//           <ListItemText primary={option.title} />
-//         </ListItem>
-//       )}
-//       renderInput={(params) => <TextField {...params} />}
-//     />
-//   );
-// };
+          )}
+          <ListItemAvatar>
+            <Avatar alt={option.title} src={option.img} />
+          </ListItemAvatar>
+          <ListItemText primary={option.title} />
+        </ListItem>
+      )}
+      renderInput={(params) => <TextField label={label} {...params} />}
+    />
+  );
+};

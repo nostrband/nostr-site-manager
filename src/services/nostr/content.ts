@@ -1,6 +1,7 @@
 import { nip19 } from "nostr-tools";
 import { fetchProfiles, getSiteSettings, parser } from "./api";
 import {
+  DEFAULT_RELAYS,
   SEARCH_RELAYS,
   getOutboxRelays,
   ndk,
@@ -27,6 +28,8 @@ import {
   SUPPORTED_KINDS,
   SUBMIT_STATE_REMOVE,
   tags,
+  fetchOutboxRelays,
+  Profile,
 } from "libnostrsite";
 import {
   NDKEvent,
@@ -37,7 +40,9 @@ import {
 
 export type SearchPost = Post & {
   submitterPubkey: string;
+  submitterProfile?: Profile;
   autoSubmitted: boolean;
+  relay?: string;
 };
 
 export type TypeSearchPosts = {
@@ -178,6 +183,7 @@ export const searchPosts = async (
     post.autoSubmitted = matchPostsToFilters(e, autoFilters);
     post.submitterPubkey =
       submitted.find((s) => s.id === post.id)?.submitterPubkey || "";
+    post.relay = e.relay?.url;
 
     // skip
     if (onlyNew && (post.autoSubmitted || post.submitterPubkey)) continue;
@@ -284,12 +290,36 @@ export async function filterSitePosts(
 
     post.submitterPubkey = "";
     post.autoSubmitted = false;
+    post.relay = e.relay?.url;
 
     // status
     if (matchPostsToFilters(e, autoFilters)) post.autoSubmitted = true;
 
     posts.push(post);
     console.log("auto post", post);
+  }
+
+  await postProcess(posts);
+
+  return posts;
+}
+
+async function postProcess(posts: SearchPost[]) {
+
+  // add relay hint to each post id
+  for (const post of posts) {
+    if (!post.relay) continue;
+    try {
+      const { type, data } = nip19.decode(post.id);
+      if (type === "naddr") {
+        // FIXME use 'author' field to pass the pubkey
+        post.id = nip19.naddrEncode({ ...data, relays: [post.relay] })
+      } else if (type === "nevent") {
+        post.id = nip19.neventEncode({ ...data, relays: [post.relay] })
+      }  
+    } catch (e) {
+      console.error("error", e, post);
+    }
   }
 
   // add hashtags
@@ -306,18 +336,61 @@ export async function filterSitePosts(
   }
 
   // add authors
-  const profiles = await fetchProfiles(posts.map((p) => p.event.pubkey));
-  for (const post of posts) {
-    const event = profiles.find((p) => p.pubkey === post.event.pubkey);
-    if (event) {
-      post.primary_author = await parser.parseAuthor(
-        parser.parseProfile(event)
-      );
-      post.authors.push(post.primary_author);
-    }
+  const pubkeys: string[] = [
+    ...posts.map((p) => p.event.pubkey),
+    ...posts.filter(p => p.submitterPubkey).map(p => p.submitterPubkey)
+  ]
+  const profiles = await fetchProfiles(pubkeys);
+  const getProfile = (pubkey: string) => {
+    const event = profiles.find((p) => p.pubkey === pubkey);
+    return event ? parser.parseProfile(event) : undefined;
   }
 
-  return posts;
+  for (const post of posts) {
+    const profile = getProfile(post.event.pubkey);
+    if (profile)
+      post.primary_author = await parser.parseAuthor(profile);
+
+    if (post.submitterPubkey)
+      post.submitterProfile = getProfile(post.submitterPubkey)
+  }
+}
+
+export async function fetchPost(site: Site, id: string) {
+
+  const submits = await fetchSubmits(site);
+  const submitted = submits.find(p => p.id === id);
+  if (submitted) return submitted;
+
+  const { type, data } = nip19.decode(id);
+  const relayHints: string[] = [...DEFAULT_RELAYS];
+  if (type !== "nevent" && type !== 'naddr') throw new Error("Invalid id");
+  
+  if (data.relays?.[0])
+    relayHints.push(data.relays[0]);
+
+  if (type === 'naddr') {
+    const relays = await getOutboxRelays(data.pubkey);
+    relayHints.push(...relays);
+  }
+
+  const events = await fetchByIds(ndk, [id], relayHints);
+  if (!events.length) return undefined;
+
+  const event = events[0];
+  const post = await parser.parseEvent(event) as SearchPost;
+  if (!post) return undefined;
+
+  const autoFilters = createSiteFilters({
+    limit: 1,
+    settings: site,
+  });
+
+  post.submitterPubkey = '';
+  post.autoSubmitted = matchPostsToFilters(event, autoFilters);
+  post.relay = event.relay?.url;
+
+  await postProcess([post]);
 }
 
 async function fetchSubmits(site: Site) {
@@ -377,6 +450,7 @@ async function fetchSubmits(site: Site) {
 
     post.submitterPubkey = submit.event.pubkey;
     post.autoSubmitted = matchPostsToFilters(post.event, autoFilters);
+    post.relay = e.relay?.url;
     posts.push(post);
     console.log("submitted post", post);
   }

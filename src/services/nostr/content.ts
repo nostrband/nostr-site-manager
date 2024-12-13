@@ -72,19 +72,19 @@ export const suggestPosts = async (siteId: string) => {
       kinds: [...new Set(existing.map((e) => e.event.kind!))],
       hashtags: [
         ...new Set(
-          existing.map((e) => tags(e.event, "t").map((t) => t[1])).flat(),
+          existing.map((e) => tags(e.event, "t").map((t) => t[1])).flat()
         ),
       ],
     },
     // onlyNew
-    true,
+    true
   );
 };
 
 export const searchPosts = async (
   siteId: string,
   { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
-  onlyNew?: boolean,
+  onlyNew?: boolean
 ): Promise<SearchPost[]> => {
   const site = await getSiteSettings(siteId);
   if (!site) throw new Error("Unknown site");
@@ -165,7 +165,7 @@ export const searchPosts = async (
     // NOTE: we are looking for different authors and it's quite
     // hard to fetch relays for all of them, so for now we just opt-in
     // to use search relays for finding posts to submit
-    SEARCH_RELAYS,
+    SEARCH_RELAYS
   );
 
   console.log("searched events", events);
@@ -202,10 +202,10 @@ export const searchPosts = async (
           arr.reduce(
             (minCreatedAt: number, e: NDKEvent) =>
               Math.min(minCreatedAt, e.created_at!),
-            arr[0].created_at!,
+            arr[0].created_at!
           ) - 1, // before that last one of current set
       },
-      onlyNew,
+      onlyNew
     );
   }
 
@@ -214,7 +214,7 @@ export const searchPosts = async (
 
 export async function filterSitePosts(
   siteId: string,
-  { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
+  { authors, kinds, hashtags, since, until, search }: TypeSearchPosts
 ): Promise<SearchPost[]> {
   const site = await getSiteSettings(siteId);
   if (!site) throw new Error("Unknown site");
@@ -261,7 +261,7 @@ export async function filterSitePosts(
       ...f,
       search,
     })),
-    relays,
+    relays
   );
 
   // make sure it matches our other local filters (skip replies etc)
@@ -419,7 +419,7 @@ export async function submitPost(
     kind,
     url,
     remove,
-  }: { id: string; author: string; kind: number; url: string; remove: boolean },
+  }: { id: string; author: string; kind: number; url: string; remove: boolean }
 ) {
   if (userIsDelegated) throw new Error("Cannot sign event in delegated mode");
 
@@ -476,11 +476,11 @@ export async function submitPost(
 
   // publish
   const r = await nevent.publish(
-    NDKRelaySet.fromRelayUrls([...userRelays, ...SEARCH_RELAYS], ndk),
+    NDKRelaySet.fromRelayUrls([...userRelays, ...SEARCH_RELAYS], ndk)
   );
   console.log(
     "published submit event to",
-    [...r].map((r) => r.url),
+    [...r].map((r) => r.url)
   );
   if (!r.size) throw new Error("Failed to publish to relays");
 
@@ -493,4 +493,6 @@ export async function submitPost(
     // add back with current user as submitter
     submitted.push(post);
   }
+
+  submitsCache.set(site.id, submitted);
 }

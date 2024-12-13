@@ -39,7 +39,6 @@ import {
 } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useFormik } from "formik";
 import { AuthorFilter, OptionAuthorType } from "./components/Author";
 import { enqueueSnackbar } from "notistack";
@@ -131,6 +130,10 @@ export const Filter = memo(
       isFetching,
     } = useSettingsSite(siteId);
 
+    const [contributors, setContributors] = useState<string[]>([]);
+
+    // const contributors = [...(siteData?.contributors ? siteData?.contributors : []), ...values.authors.map((el) => (el.pubkey) )]
+
     const [selectedDateSince, setSelectedDateSince] = useState<Date | null>(
       null,
     );
@@ -140,76 +143,77 @@ export const Filter = memo(
 
     const isLoadingFilter = isLoadingSetting || isFetching || isLoading;
 
-    const { values, submitForm, setFieldValue, handleChange, handleReset } =
-      useFormik({
-        initialValues,
-        onSubmit: async (values) => {
-          handleLoading(true);
+    const { values, submitForm, setFieldValue, handleReset } = useFormik({
+      initialValues,
+      onSubmit: async (values) => {
+        handleLoading(true);
 
-          const prepareData = {
-            authors: values.authors.map((el) => el.pubkey),
-            kinds: values.kinds,
-            hashtags: values.hashtags.map((str) => str.slice(1)),
-            since: values.since,
-            until: values.until,
-            search: values.search,
-          };
+        const prepareData = {
+          authors: values.authors.map((el) => el.pubkey),
+          kinds: values.kinds,
+          hashtags: values.hashtags.map((str) => str.slice(1)),
+          since: values.since,
+          until: values.until,
+          search: values.search,
+        };
 
-          function transformObject(input: InputObject): Partial<InputObject> {
-            const { authors, kinds, hashtags, since, until, search } = input;
+        function transformObject(input: InputObject): Partial<InputObject> {
+          const { authors, kinds, hashtags, since, until, search } = input;
 
-            const result: Partial<InputObject> = {};
+          const result: Partial<InputObject> = {};
 
-            if (authors.length > 0) {
-              result.authors = authors;
-            }
-            if (kinds.length > 0) {
-              result.kinds = kinds;
-            }
-            if (hashtags.length > 0) {
-              result.hashtags = hashtags;
-            }
-            if (since !== undefined) {
-              result.since = since / 1000;
-            }
-            if (until !== undefined) {
-              result.until = until / 1000;
-            }
-            if (search.length > 0) {
-              result.search = search;
-            }
-
-            return result;
+          if (authors.length > 0) {
+            result.authors = authors;
+          }
+          if (kinds.length > 0) {
+            result.kinds = kinds;
+          }
+          if (hashtags.length > 0) {
+            result.hashtags = hashtags;
+          }
+          if (since !== undefined) {
+            result.since = since / 1000;
+          }
+          if (until !== undefined) {
+            result.until = until / 1000;
+          }
+          if (search.length > 0) {
+            result.search = search;
           }
 
-          const transformedObject = transformObject(prepareData);
+          return result;
+        }
+
+        const transformedObject = transformObject(prepareData);
 
           try {
             if (siteData) {
               const posts = await filterSitePosts(siteData.id, transformedObject);
 
-              console.log({ posts, transformedObject });
+            console.log({ posts, transformedObject });
 
-              setPosts(posts);
-            }
-          } catch (e: any) {
-            enqueueSnackbar("Error: " + e.toString(), {
-              autoHideDuration: 3000,
-              variant: "error",
-              anchorOrigin: {
-                horizontal: "right",
-                vertical: "bottom",
-              },
-            });
-          } finally {
-            handleLoading(false);
+            setPosts(posts);
           }
-        },
-      });
+        } catch (e: any) {
+          enqueueSnackbar("Error: " + e.toString(), {
+            autoHideDuration: 3000,
+            variant: "error",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "bottom",
+            },
+          });
+        } finally {
+          handleLoading(false);
+        }
+      },
+    });
 
     const handleChangeAuthors = useCallback(
       (value: OptionAuthorType[]) => {
         setFieldValue("authors", value);
+
+        console.log({ value });
 
         if (value.length) {
           searchParams.set("authors", value.map((el) => el.pubkey).join(","));
@@ -334,6 +338,28 @@ export const Filter = memo(
     }, [submitForm, siteData]);
 
     useEffect(() => {
+      if (siteData) {
+        const authors = params.get("authors")
+          ? params.get("authors")!.split(",")
+          : [];
+
+        if (authors.length) {
+          const mergeContributors = [
+            ...authors,
+            ...siteData.contributors,
+          ].filter(
+            (author, index, self) =>
+              index === self.findIndex((a) => a === author),
+          );
+
+          setContributors(mergeContributors);
+        } else {
+          setContributors(siteData.contributors);
+        }
+      }
+    }, [siteData]);
+
+    useEffect(() => {
       const authors = params.get("authors")
         ? params
             .get("authors")!
@@ -453,9 +479,7 @@ export const Filter = memo(
                 size={sizeField}
                 selectedAuthors={values.authors}
                 handleChangeAuthors={handleChangeAuthors}
-                contributors={
-                  siteData?.contributors ? siteData?.contributors : []
-                }
+                contributors={contributors}
               />
             </StyledFormControl>
           </Grid>

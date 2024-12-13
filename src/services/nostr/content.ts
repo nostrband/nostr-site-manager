@@ -231,6 +231,7 @@ export async function filterSitePosts(
       );
     }),
   ];
+  console.log("submitted filtered posts", posts);
 
   // FIXME soon we'll get rid of auto-filters
   // and will only work with submitted events!
@@ -275,7 +276,7 @@ export async function filterSitePosts(
   // convert filtered events to posts
   for (const e of valid) {
     // skip ones that are manually submitted
-    if (submittedPosts.find((p) => p.id === eventId(e))) continue;
+    if (posts.find((p) => p.id === eventId(e))) continue;
 
     // parse
     const post = (await parser.parseEvent(e)) as SearchPost;
@@ -288,6 +289,7 @@ export async function filterSitePosts(
     if (matchPostsToFilters(e, autoFilters)) post.autoSubmitted = true;
 
     posts.push(post);
+    console.log("auto post", post);
   }
 
   // add hashtags
@@ -300,8 +302,7 @@ export async function filterSitePosts(
       id: t.toLocaleLowerCase(),
       name: t,
     }));
-
-    // FIXME also take from submits
+    post.primary_tag = post.tags?.[0] || null;
   }
 
   return posts;
@@ -311,10 +312,14 @@ async function fetchSubmits(site: Site) {
   const cached = submitsCache.get(site.id);
   if (cached) return cached;
 
+  const addr = parseAddr(site.naddr);
+  const s_tag = `${KIND_SITE}:${addr.pubkey}:${addr.identifier}`;
+
   const filter: NDKFilter = {
     // @ts-ignore
     kinds: [KIND_SITE_SUBMIT],
     authors: [...site.contributor_pubkeys, site.admin_pubkey],
+    "#s": [s_tag],
   };
 
   const events = await scanRelays(ndk, filter, userRelays, 10000, {
@@ -339,8 +344,10 @@ async function fetchSubmits(site: Site) {
   const ids = [...submits.values()]
     .filter((s) => s.state === SUBMIT_STATE_ADD)
     .map((s) => s.eventAddress);
+  console.log("submits", site.id, ids, submits);
 
   const submittedEvents = await fetchByIds(ndk, ids, relayHints);
+  console.log("submittedEvents", ids, relayHints, submittedEvents);
 
   const autoFilters = createSiteFilters({
     limit: 1,
@@ -359,6 +366,7 @@ async function fetchSubmits(site: Site) {
     post.submitterPubkey = submit.event.pubkey;
     post.autoSubmitted = matchPostsToFilters(post.event, autoFilters);
     posts.push(post);
+    console.log("submitted post", post);
   }
 
   submitsCache.set(site.id, posts);

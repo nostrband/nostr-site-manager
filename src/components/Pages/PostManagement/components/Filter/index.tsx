@@ -45,7 +45,7 @@ import { AuthorFilter, OptionAuthorType } from "./components/Author";
 import { enqueueSnackbar } from "notistack";
 import { TypesFilter } from "./components/Types";
 import { HashtagsFilter } from "./components/Hashtags";
-import { SearchPost, searchPosts } from "@/services/nostr/content";
+import { SearchPost, filterSitePosts, searchPosts } from "@/services/nostr/content";
 import { LoadingButton } from "@mui/lab";
 import { useRouter, useSearchParams } from "next/navigation";
 import { nip19 } from "nostr-tools";
@@ -186,7 +186,7 @@ export const Filter = memo(
 
           try {
             if (siteData) {
-              const posts = await searchPosts(siteData.id, transformedObject);
+              const posts = await filterSitePosts(siteData.id, transformedObject);
 
               console.log({ posts, transformedObject });
 

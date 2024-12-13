@@ -1,5 +1,5 @@
 import { nip19 } from "nostr-tools";
-import { getSiteSettings, parser } from "./api";
+import { fetchProfiles, getSiteSettings, parser } from "./api";
 import {
   SEARCH_RELAYS,
   getOutboxRelays,
@@ -303,6 +303,18 @@ export async function filterSitePosts(
       name: t,
     }));
     post.primary_tag = post.tags?.[0] || null;
+  }
+
+  // add authors
+  const profiles = await fetchProfiles(posts.map((p) => p.event.pubkey));
+  for (const post of posts) {
+    const event = profiles.find((p) => p.pubkey === post.event.pubkey);
+    if (event) {
+      post.primary_author = await parser.parseAuthor(
+        parser.parseProfile(event)
+      );
+      post.authors.push(post.primary_author);
+    }
   }
 
   return posts;

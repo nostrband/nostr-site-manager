@@ -393,7 +393,7 @@ export async function fetchPost(site: Site, id: string) {
   await postProcess([post]);
 }
 
-async function fetchSubmits(site: Site) {
+export async function fetchSubmits(site: Site) {
   const cached = submitsCache.get(site.id);
   if (cached) return cached;
 

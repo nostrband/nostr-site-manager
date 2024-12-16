@@ -38,7 +38,7 @@ import {
 } from "./styled";
 import { reorder } from "./helpers";
 import { ListPinnedNote } from "./components/ListPinnedNote";
-import { fetchPins, savePins, searchPosts } from "@/services/nostr/api";
+import { fetchPins, savePins } from "@/services/nostr/api";
 import { Post } from "libnostrsite";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { StyledItemWrapDiv } from "./components/PinnedNote/styled";
@@ -47,6 +47,7 @@ import { enqueueSnackbar } from "notistack";
 import { PinnedNoteContent } from "./components/PinnedNoteContent";
 import { CrossIcon, PinFillIcon, PinIcon } from "@/components/Icons";
 import useResponsive from "@/hooks/useResponsive";
+import { filterSitePosts } from "@/services/nostr/content";
 
 function convertPosts(posts: Post[]) {
   const pins: IPinnedNote[] = [];
@@ -164,7 +165,7 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
       setOptions([]);
 
       console.log("query", query, siteId);
-      const posts = await searchPosts(siteId, query);
+      const posts = await filterSitePosts(siteId, { search: query });
       // console.log("events", posts);
       const pins = convertPosts(posts);
       console.log("found pins", pins);

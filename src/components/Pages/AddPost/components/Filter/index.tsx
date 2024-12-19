@@ -10,14 +10,7 @@ import {
   StyledWrapField,
   StyledWrapFilter,
 } from "./styled";
-import {
-  CheckIcon,
-  ChevronLeftIcon,
-  CrossIcon,
-  FilterIcon,
-  PlusIcon,
-  SearchIcon,
-} from "@/components/Icons";
+import { ChevronLeftIcon, CrossIcon, SearchIcon } from "@/components/Icons";
 import useResponsive from "@/hooks/useResponsive";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import {
@@ -43,7 +36,12 @@ import { AuthorFilter, OptionAuthorType } from "./components/Author";
 import { enqueueSnackbar } from "notistack";
 import { TypesFilter } from "./components/Types";
 import { HashtagsFilter } from "./components/Hashtags";
-import { SearchPost, filterSitePosts } from "@/services/nostr/content";
+import {
+  SearchPost,
+  filterSitePosts,
+  searchPosts,
+  suggestPosts,
+} from "@/services/nostr/content";
 import { LoadingButton } from "@mui/lab";
 import { useRouter, useSearchParams } from "next/navigation";
 import { nip19 } from "nostr-tools";
@@ -51,7 +49,6 @@ import { fetchProfiles } from "@/services/nostr/api";
 import { debounce } from "lodash";
 import { TransitionProps } from "@mui/material/transitions";
 import { DatePickerField } from "./components/DatePickerField";
-import Link from "next/link";
 
 type InputObject = {
   authors: string[];
@@ -106,8 +103,6 @@ export const Filter = memo(
       () => new URLSearchParams(params.toString()),
       [params],
     );
-
-    const linkToAddPost = `/admin/${siteId}/add-post`;
 
     const [isOpenModal, setOpenModal] = useState(false);
 
@@ -187,7 +182,7 @@ export const Filter = memo(
 
         try {
           if (siteData) {
-            const posts = await filterSitePosts(siteData.id, transformedObject);
+            const posts = await searchPosts(siteData.id, transformedObject);
 
             console.log({ posts, transformedObject });
 
@@ -330,11 +325,21 @@ export const Filter = memo(
       );
     }, [values]);
 
-    useEffect(() => {
-      if (siteData) {
-        submitForm();
+    const getSuggestPosts = useCallback(async () => {
+      try {
+        const suggestPostsData = await suggestPosts(siteId);
+
+        setPosts(suggestPostsData);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        handleLoading(false);
       }
-    }, [submitForm, siteData]);
+    }, [siteId, setPosts, handleLoading]);
+
+    useEffect(() => {
+      getSuggestPosts();
+    }, [getSuggestPosts]);
 
     useEffect(() => {
       if (siteData) {
@@ -452,7 +457,7 @@ export const Filter = memo(
           >
             <ChevronLeftIcon />
           </StyledCloseFilterButton>
-          Filter
+          Search
           <StyledCollapseButtonFilter
             color="decorate"
             isOpenMoreFilter={isOpenMoreFilter}
@@ -595,10 +600,10 @@ export const Filter = memo(
                 color="decorate"
                 size="large"
                 endIcon={
-                  !isDesktop ? <CheckIcon fontSize="inherit" /> : undefined
+                  !isDesktop ? <SearchIcon fontSize="inherit" /> : undefined
                 }
               >
-                {isDesktop ? "Accept" : "Save"}
+                {isDesktop ? "Accept" : "Search posts"}
               </LoadingButton>
             </Grid>
           </Grid>
@@ -622,31 +627,20 @@ export const Filter = memo(
           </Dialog>
         )}
 
-        <StyledActionsButtonWrap>
-          {!isDesktop && (
+        {!isDesktop && (
+          <StyledActionsButtonWrap>
             <Button
               onClick={handleClickOpen}
               size="large"
               fullWidth
               color="decorate"
               variant="outlined"
-              startIcon={<FilterIcon fontSize="inherit" />}
+              endIcon={<SearchIcon fontSize="inherit" />}
             >
-              Filter
+              Search posts
             </Button>
-          )}
-          <Button
-            LinkComponent={Link}
-            href={linkToAddPost}
-            size="large"
-            fullWidth
-            color="decorate"
-            variant="contained"
-            endIcon={<PlusIcon fontSize="inherit" />}
-          >
-            Add post
-          </Button>
-        </StyledActionsButtonWrap>
+          </StyledActionsButtonWrap>
+        )}
       </>
     );
   },

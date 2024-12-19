@@ -14,7 +14,7 @@ import {
 import { NotFoundIcon } from "@/components/Icons";
 import { PostCard } from "@/components/PostCard";
 
-export const PostManagement = () => {
+export const AddPost = () => {
   const { siteId } = useGetSiteId();
   const [isLoadingPosts, setloadingPosts] = useState(true);
   const [posts, setPosts] = useState<SearchPost[]>([]);

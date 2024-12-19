@@ -1,11 +1,12 @@
 "use client";
-
 import { SearchPost, submitPost } from "@/services/nostr/content";
 import {
+  StyledAddButton,
   StyledAvatrAuthor,
   StyledCard,
   StyledCardContent,
   StyledCardDescription,
+  StyledCardHead,
   StyledCardMedia,
   StyledCardNoImage,
   StyledCardText,
@@ -15,20 +16,41 @@ import {
   StyledLink,
   StyledPostAuthorName,
   StyledStatus,
+  StyledTags,
 } from "./styled";
 import { usePathname } from "next/navigation";
 import { memo, MouseEvent, useEffect, useState } from "react";
 import useImageLoader from "@/hooks/useImageLoader";
 import { format, parseISO } from "date-fns";
 import { BrokenBigIcon, CheckCircleIcon, IconPerson, PlusIcon } from "../Icons";
-import { Avatar, Box, Chip, CircularProgress } from "@mui/material";
+import { Avatar, Chip, CircularProgress } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
-import { LoadingButton } from "@mui/lab";
+import { StyledTooltip } from "../Tooltip/styled";
 
 export const PostCard = memo(
-  ({ post, siteId }: { post: SearchPost; siteId: string }) => {
-    const { title, id, feature_image, url, created_at, event, tags } = post;
+  ({
+    post,
+    siteId,
+    updatePost,
+  }: {
+    post: SearchPost;
+    siteId: string;
+    updatePost: (post: SearchPost) => void;
+  }) => {
+    const {
+      title,
+      id,
+      feature_image,
+      url,
+      created_at,
+      event,
+      tags,
+      submitterPubkey,
+      submitterProfile,
+      primary_author,
+      autoSubmitted,
+    } = post;
 
     const pathname = usePathname();
     const { isLoaded: isLoadedImage } = useImageLoader(feature_image);
@@ -43,15 +65,12 @@ export const PostCard = memo(
     const [isWaiting, setIsWaiting] = useState<boolean>(false);
     const [isSending, setIsSending] = useState<boolean>(false);
 
-    const [isAdded, setAdded] = useState<boolean>(false);
+    const isAdded = Boolean(submitterPubkey);
 
     const [progress, setProgress] = useState<number>(0);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
-    const handleClick = (
-      e: MouseEvent<HTMLButtonElement>,
-      isAdded: boolean,
-    ) => {
+    const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
 
       if (isWaiting) {
@@ -70,7 +89,7 @@ export const PostCard = memo(
 
           if (progressValue >= 100) {
             clearInterval(newTimer);
-            sendRequest(isAdded);
+            sendRequest();
           }
         }, 100);
 
@@ -78,21 +97,26 @@ export const PostCard = memo(
       }
     };
 
-    const sendRequest = async (isAdded: boolean) => {
+    const sendRequest = async () => {
       setIsWaiting(false);
       setProgress(0);
       setIsSending(true);
 
       try {
-        await submitPost(siteId, {
+        const submitPostResult = await submitPost(siteId, {
           id: id,
           author: event.pubkey,
           kind: event.kind!,
           url: "",
           remove: isAdded,
         });
+        if (isAdded) {
+          updatePost({ ...post, submitterPubkey: "" });
+        } else {
+          updatePost({ ...post, submitterPubkey: "test" });
+        }
 
-        setAdded((prev) => !prev);
+        console.log({ submitPostResult });
       } catch (e: any) {
         console.log("error", e);
         enqueueSnackbar("Error: " + e.toString(), {
@@ -120,35 +144,40 @@ export const PostCard = memo(
       <StyledCard>
         <StyledLink component={Link} href={link}>
           <StyledCardContent>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <StyledStatus>
-                <CheckCircleIcon color="inherit" />
-                Auto-submitted
-              </StyledStatus>
-              <LoadingButton
-                sx={{
-                  marginLeft: "auto",
-                  background: isWaiting
-                    ? "initial"
-                    : isAdded
-                      ? "rgba(255, 62, 217, 0.5)"
-                      : "initial",
-                }}
+            <StyledCardHead>
+              {autoSubmitted && (
+                <StyledTooltip
+                  placement="bottom"
+                  title="This post is automatically added from your Nostr app"
+                  arrow
+                >
+                  <StyledStatus>
+                    <CheckCircleIcon color="inherit" />
+                    Auto-submitted
+                  </StyledStatus>
+                </StyledTooltip>
+              )}
+              <StyledAddButton
+                isSending={isSending}
+                isWaiting={isWaiting}
+                isAdded={isAdded}
                 loading={isSending}
                 disabled={isSending}
                 variant="outlined"
                 color="decorate"
-                onClick={(e) => handleClick(e, isAdded)}
+                onClick={handleClick}
+                size="small"
                 startIcon={
-                  isWaiting ? (
+                  isSending ? undefined : isWaiting ? (
                     <CircularProgress
                       color="inherit"
-                      size={20}
+                      size={16}
                       variant="determinate"
                       value={progress}
                     />
                   ) : isAdded ? (
                     <Avatar
+                      src={submitterProfile?.profile?.picture}
                       sx={{
                         border: "1px solid #fff",
                         height: "20px",
@@ -164,8 +193,8 @@ export const PostCard = memo(
                 }
               >
                 {isWaiting ? "Cancel" : isAdded ? "Added" : "Add"}
-              </LoadingButton>
-            </Box>
+              </StyledAddButton>
+            </StyledCardHead>
             {isLoadedImage && feature_image ? (
               <StyledCardMedia
                 component="img"
@@ -190,24 +219,25 @@ export const PostCard = memo(
               </StyledCardDescription>
             </StyledCardText>
 
-            <Box>
+            <StyledTags>
               {tags.map((tag, idx) => (
-                <Chip
-                  label={tag.name}
-                  key={idx}
-                  size="medium"
-                  sx={{
-                    marginRight: "10px",
-                  }}
-                />
+                <Chip label={tag.name} key={idx} size="medium" />
               ))}
-            </Box>
+            </StyledTags>
 
             <StyledCardWrapAuthor>
-              <StyledAvatrAuthor src="#">
+              <StyledAvatrAuthor
+                src={
+                  primary_author?.profile_image
+                    ? primary_author?.profile_image
+                    : "#"
+                }
+              >
                 <IconPerson fontSize="inherit" />
               </StyledAvatrAuthor>
-              <StyledPostAuthorName>Test name</StyledPostAuthorName>
+              <StyledPostAuthorName>
+                {primary_author?.name}
+              </StyledPostAuthorName>
             </StyledCardWrapAuthor>
           </StyledCardContent>
         </StyledLink>

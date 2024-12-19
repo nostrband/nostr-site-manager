@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import {
   Avatar,
   Box,
+  BoxProps,
   Card,
   CardMedia,
   CardMediaProps,
@@ -13,12 +14,19 @@ import {
 import { grey } from "@mui/material/colors";
 import { forwardRef } from "react";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
+import { PageTitle } from "@/components/shared/styled";
 
 const POST_CARD_PADDING = 16;
-const CARD_MEDIA_HEIGHT = 160;
+const CARD_MEDIA_HEIGHT = 363;
+const CARD_MEDIA_HEIGHT_SMALL = 160;
 
 interface ICardMedia {
   alt?: string;
+  isDesktop: boolean;
+}
+
+interface IBox {
+  isDesktop: boolean;
 }
 
 interface ILoadingButton {
@@ -31,35 +39,32 @@ export type LoadingButtonType = ILoadingButton & LoadingButtonProps;
 
 export type IStyledCardMedia = ICardMedia & CardMediaProps;
 
+export type BoxType = ICardMedia & BoxProps;
+
 export const StyledCard = styled(Card)(({ theme }) => ({
   width: "100%",
   height: "100%",
   display: "flex",
   flexDirection: "column",
   boxShadow: theme.shadows[0],
-  "&:hover": {
-    boxShadow: theme.shadows[10],
-  },
+  gap: POST_CARD_PADDING,
+  padding: POST_CARD_PADDING,
 }));
 
-export const StyledCardContent = styled(Box)(() => ({
-  width: "100%",
-  height: "100%",
-  display: "flex",
-  flexDirection: "column",
-  gap: 16,
-}));
+export const StyledCardNoImage = styled(
+  forwardRef<HTMLDivElement, BoxType>(function MainContentName(props, ref) {
+    const exclude = new Set(["isDesktop"]);
+    const omitProps = Object.fromEntries(
+      Object.entries(props).filter((e) => !exclude.has(e[0])),
+    );
 
-export const StyledCardHead = styled(Box)(() => ({
-  display: "flex",
-  alignItems: "center",
-}));
-
-export const StyledCardNoImage = styled(Box)(({ theme }) => ({
-  flex: `0 0 ${CARD_MEDIA_HEIGHT}px`,
+    return <Box ref={ref} {...omitProps} />;
+  }),
+)(({ isDesktop, theme }) => ({
+  flex: `0 0 ${isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL}px`,
+  height: isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL,
   background: grey[300],
   display: "flex",
-  height: CARD_MEDIA_HEIGHT,
   width: "100%",
   borderRadius: theme.shape.borderRadius,
   fontSize: 60,
@@ -68,13 +73,18 @@ export const StyledCardNoImage = styled(Box)(({ theme }) => ({
 
 export const StyledCardMedia = styled(
   forwardRef<HTMLImageElement, IStyledCardMedia>(
-    function StyledCardMediaName(props, ref) {
-      return <CardMedia ref={ref} {...props} />;
+    function MainContentName(props, ref) {
+      const exclude = new Set(["isDesktop"]);
+      const omitProps = Object.fromEntries(
+        Object.entries(props).filter((e) => !exclude.has(e[0])),
+      );
+
+      return <CardMedia ref={ref} {...omitProps} />;
     },
   ),
-)(({ theme }) => ({
-  flex: `0 0 ${CARD_MEDIA_HEIGHT}px`,
-  height: CARD_MEDIA_HEIGHT,
+)(({ isDesktop, theme }) => ({
+  flex: `0 0 ${isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL}px`,
+  height: isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL,
   borderRadius: theme.shape.borderRadius,
 }));
 
@@ -98,11 +108,6 @@ export const StyledTitle = styled(Typography)(() => ({
 
 export const StyledCardTitle = styled(Box)(({ theme }) => ({
   width: "100%",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  display: "-webkit-box",
-  WebkitLineClamp: 2,
-  WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
   fontWeight: "700",
   fontSize: 16,
@@ -110,17 +115,20 @@ export const StyledCardTitle = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-export const StyledCardDescription = styled(Typography)(({ theme }) => ({
+export const StyledCardTitleFeature = styled(Box)(({ theme }) => ({
   width: "100%",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  display: "-webkit-box",
-  WebkitLineClamp: 3,
-  WebkitBoxOrient: "vertical",
-  wordWrap: "break-word",
+  fontWeight: "700",
+  fontSize: 16,
+  lineHeight: "20px",
+  color: theme.palette.primary.main,
+}));
+
+export const StyledCardDescription = styled(Typography)(() => ({
+  width: "100%",
   fontWeight: "500",
   fontSize: 12,
   lineHeight: "19px",
+  wordWrap: "break-word",
 }));
 
 export const StyledCardText = styled(Box)(() => ({
@@ -162,25 +170,26 @@ export const StyledPostAuthorName = styled(Box)(() => ({
   fontWeight: "500",
 }));
 
-export const StyledLink = styled(
-  forwardRef<HTMLLinkElement, LinkProps>(function MainContentName(props, ref) {
-    return <Link component="nav" ref={ref} {...props} />;
-  }),
-)(() => ({
-  height: "100%",
-  textDecoration: "none",
-  padding: POST_CARD_PADDING,
-}));
-
 export const StyledStatus = styled(Typography)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   gap: 8,
-  marginRight: "auto",
   fontSize: "13px",
   lineHeight: "20px",
   fontWeight: "700",
   color: theme.palette.success.main,
+}));
+
+export const StyledStatusState = styled(Typography)(() => ({
+  fontSize: "14px",
+  lineHeight: "20px",
+  fontWeight: "700",
+}));
+
+export const StyledStatusWrap = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
 }));
 
 export const StyledAddButton = styled(
@@ -194,11 +203,7 @@ export const StyledAddButton = styled(
       return <LoadingButton ref={ref} {...omitProps} />;
     },
   ),
-)(({ isSending, isWaiting, isAdded, theme }) => ({
-  width: "88px",
-  height: "32px",
-  lineHeight: "32px",
-  marginLeft: "auto",
+)(({ isSending, isWaiting, isAdded }) => ({
   background: isSending
     ? "initial"
     : isWaiting
@@ -206,4 +211,39 @@ export const StyledAddButton = styled(
       : isAdded
         ? "rgba(255, 62, 217, 0.5)"
         : "initial",
+}));
+
+export const StyledTitlePage = styled(PageTitle)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  paddingBottom: 24,
+  gap: 8,
+  paddingTop: 40,
+  span: {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "-webkit-box",
+    WebkitLineClamp: 1,
+    WebkitBoxOrient: "vertical",
+    wordWrap: "break-word",
+  },
+  [theme.breakpoints.down("sm")]: {
+    paddingTop: 16,
+  },
+}));
+
+export const StyledWrap = styled(Box)(() => ({
+  maxWidth: 720,
+  margin: "0 auto",
+}));
+
+export const StyledComingSoon = styled(Box)(() => ({
+  fontWeight: "600",
+  fontSize: 14,
+  color: grey[400],
+  height: "100%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 4,
 }));

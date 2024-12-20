@@ -598,7 +598,7 @@ export const Filter = memo(
                   !isDesktop ? <CheckIcon fontSize="inherit" /> : undefined
                 }
               >
-                {isDesktop ? "Accept" : "Save"}
+                {isDesktop ? "Filter" : "Save"}
               </LoadingButton>
             </Grid>
           </Grid>

@@ -603,7 +603,7 @@ export const Filter = memo(
                   !isDesktop ? <SearchIcon fontSize="inherit" /> : undefined
                 }
               >
-                {isDesktop ? "Accept" : "Search posts"}
+                {isDesktop ? "Search" : "Search posts"}
               </LoadingButton>
             </Grid>
           </Grid>

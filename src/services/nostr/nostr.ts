@@ -52,6 +52,7 @@ export let userIsDelegated = false;
 export let userIsReadOnly = false;
 export let userToken = "";
 let userTokenPubkey = "";
+const outboxCache = new Map<string, string[]>();
 
 const KIND_NIP98 = 27235;
 const KIND_DELETE = 5;
@@ -123,6 +124,15 @@ function setUserToken(token: string, pubkey: string) {
   } catch {}
 }
 
+export async function getOutboxRelays(pubkey: string) {
+  const c = outboxCache.get(pubkey);
+  if (c) return c;
+
+  const relays = await fetchOutboxRelays(ndk, [pubkey]);
+  outboxCache.set(pubkey, relays);
+  return relays;
+}
+
 export async function onAuth(e: any) {
   console.log("nlAuth", e);
   const authed = e.detail.type !== "logout";
@@ -138,7 +148,7 @@ export async function onAuth(e: any) {
       setUserToken("", "");
     }
 
-    const outboxRelays = await fetchOutboxRelays(ndk, [userPubkey]);
+    const outboxRelays = await getOutboxRelays(userPubkey);
     userRelays.push(...outboxRelays);
     console.log("pubkey relays", userRelays);
 

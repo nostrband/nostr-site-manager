@@ -37,6 +37,7 @@ import {
   NDKNip07Signer,
   NDKRelaySet,
 } from "@nostr-dev-kit/ndk";
+import { marked } from "marked";
 
 export type SearchPost = Post & {
   submitterPubkey: string;
@@ -351,12 +352,21 @@ async function postProcess(posts: SearchPost[]) {
     return event ? parser.parseProfile(event) : undefined;
   };
 
+  // add submitter profile
   for (const post of posts) {
     const profile = getProfile(post.event.pubkey);
     if (profile) post.primary_author = await parser.parseAuthor(profile);
 
     if (post.submitterPubkey)
       post.submitterProfile = getProfile(post.submitterPubkey);
+  }
+
+  // make html
+  for (const post of posts) {
+    post.html = await marked.parse(post.markdown!, {
+      // FIXME doesn't work!
+      breaks: true, // convert \n to <br>
+    })
   }
 }
 

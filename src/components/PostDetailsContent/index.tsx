@@ -52,6 +52,7 @@ export const PostDetailsContent = memo(
 
     const {
       title,
+      html,
       id,
       feature_image,
       url,
@@ -199,7 +200,7 @@ export const PostDetailsContent = memo(
             <StyledCardText>
               <StyledCardTitle>{title}</StyledCardTitle>
               <StyledCardDescription variant="body2">
-                {event.content}
+                {html}
               </StyledCardDescription>
             </StyledCardText>
 
@@ -304,7 +305,7 @@ export const PostDetailsContent = memo(
         </StyledWrap>
       </Container>
     );
-  },
+  }
 );
 
 PostDetailsContent.displayName = "PostDetailsContent";

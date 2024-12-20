@@ -37,6 +37,7 @@
     "lexical": "^0.17.0",
     "libnostrsite": "^1.0.94",
     "lodash": "^4.17.21",
+    "marked": "^15.0.4",
     "mui-color-input": "^5.0.1",
     "next": "^14.2.3",
     "nostr-tools": "^1.17.0",

@@ -92,6 +92,14 @@ export const searchPosts = async (
   { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
   onlyNew?: boolean,
 ): Promise<SearchPost[]> => {
+  console.log("searchPosts", {
+    authors,
+    kinds,
+    hashtags,
+    since,
+    until,
+    search,
+  });
   const site = await getSiteSettings(siteId);
   if (!site) throw new Error("Unknown site");
 
@@ -226,6 +234,14 @@ export async function filterSitePosts(
   siteId: string,
   { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
 ): Promise<SearchPost[]> {
+  console.log("filterSitePosts", {
+    authors,
+    kinds,
+    hashtags,
+    since,
+    until,
+    search,
+  });
   const site = await getSiteSettings(siteId);
   if (!site) throw new Error("Unknown site");
 
@@ -236,8 +252,16 @@ export async function filterSitePosts(
   const posts = [
     ...submittedPosts.filter((p) => {
       // FIXME parse into words, match with words like relay does
+      const tags = p.tags.map((t) => t.name);
       return (
-        !search || p.title?.includes(search) || p.markdown?.includes(search)
+        (!search ||
+          p.title?.includes(search) ||
+          p.markdown?.includes(search)) &&
+        (!authors || authors.includes(p.event.pubkey)) &&
+        (!kinds || kinds.includes(p.event.kind!)) &&
+        (!hashtags || hashtags.find((h) => tags.includes(h))) &&
+        (!since || p.event.created_at >= since) &&
+        (!until || p.event.created_at <= until)
       );
     }),
   ];

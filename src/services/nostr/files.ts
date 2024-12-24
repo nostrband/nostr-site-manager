@@ -19,7 +19,8 @@ export async function fetchNostrJson(siteId: string) {
   if (!nostrJsonEvent) return undefined;
 
   try {
-    return JSON.parse(nostrJsonEvent.content);
+    JSON.parse(nostrJsonEvent.content);
+    return nostrJsonEvent.content;
   } catch (e) {
     console.log("Failed to parse nostr json event", nostrJsonEvent.content);
   }

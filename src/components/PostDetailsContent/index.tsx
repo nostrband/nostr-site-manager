@@ -3,10 +3,10 @@ import { SearchPost, submitPost } from "@/services/nostr/content";
 import {
   StyledAddButton,
   StyledAvatrAuthor,
+  StyledButtonCollapse,
   StyledCard,
   StyledCardDescription,
   StyledCardMedia,
-  StyledCardNoImage,
   StyledCardText,
   StyledCardTitle,
   StyledCardTitleFeature,
@@ -25,7 +25,6 @@ import { memo, MouseEvent, useEffect, useState } from "react";
 import useImageLoader from "@/hooks/useImageLoader";
 import { format, parseISO } from "date-fns";
 import {
-  BrokenBigIcon,
   CheckCircleIcon,
   ChevronLeftIcon,
   IconPerson,
@@ -37,6 +36,7 @@ import {
   Button,
   Chip,
   CircularProgress,
+  Collapse,
   Container,
   Grid,
 } from "@mui/material";
@@ -44,10 +44,13 @@ import { enqueueSnackbar } from "notistack";
 import { StyledTooltip } from "@/components/Tooltip/styled";
 import { useRouter } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
+import parse from "html-react-parser";
+import DOMPurify from "dompurify";
 
 export const PostDetailsContent = memo(
   ({ post: postData, siteId }: { post: SearchPost; siteId: string }) => {
     const [post, setPost] = useState(postData);
+    const [isShowMore, setShowMore] = useState(false);
     const isDesktop = useResponsive("up", "sm");
 
     const {
@@ -66,6 +69,10 @@ export const PostDetailsContent = memo(
     } = post;
 
     const router = useRouter();
+
+    const handleShowMore = () => {
+      setShowMore(true);
+    };
 
     const handleBack = () => {
       if (window.history.length > 1) {
@@ -137,9 +144,9 @@ export const PostDetailsContent = memo(
         });
 
         if (isAdded) {
-          updatePost({ ...post, submitterPubkey: "" });
+          updatePost({ ...post, ...submitPostResult });
         } else {
-          updatePost({ ...post, submitterPubkey: "test" });
+          updatePost({ ...post, ...submitPostResult });
         }
       } catch (e: any) {
         console.log("error", e);
@@ -155,6 +162,17 @@ export const PostDetailsContent = memo(
         setIsSending(false);
       }
     };
+
+    const getLengthDescription = DOMPurify.sanitize(html ? html : "", {
+      ALLOWED_TAGS: [],
+    })
+      .replace(/\s+/g, " ")
+      .trim().length;
+
+    const isCollapseText =
+      (isDesktop && getLengthDescription > 1380) ||
+      (!isDesktop && getLengthDescription > 340);
+    const heightCollapseArea = isDesktop ? 440 : 220;
 
     useEffect(() => {
       return () => {
@@ -179,17 +197,13 @@ export const PostDetailsContent = memo(
             <span>{title}</span>
           </StyledTitlePage>
           <StyledCard>
-            {isLoadedImage && feature_image ? (
+            {isLoadedImage && feature_image && (
               <StyledCardMedia
                 component="img"
                 isDesktop={isDesktop}
                 image={feature_image}
                 alt={title || url}
               />
-            ) : (
-              <StyledCardNoImage isDesktop={isDesktop}>
-                <BrokenBigIcon fontSize="inherit" sx={{ margin: "auto" }} />
-              </StyledCardNoImage>
             )}
 
             <StyledDate variant="body2">
@@ -200,7 +214,30 @@ export const PostDetailsContent = memo(
             <StyledCardText>
               <StyledCardTitle>{title}</StyledCardTitle>
               <StyledCardDescription variant="body2">
-                {html}
+                {isCollapseText ? (
+                  <>
+                    <Collapse
+                      in={isShowMore}
+                      collapsedSize={heightCollapseArea}
+                    >
+                      {html ? parse(html) : html}
+                    </Collapse>
+
+                    {!isShowMore && (
+                      <StyledButtonCollapse>
+                        <Button
+                          color="decorate"
+                          variant="contained"
+                          onClick={handleShowMore}
+                        >
+                          Show more
+                        </Button>
+                      </StyledButtonCollapse>
+                    )}
+                  </>
+                ) : (
+                  <>{html ? parse(html) : html}</>
+                )}
               </StyledCardDescription>
             </StyledCardText>
 
@@ -305,7 +342,7 @@ export const PostDetailsContent = memo(
         </StyledWrap>
       </Container>
     );
-  }
+  },
 );
 
 PostDetailsContent.displayName = "PostDetailsContent";

@@ -111,12 +111,10 @@ export const PostCard = memo(
           remove: isAdded,
         });
         if (isAdded) {
-          updatePost({ ...post, submitterPubkey: "" });
+          updatePost({ ...post, ...submitPostResult });
         } else {
-          updatePost({ ...post, submitterPubkey: "test" });
+          updatePost({ ...post, ...submitPostResult });
         }
-
-        console.log({ submitPostResult });
       } catch (e: any) {
         console.log("error", e);
         enqueueSnackbar("Error: " + e.toString(), {

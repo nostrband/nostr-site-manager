@@ -7,8 +7,6 @@ import {
   Card,
   CardMedia,
   CardMediaProps,
-  Link,
-  LinkProps,
   Typography,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
@@ -22,10 +20,6 @@ const CARD_MEDIA_HEIGHT_SMALL = 160;
 
 interface ICardMedia {
   alt?: string;
-  isDesktop: boolean;
-}
-
-interface IBox {
   isDesktop: boolean;
 }
 
@@ -110,25 +104,47 @@ export const StyledCardTitle = styled(Box)(({ theme }) => ({
   width: "100%",
   wordWrap: "break-word",
   fontWeight: "700",
-  fontSize: 16,
-  lineHeight: "20px",
+  fontSize: 20,
+  lineHeight: "26px",
   color: theme.palette.primary.main,
 }));
 
 export const StyledCardTitleFeature = styled(Box)(({ theme }) => ({
   width: "100%",
   fontWeight: "700",
-  fontSize: 16,
-  lineHeight: "20px",
+  fontSize: 20,
+  lineHeight: "26px",
   color: theme.palette.primary.main,
 }));
 
-export const StyledCardDescription = styled(Typography)(() => ({
+export const StyledCardDescription = styled(Typography)(({ theme }) => ({
   width: "100%",
   fontWeight: "500",
-  fontSize: 12,
-  lineHeight: "19px",
+  fontSize: 16,
+  lineHeight: "25px",
   wordWrap: "break-word",
+  position: "relative",
+  p: {
+    margin: 0,
+  },
+  [theme.breakpoints.down("sm")]: {
+    fontSize: 14,
+    lineHeight: "22px",
+  },
+}));
+
+export const StyledButtonCollapse = styled(Box)(() => ({
+  position: "absolute",
+  left: 0,
+  right: 0,
+  bottom: 0,
+  width: "100%",
+  height: 100,
+  padding: 8,
+  display: "flex",
+  alignItems: "end",
+  justifyContent: "center",
+  background: "linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 80%)",
 }));
 
 export const StyledCardText = styled(Box)(() => ({

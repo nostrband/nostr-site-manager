@@ -105,8 +105,8 @@ export const StyledCardTitle = styled(Box)(({ theme }) => ({
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
   fontWeight: "700",
-  fontSize: 16,
-  lineHeight: "20px",
+  fontSize: 20,
+  lineHeight: "26px",
   color: theme.palette.primary.main,
 }));
 
@@ -119,8 +119,12 @@ export const StyledCardDescription = styled(Typography)(({ theme }) => ({
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
   fontWeight: "500",
-  fontSize: 12,
-  lineHeight: "19px",
+  fontSize: 16,
+  lineHeight: "25px",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: 14,
+    lineHeight: "22px",
+  },
 }));
 
 export const StyledCardText = styled(Box)(() => ({

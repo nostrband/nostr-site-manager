@@ -23,6 +23,7 @@ import {
   matchPostsToFilters,
   parseAddr,
   parseATag,
+  eventId,
 } from "libnostrsite";
 import {
   addOnAuth,
@@ -42,13 +43,14 @@ import {
 import { nip19 } from "nostr-tools";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { NPUB_PRO_API, NPUB_PRO_DOMAIN } from "@/consts";
+import { fetchSubmits } from "./content";
 
 // FIXME reuse decls from libnostrsite
 const KIND_PINNED_ON_SITE = 30516;
 
 const sites: Site[] = [];
 const packageThemes = new Map<string, string>();
-const parser = new NostrParser("http://localhost/");
+export const parser = new NostrParser("http://localhost/");
 let sitesPromise: Promise<void> | undefined = undefined;
 
 export function hasSite(id: string) {
@@ -321,6 +323,11 @@ function parseSite(ne: NostrEvent) {
   return parser.parseSite(addr, e);
 }
 
+export async function getSiteSettings(siteId: string) {
+  await fetchSites();
+  return sites.find((s) => s.id === siteId);
+}
+
 export async function fetchSites() {
   console.log("fetchSites", userPubkey);
   if (!userPubkey) throw new Error("Auth please");
@@ -522,36 +529,6 @@ export const fetchDomains = async (site: string) => {
   return reply.json();
 };
 
-export const searchPosts = async (siteId: string, query: string) => {
-  const site = sites.find((s) => s.id === siteId);
-  if (!site) return [];
-
-  const filters = createSiteFilters({
-    settings: site,
-    limit: 10,
-  });
-
-  console.log("search filters", filters);
-
-  const events = await fetchEvents(
-    ndk,
-    filters.map((f) => ({ ...f, search: query })),
-    SEARCH_RELAYS,
-  );
-
-  console.log("searched events", events);
-
-  const valid = [...events].filter((e) => matchPostsToFilters(e, filters));
-
-  const posts: Post[] = [];
-  for (const e of valid) {
-    const post = await parser.parseEvent(e);
-    if (post) posts.push(post);
-  }
-
-  return posts;
-};
-
 export const fetchPins = async (siteId: string) => {
   const site = sites.find((s) => s.id === siteId);
   if (!site) return [];
@@ -596,6 +573,7 @@ export const fetchPins = async (siteId: string) => {
   if (idFilter.ids?.length) pinFilters.push(idFilter);
   if (addrFilter.authors?.length) pinFilters.push(addrFilter);
 
+  console.log("pinFilters", pinFilters);
   if (!pinFilters.length) return [];
 
   const pinned = await fetchEvents(ndk, pinFilters, [
@@ -604,12 +582,19 @@ export const fetchPins = async (siteId: string) => {
   ]);
   console.log("pinned", pinned);
 
+  const submits = await fetchSubmits(site);
+
   const siteFilters = createSiteFilters({
     settings: site,
     limit: 10,
   });
 
-  const valid = [...pinned].filter((p) => matchPostsToFilters(p, siteFilters));
+  const valid = [...pinned].filter(
+    (p) =>
+      matchPostsToFilters(p, siteFilters) ||
+      submits.find((s) => s.id === eventId(p)),
+  );
+  console.log("pinned valid", valid);
   const posts: Post[] = [];
   for (const e of valid) {
     const post = await parser.parseEvent(e);

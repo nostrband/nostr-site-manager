@@ -202,9 +202,31 @@ const theme = createTheme({
     },
   },
   shadows: [
-    ...shadows.slice(0, 10),
+    "none",
     "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
-    ...shadows.slice(11),
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
+    "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
   ] as typeof shadows,
   typography: {
     fontFamily: InterVariable.style.fontFamily,
@@ -224,9 +246,6 @@ const theme = createTheme({
   components: {
     MuiAppBar: {
       styleOverrides: {
-        root: {
-          boxShadow: "0px 6px 6px -3px rgba(0, 0, 0, 0.06)",
-        },
         colorPrimary: {
           backgroundColor: "#fff",
           color: "#000",
@@ -254,6 +273,7 @@ const theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
+          color: "inherit",
           "& .Mui-disabled": {
             color: "rgba(0, 0, 0, 0.38) !important",
             WebkitTextFillColor: "rgba(0, 0, 0, 0.38) !important",
@@ -276,6 +296,7 @@ const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
+          color: "inherit",
           "&.Mui-focused": {
             color: "#FF3ED9",
           },

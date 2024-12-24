@@ -3,8 +3,9 @@ import { userIsReadOnly } from "@/services/nostr/nostr";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Button, ClickAwayListener } from "@mui/material";
 import React, { ReactNode, useState } from "react";
-import { StyledActions, StyledTooltip } from "./styled";
+import { StyledActions } from "./styled";
 import useResponsive from "@/hooks/useResponsive";
+import { StyledTooltip } from "@/components/Tooltip/styled";
 
 interface ISaveButton {
   isEdit: boolean;

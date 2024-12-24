@@ -41,13 +41,13 @@ export const StyledTextField = styled(
 
     return <TextField ref={ref} {...omitProps} />;
   }),
-)(({ isFocus = false }) => ({
+)(({ isFocus = false, theme }) => ({
   ".MuiOutlinedInput-input": {
     paddingLeft: isFocus ? "36px" : "14px",
   },
   ".MuiFormLabel-root": {
-    color: "rgba(0, 0, 0, 0.6)",
     paddingLeft: isFocus ? "36px" : "0",
+    color: !isFocus ? theme.palette.decorate.main : "inherit",
   },
 }));
 

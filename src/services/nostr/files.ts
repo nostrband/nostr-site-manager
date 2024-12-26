@@ -1,7 +1,8 @@
 import { KIND_SITE, KIND_SITE_FILE, fetchOutboxRelays, fetchSiteFile, parseAddr } from "libnostrsite";
 import { findSiteEvent } from "./api";
-import { ndk, userIsDelegated, userPubkey } from "./nostr";
+import { fetchWithSession, ndk, userIsDelegated, userPubkey } from "./nostr";
 import { NDKEvent, NDKNip07Signer, NDKRelaySet } from "@nostr-dev-kit/ndk";
+import { NPUB_PRO_API } from "@/consts";
 
 export const NOSTR_JSON_FILE = "/.well-known/nostr.json";
 
@@ -53,6 +54,15 @@ export async function editNostrJson(siteId: string, content: string) {
   console.log("signed", event.rawEvent());
 
   const relays = await fetchOutboxRelays(ndk, [addr!.pubkey]);
-  const r = await event.publish(NDKRelaySet.fromRelayUrls(relays, ndk));
-  console.log("published at", r);
+  const pr = await event.publish(NDKRelaySet.fromRelayUrls(relays, ndk));
+  console.log("published at", pr);
+
+  const reply = await fetchWithSession(
+    // from=oldDomain - delete the old site after 7 days
+    `${NPUB_PRO_API}/deploy?site=${siteId}`,
+  );
+  if (reply.status !== 200) throw new Error("Failed to deploy");
+
+  const r = await reply.json();
+  console.log(Date.now(), "deployed", r);
 }

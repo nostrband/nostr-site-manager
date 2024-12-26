@@ -24,8 +24,8 @@ export const NostrJson = memo(({ siteId }: { siteId: string }) => {
   const [isLoading, setLoading] = useState(false);
   const [isEdit, setEdit] = useState(false);
   const [isError, setError] = useState(false);
-  const [value, setValue] = useState("{}");
-  const [valueOriginal, setValueOriginal] = useState("{}");
+  const [value, setValue] = useState("");
+  const [valueOriginal, setValueOriginal] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setDisabled] = useState(false);
 
@@ -33,7 +33,7 @@ export const NostrJson = memo(({ siteId }: { siteId: string }) => {
 
   const isValidJson = (input: string) => {
     try {
-      JSON.parse(input);
+      if (input) JSON.parse(input);
       setError(false);
     } catch {
       setError(true);
@@ -140,12 +140,12 @@ export const NostrJson = memo(({ siteId }: { siteId: string }) => {
 
       <StyledFormFields>
         <FormControl disabled={!isEdit} fullWidth size="small" error={isError}>
-          <InputLabel htmlFor="nostr_json">Nostr.json fields</InputLabel>
+          <InputLabel htmlFor="nostr_json">Nostr.json file content</InputLabel>
           <OutlinedInput
             inputRef={inputRef}
             id="nostr_json"
             name="nostr_json"
-            label="Nostr.json fields"
+            label="Nostr.json file content"
             multiline
             rows={6}
             error={isError}
@@ -163,11 +163,11 @@ export const NostrJson = memo(({ siteId }: { siteId: string }) => {
         {isEdit && (
           <Box>
             <Button onClick={handleFormate} size="small">
-              Formatte JSON
+              Format JSON
             </Button>
             {isEdited && (
               <Button onClick={handleReset} size="small">
-                Reset JSON
+                Reset changes
               </Button>
             )}
           </Box>

@@ -109,6 +109,7 @@ export const HASH_CONFIG = {
   OTHER: "other",
   PINNED_NOTES: "pinned-notes",
   LOGO: "logo",
+  NOSTR_JSON: 'nostr-json'
 };
 
 export const SETTINGS_CONFIG = {
@@ -235,6 +236,13 @@ export const SETTINGS_CONFIG = {
     group: "Growth",
     description: "",
     isComingSoon: true,
+  },
+  nostrJson: {
+    title: "Nostr.json",
+    anchor: HASH_CONFIG.NOSTR_JSON,
+    icon: <FIleTextIcon />,
+    group: "Files",
+    description: "Edit your nostr.json file to add NIP-05 records",
   },
 };
 

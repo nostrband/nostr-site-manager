@@ -16,6 +16,7 @@ export async function fetchNostrJson(siteId: string) {
     NOSTR_JSON_FILE,
     relays
   );
+
   if (!nostrJsonEvent) return undefined;
 
   try {

@@ -39,6 +39,7 @@ import {
 import Link from "next/link";
 import { ChevronLeftIcon } from "@/components/Icons";
 import { SearchSettingsField, Setting } from "./components/SearchSettingsField";
+import { NostrJson } from "./components/NostrJson";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -498,6 +499,10 @@ export const SettingPage = () => {
           <StyledTitleSection>Growth</StyledTitleSection>
 
           <Recommendation />
+
+          <StyledTitleSection>Files</StyledTitleSection>
+
+          <NostrJson siteId={values.id} />
         </StyledWrapSettings>
       </StyledWrap>
     </Container>

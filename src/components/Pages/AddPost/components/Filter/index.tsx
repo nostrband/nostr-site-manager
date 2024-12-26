@@ -38,15 +38,11 @@ import { TypesFilter } from "./components/Types";
 import { HashtagsFilter } from "./components/Hashtags";
 import {
   SearchPost,
-  filterSitePosts,
   searchPosts,
   suggestPosts,
 } from "@/services/nostr/content";
 import { LoadingButton } from "@mui/lab";
 import { useRouter, useSearchParams } from "next/navigation";
-import { nip19 } from "nostr-tools";
-import { fetchProfiles } from "@/services/nostr/api";
-import { debounce } from "lodash";
 import { TransitionProps } from "@mui/material/transitions";
 import { DatePickerField } from "./components/DatePickerField";
 
@@ -81,6 +77,33 @@ interface IFilter {
   setPosts: (cards: SearchPost[]) => void;
   isLoading: boolean;
 }
+
+const transformObject = (input: InputObject): Partial<InputObject> => {
+  const { authors, kinds, hashtags, since, until, search } = input;
+
+  const result: Partial<InputObject> = {};
+
+  if (authors.length > 0) {
+    result.authors = authors;
+  }
+  if (kinds.length > 0) {
+    result.kinds = kinds;
+  }
+  if (hashtags.length > 0) {
+    result.hashtags = hashtags;
+  }
+  if (since !== undefined) {
+    result.since = since / 1000;
+  }
+  if (until !== undefined) {
+    result.until = until / 1000;
+  }
+  if (search.length > 0) {
+    result.search = search;
+  }
+
+  return result;
+};
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -137,6 +160,32 @@ export const Filter = memo(
 
     const isLoadingFilter = isLoadingSetting || isFetching || isLoading;
 
+    const getSearchPosts = async (
+      formData: Partial<InputObject>,
+      id: string,
+    ) => {
+      handleLoading(true);
+
+      try {
+        const posts = await searchPosts(id, formData);
+
+        console.log({ posts, formData });
+
+        setPosts(posts);
+      } catch (e: any) {
+        enqueueSnackbar("Error: " + e.toString(), {
+          autoHideDuration: 3000,
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "bottom",
+          },
+        });
+      } finally {
+        handleLoading(false);
+      }
+    };
+
     const { values, submitForm, setFieldValue, handleReset } = useFormik({
       initialValues,
       onSubmit: async (values) => {
@@ -151,54 +200,48 @@ export const Filter = memo(
           search: values.search,
         };
 
-        function transformObject(input: InputObject): Partial<InputObject> {
-          const { authors, kinds, hashtags, since, until, search } = input;
-
-          const result: Partial<InputObject> = {};
-
-          if (authors.length > 0) {
-            result.authors = authors;
-          }
-          if (kinds.length > 0) {
-            result.kinds = kinds;
-          }
-          if (hashtags.length > 0) {
-            result.hashtags = hashtags;
-          }
-          if (since !== undefined) {
-            result.since = since / 1000;
-          }
-          if (until !== undefined) {
-            result.until = until / 1000;
-          }
-          if (search.length > 0) {
-            result.search = search;
-          }
-
-          return result;
-        }
-
         const transformedObject = transformObject(prepareData);
 
-        try {
-          if (siteData) {
-            const posts = await searchPosts(siteData.id, transformedObject);
+        if (prepareData.kinds.length) {
+          searchParams.set("kinds", prepareData.kinds.join(","));
+        } else {
+          searchParams.delete("kinds");
+        }
 
-            console.log({ posts, transformedObject });
+        if (prepareData.until) {
+          searchParams.set("until", (prepareData.until / 1000).toString());
+        } else {
+          searchParams.delete("until");
+        }
 
-            setPosts(posts);
-          }
-        } catch (e: any) {
-          enqueueSnackbar("Error: " + e.toString(), {
-            autoHideDuration: 3000,
-            variant: "error",
-            anchorOrigin: {
-              horizontal: "right",
-              vertical: "bottom",
-            },
-          });
-        } finally {
-          handleLoading(false);
+        if (prepareData.since) {
+          searchParams.set("since", (prepareData.since / 1000).toString());
+        } else {
+          searchParams.delete("since");
+        }
+
+        if (prepareData.search) {
+          searchParams.set("search", prepareData.search.trim());
+        } else {
+          searchParams.delete("search");
+        }
+
+        if (prepareData.hashtags.length) {
+          searchParams.set("hashtags", prepareData.hashtags.join(","));
+        } else {
+          searchParams.delete("hashtags");
+        }
+
+        if (prepareData.authors.length) {
+          searchParams.set("authors", prepareData.authors.join(","));
+        } else {
+          searchParams.delete("authors");
+        }
+
+        router.push(`?${searchParams.toString()}`);
+
+        if (siteData) {
+          await getSearchPosts(transformedObject, siteData.id);
         }
       },
     });
@@ -206,48 +249,22 @@ export const Filter = memo(
     const handleChangeAuthors = useCallback(
       (value: OptionAuthorType[]) => {
         setFieldValue("authors", value);
-
-        console.log({ value });
-
-        if (value.length) {
-          searchParams.set("authors", value.map((el) => el.pubkey).join(","));
-        } else {
-          searchParams.delete("authors");
-        }
-
-        router.push(`?${searchParams.toString()}`);
       },
-      [setFieldValue, searchParams, router],
+      [setFieldValue],
     );
 
     const handleChangeHashtags = useCallback(
       (value: string[]) => {
         setFieldValue("hashtags", value);
-
-        if (value.length) {
-          searchParams.set("hashtags", value.join(","));
-        } else {
-          searchParams.delete("hashtags");
-        }
-
-        router.push(`?${searchParams.toString()}`);
       },
-      [setFieldValue, searchParams, router],
+      [setFieldValue],
     );
 
     const handleChangeTypes = useCallback(
       (value: number[]) => {
         setFieldValue("kinds", value);
-
-        if (value.length) {
-          searchParams.set("kinds", value.join(","));
-        } else {
-          searchParams.delete("kinds");
-        }
-
-        router.push(`?${searchParams.toString()}`);
       },
-      [setFieldValue, searchParams, router],
+      [setFieldValue],
     );
 
     const handleDateSinceChange = (newValue: Date | null) => {
@@ -255,15 +272,9 @@ export const Filter = memo(
 
       if (newValue) {
         setFieldValue("since", newValue.getTime());
-
-        searchParams.set("since", (newValue.getTime() / 1000).toString());
       } else {
         setFieldValue("since", undefined);
-
-        searchParams.delete("since");
       }
-
-      router.push(`?${searchParams.toString()}`);
     };
 
     const handleDateUntilChange = (newValue: Date | null) => {
@@ -271,37 +282,15 @@ export const Filter = memo(
 
       if (newValue) {
         setFieldValue("until", newValue.getTime());
-
-        searchParams.set("until", (newValue.getTime() / 1000).toString());
       } else {
         setFieldValue("until", undefined);
-
-        searchParams.delete("until");
       }
-
-      router.push(`?${searchParams.toString()}`);
     };
-
-    const handleChangeSearchContentQueryParams = useMemo(
-      () =>
-        debounce((valueSearch: string) => {
-          if (valueSearch) {
-            searchParams.set("search", valueSearch);
-          } else {
-            searchParams.delete("search");
-          }
-
-          router.push(`?${searchParams.toString()}`);
-        }, 100),
-      [router, searchParams],
-    );
 
     const onSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const valueSearch = e.target.value;
 
       setFieldValue("search", valueSearch);
-
-      handleChangeSearchContentQueryParams(valueSearch.trim());
     };
 
     const handleClearFilter = () => {
@@ -338,8 +327,10 @@ export const Filter = memo(
     }, [siteId, setPosts, handleLoading]);
 
     useEffect(() => {
-      getSuggestPosts();
-    }, [getSuggestPosts]);
+      if (params.size === 0) {
+        getSuggestPosts();
+      }
+    }, [getSuggestPosts, params]);
 
     useEffect(() => {
       if (siteData) {
@@ -371,243 +362,217 @@ export const Filter = memo(
             .map((pubkey) => ({ pubkey }))
         : [];
 
-      if (authors.length) {
-        fetchProfiles(authors.map((el) => el.pubkey))
-          .then((profiles) => {
-            if (profiles.length) {
-              const dataAuthors = profiles.map((author) => {
-                let meta;
-
-                try {
-                  meta = JSON.parse(author.content);
-                } catch (error) {
-                  console.error("Error parsing author content:", error);
-                  meta = {};
-                }
-
-                const npub = author.pubkey
-                  ? nip19.npubEncode(author.pubkey).substring(0, 8) + "..."
-                  : "";
-                const name = meta.display_name || meta.name || npub;
-                const img = meta.picture || "";
-
-                return {
-                  img,
-                  title: name,
-                  id: author.id,
-                  pubkey: author.pubkey,
-                };
-              });
-
-              setFieldValue("authors", dataAuthors);
-            } else {
-              setFieldValue("authors", []);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching profiles:", error);
-
-            setFieldValue("authors", []);
-          });
-      }
-
       const kinds = params.get("kinds")
         ? params.get("kinds")!.split(",").map(Number)
         : [];
-
-      setFieldValue("kinds", kinds);
 
       const hashtags = params.get("hashtags")
         ? params.get("hashtags")!.split(",")
         : [];
 
-      setFieldValue("hashtags", hashtags);
-
       const since = params.get("since")
         ? Number(params.get("since")) * 1000
         : undefined;
-
-      setFieldValue("since", since);
 
       const until = params.get("until")
         ? Number(params.get("until")) * 1000
         : undefined;
 
-      setFieldValue("until", until);
-
       const search = params.get("search") || "";
 
+      setFieldValue("authors", authors);
+      setFieldValue("kinds", kinds);
+      setFieldValue("hashtags", hashtags);
+      setFieldValue("since", since);
+      setFieldValue("until", until);
       setFieldValue("search", search);
 
-      if (kinds.length !== 0 || hashtags.length !== 0 || since || until) {
-        setOpenMoreFilter(true);
-      }
+      const prepareData = {
+        authors: authors.map((el) => el.pubkey),
+        kinds: kinds,
+        hashtags: hashtags.map((str) => str.slice(1)),
+        since: since,
+        until: until,
+        search: search,
+      };
 
-      if (since) setSelectedDateSince(new Date(since));
-      if (until) setSelectedDateUntil(new Date(until));
-    }, []);
+      const transformedObject = transformObject(prepareData);
+
+      if (siteData && params.size !== 0) {
+        getSearchPosts(transformedObject, siteData.id);
+      }
+    }, [siteData]);
 
     const renderFilterContent = (
       <StyledWrapFilter>
-        <StyledTitleFilter>
-          <StyledCloseFilterButton
-            onClick={handleClose}
-            color="primary"
-            variant="text"
-          >
-            <ChevronLeftIcon />
-          </StyledCloseFilterButton>
-          Search
-          <StyledCollapseButtonFilter
-            color="decorate"
-            isOpenMoreFilter={isOpenMoreFilter}
-            variant="text"
-            endIcon={
-              <ChevronLeftIcon
-                className="collapseButtonIcon"
-                fontSize="inherit"
-              />
-            }
-            onClick={handleToggleMoreFilter}
-          >
-            {textToggleMoreFilter} filters
-          </StyledCollapseButtonFilter>
-        </StyledTitleFilter>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
 
-        <Grid container spacing={{ xs: "24px", sm: "16px" }}>
-          <Grid item xs={12} sm={6}>
-            <StyledFormControl fullWidth>
-              <AuthorFilter
-                label="Author"
-                id="author"
-                size={sizeField}
-                selectedAuthors={values.authors}
-                handleChangeAuthors={handleChangeAuthors}
-                contributors={contributors}
-              />
-            </StyledFormControl>
+            submitForm();
+          }}
+        >
+          <StyledTitleFilter>
+            <StyledCloseFilterButton
+              onClick={handleClose}
+              color="primary"
+              variant="text"
+            >
+              <ChevronLeftIcon />
+            </StyledCloseFilterButton>
+            Search
+            <StyledCollapseButtonFilter
+              color="decorate"
+              isOpenMoreFilter={isOpenMoreFilter}
+              variant="text"
+              endIcon={
+                <ChevronLeftIcon
+                  className="collapseButtonIcon"
+                  fontSize="inherit"
+                />
+              }
+              onClick={handleToggleMoreFilter}
+            >
+              {textToggleMoreFilter} filters
+            </StyledCollapseButtonFilter>
+          </StyledTitleFilter>
+
+          <Grid container spacing={{ xs: "24px", sm: "16px" }}>
+            <Grid item xs={12} sm={6}>
+              <StyledFormControl fullWidth>
+                <AuthorFilter
+                  label="Author"
+                  id="author"
+                  size={sizeField}
+                  selectedAuthors={values.authors}
+                  handleChangeAuthors={handleChangeAuthors}
+                  contributors={contributors}
+                />
+              </StyledFormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <StyledFormControl fullWidth size={sizeField}>
+                <StyledFormControlLabel htmlFor="search-content">
+                  Search content
+                </StyledFormControlLabel>
+                <OutlinedInput
+                  id="search-content"
+                  fullWidth
+                  label="Search content"
+                  endAdornment={<SearchIcon color="inherit" />}
+                  onChange={onSearchInputChange}
+                  value={values.search}
+                  name="search"
+                />
+              </StyledFormControl>
+            </Grid>
           </Grid>
 
-          <Grid item xs={12} sm={6}>
-            <StyledFormControl fullWidth size={sizeField}>
-              <StyledFormControlLabel htmlFor="search-content">
-                Search content
-              </StyledFormControlLabel>
-              <OutlinedInput
-                id="search-content"
-                fullWidth
-                label="Search content"
-                endAdornment={<SearchIcon color="inherit" />}
-                onChange={onSearchInputChange}
-                value={values.search}
-                name="search"
-              />
-            </StyledFormControl>
-          </Grid>
-        </Grid>
+          <Collapse in={isDesktop ? isOpenMoreFilter : true}>
+            <StyledWrapField>
+              <Grid container spacing={{ xs: "24px", sm: "16px" }}>
+                <Grid item xs={12} sm={6} lg={3}>
+                  <StyledFormControl fullWidth size={sizeField}>
+                    <StyledFormControlLabel htmlFor="kinds-select">
+                      Kinds
+                    </StyledFormControlLabel>
+                    <TypesFilter
+                      label="Kinds"
+                      id="kinds-select"
+                      selectedTypes={values.kinds}
+                      handleChangeTypes={handleChangeTypes}
+                    />
+                  </StyledFormControl>
+                </Grid>
+                <Grid item xs={12} sm={6} lg={3}>
+                  <StyledFormControl fullWidth>
+                    <HashtagsFilter
+                      size={sizeField}
+                      label="Hashtags"
+                      contributors={
+                        siteData?.contributors ? siteData?.contributors : []
+                      }
+                      selectedHashtags={values.hashtags}
+                      handleChangeHashtags={handleChangeHashtags}
+                    />
+                  </StyledFormControl>
+                </Grid>
+                <Grid item xs={12} sm={6} lg={3}>
+                  <StyledFormControl fullWidth>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePickerField
+                        label="Since"
+                        value={selectedDateSince}
+                        onChange={handleDateSinceChange}
+                        sizeField={sizeField}
+                      />
+                    </LocalizationProvider>
+                  </StyledFormControl>
+                </Grid>
+                <Grid item xs={12} sm={6} lg={3}>
+                  <StyledFormControl fullWidth>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePickerField
+                        label="Until"
+                        value={selectedUntilSince}
+                        onChange={handleDateUntilChange}
+                        sizeField={sizeField}
+                      />
+                    </LocalizationProvider>
+                  </StyledFormControl>
+                </Grid>
+              </Grid>
+            </StyledWrapField>
+          </Collapse>
 
-        <Collapse in={isDesktop ? isOpenMoreFilter : true}>
           <StyledWrapField>
-            <Grid container spacing={{ xs: "24px", sm: "16px" }}>
+            <Grid
+              spacing={{ xs: "16px" }}
+              container
+              justifyContent="space-between"
+              flexDirection={{ xs: "column", sm: "row" }}
+            >
               <Grid item xs={12} sm={6} lg={3}>
-                <StyledFormControl fullWidth size={sizeField}>
-                  <StyledFormControlLabel htmlFor="kinds-select">
-                    Kinds
-                  </StyledFormControlLabel>
-                  <TypesFilter
-                    label="Kinds"
-                    id="kinds-select"
-                    selectedTypes={values.kinds}
-                    handleChangeTypes={handleChangeTypes}
-                  />
-                </StyledFormControl>
+                <Button
+                  onClick={handleClearFilter}
+                  startIcon={<CrossIcon fontSize="inherit" />}
+                  disabled={isValuesEmpty()}
+                  variant="text"
+                  fullWidth={!isDesktop}
+                  color="secondary"
+                  size="large"
+                >
+                  Clear all
+                </Button>
               </Grid>
               <Grid item xs={12} sm={6} lg={3}>
-                <StyledFormControl fullWidth>
-                  <HashtagsFilter
-                    size={sizeField}
-                    label="Hashtags"
-                    contributors={
-                      siteData?.contributors ? siteData?.contributors : []
+                <LoadingButton
+                  onClick={() => {
+                    if (isDesktop) {
+                      submitForm();
+                    } else {
+                      submitForm();
+                      handleClose();
                     }
-                    selectedHashtags={values.hashtags}
-                    handleChangeHashtags={handleChangeHashtags}
-                  />
-                </StyledFormControl>
-              </Grid>
-              <Grid item xs={12} sm={6} lg={3}>
-                <StyledFormControl fullWidth>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePickerField
-                      label="Since"
-                      value={selectedDateSince}
-                      onChange={handleDateSinceChange}
-                      sizeField={sizeField}
-                    />
-                  </LocalizationProvider>
-                </StyledFormControl>
-              </Grid>
-              <Grid item xs={12} sm={6} lg={3}>
-                <StyledFormControl fullWidth>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePickerField
-                      label="Until"
-                      value={selectedUntilSince}
-                      onChange={handleDateUntilChange}
-                      sizeField={sizeField}
-                    />
-                  </LocalizationProvider>
-                </StyledFormControl>
+                  }}
+                  type="submit"
+                  disabled={isLoadingFilter}
+                  loading={isLoadingFilter}
+                  variant="contained"
+                  fullWidth
+                  color="decorate"
+                  size="large"
+                  endIcon={
+                    !isDesktop ? <SearchIcon fontSize="inherit" /> : undefined
+                  }
+                >
+                  {isDesktop ? "Search" : "Search posts"}
+                </LoadingButton>
               </Grid>
             </Grid>
           </StyledWrapField>
-        </Collapse>
-
-        <StyledWrapField>
-          <Grid
-            spacing={{ xs: "16px" }}
-            container
-            justifyContent="space-between"
-            flexDirection={{ xs: "column", sm: "row" }}
-          >
-            <Grid item xs={12} sm={6} lg={3}>
-              <Button
-                onClick={handleClearFilter}
-                startIcon={<CrossIcon fontSize="inherit" />}
-                disabled={isValuesEmpty()}
-                variant="text"
-                fullWidth={!isDesktop}
-                color="secondary"
-                size="large"
-              >
-                Clear all
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={6} lg={3}>
-              <LoadingButton
-                onClick={() => {
-                  if (isDesktop) {
-                    submitForm();
-                  } else {
-                    submitForm();
-                    handleClose();
-                  }
-                }}
-                disabled={isLoadingFilter}
-                loading={isLoadingFilter}
-                variant="contained"
-                fullWidth
-                color="decorate"
-                size="large"
-                endIcon={
-                  !isDesktop ? <SearchIcon fontSize="inherit" /> : undefined
-                }
-              >
-                {isDesktop ? "Search" : "Search posts"}
-              </LoadingButton>
-            </Grid>
-          </Grid>
-        </StyledWrapField>
+        </form>
       </StyledWrapFilter>
     );
 

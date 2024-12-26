@@ -21,3 +21,17 @@ export const StyledWrapListPosts = styled(Box)(({ theme }) => ({
     paddingBottom: "80px",
   },
 }));
+
+export const StyledShowMore = styled(Box)(({ theme }) => ({
+  marginBottom: "50px",
+  maxWidth: 348,
+  marginLeft: "auto",
+  marginRight: "auto",
+  borderRadius: theme.shape.borderRadius,
+  background: "#fff",
+  padding: 8,
+  marginTop: 25,
+  [theme.breakpoints.down("md")]: {
+    marginBottom: 25,
+  },
+}));

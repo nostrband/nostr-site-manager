@@ -9,10 +9,12 @@ import { SpinerCircularProgress } from "@/components/Spiner";
 import {
   SpinerWrapSites,
   StyledEmptyBlock,
+  StyledShowMore,
   StyledWrapListPosts,
 } from "./styled";
 import { NotFoundIcon } from "@/components/Icons";
 import { PostCard } from "@/components/PostCard";
+import { LoadingButton } from "@mui/lab";
 
 export const PostManagement = () => {
   const { siteId } = useGetSiteId();
@@ -76,6 +78,16 @@ export const PostManagement = () => {
               );
             })}
           </Grid>
+          <StyledShowMore>
+            <LoadingButton
+              variant="contained"
+              color="decorate"
+              fullWidth
+              size="large"
+            >
+              Load more
+            </LoadingButton>
+          </StyledShowMore>
         </StyledWrapListPosts>
       )}
     </Container>

@@ -446,16 +446,16 @@ export const SettingPage = () => {
               isLoading={isLoading}
             />
 
-            <Icon
-              icon={values.icon}
+            <Logo
+              logo={values.logo}
               handleBlur={handleBlur}
               handleChange={handleChange}
               submitForm={submitForm}
               isLoading={isLoading}
             />
 
-            <Logo
-              logo={values.logo}
+            <Icon
+              icon={values.icon}
               handleBlur={handleBlur}
               handleChange={handleChange}
               submitForm={submitForm}

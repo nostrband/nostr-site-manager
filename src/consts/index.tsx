@@ -5,12 +5,14 @@ import {
   HomeIcon,
   ImageIcon,
   IosSmartphoneIcon,
+  JsonCodeIcon,
   LinkIcon,
   MessageIcon,
   NavigationIcon,
   PinIcon,
   PipetteIcon,
   StarIcon,
+  StarRectangleIcon,
   TitleIcon,
   UserCircleIcon,
   WebIcon,
@@ -109,7 +111,7 @@ export const HASH_CONFIG = {
   OTHER: "other",
   PINNED_NOTES: "pinned-notes",
   LOGO: "logo",
-  NOSTR_JSON: 'nostr-json'
+  NOSTR_JSON: "nostr-json",
 };
 
 export const SETTINGS_CONFIG = {
@@ -193,19 +195,19 @@ export const SETTINGS_CONFIG = {
     group: "Design",
     description: "Accent color for theme and PWA",
   },
-  icon: {
-    title: "Icon",
-    anchor: HASH_CONFIG.ICON,
-    icon: <StarIcon />,
-    group: "Design",
-    description: "Website icon",
-  },
   logo: {
     title: "Logo",
     anchor: HASH_CONFIG.LOGO,
     icon: <StarIcon />,
     group: "Design",
     description: "Website logo",
+  },
+  icon: {
+    title: "Icon",
+    anchor: HASH_CONFIG.ICON,
+    icon: <StarRectangleIcon />,
+    group: "Design",
+    description: "Website icon",
   },
   image: {
     title: "Image",
@@ -229,6 +231,13 @@ export const SETTINGS_CONFIG = {
     description:
       "Choose event kinds and hashtags that will be displayed on the homepage",
   },
+  nostrJson: {
+    title: "Nostr.json",
+    anchor: HASH_CONFIG.NOSTR_JSON,
+    icon: <JsonCodeIcon />,
+    group: "Files",
+    description: "Edit your nostr.json file to add NIP-05 records",
+  },
   recommendations: {
     title: "Recommendations",
     anchor: HASH_CONFIG.RECOMMENDATION,
@@ -236,13 +245,6 @@ export const SETTINGS_CONFIG = {
     group: "Growth",
     description: "",
     isComingSoon: true,
-  },
-  nostrJson: {
-    title: "Nostr.json",
-    anchor: HASH_CONFIG.NOSTR_JSON,
-    icon: <FIleTextIcon />,
-    group: "Files",
-    description: "Edit your nostr.json file to add NIP-05 records",
   },
 };
 

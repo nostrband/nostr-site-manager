@@ -1,6 +1,6 @@
-import { KIND_SITE, KIND_SITE_FILE, fetchOutboxRelays, fetchSiteFile, parseAddr } from "libnostrsite";
+import { KIND_SITE, KIND_SITE_FILE, SITE_RELAY, fetchOutboxRelays, fetchSiteFile, parseAddr } from "libnostrsite";
 import { findSiteEvent } from "./api";
-import { fetchWithSession, ndk, userIsDelegated, userPubkey } from "./nostr";
+import { fetchWithSession, ndk, userIsDelegated, userPubkey, userRelays } from "./nostr";
 import { NDKEvent, NDKNip07Signer, NDKRelaySet } from "@nostr-dev-kit/ndk";
 import { NPUB_PRO_API } from "@/consts";
 
@@ -53,7 +53,7 @@ export async function editNostrJson(siteId: string, content: string) {
   await event.sign(new NDKNip07Signer());
   console.log("signed", event.rawEvent());
 
-  const relays = await fetchOutboxRelays(ndk, [addr!.pubkey]);
+  const relays = [...userRelays, SITE_RELAY];
   const pr = await event.publish(NDKRelaySet.fromRelayUrls(relays, ndk));
   console.log("published at", pr);
 

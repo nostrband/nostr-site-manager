@@ -78,19 +78,19 @@ export const suggestPosts = async (siteId: string) => {
       kinds: [...new Set(existing.map((e) => e.event.kind!))],
       hashtags: [
         ...new Set(
-          existing.map((e) => tags(e.event, "t").map((t) => t[1])).flat(),
+          existing.map((e) => tags(e.event, "t").map((t) => t[1])).flat()
         ),
       ],
     },
     // onlyNew
-    true,
+    true
   );
 };
 
 export const searchPosts = async (
   siteId: string,
   { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
-  onlyNew?: boolean,
+  onlyNew?: boolean
 ): Promise<SearchPost[]> => {
   console.log("searchPosts", {
     authors,
@@ -180,6 +180,7 @@ export const searchPosts = async (
     // hard to fetch relays for all of them, so for now we just opt-in
     // to use search relays for finding posts to submit
     SEARCH_RELAYS,
+    5000
   );
 
   console.log("searched events", events);
@@ -220,10 +221,10 @@ export const searchPosts = async (
           arr.reduce(
             (minCreatedAt: number, e: NDKEvent) =>
               Math.min(minCreatedAt, e.created_at!),
-            arr[0].created_at!,
+            arr[0].created_at!
           ) - 1, // before that last one of current set
       },
-      onlyNew,
+      onlyNew
     );
   }
 
@@ -232,7 +233,7 @@ export const searchPosts = async (
 
 export async function filterSitePosts(
   siteId: string,
-  { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
+  { authors, kinds, hashtags, since, until, search }: TypeSearchPosts
 ): Promise<SearchPost[]> {
   console.log("filterSitePosts", {
     authors,
@@ -249,14 +250,15 @@ export async function filterSitePosts(
   const submittedPosts = await fetchSubmits(site);
 
   // filter using search query
+  const searchLower = search?.toLocaleLowerCase();
   const posts = [
     ...submittedPosts.filter((p) => {
       // FIXME parse into words, match with words like relay does
       const tags = p.tags.map((t) => t.name);
       return (
-        (!search ||
-          p.title?.includes(search) ||
-          p.markdown?.includes(search)) &&
+        (!searchLower ||
+          p.title?.toLocaleLowerCase().includes(searchLower) ||
+          p.markdown?.toLocaleLowerCase().includes(searchLower)) &&
         (!authors || authors.includes(p.event.pubkey)) &&
         (!kinds || kinds.includes(p.event.kind!)) &&
         (!hashtags || hashtags.find((h) => tags.includes(h))) &&
@@ -278,53 +280,57 @@ export async function filterSitePosts(
     limit: 50,
     settings: site,
   });
+  console.log("filters", site, filters);
+  if (filters.length) {
+    const relays = [...site.contributor_relays];
+    if (search) {
+      search += " include:spam";
 
-  const relays = [...site.contributor_relays];
-  if (search) {
-    search += " include:spam";
+      // only search relay
+      relays.length = 0;
+      relays.push(...SEARCH_RELAYS);
+    }
+    if (!relays.length) relays.push(...SEARCH_RELAYS);
 
-    // only search relay
-    relays.length = 0;
-    relays.push(...SEARCH_RELAYS);
-  }
-  if (!relays.length) relays.push(...SEARCH_RELAYS);
+    const autoEvents = await fetchEvents(
+      ndk,
+      filters.map((f) => ({
+        ...f,
+        search,
+      })),
+      relays
+    );
 
-  const autoEvents = await fetchEvents(
-    ndk,
-    filters.map((f) => ({
-      ...f,
-      search,
-    })),
-    relays,
-  );
+    // used to mark as 'auto-submitted'
+    const autoFilters = createSiteFilters({
+      limit: 1,
+      settings: site,
+    });
 
-  // make sure it matches our other local filters (skip replies etc)
-  const valid = [...autoEvents].filter((e) => matchPostsToFilters(e, filters));
+    // make sure it matches our other local filters (skip replies etc)
+    const valid = [...autoEvents].filter((e) =>
+      matchPostsToFilters(e, autoFilters)
+    );
 
-  // used to mark as 'auto-submitted'
-  const autoFilters = createSiteFilters({
-    limit: 1,
-    settings: site,
-  });
+    // convert filtered events to posts
+    for (const e of valid) {
+      // skip ones that are manually submitted
+      if (posts.find((p) => p.id === eventId(e))) continue;
 
-  // convert filtered events to posts
-  for (const e of valid) {
-    // skip ones that are manually submitted
-    if (posts.find((p) => p.id === eventId(e))) continue;
+      // parse
+      const post = (await parser.parseEvent(e)) as SearchPost;
+      if (!post) continue;
 
-    // parse
-    const post = (await parser.parseEvent(e)) as SearchPost;
-    if (!post) continue;
+      post.submitterPubkey = "";
+      post.autoSubmitted = false;
+      post.relay = e.relay?.url;
 
-    post.submitterPubkey = "";
-    post.autoSubmitted = false;
-    post.relay = e.relay?.url;
+      // status
+      if (matchPostsToFilters(e, autoFilters)) post.autoSubmitted = true;
 
-    // status
-    if (matchPostsToFilters(e, autoFilters)) post.autoSubmitted = true;
-
-    posts.push(post);
-    console.log("auto post", post);
+      posts.push(post);
+      console.log("auto post", post);
+    }
   }
 
   await postProcess(posts);
@@ -545,7 +551,7 @@ export async function submitPost(
     kind,
     url,
     remove,
-  }: { id: string; author: string; kind: number; url: string; remove: boolean },
+  }: { id: string; author: string; kind: number; url: string; remove: boolean }
 ) {
   if (userIsDelegated) throw new Error("Cannot sign event in delegated mode");
 
@@ -607,11 +613,11 @@ export async function submitPost(
 
   // publish
   const r = await nevent.publish(
-    NDKRelaySet.fromRelayUrls([...userRelays, ...SEARCH_RELAYS], ndk),
+    NDKRelaySet.fromRelayUrls([...userRelays, ...SEARCH_RELAYS], ndk)
   );
   console.log(
     "published submit event to",
-    [...r].map((r) => r.url),
+    [...r].map((r) => r.url)
   );
   if (!r.size) throw new Error("Failed to publish to relays");
 
@@ -619,12 +625,13 @@ export async function submitPost(
   let submitted = submitsCache.get(site.id) || [];
 
   // remove from submitted
-  submitted = submitted.filter((s) => s.id === id);
+  submitted = submitted.filter((s) => s.id !== id);
   if (!remove) {
     // add back with current user as submitter
     submitted.push(post);
   }
 
+  console.log("submitted", submitted);
   submitsCache.set(site.id, submitted);
 
   return post;

@@ -34,7 +34,7 @@
     "date-fns-tz": "^3.2.0",
     "formik": "^2.4.6",
     "lexical": "^0.17.0",
-    "libnostrsite": "^1.0.87",
+    "libnostrsite": "^1.0.97",
     "lodash": "^4.17.21",
     "mui-color-input": "^2.0.3",
     "next": "^14.2.3",

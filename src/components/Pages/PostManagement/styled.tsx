@@ -24,12 +24,12 @@ export const StyledWrapListPosts = styled(Box)(({ theme }) => ({
 
 export const StyledShowMore = styled(Box)(({ theme }) => ({
   marginBottom: "50px",
-  maxWidth: 348,
+  maxWidth: 320,
   marginLeft: "auto",
   marginRight: "auto",
-  borderRadius: theme.shape.borderRadius,
-  background: "#fff",
-  padding: 8,
+  // borderRadius: theme.shape.borderRadius,
+  // background: "#fff",
+  // padding: 8,
   marginTop: 25,
   [theme.breakpoints.down("md")]: {
     marginBottom: 25,

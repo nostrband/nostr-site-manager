@@ -147,7 +147,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   srm(e, "include");
   for (const t of [...new Set(data.hashtags)])
     e.tags.push(["include", "t", t.replace("#", "")]);
-  if (!data.hashtags.length) stv(e, "include", "*");
+  if (data.autoSubmit && !data.hashtags.length) stv(e, "include", "*");
   for (const t of [...new Set(data.hashtags_homepage)])
     e.tags.push(["include", "t", t.replace("#", ""), "", "homepage"]);
 
@@ -236,6 +236,7 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
     themeId: packageThemes.get(s.extensions?.[0].event_id || "") || "",
     themeName: s.extensions?.[0].petname || "",
     contributors: s.contributor_pubkeys,
+    autoSubmit: Boolean(s.include_all) || Boolean(s.include_tags?.length),
     hashtags:
       s.include_tags?.filter((t) => t.tag === "t").map((t) => "#" + t.value) ||
       [],

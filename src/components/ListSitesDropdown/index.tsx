@@ -4,7 +4,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ExpandMoreTwoToneIcon from "@mui/icons-material/ExpandMoreTwoTone";
 import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
-import { useParams, useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useListSites } from "@/hooks/useListSites";
 import {
   StyledLoadingButton,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ListSitesDropdown/styled";
 import { IconButton } from "@mui/material";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
+import { useGetSiteId } from "@/hooks/useGetSiteId";
 
 export const ListSitesDropdown = ({
   handleCloseSideBar,
@@ -21,7 +22,7 @@ export const ListSitesDropdown = ({
   const { data, isLoading, isFetching } = useListSites();
 
   const router = useRouter();
-  const params = useParams();
+  const { siteId } = useGetSiteId();
   const path = usePathname();
   const pathAdmin = useFirstPathElement();
 
@@ -47,7 +48,7 @@ export const ListSitesDropdown = ({
     setAnchorEl(null);
   };
 
-  const siteInfo = (data ? data.filter((el) => el.id === params.id) : [])[0];
+  const siteInfo = (data ? data.filter((el) => el.id === siteId) : [])[0];
   const siteTitle = siteInfo?.title ? siteInfo.title : "Select a site";
 
   return (

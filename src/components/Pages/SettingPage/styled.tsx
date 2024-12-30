@@ -47,6 +47,7 @@ export const StyledSettingBlock = styled(Box)(({ theme }) => ({
   padding: 16,
   borderRadius: theme.shape.borderRadius,
   background: "#fff",
+  color: "rgba(0, 0, 0, 0.6)",
 }));
 
 export const StyledFormFields = styled(Box)(() => ({

@@ -39,6 +39,13 @@ export const ItemNavigation = ({
 
   const handleClose = () => {
     setOpen(false);
+
+    if (title.length === 0 && link.length === 0) {
+      handleRemoveLinkNavigation({
+        id,
+        type: "primary",
+      });
+    }
   };
 
   const handleOpen = () => {

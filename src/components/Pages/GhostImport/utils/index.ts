@@ -23,34 +23,36 @@ import { nip19 } from "nostr-tools";
 export const preparePosts = (db: DBReturnType): ClientPost[] => {
   const { posts, users, posts_authors, tags, posts_tags } = db.data;
 
-  return posts.filter(post => !!post.plaintext).map((post) => {
-    post.published_at = post.published_at || post.created_at;
-    post.summary =
-      post.custom_excerpt || post.plaintext.trim().substring(0, 100);
+  return posts
+    .filter((post) => !!post.plaintext)
+    .map((post) => {
+      post.published_at = post.published_at || post.created_at;
+      post.summary =
+        post.custom_excerpt || post.plaintext.trim().substring(0, 100);
 
-    const postAuthorRelation = posts_authors.find(
-      (relation) => relation.post_id === post.id,
-    );
-    const author = postAuthorRelation
-      ? users.find((user) => user.id === postAuthorRelation.author_id)
-      : undefined;
+      const postAuthorRelation = posts_authors.find(
+        (relation) => relation.post_id === post.id,
+      );
+      const author = postAuthorRelation
+        ? users.find((user) => user.id === postAuthorRelation.author_id)
+        : undefined;
 
-    const postTagsRelations = posts_tags.filter(
-      (relation) => relation.post_id === post.id,
-    );
-    const postTags = postTagsRelations
-      .map((relation) => tags.find((tag) => tag.id === relation.tag_id))
-      .filter((tag) => tag !== undefined) as Tag[];
+      const postTagsRelations = posts_tags.filter(
+        (relation) => relation.post_id === post.id,
+      );
+      const postTags = postTagsRelations
+        .map((relation) => tags.find((tag) => tag.id === relation.tag_id))
+        .filter((tag) => tag !== undefined) as Tag[];
 
-    return {
-      ...post,
-      author: author || undefined,
-      tags: postTags,
-      // we should use slug to preserve the post url when migrating
-      // from Ghost to npub.pro
-      d_tag: post.slug, // + '_' + post.id,
-    };
-  });
+      return {
+        ...post,
+        author: author || undefined,
+        tags: postTags,
+        // we should use slug to preserve the post url when migrating
+        // from Ghost to npub.pro
+        d_tag: post.slug, // + '_' + post.id,
+      };
+    });
 };
 
 export const capitalizeFirstLetter = (string: string) => {

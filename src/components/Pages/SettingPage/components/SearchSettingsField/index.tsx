@@ -85,7 +85,7 @@ export const SearchSettingsField: FC<SearchSettingsFieldProps> = ({
     <StyledFormControl>
       {isStartIcon && isFocus && (
         <StyledStartIcon>
-          <SearchIcon />
+          <SearchIcon color="inherit" />
         </StyledStartIcon>
       )}
 

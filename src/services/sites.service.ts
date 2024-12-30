@@ -47,6 +47,7 @@ export type ReturnSettingsSiteDataType = {
     primary: { title: string; link: string; id: string }[];
     secondary: { title: string; link: string; id: string }[];
   };
+  autoSubmit: boolean;
   hashtags: string[];
   kinds: number[];
   hashtags_homepage: string[];

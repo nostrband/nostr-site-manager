@@ -94,6 +94,7 @@ interface IFilter {
   handleLoadingMore: (state: boolean) => void;
   siteId: string;
   setPosts: Dispatch<SetStateAction<SearchPost[]>>;
+  setIsEmpty: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
 }
 
@@ -134,7 +135,17 @@ const Transition = forwardRef(function Transition(
 });
 
 const FilterComponent = forwardRef<FilterRef, IFilter>(
-  ({ siteId, handleLoading, isLoading, setPosts, handleLoadingMore }, ref) => {
+  (
+    {
+      siteId,
+      handleLoading,
+      isLoading,
+      setPosts,
+      handleLoadingMore,
+      setIsEmpty,
+    },
+    ref,
+  ) => {
     const [isOpenMoreFilter, setOpenMoreFilter] = useState(false);
     const isDesktop = useResponsive("up", "sm");
     const sizeField = isDesktop ? "medium" : "small";
@@ -146,7 +157,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
       [params],
     );
 
-    const linkToAddPost = `/admin/${siteId}/add-post`;
+    const linkToAddPost = `/admin/${siteId}/posts/add`;
 
     const [isOpenModal, setOpenModal] = useState(false);
 
@@ -197,6 +208,13 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
             const newPosts = posts.filter((item) => !prevPosts.has(item.id));
             console.log({ postLength: newPosts.length });
+
+            if (newPosts.length === 0) {
+              setIsEmpty(true);
+            } else {
+              setIsEmpty(false);
+            }
+
             return [...prev, ...newPosts];
           });
         } catch (e: any) {
@@ -220,6 +238,12 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
           const posts = await filterSitePosts(id, formData);
 
           console.log({ posts, formData });
+
+          if (posts.length === 0) {
+            setIsEmpty(true);
+          } else {
+            setIsEmpty(false);
+          }
 
           setPosts(posts);
         } catch (e: any) {

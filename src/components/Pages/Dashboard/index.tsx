@@ -42,7 +42,7 @@ export const Dashboard = () => {
   const switchTheme = `/design?siteId=${siteId}&themeId=${getSite?.themeId}`;
 
   const openSettings = `/admin/${siteId}/settings`;
-  const openPostManagement = `/admin/${siteId}/post-management`;
+  const openPostManagement = `/admin/${siteId}/posts`;
 
   const handeOpenConfirm = () => {
     setOpenConfirm(true);

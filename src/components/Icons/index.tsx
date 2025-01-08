@@ -586,7 +586,7 @@ export const StarRectangleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "StarRectangleIcon"
+  "StarRectangleIcon",
 );
 
 export const PipetteIcon = createSvgIcon(
@@ -932,7 +932,7 @@ export const CopyIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CopyIcon"
+  "CopyIcon",
 );
 
 export const CheckCircleIcon = createSvgIcon(
@@ -956,7 +956,7 @@ export const CheckCircleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CheckCircleIcon"
+  "CheckCircleIcon",
 );
 
 export const PinFillIcon = createSvgIcon(
@@ -972,7 +972,7 @@ export const PinFillIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PinFillIcon"
+  "PinFillIcon",
 );
 
 export const JsonCodeIcon = createSvgIcon(
@@ -1008,7 +1008,7 @@ export const JsonCodeIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "JsonCodeIcon"
+  "JsonCodeIcon",
 );
 
 export const CalendarIcon = createSvgIcon(

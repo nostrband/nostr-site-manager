@@ -20,6 +20,7 @@ export const PostManagement = () => {
   const { siteId } = useGetSiteId();
   const [isLoadingPosts, setloadingPosts] = useState(true);
   const [isLoadingMore, setLoadingMore] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
   const [posts, setPosts] = useState<SearchPost[]>([]);
   const filterRef = useRef<FilterRef | null>(null);
 
@@ -55,9 +56,10 @@ export const PostManagement = () => {
 
   return (
     <Container maxWidth="lg">
-      <Head siteId={siteId} />
+      <Head />
 
       <Filter
+        setIsEmpty={setIsEmpty}
         handleLoadingMore={setLoadingMore}
         ref={filterRef}
         setPosts={setPosts}
@@ -105,7 +107,7 @@ export const PostManagement = () => {
               size="large"
               onClick={handleLoadMore}
             >
-              Load more
+              {isEmpty ? "Try again" : "Load more"}
             </LoadingButton>
           </StyledShowMore>
         </StyledWrapListPosts>

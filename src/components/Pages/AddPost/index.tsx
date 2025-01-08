@@ -20,6 +20,7 @@ export const AddPost = () => {
   const { siteId } = useGetSiteId();
   const [isLoadingPosts, setloadingPosts] = useState(true);
   const [posts, setPosts] = useState<SearchPost[]>([]);
+  const [isSearchResult, setSearchResult] = useState(false);
 
   const isNotFound = posts.length === 0;
 
@@ -40,13 +41,14 @@ export const AddPost = () => {
 
   return (
     <Container maxWidth="lg">
-      <Head siteId={siteId} />
+      <Head isSearchResult={isSearchResult} />
 
       <Filter
         setPosts={setPosts}
         siteId={siteId}
         handleLoading={setloadingPosts}
         isLoading={isLoadingPosts}
+        setSearchResult={setSearchResult}
       />
 
       {isNotFound && !isLoadingPosts && (

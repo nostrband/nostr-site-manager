@@ -75,6 +75,7 @@ interface IFilter {
   handleLoading: (state: boolean) => void;
   siteId: string;
   setPosts: (cards: SearchPost[]) => void;
+  setSearchResult: (state: boolean) => void;
   isLoading: boolean;
 }
 
@@ -115,8 +116,15 @@ const Transition = forwardRef(function Transition(
 });
 
 export const Filter = memo(
-  ({ siteId, handleLoading, isLoading, setPosts }: IFilter) => {
+  ({
+    siteId,
+    handleLoading,
+    isLoading,
+    setPosts,
+    setSearchResult,
+  }: IFilter) => {
     const [isOpenMoreFilter, setOpenMoreFilter] = useState(false);
+
     const isDesktop = useResponsive("up", "sm");
     const sizeField = isDesktop ? "medium" : "small";
 
@@ -183,6 +191,8 @@ export const Filter = memo(
         });
       } finally {
         handleLoading(false);
+
+        setSearchResult(true);
       }
     };
 
@@ -399,6 +409,8 @@ export const Filter = memo(
       const transformedObject = transformObject(prepareData);
 
       if (siteData && params.size !== 0) {
+        setSearchResult(true);
+
         getSearchPosts(transformedObject, siteData.id);
       }
     }, [siteData]);

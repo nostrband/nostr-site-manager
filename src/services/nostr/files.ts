@@ -1,6 +1,19 @@
-import { KIND_SITE, KIND_SITE_FILE, SITE_RELAY, fetchOutboxRelays, fetchSiteFile, parseAddr } from "libnostrsite";
+import {
+  KIND_SITE,
+  KIND_SITE_FILE,
+  SITE_RELAY,
+  fetchOutboxRelays,
+  fetchSiteFile,
+  parseAddr,
+} from "libnostrsite";
 import { findSiteEvent } from "./api";
-import { fetchWithSession, ndk, userIsDelegated, userPubkey, userRelays } from "./nostr";
+import {
+  fetchWithSession,
+  ndk,
+  userIsDelegated,
+  userPubkey,
+  userRelays,
+} from "./nostr";
 import { NDKEvent, NDKNip07Signer, NDKRelaySet } from "@nostr-dev-kit/ndk";
 import { NPUB_PRO_API } from "@/consts";
 
@@ -15,7 +28,7 @@ export async function fetchNostrJson(siteId: string) {
     ndk,
     siteId,
     NOSTR_JSON_FILE,
-    relays
+    relays,
   );
 
   if (!nostrJsonEvent) return undefined;
@@ -31,7 +44,8 @@ export async function fetchNostrJson(siteId: string) {
 }
 
 export async function editNostrJson(siteId: string, content: string) {
-  if (userIsDelegated) throw new Error("Can't save nostr.json in delegated mode");
+  if (userIsDelegated)
+    throw new Error("Can't save nostr.json in delegated mode");
 
   const addr = parseAddr(siteId);
   const s_tag = `${KIND_SITE}:${addr!.pubkey}:${addr!.identifier}`;

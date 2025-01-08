@@ -1,7 +1,7 @@
 "use client";
 import { ChevronLeftIcon, CrossIcon, InfoIcon } from "@/components/Icons";
 import { Button, Collapse, IconButton } from "@mui/material";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   StyledAlert,
@@ -10,12 +10,11 @@ import {
   StyledTitle,
 } from "./styled";
 
-export const Head = ({ siteId }: { siteId: string }) => {
+export const Head = ({ isSearchResult }: { isSearchResult: boolean }) => {
   const flagAlert = "isOpenAlertInfo";
+  const router = useRouter();
 
   const [isOpenAlertInfo, setOpenAlertInfo] = useState(false);
-
-  const backToDashboardLink = `/admin/${siteId}/post-management`;
 
   const handleOpenAlertInfo = () => {
     setOpenAlertInfo(true);
@@ -27,6 +26,10 @@ export const Head = ({ siteId }: { siteId: string }) => {
     setOpenAlertInfo(false);
 
     localStorage.setItem(flagAlert, "false");
+  };
+
+  const handleBack = () => {
+    router.back();
   };
 
   useEffect(() => {
@@ -43,15 +46,14 @@ export const Head = ({ siteId }: { siteId: string }) => {
     <>
       <StyledTitle>
         <Button
-          LinkComponent={Link}
-          href={backToDashboardLink}
+          onClick={handleBack}
           color="primary"
           variant="text"
           sx={{ minWidth: "auto" }}
         >
           <ChevronLeftIcon />
         </Button>
-        Posts ideas
+        {isSearchResult ? " Search results" : "Posts ideas"}
         <StyledButtonInfo
           onClick={handleOpenAlertInfo}
           color="info"

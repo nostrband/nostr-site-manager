@@ -18,7 +18,6 @@ import {
   StyledStatus,
   StyledTags,
 } from "./styled";
-import { usePathname } from "next/navigation";
 import { memo, MouseEvent, useEffect, useState } from "react";
 import useImageLoader from "@/hooks/useImageLoader";
 import { format, parseISO } from "date-fns";
@@ -52,10 +51,10 @@ export const PostCard = memo(
       autoSubmitted,
     } = post;
 
-    const pathname = usePathname();
     const { isLoaded: isLoadedImage } = useImageLoader(feature_image);
 
-    const link = `${pathname}/${id}`;
+    const link = `/admin/${siteId}/posts/${id}`;
+
     const date = parseISO(created_at);
 
     const datePost = format(date, "MMM dd, yyyy");

@@ -9,10 +9,11 @@ import {
   StyledButtonInfo,
   StyledTitle,
 } from "./styled";
+import { useBack } from "@/hooks/useBackPage";
 
 export const Head = ({ isSearchResult }: { isSearchResult: boolean }) => {
   const flagAlert = "isOpenAlertInfo";
-  const router = useRouter();
+  const { back } = useBack();
 
   const [isOpenAlertInfo, setOpenAlertInfo] = useState(false);
 
@@ -29,7 +30,7 @@ export const Head = ({ isSearchResult }: { isSearchResult: boolean }) => {
   };
 
   const handleBack = () => {
-    router.back();
+    back();
   };
 
   useEffect(() => {

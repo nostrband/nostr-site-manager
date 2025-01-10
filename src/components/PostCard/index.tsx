@@ -26,16 +26,19 @@ import { Avatar, Chip, CircularProgress } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import { StyledTooltip } from "../Tooltip/styled";
+import { useSearchParams } from "next/navigation";
 
 export const PostCard = memo(
   ({
     post,
     siteId,
     updatePost,
+    backSlug,
   }: {
     post: SearchPost;
     siteId: string;
     updatePost: (post: SearchPost) => void;
+    backSlug?: string;
   }) => {
     const {
       title,
@@ -53,7 +56,11 @@ export const PostCard = memo(
 
     const { isLoaded: isLoadedImage } = useImageLoader(feature_image);
 
-    const link = `/admin/${siteId}/posts/${id}`;
+    const params = useSearchParams();
+
+    const queryParams = `${params.toString()}${backSlug ? `${params.size ? "&" : ""}backSlug=${backSlug}` : ""}`;
+
+    const link = `/admin/${siteId}/posts/${id}${queryParams.length ? `?${queryParams}` : ""}`;
 
     const date = parseISO(created_at);
 

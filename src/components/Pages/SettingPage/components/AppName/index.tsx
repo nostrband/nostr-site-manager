@@ -54,7 +54,7 @@ export const AppName = memo(
         </StyledHeadSettingBlock>
 
         <FormControl disabled={!isEdit} fullWidth size={sizeField}>
-          <InputLabel htmlFor="app-name">Name</InputLabel>
+          <InputLabel htmlFor="app-name">App name</InputLabel>
           <OutlinedInput
             inputRef={inputRef}
             id="app-name"

@@ -135,7 +135,7 @@ export const StyledCardTitle = styled(Box)(({ theme }) => ({
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
   fontWeight: "700",
-  fontSize: 14,
+  fontSize: 16,
   lineHeight: "18px",
   height: "18px",
   color: theme.palette.primary.main,

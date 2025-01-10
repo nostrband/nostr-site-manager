@@ -1,7 +1,6 @@
 "use client";
 import { ChevronLeftIcon, CrossIcon, InfoIcon } from "@/components/Icons";
 import { Button, Collapse, IconButton } from "@mui/material";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   StyledAlert,
@@ -9,10 +8,11 @@ import {
   StyledButtonInfo,
   StyledTitle,
 } from "./styled";
+import { useBack } from "@/hooks/useBackPage";
 
 export const Head = () => {
   const flagAlert = "isOpenAlertInfo";
-  const router = useRouter();
+  const { back } = useBack();
 
   const [isOpenAlertInfo, setOpenAlertInfo] = useState(false);
 
@@ -29,7 +29,7 @@ export const Head = () => {
   };
 
   const handleBack = () => {
-    router.back();
+    back("dashboard");
   };
 
   useEffect(() => {

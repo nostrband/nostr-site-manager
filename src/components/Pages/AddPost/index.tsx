@@ -75,6 +75,7 @@ export const AddPost = () => {
                     updatePost={updatePost}
                     siteId={siteId}
                     post={post}
+                    backSlug="add"
                   />
                 </Grid>
               );

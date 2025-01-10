@@ -127,6 +127,9 @@ export const StyledCardDescription = styled(Typography)(({ theme }) => ({
   p: {
     margin: 0,
   },
+  img: {
+    width: "100%",
+  },
   [theme.breakpoints.down("sm")]: {
     fontSize: 14,
     lineHeight: "22px",

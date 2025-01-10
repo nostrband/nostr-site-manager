@@ -134,7 +134,7 @@ export const Dashboard = () => {
                   fullWidth
                   endIcon={<ArrowRightIcon />}
                 >
-                  Open website
+                  Open
                 </Button>
 
                 <Button
@@ -146,7 +146,7 @@ export const Dashboard = () => {
                   fullWidth
                   endIcon={<FIleTextIcon />}
                 >
-                  Post management
+                  Posts
                 </Button>
 
                 <Button
@@ -158,7 +158,7 @@ export const Dashboard = () => {
                   fullWidth
                   endIcon={<BrushIcon />}
                 >
-                  Theme settings
+                  Theme
                 </Button>
 
                 <Button

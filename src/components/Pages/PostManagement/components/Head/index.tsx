@@ -78,8 +78,8 @@ export const Head = () => {
             </IconButton>
           }
         >
-          <StyledAlertTitle>Content management section</StyledAlertTitle>
-          In this section you will find any posts, and manage your content
+          <StyledAlertTitle>Post management</StyledAlertTitle>
+          View posts already published on your site.
         </StyledAlert>
       </Collapse>
     </>

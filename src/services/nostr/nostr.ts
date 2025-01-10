@@ -129,6 +129,7 @@ export async function getOutboxRelays(pubkey: string) {
   if (c) return c;
 
   const relays = await fetchOutboxRelays(ndk, [pubkey]);
+  relays.push(...DEFAULT_RELAYS);
   outboxCache.set(pubkey, relays);
   return relays;
 }
@@ -335,6 +336,7 @@ export async function publishSiteEvent(
     // publish
     const set = NDKRelaySet.fromRelayUrls(relays, ndk);
     console.log("publishing to relays", relays, set);
+
     const r = await site.publish(set);
     console.log(
       "published site event to",

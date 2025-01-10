@@ -46,7 +46,7 @@ import { AuthorFilter, OptionAuthorType } from "./components/Author";
 import { enqueueSnackbar } from "notistack";
 import { TypesFilter } from "./components/Types";
 import { HashtagsFilter } from "./components/Hashtags";
-import { SearchPost, filterSitePosts } from "@/services/nostr/content";
+import { SearchPost, filterSitePosts, getSiteContributors } from "@/services/nostr/content";
 import { LoadingButton } from "@mui/lab";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TransitionProps } from "@mui/material/transitions";
@@ -421,25 +421,17 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
     }, [submitForm, siteData, params]);
 
     useEffect(() => {
-      if (siteData) {
+      if (!siteData) return;
+      const load = async () => {
         const authors = params.get("authors")
           ? params.get("authors")!.split(",")
           : [];
 
-        if (authors.length) {
-          const mergeContributors = [
-            ...authors,
-            ...siteData.contributors,
-          ].filter(
-            (author, index, self) =>
-              index === self.findIndex((a) => a === author),
-          );
-
-          setContributors(mergeContributors);
-        } else {
-          setContributors(siteData.contributors);
-        }
+        const contributors = await getSiteContributors(siteId);
+        authors.push(...contributors);
+        setContributors(authors);
       }
+      load();
     }, [siteData]);
 
     useEffect(() => {
@@ -588,12 +580,12 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
             <Grid item xs={12} sm={6}>
               <StyledFormControl fullWidth size={sizeField}>
                 <StyledFormControlLabel htmlFor="search-content">
-                  Search content
+                  Search string
                 </StyledFormControlLabel>
                 <OutlinedInput
                   id="search-content"
                   fullWidth
-                  label="Search content"
+                  label="Search string"
                   endAdornment={<SearchIcon color="inherit" />}
                   onChange={onSearchInputChange}
                   value={values.search}

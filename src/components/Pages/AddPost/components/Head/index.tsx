@@ -78,8 +78,8 @@ export const Head = ({ isSearchResult }: { isSearchResult: boolean }) => {
             </IconButton>
           }
         >
-          <StyledAlertTitle>Content management section</StyledAlertTitle>
-          In this section you will find any posts, and manage your content
+          <StyledAlertTitle>Adding posts</StyledAlertTitle>
+          Search for new posts on Nostr and add them to your site.
         </StyledAlert>
       </Collapse>
     </>

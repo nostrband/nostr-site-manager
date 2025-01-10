@@ -113,12 +113,12 @@ export const ContentFilters = memo(
         target: { value },
       } = event;
       handleChangeKinds(
-        typeof value === "string" ? value.split(",").map(Number) : value,
+        typeof value === "string" ? value.split(",").map(Number) : value
       );
     };
 
     const handleChangeAutoSubmit = (
-      event: React.ChangeEvent<HTMLInputElement>,
+      event: React.ChangeEvent<HTMLInputElement>
     ) => {
       handleAutoSubmit(event.target.checked);
     };
@@ -153,106 +153,119 @@ export const ContentFilters = memo(
             control={
               <Switch checked={autoSubmit} onChange={handleChangeAutoSubmit} />
             }
-            label="Enable auto submit"
+            label={autoSubmit ? "Auto-submit ON" : "Auto-submit OFF"}
           />
 
-          <FormControl disabled={autoSubmit} fullWidth>
-            <Autocomplete
-              multiple
-              options={mergedOptions}
-              disableCloseOnSelect
-              disabled={autoSubmit}
-              freeSolo
-              value={selectedHashtags}
-              inputValue={inputValue}
-              onInputChange={(_, newInputValue) => setInputValue(newInputValue)}
-              onChange={(_, value) => {
-                const newHashtag = (s: string) =>
-                  s.startsWith("#") ? s : `#${s}`;
+          {autoSubmit && (
+            <>
+              <FormControl disabled={!autoSubmit} fullWidth>
+                <Autocomplete
+                  multiple
+                  options={mergedOptions}
+                  disableCloseOnSelect
+                  disabled={!autoSubmit}
+                  freeSolo
+                  value={selectedHashtags}
+                  inputValue={inputValue}
+                  onInputChange={(_, newInputValue) =>
+                    setInputValue(newInputValue)
+                  }
+                  onChange={(_, value) => {
+                    const newHashtag = (s: string) =>
+                      s.startsWith("#") ? s : `#${s}`;
 
-                const newValues = value.map((v) =>
-                  typeof v === "string" ? newHashtag(v) : newHashtag(v.title),
-                );
-                const uniqueValues = [...new Set(newValues)];
-                handleChangeHashtags(uniqueValues);
-                setHashtags((prevHashtags) => [
-                  ...new Set([...prevHashtags, ...uniqueValues]),
-                ]);
-              }}
-              getOptionLabel={(option) =>
-                typeof option === "string" ? option : option.title
-              }
-              renderOption={(props, option) => {
-                // @ts-ignore
-                const { key, ...optionProps } = props;
-                return (
-                  <ListItem {...optionProps} key={key}>
-                    <Checkbox
-                      disabled={autoSubmit}
-                      checked={selectedHashtags.indexOf(option.title) > -1}
-                      onClick={(e) => {
-                        const isSelected = selectedHashtags.includes(
-                          option.title,
-                        );
-                        if (isSelected) {
-                          e.stopPropagation();
-                          const newSelectedHashtags = selectedHashtags.filter(
-                            (el) => el !== option.title,
-                          );
+                    const newValues = value.map((v) =>
+                      typeof v === "string"
+                        ? newHashtag(v)
+                        : newHashtag(v.title)
+                    );
+                    const uniqueValues = [...new Set(newValues)];
+                    handleChangeHashtags(uniqueValues);
+                    setHashtags((prevHashtags) => [
+                      ...new Set([...prevHashtags, ...uniqueValues]),
+                    ]);
+                  }}
+                  getOptionLabel={(option) =>
+                    typeof option === "string" ? option : option.title
+                  }
+                  renderOption={(props, option) => {
+                    // @ts-ignore
+                    const { key, ...optionProps } = props;
+                    return (
+                      <ListItem {...optionProps} key={key}>
+                        <Checkbox
+                          disabled={!autoSubmit}
+                          checked={selectedHashtags.indexOf(option.title) > -1}
+                          onClick={(e) => {
+                            const isSelected = selectedHashtags.includes(
+                              option.title
+                            );
+                            if (isSelected) {
+                              e.stopPropagation();
+                              const newSelectedHashtags =
+                                selectedHashtags.filter(
+                                  (el) => el !== option.title
+                                );
 
-                          handleChangeHashtags(newSelectedHashtags);
-                        }
-                      }}
+                              handleChangeHashtags(newSelectedHashtags);
+                            }
+                          }}
+                        />
+                        <ListItemText primary={option.title} />
+                      </ListItem>
+                    );
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      disabled={!autoSubmit}
+                      label="Hashtags"
                     />
-                    <ListItemText primary={option.title} />
-                  </ListItem>
-                );
-              }}
-              renderInput={(params) => (
-                <TextField {...params} disabled={autoSubmit} label="Hashtags" />
-              )}
-            />
-            {inputValue &&
-              !hashtags.includes(inputValue) &&
-              !isSubstringPresent(inputValue) && (
-                <Button
-                  disabled={autoSubmit}
-                  onClick={handleAddHashtag}
-                  variant="contained"
-                  size={sizeButton}
-                  sx={{ mt: 1 }}
+                  )}
+                />
+                {inputValue &&
+                  !hashtags.includes(inputValue) &&
+                  !isSubstringPresent(inputValue) && (
+                    <Button
+                      disabled={!autoSubmit}
+                      onClick={handleAddHashtag}
+                      variant="contained"
+                      size={sizeButton}
+                      sx={{ mt: 1 }}
+                    >
+                      Add {inputValue}
+                    </Button>
+                  )}
+              </FormControl>
+
+              <FormControl disabled={!autoSubmit} fullWidth size={sizeField}>
+                <InputLabel id="demo-multiple-checkbox-label">Kinds</InputLabel>
+
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  multiple
+                  value={selectedKinds}
+                  onChange={handleChange}
+                  input={<OutlinedInput disabled={!autoSubmit} label="Kinds" />}
+                  renderValue={(selected) =>
+                    selected.map((val) => kindsMap[val]).join(", ")
+                  }
                 >
-                  Add {inputValue}
-                </Button>
-              )}
-          </FormControl>
-
-          <FormControl disabled={autoSubmit} fullWidth size={sizeField}>
-            <InputLabel id="demo-multiple-checkbox-label">Kinds</InputLabel>
-
-            <Select
-              labelId="demo-multiple-checkbox-label"
-              id="demo-multiple-checkbox"
-              multiple
-              value={selectedKinds}
-              onChange={handleChange}
-              input={<OutlinedInput disabled={autoSubmit} label="Kinds" />}
-              renderValue={(selected) =>
-                selected.map((val) => kindsMap[val]).join(", ")
-              }
-            >
-              {kinds.map((kind, i) => (
-                <MenuItem key={i} value={kind}>
-                  <Checkbox checked={selectedKinds.indexOf(kind) > -1} />
-                  <ListItemText primary={kindsMap[kind]} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+                  {kinds.map((kind, i) => (
+                    <MenuItem key={i} value={kind}>
+                      <Checkbox checked={selectedKinds.indexOf(kind) > -1} />
+                      <ListItemText primary={kindsMap[kind]} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </>
+          )}
         </StyledFormFields>
       </StyledSettingBlock>
     );
-  },
+  }
 );
 
 ContentFilters.displayName = "ContentFilters";

@@ -149,7 +149,7 @@ export const SETTINGS_CONFIG = {
     icon: <FIleTextIcon />,
     group: "General settings",
     description:
-      "Choose event kinds and hashtags that will be displayed on this site",
+      "Enable auto-submission to publish events of chosen kinds and hashtags by the site contributors",
   },
   plugins: {
     title: "Plugins",

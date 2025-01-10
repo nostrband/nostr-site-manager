@@ -519,7 +519,7 @@ async function preparePreviewSite() {
     // load posts
     await loadSite();
 
-    console.log("updated site event", site);
+    console.log("updated site event", site, hashtags);
   }
 
   // save local copy

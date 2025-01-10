@@ -466,12 +466,12 @@ export const Filter = memo(
             <Grid item xs={12} sm={6}>
               <StyledFormControl fullWidth size={sizeField}>
                 <StyledFormControlLabel htmlFor="search-content">
-                  Search content
+                  Search string
                 </StyledFormControlLabel>
                 <OutlinedInput
                   id="search-content"
                   fullWidth
-                  label="Search content"
+                  label="Search string"
                   endAdornment={<SearchIcon color="inherit" />}
                   onChange={onSearchInputChange}
                   value={values.search}

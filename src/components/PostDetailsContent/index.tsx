@@ -42,10 +42,11 @@ import {
 } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { StyledTooltip } from "@/components/Tooltip/styled";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
+import { useBack } from "@/hooks/useBackPage";
 
 export const PostDetailsContent = memo(
   ({ post: postData, siteId }: { post: SearchPost; siteId: string }) => {
@@ -68,18 +69,35 @@ export const PostDetailsContent = memo(
       autoSubmitted,
     } = post;
 
-    const router = useRouter();
+    const { back } = useBack();
+    const params = useSearchParams();
 
     const handleShowMore = () => {
       setShowMore(true);
     };
 
     const handleBack = () => {
-      if (window.history.length > 1) {
-        router.back();
-      } else {
-        router.push("/");
+      const backSlug = params.get("backSlug");
+
+      if (backSlug) {
+        if (params.size) {
+          back(`add?${params.toString()}`);
+
+          return;
+        }
+
+        back("add");
+
+        return;
       }
+
+      if (params.size) {
+        back(`?${params.toString()}`);
+
+        return;
+      }
+
+      back();
     };
 
     const updatePost = (post: SearchPost) => {

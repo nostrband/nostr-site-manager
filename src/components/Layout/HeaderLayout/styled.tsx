@@ -24,11 +24,12 @@ export const StyledUserAvatar = styled(Avatar)(() => ({
 
 export const StyledBadgeWrap = styled(Box)(() => ({
   background: grey[100],
-  padding: "4px 6px",
+  padding: "5px 6px",
   display: "flex",
   alignItems: "center",
   gap: "4px",
   borderRadius: "8px",
+  height: 34,
 }));
 
 export const StyledBadge = styled(Badge)(() => ({
@@ -44,15 +45,15 @@ export const StyledBadge = styled(Badge)(() => ({
 }));
 
 export const StyledBadgeAvatar = styled(Avatar)(() => ({
-  width: "18px",
-  height: "18px",
+  width: 24,
+  height: 24,
   fontSize: "10px",
   background: grey[400],
   borderRadius: "3px",
 }));
 
 export const StyledBadgeTitle = styled(Typography)(() => ({
-  fontSize: "10px",
-  lineHeight: "14px",
+  fontSize: "14px",
+  lineHeight: "22px",
   fontWeight: "500",
 }));

@@ -42,6 +42,7 @@ import { SearchSettingsField, Setting } from "./components/SearchSettingsField";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { NostrJson } from "./components/NostrJson";
 import { ContentFilters } from "./components/ContentFilters";
+import { useBack } from "@/hooks/useBackPage";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -96,6 +97,7 @@ export const SettingPage = () => {
   const [choiceSetting, setChoiceSetting] = useState<Setting | null>(null);
   const { enqueueSnackbar } = useSnackbar();
   const { siteId } = useGetSiteId();
+  const { back } = useBack();
 
   const {
     data,
@@ -103,10 +105,12 @@ export const SettingPage = () => {
     isFetching,
   } = useSettingsSite(siteId);
 
-  const backToDashboardLink = `/admin/${siteId}/dashboard`;
-
   const handleChoiceSetting = (setting: Setting | null) => {
     setChoiceSetting(setting);
+  };
+
+  const handleBack = () => {
+    back("dashboard");
   };
 
   const {
@@ -332,8 +336,7 @@ export const SettingPage = () => {
       <StyledWrap>
         <StyledTitle>
           <Button
-            LinkComponent={Link}
-            href={backToDashboardLink}
+            onClick={handleBack}
             color="primary"
             variant="text"
             sx={{ minWidth: "auto" }}

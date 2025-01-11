@@ -113,12 +113,12 @@ export const ContentFilters = memo(
         target: { value },
       } = event;
       handleChangeKinds(
-        typeof value === "string" ? value.split(",").map(Number) : value
+        typeof value === "string" ? value.split(",").map(Number) : value,
       );
     };
 
     const handleChangeAutoSubmit = (
-      event: React.ChangeEvent<HTMLInputElement>
+      event: React.ChangeEvent<HTMLInputElement>,
     ) => {
       handleAutoSubmit(event.target.checked);
     };
@@ -177,7 +177,7 @@ export const ContentFilters = memo(
                     const newValues = value.map((v) =>
                       typeof v === "string"
                         ? newHashtag(v)
-                        : newHashtag(v.title)
+                        : newHashtag(v.title),
                     );
                     const uniqueValues = [...new Set(newValues)];
                     handleChangeHashtags(uniqueValues);
@@ -198,13 +198,13 @@ export const ContentFilters = memo(
                           checked={selectedHashtags.indexOf(option.title) > -1}
                           onClick={(e) => {
                             const isSelected = selectedHashtags.includes(
-                              option.title
+                              option.title,
                             );
                             if (isSelected) {
                               e.stopPropagation();
                               const newSelectedHashtags =
                                 selectedHashtags.filter(
-                                  (el) => el !== option.title
+                                  (el) => el !== option.title,
                                 );
 
                               handleChangeHashtags(newSelectedHashtags);
@@ -265,7 +265,7 @@ export const ContentFilters = memo(
         </StyledFormFields>
       </StyledSettingBlock>
     );
-  }
+  },
 );
 
 ContentFilters.displayName = "ContentFilters";

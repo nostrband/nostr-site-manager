@@ -2,6 +2,7 @@
 import { SearchPost, submitPost } from "@/services/nostr/content";
 import {
   StyledAddButton,
+  StyledAddButtonAvatar,
   StyledAvatrAuthor,
   StyledCard,
   StyledCardContent,
@@ -17,12 +18,13 @@ import {
   StyledPostAuthorName,
   StyledStatus,
   StyledTags,
+  StyledTypePost,
 } from "./styled";
 import { memo, MouseEvent, useEffect, useState } from "react";
 import useImageLoader from "@/hooks/useImageLoader";
 import { format, parseISO } from "date-fns";
 import { BrokenBigIcon, CheckCircleIcon, IconPerson, PlusIcon } from "../Icons";
-import { Avatar, Chip, CircularProgress } from "@mui/material";
+import { Chip, CircularProgress } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import { StyledTooltip } from "../Tooltip/styled";
@@ -180,17 +182,11 @@ export const PostCard = memo(
                       value={progress}
                     />
                   ) : isAdded ? (
-                    <Avatar
+                    <StyledAddButtonAvatar
                       src={submitterProfile?.profile?.picture}
-                      sx={{
-                        border: "1px solid #fff",
-                        height: "20px",
-                        width: "20px",
-                        fontSize: "12px !important",
-                      }}
                     >
                       <IconPerson fontSize="inherit" />
-                    </Avatar>
+                    </StyledAddButtonAvatar>
                   ) : (
                     <PlusIcon color="inherit" fontSize="inherit" />
                   )
@@ -214,6 +210,8 @@ export const PostCard = memo(
             <StyledDate variant="body2">
               <span>{datePost}</span>
               <span>{timePost}</span>
+
+              <StyledTypePost label="Article" color="secondary" size="small" />
             </StyledDate>
 
             <StyledCardText>

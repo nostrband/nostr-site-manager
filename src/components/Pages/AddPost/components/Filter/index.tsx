@@ -22,10 +22,13 @@ import {
   Slide,
 } from "@mui/material";
 import {
+  Dispatch,
   forwardRef,
   memo,
+  SetStateAction,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useState,
 } from "react";
@@ -45,6 +48,12 @@ import { LoadingButton } from "@mui/lab";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TransitionProps } from "@mui/material/transitions";
 import { DatePickerField } from "./components/DatePickerField";
+import { nip19 } from "nostr-tools";
+import { fetchProfiles } from "@/services/nostr/api";
+
+export interface FilterRef {
+  handleLoadMore: (createdAtTime: number) => void;
+}
 
 type InputObject = {
   authors: string[];
@@ -53,6 +62,7 @@ type InputObject = {
   since?: number;
   until?: number;
   search: string;
+  loadMore?: boolean;
 };
 
 const initialValues: {
@@ -62,6 +72,8 @@ const initialValues: {
   since?: number;
   until?: number;
   search: string;
+  loadMore?: boolean;
+  loadMoreUntil: number;
 } = {
   authors: [],
   kinds: [],
@@ -69,12 +81,16 @@ const initialValues: {
   since: undefined,
   until: undefined,
   search: "",
+  loadMore: false,
+  loadMoreUntil: 0,
 };
 
 interface IFilter {
   handleLoading: (state: boolean) => void;
+  handleLoadingMore: (state: boolean) => void;
   siteId: string;
-  setPosts: (cards: SearchPost[]) => void;
+  setPosts: Dispatch<SetStateAction<SearchPost[]>>;
+  setIsEmpty: Dispatch<SetStateAction<boolean>>;
   setSearchResult: (state: boolean) => void;
   isLoading: boolean;
 }
@@ -115,16 +131,20 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="right" ref={ref} {...props} />;
 });
 
-export const Filter = memo(
-  ({
-    siteId,
-    handleLoading,
-    isLoading,
-    setPosts,
-    setSearchResult,
-  }: IFilter) => {
+const FilterComponent = forwardRef<FilterRef, IFilter>(
+  (
+    {
+      siteId,
+      handleLoading,
+      isLoading,
+      setPosts,
+      setSearchResult,
+      setIsEmpty,
+      handleLoadingMore,
+    },
+    ref,
+  ) => {
     const [isOpenMoreFilter, setOpenMoreFilter] = useState(false);
-
     const isDesktop = useResponsive("up", "sm");
     const sizeField = isDesktop ? "medium" : "small";
 
@@ -171,35 +191,75 @@ export const Filter = memo(
     const getSearchPosts = async (
       formData: Partial<InputObject>,
       id: string,
+      isLoadMore?: boolean,
     ) => {
-      handleLoading(true);
+      if (isLoadMore) {
+        handleLoadingMore(true);
 
-      try {
-        const posts = await searchPosts(id, formData);
+        try {
+          const posts = await searchPosts(id, formData);
 
-        console.log({ posts, formData });
+          setPosts((prev) => {
+            const prevPosts = new Set(prev.map((item) => item.id));
 
-        setPosts(posts);
-      } catch (e: any) {
-        enqueueSnackbar("Error: " + e.toString(), {
-          autoHideDuration: 3000,
-          variant: "error",
-          anchorOrigin: {
-            horizontal: "right",
-            vertical: "bottom",
-          },
-        });
-      } finally {
-        handleLoading(false);
+            const newPosts = posts.filter((item) => !prevPosts.has(item.id));
 
-        setSearchResult(true);
+            if (newPosts.length === 0) {
+              setIsEmpty(true);
+            } else {
+              setIsEmpty(false);
+            }
+
+            return [...prev, ...newPosts];
+          });
+        } catch (e: any) {
+          enqueueSnackbar("Error: " + e.toString(), {
+            autoHideDuration: 3000,
+            variant: "error",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "bottom",
+            },
+          });
+        } finally {
+          handleLoadingMore(false);
+
+          setFieldValue("loadMore", false);
+        }
+      } else {
+        handleLoading(true);
+
+        try {
+          const posts = await searchPosts(id, formData);
+
+          if (posts.length === 0) {
+            setIsEmpty(true);
+          } else {
+            setIsEmpty(false);
+          }
+
+          setPosts(posts);
+        } catch (e: any) {
+          enqueueSnackbar("Error: " + e.toString(), {
+            autoHideDuration: 3000,
+            variant: "error",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "bottom",
+            },
+          });
+        } finally {
+          handleLoading(false);
+
+          setSearchResult(true);
+        }
       }
     };
 
     const { values, submitForm, setFieldValue, handleReset } = useFormik({
       initialValues,
       onSubmit: async (values) => {
-        handleLoading(true);
+        const isLoadMore = values.loadMore;
 
         const prepareData = {
           authors: values.authors.map((el) => el.pubkey),
@@ -212,46 +272,57 @@ export const Filter = memo(
 
         const transformedObject = transformObject(prepareData);
 
-        if (prepareData.kinds.length) {
-          searchParams.set("kinds", prepareData.kinds.join(","));
+        if (isLoadMore) {
+          if (siteData) {
+            const loadMoreData = {
+              ...transformedObject,
+              until: values.loadMoreUntil,
+            };
+
+            await getSearchPosts(loadMoreData, siteData.id, isLoadMore);
+          }
         } else {
-          searchParams.delete("kinds");
-        }
+          if (prepareData.kinds.length) {
+            searchParams.set("kinds", prepareData.kinds.join(","));
+          } else {
+            searchParams.delete("kinds");
+          }
 
-        if (prepareData.until) {
-          searchParams.set("until", (prepareData.until / 1000).toString());
-        } else {
-          searchParams.delete("until");
-        }
+          if (prepareData.until) {
+            searchParams.set("until", (prepareData.until / 1000).toString());
+          } else {
+            searchParams.delete("until");
+          }
 
-        if (prepareData.since) {
-          searchParams.set("since", (prepareData.since / 1000).toString());
-        } else {
-          searchParams.delete("since");
-        }
+          if (prepareData.since) {
+            searchParams.set("since", (prepareData.since / 1000).toString());
+          } else {
+            searchParams.delete("since");
+          }
 
-        if (prepareData.search) {
-          searchParams.set("search", prepareData.search.trim());
-        } else {
-          searchParams.delete("search");
-        }
+          if (prepareData.search) {
+            searchParams.set("search", prepareData.search.trim());
+          } else {
+            searchParams.delete("search");
+          }
 
-        if (prepareData.hashtags.length) {
-          searchParams.set("hashtags", prepareData.hashtags.join(","));
-        } else {
-          searchParams.delete("hashtags");
-        }
+          if (prepareData.hashtags.length) {
+            searchParams.set("hashtags", prepareData.hashtags.join(","));
+          } else {
+            searchParams.delete("hashtags");
+          }
 
-        if (prepareData.authors.length) {
-          searchParams.set("authors", prepareData.authors.join(","));
-        } else {
-          searchParams.delete("authors");
-        }
+          if (prepareData.authors.length) {
+            searchParams.set("authors", prepareData.authors.join(","));
+          } else {
+            searchParams.delete("authors");
+          }
 
-        router.push(`?${searchParams.toString()}`);
+          router.push(`?${searchParams.toString()}`);
 
-        if (siteData) {
-          await getSearchPosts(transformedObject, siteData.id);
+          if (siteData) {
+            await getSearchPosts(transformedObject, siteData.id);
+          }
         }
       },
     });
@@ -313,6 +384,17 @@ export const Filter = memo(
       router.push(`?${searchParamsReset.toString()}`);
     };
 
+    const handleLoadMore = (until: number) => {
+      setFieldValue("loadMore", true);
+      setFieldValue("loadMoreUntil", until);
+
+      submitForm();
+    };
+
+    useImperativeHandle(ref, () => ({
+      handleLoadMore,
+    }));
+
     const isValuesEmpty = useCallback(() => {
       return (
         values.authors.length === 0 &&
@@ -372,6 +454,46 @@ export const Filter = memo(
             .map((pubkey) => ({ pubkey }))
         : [];
 
+      if (authors.length) {
+        fetchProfiles(authors.map((el) => el.pubkey))
+          .then((profiles) => {
+            if (profiles.length) {
+              const dataAuthors = profiles.map((author) => {
+                let meta;
+
+                try {
+                  meta = JSON.parse(author.content);
+                } catch (error) {
+                  console.error("Error parsing author content:", error);
+                  meta = {};
+                }
+
+                const npub = author.pubkey
+                  ? nip19.npubEncode(author.pubkey).substring(0, 8) + "..."
+                  : "";
+                const name = meta.display_name || meta.name || npub;
+                const img = meta.picture || "";
+
+                return {
+                  img,
+                  title: name,
+                  id: author.id,
+                  pubkey: author.pubkey,
+                };
+              });
+
+              setFieldValue("authors", dataAuthors);
+            } else {
+              setFieldValue("authors", []);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching profiles:", error);
+
+            setFieldValue("authors", []);
+          });
+      }
+
       const kinds = params.get("kinds")
         ? params.get("kinds")!.split(",").map(Number)
         : [];
@@ -390,12 +512,18 @@ export const Filter = memo(
 
       const search = params.get("search") || "";
 
-      setFieldValue("authors", authors);
+      if (since) setSelectedDateSince(new Date(since));
+      if (until) setSelectedDateUntil(new Date(until));
+
       setFieldValue("kinds", kinds);
       setFieldValue("hashtags", hashtags);
       setFieldValue("since", since);
       setFieldValue("until", until);
       setFieldValue("search", search);
+
+      if (kinds.length !== 0 || hashtags.length !== 0 || since || until) {
+        setOpenMoreFilter(true);
+      }
 
       const prepareData = {
         authors: authors.map((el) => el.pubkey),
@@ -623,4 +751,6 @@ export const Filter = memo(
   },
 );
 
-Filter.displayName = "Filter";
+FilterComponent.displayName = "FilterComponent";
+
+export const Filter = memo(FilterComponent);

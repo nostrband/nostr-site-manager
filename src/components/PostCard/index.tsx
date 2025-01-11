@@ -29,6 +29,7 @@ import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import { StyledTooltip } from "../Tooltip/styled";
 import { useSearchParams } from "next/navigation";
+import { SUPPORTED_KIND_NAMES } from "@/consts";
 
 export const PostCard = memo(
   ({
@@ -55,19 +56,12 @@ export const PostCard = memo(
       primary_author,
       autoSubmitted,
     } = post;
-
     const { isLoaded: isLoadedImage } = useImageLoader(feature_image);
-
     const params = useSearchParams();
-
     const queryParams = `${params.toString()}${backSlug ? `${params.size ? "&" : ""}backSlug=${backSlug}` : ""}`;
-
     const link = `/admin/${siteId}/posts/${id}${queryParams.length ? `?${queryParams}` : ""}`;
-
     const date = parseISO(created_at);
-
     const datePost = format(date, "MMM dd, yyyy");
-
     const timePost = format(date, "HH:hh");
 
     const [isWaiting, setIsWaiting] = useState<boolean>(false);
@@ -211,7 +205,13 @@ export const PostCard = memo(
               <span>{datePost}</span>
               <span>{timePost}</span>
 
-              <StyledTypePost label="Article" color="secondary" size="small" />
+              {event.kind && (
+                <StyledTypePost
+                  label={SUPPORTED_KIND_NAMES[event.kind]}
+                  color="secondary"
+                  size="small"
+                />
+              )}
             </StyledDate>
 
             <StyledCardText>

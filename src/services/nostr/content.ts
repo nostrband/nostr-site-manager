@@ -271,7 +271,8 @@ export async function filterSitePosts(
       return (
         (!searchLower ||
           p.title?.toLocaleLowerCase().includes(searchLower) ||
-          p.markdown?.toLocaleLowerCase().includes(searchLower)) &&
+          p.markdown?.toLocaleLowerCase().includes(searchLower) ||
+          p.id.toLocaleLowerCase().includes(searchLower)) &&
         (!authors || authors.includes(p.event.pubkey)) &&
         (!kinds || kinds.includes(p.event.kind!)) &&
         (!hashtags || hashtags.find((h) => tags.includes(h))) &&

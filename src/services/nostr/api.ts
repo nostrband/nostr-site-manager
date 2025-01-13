@@ -122,7 +122,8 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   srm(e, "settings", "core");
   stv3(e, "settings", "core", "codeinjection_head", data.codeinjection_head);
   stv3(e, "settings", "core", "codeinjection_foot", data.codeinjection_foot);
-  stv3(e, "settings", "core", "posts_per_page", data.postsPerPage);
+  // ensure it's string!
+  stv3(e, "settings", "core", "posts_per_page", "" + data.postsPerPage);
 
   // FIXME move to plugin settings later
   stv3(e, "settings", "core", "content_cta_main", data.contentActionMain);

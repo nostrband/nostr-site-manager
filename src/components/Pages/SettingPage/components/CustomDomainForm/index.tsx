@@ -620,7 +620,7 @@ export const CustomDomainForm = ({
 
               {isLoading && (
                 <StyledNotifyWhenLoading variant="body2">
-                  Waiting for deployment...
+                  Waiting for deployment up to 60 seconds...
                 </StyledNotifyWhenLoading>
               )}
             </>

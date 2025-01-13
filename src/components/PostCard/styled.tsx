@@ -6,6 +6,7 @@ import {
   Card,
   CardMedia,
   CardMediaProps,
+  Chip,
   Link,
   LinkProps,
   Typography,
@@ -80,11 +81,17 @@ export const StyledCardMedia = styled(
 
 export const StyledDate = styled(Typography)(() => ({
   display: "flex",
-  justifyContent: "space-between",
   textTransform: "uppercase",
   fontSize: "12px",
   lineHeight: "24px",
   width: "100%",
+  gap: 8,
+}));
+
+export const StyledTypePost = styled(Chip)(() => ({
+  textTransform: "initial",
+  background: "#8C07DD",
+  marginLeft: "auto",
 }));
 
 export const StyledTitle = styled(Typography)(() => ({
@@ -210,4 +217,11 @@ export const StyledAddButton = styled(
       : isAdded
         ? "rgba(255, 62, 217, 0.5)"
         : "initial",
+}));
+
+export const StyledAddButtonAvatar = styled(Avatar)(() => ({
+  border: "1px solid #fff",
+  height: "20px",
+  width: "20px",
+  fontSize: "12px !important",
 }));

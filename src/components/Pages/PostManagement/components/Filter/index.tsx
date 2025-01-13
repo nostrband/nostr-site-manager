@@ -46,7 +46,11 @@ import { AuthorFilter, OptionAuthorType } from "./components/Author";
 import { enqueueSnackbar } from "notistack";
 import { TypesFilter } from "./components/Types";
 import { HashtagsFilter } from "./components/Hashtags";
-import { SearchPost, filterSitePosts, getSiteContributors } from "@/services/nostr/content";
+import {
+  SearchPost,
+  filterSitePosts,
+  getSiteContributors,
+} from "@/services/nostr/content";
 import { LoadingButton } from "@mui/lab";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TransitionProps } from "@mui/material/transitions";
@@ -341,7 +345,6 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
     const handleChangeHashtags = useCallback(
       (value: string[]) => {
-        console.log({ hashtags: value });
         setFieldValue("hashtags", value);
       },
       [setFieldValue],
@@ -430,7 +433,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
         const contributors = await getSiteContributors(siteId);
         authors.push(...contributors);
         setContributors(authors);
-      }
+      };
       load();
     }, [siteData]);
 

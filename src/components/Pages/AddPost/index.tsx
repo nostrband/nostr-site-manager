@@ -2,8 +2,8 @@
 import { Alert, Container, Grid } from "@mui/material";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { Head } from "./components/Head";
-import { Filter } from "./components/Filter";
-import { useCallback, useState } from "react";
+import { Filter, FilterRef } from "./components/Filter";
+import { useCallback, useRef, useState } from "react";
 import { SearchPost } from "@/services/nostr/content";
 import { SpinerCircularProgress } from "@/components/Spiner";
 import {
@@ -19,10 +19,26 @@ import { LoadingButton } from "@mui/lab";
 export const AddPost = () => {
   const { siteId } = useGetSiteId();
   const [isLoadingPosts, setloadingPosts] = useState(true);
+  const [isLoadingMore, setLoadingMore] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
   const [posts, setPosts] = useState<SearchPost[]>([]);
   const [isSearchResult, setSearchResult] = useState(false);
+  const filterRef = useRef<FilterRef | null>(null);
 
   const isNotFound = posts.length === 0;
+
+  const handleLoadMore = () => {
+    const lastPost = posts.at(-1);
+
+    if (filterRef.current) {
+      if (lastPost) {
+        const createdAtDate = new Date(lastPost.created_at);
+        const createdAtTime = createdAtDate.getTime() / 1000;
+
+        filterRef.current.handleLoadMore(createdAtTime);
+      }
+    }
+  };
 
   const updatePost = useCallback(
     (post: SearchPost) => {
@@ -44,6 +60,9 @@ export const AddPost = () => {
       <Head isSearchResult={isSearchResult} />
 
       <Filter
+        setIsEmpty={setIsEmpty}
+        handleLoadingMore={setLoadingMore}
+        ref={filterRef}
         setPosts={setPosts}
         siteId={siteId}
         handleLoading={setloadingPosts}
@@ -84,12 +103,15 @@ export const AddPost = () => {
 
           <StyledShowMore>
             <LoadingButton
-              variant="contained"
+              disabled={isLoadingMore}
+              loading={isLoadingMore}
+              variant="outlined"
               color="decorate"
               fullWidth
               size="large"
+              onClick={handleLoadMore}
             >
-              Load more
+              {isEmpty ? "Try again" : "Load more"}
             </LoadingButton>
           </StyledShowMore>
         </StyledWrapListPosts>

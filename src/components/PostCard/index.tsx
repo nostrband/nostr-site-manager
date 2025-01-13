@@ -2,6 +2,7 @@
 import { SearchPost, submitPost } from "@/services/nostr/content";
 import {
   StyledAddButton,
+  StyledAddButtonAvatar,
   StyledAvatrAuthor,
   StyledCard,
   StyledCardContent,
@@ -17,16 +18,18 @@ import {
   StyledPostAuthorName,
   StyledStatus,
   StyledTags,
+  StyledTypePost,
 } from "./styled";
 import { memo, MouseEvent, useEffect, useState } from "react";
 import useImageLoader from "@/hooks/useImageLoader";
 import { format, parseISO } from "date-fns";
 import { BrokenBigIcon, CheckCircleIcon, IconPerson, PlusIcon } from "../Icons";
-import { Avatar, Chip, CircularProgress } from "@mui/material";
+import { Chip, CircularProgress } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import { StyledTooltip } from "../Tooltip/styled";
 import { useSearchParams } from "next/navigation";
+import { SUPPORTED_KIND_NAMES } from "@/consts";
 
 export const PostCard = memo(
   ({
@@ -53,19 +56,12 @@ export const PostCard = memo(
       primary_author,
       autoSubmitted,
     } = post;
-
     const { isLoaded: isLoadedImage } = useImageLoader(feature_image);
-
     const params = useSearchParams();
-
     const queryParams = `${params.toString()}${backSlug ? `${params.size ? "&" : ""}backSlug=${backSlug}` : ""}`;
-
     const link = `/admin/${siteId}/posts/${id}${queryParams.length ? `?${queryParams}` : ""}`;
-
     const date = parseISO(created_at);
-
     const datePost = format(date, "MMM dd, yyyy");
-
     const timePost = format(date, "HH:hh");
 
     const [isWaiting, setIsWaiting] = useState<boolean>(false);
@@ -180,17 +176,11 @@ export const PostCard = memo(
                       value={progress}
                     />
                   ) : isAdded ? (
-                    <Avatar
+                    <StyledAddButtonAvatar
                       src={submitterProfile?.profile?.picture}
-                      sx={{
-                        border: "1px solid #fff",
-                        height: "20px",
-                        width: "20px",
-                        fontSize: "12px !important",
-                      }}
                     >
                       <IconPerson fontSize="inherit" />
-                    </Avatar>
+                    </StyledAddButtonAvatar>
                   ) : (
                     <PlusIcon color="inherit" fontSize="inherit" />
                   )
@@ -214,6 +204,14 @@ export const PostCard = memo(
             <StyledDate variant="body2">
               <span>{datePost}</span>
               <span>{timePost}</span>
+
+              {event.kind && (
+                <StyledTypePost
+                  label={SUPPORTED_KIND_NAMES[event.kind]}
+                  color="secondary"
+                  size="small"
+                />
+              )}
             </StyledDate>
 
             <StyledCardText>

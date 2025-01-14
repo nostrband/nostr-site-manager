@@ -29,7 +29,7 @@ import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import { StyledTooltip } from "../Tooltip/styled";
 import { useSearchParams } from "next/navigation";
-import { SUPPORTED_KIND_NAMES } from "@/consts";
+import { SUPPORTED_KIND_NAMES_SINGLE } from "@/consts";
 
 export const PostCard = memo(
   ({
@@ -207,7 +207,7 @@ export const PostCard = memo(
 
               {event.kind && (
                 <StyledTypePost
-                  label={SUPPORTED_KIND_NAMES[event.kind]}
+                  label={SUPPORTED_KIND_NAMES_SINGLE[event.kind]}
                   color="secondary"
                   size="small"
                 />

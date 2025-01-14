@@ -15,7 +15,6 @@ import {
   userRelays,
 } from "./nostr";
 import { NDKEvent, NDKNip07Signer, NDKRelaySet } from "@nostr-dev-kit/ndk";
-import { NPUB_PRO_API } from "@/consts";
 
 export const NOSTR_JSON_FILE = "/.well-known/nostr.json";
 
@@ -28,7 +27,7 @@ export async function fetchNostrJson(siteId: string) {
     ndk,
     siteId,
     NOSTR_JSON_FILE,
-    relays,
+    relays
   );
 
   if (!nostrJsonEvent) return undefined;
@@ -73,7 +72,7 @@ export async function editNostrJson(siteId: string, content: string) {
 
   const reply = await fetchWithSession(
     // from=oldDomain - delete the old site after 7 days
-    `${NPUB_PRO_API}/deploy?site=${siteId}`,
+    `/deploy?site=${siteId}`
   );
   if (reply.status !== 200) throw new Error("Failed to deploy");
 

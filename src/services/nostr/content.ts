@@ -1,8 +1,9 @@
-import { nip19 } from "nostr-tools";
+import { Event, nip19 } from "nostr-tools";
 import { fetchProfiles, getSiteSettings, parser } from "./api";
 import {
   DEFAULT_RELAYS,
   SEARCH_RELAYS,
+  fetchWithSession,
   getOutboxRelays,
   ndk,
   userIsDelegated,
@@ -28,7 +29,6 @@ import {
   SUPPORTED_KINDS,
   SUBMIT_STATE_REMOVE,
   tags,
-  fetchOutboxRelays,
   Profile,
 } from "libnostrsite";
 import {
@@ -38,6 +38,7 @@ import {
   NDKRelaySet,
 } from "@nostr-dev-kit/ndk";
 import { marked } from "marked";
+import { SERVER_PUBKEY } from "./consts";
 
 export type SearchPost = Post & {
   submitterPubkey: string;
@@ -57,6 +58,7 @@ export type TypeSearchPosts = {
 
 // site => posts
 const submitsCache = new Map<string, SearchPost[]>();
+const cache = new Map<string, NDKEvent>();
 
 function createAutoFilters(site: Site) {
   return createSiteFilters({
@@ -78,19 +80,19 @@ export const suggestPosts = async (siteId: string) => {
       kinds: [...new Set(existing.map((e) => e.event.kind!))],
       hashtags: [
         ...new Set(
-          existing.map((e) => tags(e.event, "t").map((t) => t[1])).flat(),
+          existing.map((e) => tags(e.event, "t").map((t) => t[1])).flat()
         ),
       ],
     },
     // onlyNew
-    true,
+    true
   );
 };
 
 export const searchPosts = async (
   siteId: string,
   { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
-  onlyNew?: boolean,
+  onlyNew?: boolean
 ): Promise<SearchPost[]> => {
   console.log("searchPosts", {
     authors,
@@ -180,7 +182,7 @@ export const searchPosts = async (
     // hard to fetch relays for all of them, so for now we just opt-in
     // to use search relays for finding posts to submit
     SEARCH_RELAYS,
-    5000,
+    5000
   );
 
   console.log("searched events", events);
@@ -189,6 +191,8 @@ export const searchPosts = async (
   for (const e of events) {
     const post = (await parser.parseEvent(e)) as SearchPost;
     if (!post) continue;
+
+    cache.set(post.id, e);
 
     post.autoSubmitted = matchPostsToFilters(e, autoFilters);
     post.submitterPubkey =
@@ -221,10 +225,10 @@ export const searchPosts = async (
           arr.reduce(
             (minCreatedAt: number, e: NDKEvent) =>
               Math.min(minCreatedAt, e.created_at!),
-            arr[0].created_at!,
+            arr[0].created_at!
           ) - 1, // before that last one of current set
       },
-      onlyNew,
+      onlyNew
     );
   }
 
@@ -246,7 +250,7 @@ export async function getSiteContributors(siteId: string) {
 
 export async function filterSitePosts(
   siteId: string,
-  { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
+  { authors, kinds, hashtags, since, until, search }: TypeSearchPosts
 ): Promise<SearchPost[]> {
   console.log("filterSitePosts", {
     authors,
@@ -312,7 +316,7 @@ export async function filterSitePosts(
         ...f,
         search,
       })),
-      relays,
+      relays
     );
 
     // used to mark as 'auto-submitted'
@@ -323,7 +327,7 @@ export async function filterSitePosts(
 
     // make sure it matches our other local filters (skip replies etc)
     const valid = [...autoEvents].filter((e) =>
-      matchPostsToFilters(e, autoFilters),
+      matchPostsToFilters(e, autoFilters)
     );
 
     // convert filtered events to posts
@@ -334,6 +338,8 @@ export async function filterSitePosts(
       // parse
       const post = (await parser.parseEvent(e)) as SearchPost;
       if (!post) continue;
+
+      cache.set(post.id, e);
 
       post.submitterPubkey = "";
       post.autoSubmitted = false;
@@ -412,32 +418,37 @@ async function postProcess(posts: SearchPost[]) {
       breaks: true, // convert \n to <br>
     });
   }
+
+  // sort
+  posts.sort((a, b) => b.event.created_at - a.event.created_at);
 }
 
 export async function fetchPost(site: Site, id: string) {
-  // const submits = await fetchSubmits(site);
-  // const submitted = submits.find((p) => p.id === id);
-  // if (submitted) return submitted;
+  let event = cache.get(id);
+  if (!event) {
+    const { type, data } = nip19.decode(id);
+    const relayHints: string[] = [...DEFAULT_RELAYS, ...SEARCH_RELAYS];
+    if (type !== "note" && type !== "naddr") throw new Error("Invalid id");
 
-  const { type, data } = nip19.decode(id);
-  const relayHints: string[] = [...DEFAULT_RELAYS, ...SEARCH_RELAYS];
-  if (type !== "note" && type !== "naddr") throw new Error("Invalid id");
-
-  if (type === "naddr") {
-    if (data.relays?.[0]) relayHints.push(data.relays[0]);
-    else {
-      const relays = await getOutboxRelays(data.pubkey);
-      relayHints.push(...relays);
+    if (type === "naddr") {
+      if (data.relays?.[0]) relayHints.push(data.relays[0]);
+      else {
+        const relays = await getOutboxRelays(data.pubkey);
+        relayHints.push(...relays);
+      }
     }
+
+    const events = await fetchByIds(ndk, [id], relayHints);
+    if (!events.length) return undefined;
+
+    event = events[0];
   }
 
-  const events = await fetchByIds(ndk, [id], relayHints);
-  if (!events.length) return undefined;
-
-  const event = events[0];
   const post = (await parser.parseEvent(event)) as SearchPost;
   console.log("fetchPost post", post);
   if (!post) return undefined;
+
+  cache.set(post.id, event);
 
   const autoFilters = createSiteFilters({
     limit: 1,
@@ -490,7 +501,7 @@ export async function fetchSubmits(site: Site) {
   const filter: NDKFilter = {
     // @ts-ignore
     kinds: [KIND_SITE_SUBMIT],
-    authors: [...site.contributor_pubkeys, site.admin_pubkey],
+    authors: [...new Set([...site.contributor_pubkeys, site.event.pubkey])],
     "#s": [s_tag],
   };
 
@@ -535,6 +546,8 @@ export async function fetchSubmits(site: Site) {
     // hmm...
     if (!submit) continue;
 
+    cache.set(post.id, e);
+
     post.submitterPubkey = submit.event.pubkey;
     post.autoSubmitted = matchPostsToFilters(post.event, autoFilters);
     post.relay = e.relay?.url;
@@ -560,6 +573,8 @@ function eventIdToTag(id: string) {
 
 async function getSubmitEvent(pubkey: string, id: string) {
   const relays = await getOutboxRelays(pubkey);
+  relays.push(...SEARCH_RELAYS);
+
   const filter: NDKFilter = {
     authors: [pubkey],
   };
@@ -578,6 +593,7 @@ async function getSubmitEvent(pubkey: string, id: string) {
       throw new Error("Bad id");
   }
   const event = await fetchEvent(ndk, filter, relays, 1000);
+  if (event) cache.set(eventId(event), event);
   return {
     event,
     relay: event?.relay?.url || SEARCH_RELAYS[0],
@@ -592,16 +608,23 @@ export async function submitPost(
     kind,
     url,
     remove,
-  }: { id: string; author: string; kind: number; url: string; remove: boolean },
+  }: { id: string; author: string; kind: number; url: string; remove: boolean }
 ) {
-  if (userIsDelegated) throw new Error("Cannot sign event in delegated mode");
-
   const site = await getSiteSettings(siteId);
   if (!site) throw new Error("Unknown site");
 
+  if (userIsDelegated && site.event.pubkey !== SERVER_PUBKEY)
+    throw new Error("Can't submit in delegated mode");
+
   // we need event itself and a relay hint
-  const { relay, event: submittedEvent } = await getSubmitEvent(author, id);
-  if (!submittedEvent) throw new Error("Failed to fetch submitted event");
+  let submittedEvent = cache.get(id);
+  let relayHint = submittedEvent?.relay?.url;
+  if (!submittedEvent) {
+    const { relay, event } = await getSubmitEvent(author, id);
+    if (!event) throw new Error("Failed to fetch submitted event");
+    submittedEvent = event;
+    relayHint = relay;
+  }
 
   // we also convert the submitted event to a post to cache it
   const post = (await parser.parseEvent(submittedEvent)) as SearchPost;
@@ -614,7 +637,7 @@ export async function submitPost(
   post.autoSubmitted = matchPostsToFilters(post.event, autoFilters);
   if (remove) post.submitterPubkey = "";
   else post.submitterPubkey = userPubkey;
-  post.relay = relay;
+  post.relay = relayHint;
 
   // add authors & tags
   await postProcess([post]);
@@ -624,9 +647,10 @@ export async function submitPost(
   const siteAddress = `${KIND_SITE}:${addr.pubkey}:${addr.identifier}`;
   const eventIdTag = eventIdToTag(id);
 
+  const pubkey = userIsDelegated ? SERVER_PUBKEY : userPubkey;
   const event = {
     kind: KIND_SITE_SUBMIT,
-    pubkey: userPubkey,
+    pubkey,
     created_at: Math.floor(Date.now() / 1000),
     content: "",
     tags: [
@@ -644,21 +668,32 @@ export async function submitPost(
   if (remove) event.tags.push(["state", SUBMIT_STATE_REMOVE]);
   else event.tags.push(["state", SUBMIT_STATE_ADD]);
 
-  if (eventIdTag.includes(":")) event.tags.push(["a", eventIdTag, relay]);
-  else event.tags.push(["e", eventIdTag, relay]);
+  if (eventIdTag.includes(":")) event.tags.push(["a", eventIdTag, relayHint!]);
+  else event.tags.push(["e", eventIdTag, relayHint!]);
 
   // sign it
-  const nevent = new NDKEvent(ndk, event);
-  await nevent.sign(new NDKNip07Signer());
+  let nevent: NDKEvent | undefined;
+  if (userIsDelegated) {
+    // mark current user as author
+    event.tags.push(["u", userPubkey]);
+    const reply = await fetchWithSession(`/sign`, event);
+    if (reply.status !== 200) throw new Error("Failed to sign submit event");
+    const r = await reply.json();
+    console.log(Date.now(), "signed submit event", r);
+    nevent = new NDKEvent(ndk, r.event);
+  } else {
+    nevent = new NDKEvent(ndk, event);
+    await nevent.sign(new NDKNip07Signer());
+  }
   console.log("submit post event", nevent);
 
   // publish
   const r = await nevent.publish(
-    NDKRelaySet.fromRelayUrls([...userRelays, ...SEARCH_RELAYS], ndk),
+    NDKRelaySet.fromRelayUrls([...userRelays, ...SEARCH_RELAYS], ndk)
   );
   console.log(
     "published submit event to",
-    [...r].map((r) => r.url),
+    [...r].map((r) => r.url)
   );
   if (!r.size) throw new Error("Failed to publish to relays");
 

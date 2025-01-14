@@ -53,7 +53,13 @@ export const NPUB_PRO_API = "https://api.npubpro.com";
 
 export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
   1: "Notes",
-  30023: "Long-form posts",
+  30023: "Article",
+  // 31337: "Music tracks",
+};
+
+export const SUPPORTED_KIND_NAMES_SINGLE: { [key: number]: string } = {
+  1: "Note",
+  30023: "Article",
   // 31337: "Music tracks",
 };
 

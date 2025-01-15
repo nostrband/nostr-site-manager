@@ -77,7 +77,6 @@ export const PostCard = memo(
 
     const handleOpenPost = (e: MouseEvent<HTMLAnchorElement>) => {
       if (e.ctrlKey || e.metaKey) {
-        // ctr or cmd (windows | linux | mac)
         return;
       }
 

@@ -918,9 +918,7 @@ export async function prefetchThemes(ids: string[]) {
 }
 
 export async function checkNpubProDomain(domain: string, naddr: string) {
-  const reply = await fetchWithSession(
-    `/check?domain=${domain}&site=${naddr}`,
-  );
+  const reply = await fetchWithSession(`/check?domain=${domain}&site=${naddr}`);
   switch (reply.status) {
     case 200:
       return "ok";

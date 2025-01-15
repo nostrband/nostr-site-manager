@@ -25,7 +25,7 @@ export async function migrateToConnectedKey(siteId: string) {
   // is user authed with OTP?
   if (userIsDelegated || userIsReadOnly) {
     document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "import-otp" })
+      new CustomEvent("nlLaunch", { detail: "import-otp" }),
     );
 
     console.log("key migration, old pubkey", pubkey);
@@ -95,7 +95,7 @@ export async function migrateToConnectedKey(siteId: string) {
       "from old site",
       siteEvent,
       "to",
-      relays
+      relays,
     );
     const newSite = await publishSiteEvent(event, relays);
     console.log("published new site event", newSite);
@@ -107,12 +107,12 @@ export async function migrateToConnectedKey(siteId: string) {
       "from",
       siteId,
       "to",
-      newSiteId
+      newSiteId,
     );
 
     // migrate
     const reply = await fetchWithSession(
-      `/migrate?from=${siteId}&to=${newSiteId}&fromId=${siteEvent.id}&relays=${relays}`
+      `/migrate?from=${siteId}&to=${newSiteId}&fromId=${siteEvent.id}&relays=${relays}`,
     );
     if (reply.status !== 200) throw new Error("Failed to migrate");
     const r = await reply.json();

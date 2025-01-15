@@ -7,12 +7,14 @@ import {
   Card,
   CardMedia,
   CardMediaProps,
+  Chip,
   Typography,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { forwardRef } from "react";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 import { PageTitle } from "@/components/shared/styled";
+import { isNumber } from "lodash";
 
 const POST_CARD_PADDING = 16;
 const CARD_MEDIA_HEIGHT = 363;
@@ -21,6 +23,7 @@ const CARD_MEDIA_HEIGHT_SMALL = 160;
 interface ICardMedia {
   alt?: string;
   isDesktop: boolean;
+  height?: number;
 }
 
 interface ILoadingButton {
@@ -68,7 +71,7 @@ export const StyledCardNoImage = styled(
 export const StyledCardMedia = styled(
   forwardRef<HTMLImageElement, IStyledCardMedia>(
     function MainContentName(props, ref) {
-      const exclude = new Set(["isDesktop"]);
+      const exclude = new Set(["isDesktop, height"]);
       const omitProps = Object.fromEntries(
         Object.entries(props).filter((e) => !exclude.has(e[0])),
       );
@@ -76,19 +79,29 @@ export const StyledCardMedia = styled(
       return <CardMedia ref={ref} {...omitProps} />;
     },
   ),
-)(({ isDesktop, theme }) => ({
-  flex: `0 0 ${isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL}px`,
-  height: isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL,
+)(({ isDesktop, theme, height }) => ({
+  flex: `0 0 ${isDesktop ? (isNumber(height) ? height : CARD_MEDIA_HEIGHT) : CARD_MEDIA_HEIGHT_SMALL}px`,
+  height: isDesktop
+    ? isNumber(height)
+      ? height
+      : CARD_MEDIA_HEIGHT
+    : CARD_MEDIA_HEIGHT_SMALL,
   borderRadius: theme.shape.borderRadius,
 }));
 
 export const StyledDate = styled(Typography)(() => ({
   display: "flex",
-  justifyContent: "space-between",
   textTransform: "uppercase",
   fontSize: "12px",
   lineHeight: "24px",
   width: "100%",
+  gap: 8,
+}));
+
+export const StyledTypePost = styled(Chip)(() => ({
+  textTransform: "initial",
+  background: "#8C07DD",
+  marginLeft: "auto",
 }));
 
 export const StyledTitle = styled(Typography)(() => ({
@@ -230,30 +243,6 @@ export const StyledAddButton = styled(
       : isAdded
         ? "rgba(255, 62, 217, 0.5)"
         : "initial",
-}));
-
-export const StyledTitlePage = styled(PageTitle)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  paddingBottom: 24,
-  gap: 8,
-  paddingTop: 40,
-  span: {
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    display: "-webkit-box",
-    WebkitLineClamp: 1,
-    WebkitBoxOrient: "vertical",
-    wordWrap: "break-word",
-  },
-  [theme.breakpoints.down("sm")]: {
-    paddingTop: 16,
-  },
-}));
-
-export const StyledWrap = styled(Box)(() => ({
-  maxWidth: 720,
-  margin: "0 auto",
 }));
 
 export const StyledComingSoon = styled(Box)(() => ({

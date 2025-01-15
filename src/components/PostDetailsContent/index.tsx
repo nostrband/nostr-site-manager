@@ -18,15 +18,13 @@ import {
   StyledStatusState,
   StyledStatusWrap,
   StyledTags,
-  StyledTitlePage,
-  StyledWrap,
+  StyledTypePost,
 } from "./styled";
 import { memo, MouseEvent, useEffect, useState } from "react";
 import useImageLoader from "@/hooks/useImageLoader";
 import { format, parseISO } from "date-fns";
 import {
   CheckCircleIcon,
-  ChevronLeftIcon,
   IconPerson,
   InfoIcon,
   PlusIcon,
@@ -37,19 +35,27 @@ import {
   Chip,
   CircularProgress,
   Collapse,
-  Container,
   Grid,
 } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { StyledTooltip } from "@/components/Tooltip/styled";
-import { useSearchParams } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
-import { useBack } from "@/hooks/useBackPage";
+import { SUPPORTED_KIND_NAMES_SINGLE } from "@/consts";
 
 export const PostDetailsContent = memo(
-  ({ post: postData, siteId }: { post: SearchPost; siteId: string }) => {
+  ({
+    post: postData,
+    siteId,
+    heightCardMedia,
+    updateExternalPost,
+  }: {
+    post: SearchPost;
+    siteId: string;
+    heightCardMedia?: number;
+    updateExternalPost?: (post: SearchPost) => void;
+  }) => {
     const [post, setPost] = useState(postData);
     const [isShowMore, setShowMore] = useState(false);
     const isDesktop = useResponsive("up", "sm");
@@ -69,39 +75,16 @@ export const PostDetailsContent = memo(
       autoSubmitted,
     } = post;
 
-    const { back } = useBack();
-    const params = useSearchParams();
-
     const handleShowMore = () => {
       setShowMore(true);
     };
 
-    const handleBack = () => {
-      const backSlug = params.get("backSlug");
-
-      if (backSlug) {
-        if (params.size) {
-          back(`add?${params.toString()}`);
-
-          return;
-        }
-
-        back("add");
-
-        return;
-      }
-
-      if (params.size) {
-        back(`?${params.toString()}`);
-
-        return;
-      }
-
-      back();
-    };
-
     const updatePost = (post: SearchPost) => {
       setPost(post);
+
+      if (updateExternalPost) {
+        updateExternalPost(post);
+      }
     };
 
     const { isLoaded: isLoadedImage } = useImageLoader(feature_image);
@@ -200,165 +183,156 @@ export const PostDetailsContent = memo(
       };
     }, [timer]);
 
+    useEffect(() => {
+      setPost(postData);
+    }, [postData.submitterPubkey, postData.submitterProfile]);
+
     return (
-      <Container maxWidth="lg">
-        <StyledWrap>
-          <StyledTitlePage>
-            <Button
-              onClick={handleBack}
-              color="primary"
-              variant="text"
-              sx={{ minWidth: "auto" }}
-            >
-              <ChevronLeftIcon />
-            </Button>
-            <span>{title}</span>
-          </StyledTitlePage>
-          <StyledCard>
-            {isLoadedImage && feature_image && (
-              <StyledCardMedia
-                component="img"
-                isDesktop={isDesktop}
-                image={feature_image}
-                alt={title || url}
+      <>
+        <StyledCard>
+          {isLoadedImage && feature_image && (
+            <StyledCardMedia
+              component="img"
+              isDesktop={isDesktop}
+              image={feature_image}
+              alt={title || url}
+              height={heightCardMedia}
+            />
+          )}
+
+          <StyledDate variant="body2">
+            <span>{datePost}</span>
+            <span>{timePost}</span>
+
+            {event.kind && (
+              <StyledTypePost
+                label={SUPPORTED_KIND_NAMES_SINGLE[event.kind]}
+                color="secondary"
+                size="small"
               />
             )}
+          </StyledDate>
 
-            <StyledDate variant="body2">
-              <span>{datePost}</span>
-              <span>{timePost}</span>
-            </StyledDate>
+          <StyledCardText>
+            <StyledCardTitle>{title}</StyledCardTitle>
+            <StyledCardDescription variant="body2">
+              {isCollapseText ? (
+                <>
+                  <Collapse in={isShowMore} collapsedSize={heightCollapseArea}>
+                    {html ? parse(html) : html}
+                  </Collapse>
 
-            <StyledCardText>
-              <StyledCardTitle>{title}</StyledCardTitle>
-              <StyledCardDescription variant="body2">
-                {isCollapseText ? (
-                  <>
-                    <Collapse
-                      in={isShowMore}
-                      collapsedSize={heightCollapseArea}
+                  {!isShowMore && (
+                    <StyledButtonCollapse>
+                      <Button
+                        color="decorate"
+                        variant="contained"
+                        onClick={handleShowMore}
+                      >
+                        Show more
+                      </Button>
+                    </StyledButtonCollapse>
+                  )}
+                </>
+              ) : (
+                <>{html ? parse(html) : html}</>
+              )}
+            </StyledCardDescription>
+          </StyledCardText>
+
+          <StyledTags>
+            {tags.map((tag, idx) => (
+              <Chip label={tag.name} key={idx} size="medium" />
+            ))}
+          </StyledTags>
+
+          <StyledCardWrapAuthor>
+            <StyledAvatrAuthor
+              src={
+                primary_author?.profile_image
+                  ? primary_author?.profile_image
+                  : "#"
+              }
+            >
+              <IconPerson fontSize="inherit" />
+            </StyledAvatrAuthor>
+            <StyledPostAuthorName>{primary_author?.name}</StyledPostAuthorName>
+          </StyledCardWrapAuthor>
+        </StyledCard>
+
+        <Grid container sx={{ paddingTop: "24px" }} spacing={{ xs: "24px" }}>
+          <Grid item xs={12} sm={6}>
+            <StyledCard>
+              <StyledCardTitleFeature>Post settings</StyledCardTitleFeature>
+              <StyledAddButton
+                fullWidth
+                isSending={isSending}
+                isWaiting={isWaiting}
+                isAdded={isAdded}
+                loading={isSending}
+                disabled={isSending}
+                variant="outlined"
+                color="decorate"
+                onClick={handleClick}
+                size="large"
+                startIcon={
+                  isSending ? undefined : isWaiting ? (
+                    <CircularProgress
+                      color="inherit"
+                      size={20}
+                      variant="determinate"
+                      value={progress}
+                    />
+                  ) : isAdded ? (
+                    <Avatar
+                      src={submitterProfile?.profile?.picture}
+                      sx={{
+                        border: "1px solid #fff",
+                        height: "20px",
+                        width: "20px",
+                        fontSize: "12px !important",
+                      }}
                     >
-                      {html ? parse(html) : html}
-                    </Collapse>
-
-                    {!isShowMore && (
-                      <StyledButtonCollapse>
-                        <Button
-                          color="decorate"
-                          variant="contained"
-                          onClick={handleShowMore}
-                        >
-                          Show more
-                        </Button>
-                      </StyledButtonCollapse>
-                    )}
-                  </>
-                ) : (
-                  <>{html ? parse(html) : html}</>
-                )}
-              </StyledCardDescription>
-            </StyledCardText>
-
-            <StyledTags>
-              {tags.map((tag, idx) => (
-                <Chip label={tag.name} key={idx} size="medium" />
-              ))}
-            </StyledTags>
-
-            <StyledCardWrapAuthor>
-              <StyledAvatrAuthor
-                src={
-                  primary_author?.profile_image
-                    ? primary_author?.profile_image
-                    : "#"
+                      <IconPerson fontSize="inherit" />
+                    </Avatar>
+                  ) : (
+                    <PlusIcon color="inherit" fontSize="inherit" />
+                  )
                 }
               >
-                <IconPerson fontSize="inherit" />
-              </StyledAvatrAuthor>
-              <StyledPostAuthorName>
-                {primary_author?.name}
-              </StyledPostAuthorName>
-            </StyledCardWrapAuthor>
-          </StyledCard>
+                {isWaiting ? "Cancel" : isAdded ? "Added" : "Add"}
+              </StyledAddButton>
 
-          <Grid
-            container
-            sx={{ paddingTop: "24px", paddingBottom: "24px" }}
-            spacing={{ xs: "24px" }}
-          >
-            <Grid item xs={12} sm={6}>
-              <StyledCard>
-                <StyledCardTitleFeature>Post settings</StyledCardTitleFeature>
-                <StyledAddButton
-                  fullWidth
-                  isSending={isSending}
-                  isWaiting={isWaiting}
-                  isAdded={isAdded}
-                  loading={isSending}
-                  disabled={isSending}
-                  variant="outlined"
-                  color="decorate"
-                  onClick={handleClick}
-                  size="large"
-                  startIcon={
-                    isSending ? undefined : isWaiting ? (
-                      <CircularProgress
-                        color="inherit"
-                        size={20}
-                        variant="determinate"
-                        value={progress}
-                      />
-                    ) : isAdded ? (
-                      <Avatar
-                        src={submitterProfile?.profile?.picture}
-                        sx={{
-                          border: "1px solid #fff",
-                          height: "20px",
-                          width: "20px",
-                          fontSize: "12px !important",
-                        }}
-                      >
-                        <IconPerson fontSize="inherit" />
-                      </Avatar>
-                    ) : (
-                      <PlusIcon color="inherit" fontSize="inherit" />
-                    )
-                  }
-                >
-                  {isWaiting ? "Cancel" : isAdded ? "Added" : "Add"}
-                </StyledAddButton>
-
-                {autoSubmitted && (
-                  <StyledStatusWrap>
-                    <StyledStatusState variant="body2">State</StyledStatusState>
-                    <StyledTooltip
-                      placement="bottom"
-                      title="This post is automatically added from your Nostr app"
-                      arrow
-                    >
-                      <StyledStatus>
-                        <CheckCircleIcon color="inherit" />
-                        Auto-submitted
-                      </StyledStatus>
-                    </StyledTooltip>
-                  </StyledStatusWrap>
-                )}
-              </StyledCard>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <StyledCard>
-                <StyledCardTitleFeature>
-                  Information and stats
-                </StyledCardTitleFeature>
-                <StyledComingSoon>
-                  <InfoIcon color="inherit" />
-                  Coming soon
-                </StyledComingSoon>
-              </StyledCard>
-            </Grid>
+              {autoSubmitted && (
+                <StyledStatusWrap>
+                  <StyledStatusState variant="body2">State</StyledStatusState>
+                  <StyledTooltip
+                    placement="bottom"
+                    title="This post is automatically added from your Nostr app"
+                    arrow
+                  >
+                    <StyledStatus>
+                      <CheckCircleIcon color="inherit" />
+                      Auto-submitted
+                    </StyledStatus>
+                  </StyledTooltip>
+                </StyledStatusWrap>
+              )}
+            </StyledCard>
           </Grid>
-        </StyledWrap>
-      </Container>
+          <Grid item xs={12} sm={6}>
+            <StyledCard>
+              <StyledCardTitleFeature>
+                Information and stats
+              </StyledCardTitleFeature>
+              <StyledComingSoon>
+                <InfoIcon color="inherit" />
+                Coming soon
+              </StyledComingSoon>
+            </StyledCard>
+          </Grid>
+        </Grid>
+      </>
     );
   },
 );

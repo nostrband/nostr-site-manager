@@ -24,6 +24,7 @@ import { BrokenIcon } from "@/components/Icons";
 import { useListSites } from "@/hooks/useListSites";
 import useImageLoader from "@/hooks/useImageLoader";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
+import Link from "next/link";
 
 export const HeaderLayout = () => {
   const { isAuth } = useContext(AuthContext);
@@ -37,6 +38,8 @@ export const HeaderLayout = () => {
   const { siteId } = useGetSiteId();
   const { data } = useListSites();
   const getSite = data?.find((el) => el.id === siteId);
+
+  const linkToDashboard = `/admin/${siteId}/dashboard`;
 
   const { isLoaded } = useImageLoader(getSite ? getSite.icon : "");
 
@@ -88,19 +91,21 @@ export const HeaderLayout = () => {
       </StyledLogo>
 
       {Boolean(siteId && getSite) && (
-        <StyledBadgeWrap>
-          {isLoaded ? (
-            <StyledBadgeAvatar variant="square" src={getSite?.icon}>
-              {getSite?.name[0]}
-            </StyledBadgeAvatar>
-          ) : (
-            <StyledBadgeAvatar variant="square">
-              <BrokenIcon fontSize="inherit" />
-            </StyledBadgeAvatar>
-          )}
+        <Link href={linkToDashboard}>
+          <StyledBadgeWrap>
+            {isLoaded ? (
+              <StyledBadgeAvatar variant="square" src={getSite?.icon}>
+                {getSite?.name[0]}
+              </StyledBadgeAvatar>
+            ) : (
+              <StyledBadgeAvatar variant="square">
+                <BrokenIcon fontSize="inherit" />
+              </StyledBadgeAvatar>
+            )}
 
-          <StyledBadgeTitle variant="body2">{getSite?.name}</StyledBadgeTitle>
-        </StyledBadgeWrap>
+            <StyledBadgeTitle variant="body2">{getSite?.name}</StyledBadgeTitle>
+          </StyledBadgeWrap>
+        </Link>
       )}
 
       <StyledUser>

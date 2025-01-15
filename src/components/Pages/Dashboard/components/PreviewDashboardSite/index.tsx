@@ -1,6 +1,6 @@
 "use client";
 import { memo, ReactNode } from "react";
-import { Avatar, AvatarGroup } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
 import {
   StyledCard,
   StyledWrapFooter,
@@ -13,6 +13,8 @@ import {
   StyledCardContent,
   StyledCardWrapAuthors,
   StyledCardAuthorName,
+  StyledAvatarGroup,
+  StyledCardAuthorStatus,
 } from "@/components/PreviewSite/styled";
 import { StyledAvatarSite } from "@/components/shared/styled";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
@@ -109,57 +111,51 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
           </StyledCardContent>
         )}
 
-        {isSeveralAuthor ? (
-          <StyledCardWrapAuthors>
-            <AvatarGroup spacing={20.5}>
-              {contributors.length
-                ? prepareContributors.map((el, i) => {
-                    let meta = JSON.parse(el.content);
+        <StyledCardWrapAuthors>
+          <Avatar src={icon}>
+            <IconPerson />
+          </Avatar>
+          <Box
+            sx={{
+              width: "100%",
+              color: getContrastingTextColor(accentColor),
+            }}
+          >
+            <StyledCardAuthorName>{name}</StyledCardAuthorName>
+            <StyledCardAuthorStatus>
+              Admin
+              {isSeveralAuthor && (
+                <StyledAvatarGroup max={3}>
+                  {contributors.length
+                    ? prepareContributors.map((el, i) => {
+                        let meta = JSON.parse(el.content);
 
-                    const npub = el.pubkey
-                      ? nip19.npubEncode(el.pubkey).substring(0, 8) + "..."
-                      : "";
-                    const nameAuthor = meta.display_name || meta.name || npub;
-                    const img = meta.picture || "";
+                        const npub = el.pubkey
+                          ? nip19.npubEncode(el.pubkey).substring(0, 8) + "..."
+                          : "";
+                        const nameAuthor =
+                          meta.display_name || meta.name || npub;
+                        const img = meta.picture || "";
 
-                    return (
-                      <Avatar key={i} alt={nameAuthor} src={img}>
-                        <IconPerson />
-                      </Avatar>
-                    );
-                  })
-                : pubkeysContributors.map((_, i) => {
-                    return (
-                      <Avatar key={i}>
-                        <IconPerson />
-                      </Avatar>
-                    );
-                  })}
-            </AvatarGroup>
-            <StyledCardAuthorName
-              sx={{
-                color: getContrastingTextColor(accentColor),
-              }}
-            >
-              {pubkeysContributors.length} authors
-            </StyledCardAuthorName>
-          </StyledCardWrapAuthors>
-        ) : (
-          <StyledCardWrapAuthors>
-            <Avatar src={icon}>
-              <IconPerson />
-            </Avatar>
-            <StyledCardAuthorName
-              sx={{
-                color: getContrastingTextColor(accentColor),
-              }}
-            >
-              {name}
-            </StyledCardAuthorName>
-          </StyledCardWrapAuthors>
-        )}
+                        return (
+                          <Avatar key={i} alt={nameAuthor} src={img}>
+                            <IconPerson fontSize="inherit" />
+                          </Avatar>
+                        );
+                      })
+                    : pubkeysContributors.map((_, i) => {
+                        return (
+                          <Avatar key={i}>
+                            <IconPerson fontSize="inherit" />
+                          </Avatar>
+                        );
+                      })}
+                </StyledAvatarGroup>
+              )}
+            </StyledCardAuthorStatus>
+          </Box>
+        </StyledCardWrapAuthors>
       </StyledWrapFooter>
-
       {actions}
     </StyledCard>
   );

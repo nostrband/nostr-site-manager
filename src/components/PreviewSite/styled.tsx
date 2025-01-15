@@ -10,6 +10,7 @@ import {
   CardMediaProps,
   Typography,
   CardContent,
+  AvatarGroup,
 } from "@mui/material";
 import { forwardRef } from "react";
 import { grey } from "@mui/material/colors";
@@ -172,7 +173,6 @@ export const StyledCardContent = styled(CardContent)(() => ({
 
 export const StyledCardWrapAuthors = styled(Box)(() => ({
   display: "flex",
-  alignItems: "center",
   gap: AUTHORS_CONTENT_SPACING,
   marginTop: "auto",
   padding: CARD_PADDING,
@@ -190,4 +190,27 @@ export const StyledCardAuthorName = styled(Box)(() => ({
   fontSize: "14px",
   lineHeight: "18px",
   fontWeight: "700",
+}));
+
+export const StyledCardAuthorStatus = styled(Box)(() => ({
+  fontSize: "14px",
+  lineHeight: "22px",
+  fontWeight: "400",
+  paddingTop: "3px",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+}));
+
+export const StyledAvatarGroup = styled(AvatarGroup)(() => ({
+  "& .MuiAvatar-root": {
+    width: 22,
+    height: 22,
+    fontSize: "10px",
+  },
+  "& .MuiAvatarGroup-avatar": {
+    width: 22,
+    height: 22,
+    fontSize: "10px",
+  },
 }));

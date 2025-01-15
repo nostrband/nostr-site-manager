@@ -27,6 +27,6 @@ export const StyledDialog = styled(Dialog)(() => ({
   "& .MuiDialog-paper": {
     maxWidth: 720,
     margin: "16px",
-    width: 'auto'
+    width: "auto",
   },
 }));

@@ -168,7 +168,7 @@ export const PostCard = memo(
                 {autoSubmitted && (
                   <StyledTooltip
                     placement="bottom"
-                    title="This post is automatically added from your Nostr app"
+                    title="This post is auto-submitted according to your Settings"
                     arrow
                   >
                     <StyledStatus>

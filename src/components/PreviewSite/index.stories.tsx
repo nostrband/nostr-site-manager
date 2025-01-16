@@ -22,7 +22,6 @@ export const Primary: Story = {
   args: {
     id: "e32e23e2",
     path: "test",
-    icon: PreviewIcon.src,
     logo: PreviewLogo.src,
     name: "Author Name",
     title: "Galaxe top projects",
@@ -39,8 +38,7 @@ export const Primary: Story = {
     accentColor: "#FF7BFD",
     description:
       "Galaxe top projects on Galaxe platform ✅. Chek out latest new from SocialFi 🔥",
-    adminAvatar: "",
-    adminName: "Admin Name",
+    adminPubkey: "f0ff87e7796ba86fc84b4807b25a5dee206d724c6f61aa8853975a39deeeff58",
     isLink: true,
     isPublic: false,
     isLinkToOpenSite: true,

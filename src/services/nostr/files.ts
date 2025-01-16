@@ -6,7 +6,7 @@ import {
   fetchSiteFile,
   parseAddr,
 } from "libnostrsite";
-import { findSiteEvent } from "./api";
+import { findSiteEvent, getSiteSettings } from "./api";
 import {
   fetchWithSession,
   ndk,
@@ -27,7 +27,7 @@ export async function fetchNostrJson(siteId: string) {
     ndk,
     siteId,
     NOSTR_JSON_FILE,
-    relays,
+    relays
   );
 
   if (!nostrJsonEvent) return undefined;
@@ -45,6 +45,12 @@ export async function fetchNostrJson(siteId: string) {
 export async function editNostrJson(siteId: string, content: string) {
   if (userIsDelegated)
     throw new Error("Can't save nostr.json in delegated mode");
+
+  const site = await getSiteSettings(siteId);
+  if (!site) throw new Error("Unknown site");
+
+  if (site.admin_pubkey !== userPubkey)
+    throw new Error("Only admin can save nostr.json");
 
   const addr = parseAddr(siteId);
   const s_tag = `${KIND_SITE}:${addr!.pubkey}:${addr!.identifier}`;
@@ -72,7 +78,7 @@ export async function editNostrJson(siteId: string, content: string) {
 
   const reply = await fetchWithSession(
     // from=oldDomain - delete the old site after 7 days
-    `/deploy?site=${siteId}`,
+    `/deploy?site=${siteId}`
   );
   if (reply.status !== 200) throw new Error("Failed to deploy");
 

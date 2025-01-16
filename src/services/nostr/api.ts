@@ -624,6 +624,8 @@ export const savePins = async (siteId: string, ids: string[]) => {
   const site = sites.find((s) => s.id === siteId);
   if (!site) return [];
 
+  if (site.admin_pubkey !== userPubkey) throw new Error("Only admin can edit pins");
+
   const addr = parseAddr(siteId);
 
   const event = {

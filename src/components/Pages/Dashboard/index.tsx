@@ -41,6 +41,9 @@ export const Dashboard = () => {
 
   const getSite = data?.find((el) => el.id === siteId);
 
+  const userIsAdmin =
+    userPubkey && getSite && getSite.adminPubkey === userPubkey;
+
   const switchTheme = `/design?siteId=${siteId}&themeId=${getSite?.themeId}`;
 
   const openSettings = `/admin/${siteId}/settings`;
@@ -152,56 +155,57 @@ export const Dashboard = () => {
                   Posts
                 </Button>
 
-                <Button
-                  LinkComponent={Link}
-                  size="large"
-                  variant="outlined"
-                  color="decorate"
-                  href={switchTheme}
-                  fullWidth
-                  endIcon={<BrushIcon />}
-                >
-                  Theme
-                </Button>
-
-                <Button
-                  LinkComponent={Link}
-                  size="large"
-                  variant="outlined"
-                  color="decorate"
-                  href={openSettings}
-                  fullWidth
-                  endIcon={<SettingsIcon />}
-                >
-                  Settings
-                </Button>
-
-                {isNeedMigrateKey(siteId) && (
-                  <LoadingButton
-                    color="decorate"
-                    variant="outlined"
-                    type="submit"
-                    fullWidth
-                    size="large"
-                    loading={isLoadingConnectKeys}
-                    disabled={isLoadingConnectKeys}
-                    endIcon={<KeyIcon />}
-                    onClick={handleConnectKeys}
-                  >
-                    Connect keys
-                  </LoadingButton>
+                {userIsAdmin && (
+                  <>
+                    <Button
+                      LinkComponent={Link}
+                      size="large"
+                      variant="outlined"
+                      color="decorate"
+                      href={switchTheme}
+                      fullWidth
+                      endIcon={<BrushIcon />}
+                    >
+                      Theme
+                    </Button>
+                    <Button
+                      LinkComponent={Link}
+                      size="large"
+                      variant="outlined"
+                      color="decorate"
+                      href={openSettings}
+                      fullWidth
+                      endIcon={<SettingsIcon />}
+                    >
+                      Settings
+                    </Button>
+                    {isNeedMigrateKey(siteId) && (
+                      <LoadingButton
+                        color="decorate"
+                        variant="outlined"
+                        type="submit"
+                        fullWidth
+                        size="large"
+                        loading={isLoadingConnectKeys}
+                        disabled={isLoadingConnectKeys}
+                        endIcon={<KeyIcon />}
+                        onClick={handleConnectKeys}
+                      >
+                        Connect keys
+                      </LoadingButton>
+                    )}
+                    <Button
+                      size="large"
+                      variant="outlined"
+                      color="error"
+                      onClick={handeOpenConfirm}
+                      fullWidth
+                      endIcon={<TrashIcon />}
+                    >
+                      Delete
+                    </Button>
+                  </>
                 )}
-
-                <Button
-                  size="large"
-                  variant="outlined"
-                  color="error"
-                  onClick={handeOpenConfirm}
-                  fullWidth
-                  endIcon={<TrashIcon />}
-                >
-                  Delete
-                </Button>
               </StyledActions>
             }
           />

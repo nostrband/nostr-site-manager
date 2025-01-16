@@ -40,6 +40,7 @@ import {
 } from "@nostr-dev-kit/ndk";
 import { marked } from "marked";
 import { SERVER_PUBKEY } from "./consts";
+import { countItems, shuffleArray } from "./utils";
 
 export type SearchPost = Post & {
   submitterPubkey: string;
@@ -75,9 +76,13 @@ export const suggestPosts = async (siteId: string) => {
 
   const authors = [...new Set(existing.map((e) => e.event.pubkey))];
   const kinds = [...new Set(existing.map((e) => e.event.kind!))];
-  const hashtags = [
-    ...new Set(existing.map((e) => tags(e.event, "t").map((t) => t[1])).flat()),
-  ];
+  const allHashtags = existing.map((e) => tags(e.event, "t").map((t) => t[1])).flat();
+  const hashtagCounts = countItems(allHashtags);
+  const hashtags = [...hashtagCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map((t) => t[0]);
+
+  if (hashtags.length > 10) hashtags.length = 10;
 
   // use existing content to find authors, kinds and hashtags
   const sameAuthorPosts = await searchPosts(
@@ -117,20 +122,12 @@ export const suggestPosts = async (siteId: string) => {
     ),
   ];
 
-  // https://stackoverflow.com/a/12646864
-  function shuffleArray<T>(array: T[]) {
-    for (let i = array.length - 1; i >= 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
-
-  // shuffle to make sure we don't have bias against old followed
+  // throttle,
+  // shuffle first to make sure we don't have bias against old followed
   // profiles that are likely to be dead already
   shuffleArray(followed);
-
-  // throttle
   if (followed.length > 100) followed.length = 100;
+
   console.log("followed", followed);
   return await searchPosts(
     siteId,

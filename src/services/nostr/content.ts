@@ -482,7 +482,7 @@ export async function fetchPost(site: Site, id: string) {
   if (submitEvent) {
     const submit = await parser.parseSubmitEvent(submitEvent);
     if (submit?.eventAddress === post.id && submit.state === SUBMIT_STATE_ADD) {
-      post.submitterPubkey = submit.pubkey;
+      post.submitterPubkey = submit.authorPubkey;
     }
   }
 
@@ -548,7 +548,7 @@ export async function fetchSubmits(site: Site) {
 
     cache.set(post.id, e);
 
-    post.submitterPubkey = submit.event.pubkey;
+    post.submitterPubkey = submit.authorPubkey;
     post.autoSubmitted = matchPostsToFilters(post.event, autoFilters);
     post.relay = e.relay?.url;
     posts.push(post);

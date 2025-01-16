@@ -9,12 +9,14 @@ import {
 import {
   Checkbox,
   FormControl,
+  FormControlLabel,
   InputLabel,
   ListItemText,
   MenuItem,
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  Switch,
 } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
@@ -26,8 +28,10 @@ interface IOther extends IBaseSetting {
   postsPerPage: string;
   contentActionMain: string;
   selectedContentActions: string[];
+  signupStartNjump: boolean;
   handleOptionsMainCallAction: (value: string) => void;
   handleChangeContentActions: (value: string[]) => void;
+  handleSignupStartNjump: (value: boolean) => void;
 }
 
 const options: { [name: string]: string } = {
@@ -64,6 +68,8 @@ export const Other = memo(
     selectedContentActions,
     handleOptionsMainCallAction,
     handleChangeContentActions,
+    signupStartNjump,
+    handleSignupStartNjump,
     isLoading,
   }: IOther) => {
     const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
@@ -97,6 +103,12 @@ export const Other = memo(
       const { value } = event.target;
 
       handleOptionsMainCallAction(value);
+    };
+
+    const handleChangeSignupStartNjump = (
+      event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+      handleSignupStartNjump(event.target.checked);
     };
 
     return (
@@ -176,6 +188,15 @@ export const Other = memo(
               ))}
             </Select>
           </FormControl>
+
+          <FormControlLabel
+            disabled={!isEdit}
+            control={
+              <Switch checked={signupStartNjump} onChange={handleChangeSignupStartNjump} />
+            }
+            label={signupStartNjump ? "Signup with Start.Njump.me ON" : "Signup with Start.Njump.me OFF"}
+          />
+
         </StyledFormFields>
       </StyledSettingBlock>
     );

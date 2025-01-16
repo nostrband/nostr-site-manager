@@ -1,5 +1,5 @@
 "use client";
-import { memo, ReactNode } from "react";
+import { memo, ReactNode, useMemo } from "react";
 import { Avatar, Box } from "@mui/material";
 import {
   StyledCard,
@@ -21,22 +21,23 @@ import { getContrastingTextColor } from "@/utils/contrasting-color";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import useImageLoader from "@/hooks/useImageLoader";
 import { AddImageIcon, BrokenIcon, IconPerson } from "@/components/Icons";
-import { nip19 } from "nostr-tools";
 import { StyledCardAddImage, StyledTextAddImage } from "./styled";
 import useContributors from "@/hooks/useContributors";
 import Link from "next/link";
+import { parseProfileEvent } from "@/services/nostr/nostr";
 
 type PreviewDashboardSiteType = {
   actions?: ReactNode;
   settingsLink?: string;
+  userPubkey?: string;
 };
 
 export type PreviewDashboardSitePropsType = PreviewDashboardSiteType &
   Pick<
     ReturnSettingsSiteDataType,
-    | "icon"
     | "description"
     | "contributors"
+    | "adminPubkey"
     | "image"
     | "name"
     | "logo"
@@ -46,24 +47,42 @@ export type PreviewDashboardSitePropsType = PreviewDashboardSiteType &
   >;
 
 export const PreviewDashboardSite = memo(function PreviewDashboardSite({
-  icon,
   logo,
   name,
   title,
   url,
   image,
+  adminPubkey,
+  userPubkey,
   contributors: pubkeysContributors,
   accentColor,
   description,
   actions,
   settingsLink,
 }: PreviewDashboardSitePropsType) {
+  // put them all into the same bucket
+  pubkeysContributors = useMemo(
+    () => [...pubkeysContributors, adminPubkey],
+    [pubkeysContributors, adminPubkey]
+  );
+
+  // reset userPubkey if they're not a contributor
+  if (userPubkey && !pubkeysContributors.includes(userPubkey))
+    userPubkey = undefined;
+
   const { isLoaded: isLoadedLogo } = useImageLoader(logo);
   const { isLoaded: isLoadedImage } = useImageLoader(image);
   const isSeveralAuthor = pubkeysContributors.length > 1;
-  const contributors = useContributors(pubkeysContributors, isSeveralAuthor);
-  const prepareContributors =
-    contributors.length > 5 ? contributors.slice(0, 5) : contributors;
+  const allContributors = useContributors(pubkeysContributors);
+  const mainContributorPubkey = userPubkey || adminPubkey;
+  const otherPubkeys = pubkeysContributors.filter(
+    (p) => p !== mainContributorPubkey
+  );
+
+  const main = allContributors.find((c) => c.pubkey === mainContributorPubkey);
+  const mainProfile = parseProfileEvent(mainContributorPubkey, main);
+  const mainAvatar = mainProfile.img;
+  const mainName = mainProfile.name;
 
   return (
     <StyledCard>
@@ -112,7 +131,7 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
         )}
 
         <StyledCardWrapAuthors>
-          <Avatar src={icon}>
+          <Avatar src={mainAvatar || ""} alt={mainName}>
             <IconPerson />
           </Avatar>
           <Box
@@ -121,35 +140,22 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
               color: getContrastingTextColor(accentColor),
             }}
           >
-            <StyledCardAuthorName>{name}</StyledCardAuthorName>
+            <StyledCardAuthorName>{mainName}</StyledCardAuthorName>
             <StyledCardAuthorStatus>
-              Admin
+              {mainContributorPubkey === adminPubkey ? "Admin" : "Contributor"}
               {isSeveralAuthor && (
                 <StyledAvatarGroup max={3}>
-                  {contributors.length
-                    ? prepareContributors.map((el, i) => {
-                        let meta = JSON.parse(el.content);
-
-                        const npub = el.pubkey
-                          ? nip19.npubEncode(el.pubkey).substring(0, 8) + "..."
-                          : "";
-                        const nameAuthor =
-                          meta.display_name || meta.name || npub;
-                        const img = meta.picture || "";
-
-                        return (
-                          <Avatar key={i} alt={nameAuthor} src={img}>
-                            <IconPerson fontSize="inherit" />
-                          </Avatar>
-                        );
-                      })
-                    : pubkeysContributors.map((_, i) => {
-                        return (
-                          <Avatar key={i}>
-                            <IconPerson fontSize="inherit" />
-                          </Avatar>
-                        );
-                      })}
+                  {otherPubkeys.map((pubkey, i) => {
+                    const profile = allContributors.find(
+                      (c) => c.pubkey === pubkey
+                    );
+                    const info = parseProfileEvent(pubkey, profile);
+                    return (
+                      <Avatar key={i} alt={info.name} src={info.img || ""}>
+                        <IconPerson fontSize="inherit" />
+                      </Avatar>
+                    );
+                  })}
                 </StyledAvatarGroup>
               )}
             </StyledCardAuthorStatus>

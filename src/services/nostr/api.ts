@@ -44,6 +44,7 @@ import { nip19 } from "nostr-tools";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { NPUB_PRO_DOMAIN } from "@/consts";
 import { fetchSubmits } from "./content";
+import { Mutex } from "./themes";
 
 // FIXME reuse decls from libnostrsite
 const KIND_PINNED_ON_SITE = 30516;
@@ -132,7 +133,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
     "settings",
     "core",
     "content_cta_list",
-    data.contentActions.join(","),
+    data.contentActions.join(",")
   );
 
   // nav
@@ -172,7 +173,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   // console.log("domain", domain, "oldDomain", oldDomain);
   if (domain && domain !== oldDomain) {
     const reply = await fetchWithSession(
-      `/reserve?domain=${domain}&site=${naddr}&no_retry=true`,
+      `/reserve?domain=${domain}&site=${naddr}&no_retry=true`
     );
     if (reply.status !== 200) throw new Error("Failed to reserve");
     const r = await reply.json();
@@ -189,7 +190,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   {
     const reply = await fetchWithSession(
       // from=oldDomain - delete the old site after 7 days
-      `/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`,
+      `/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`
     );
     if (reply.status !== 200) throw new Error("Failed to deploy");
 
@@ -222,7 +223,7 @@ export async function deleteSite(siteId: string) {
   }
 
   const reply = await fetchWithSession(
-    `/delete?domain=${domain}&site=${siteId}`,
+    `/delete?domain=${domain}&site=${siteId}`
   );
   if (reply.status !== 200) throw new Error("Failed to delete domain");
   const r = await reply.json();
@@ -306,7 +307,7 @@ async function fetchSiteThemes() {
         .map((s) => s.extensions?.[0].event_id || "")
         .filter((id) => !!id),
     },
-    [SITE_RELAY],
+    [SITE_RELAY]
   );
 
   for (const e of events) {
@@ -359,13 +360,13 @@ export async function fetchSites() {
           },
         ],
         relays,
-        5000,
+        5000
       );
       console.log("site events", events);
 
       // sort by timestamp desc
       const array = [...events.values()].sort(
-        (a, b) => b.created_at! - a.created_at!,
+        (a, b) => b.created_at! - a.created_at!
       );
 
       await filterDeleted(array, relays);
@@ -394,40 +395,45 @@ addOnAuth(async (type: string) => {
 });
 
 const profileCache = new Map<string, NDKEvent | null>();
+const profileFetchMutex = new Mutex();
 
 export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
-  const res = [];
-  const req = [];
-  for (const p of pubkeys) {
-    const c = profileCache.get(p);
-    if (c === undefined) {
-      req.push(p);
-    } else if (c !== null) {
-      res.push(c);
+  return profileFetchMutex.run(async () => {
+    const res: NDKEvent[] = [];
+    const req: string[] = [];
+    for (const p of pubkeys) {
+      const c = profileCache.get(p);
+      if (c === undefined) {
+        req.push(p);
+      } else if (c !== null) {
+        res.push(c);
+      }
     }
-  }
 
-  if (!req.length) return res;
+    if (!req.length) {
+      return res;
+    }
 
-  const events = await fetchEvents(
-    ndk,
-    {
-      kinds: [KIND_PROFILE],
-      authors: req,
-    },
-    OUTBOX_RELAYS,
-  );
+    const events = await fetchEvents(
+      ndk,
+      {
+        kinds: [KIND_PROFILE],
+        authors: req,
+      },
+      OUTBOX_RELAYS
+    );
 
-  for (const e of events) {
-    profileCache.set(e.pubkey, e);
-    res.push(e);
-  }
+    for (const e of events) {
+      profileCache.set(e.pubkey, e);
+      res.push(e);
+    }
 
-  for (const p of req) {
-    if (!profileCache.get(p)) profileCache.set(p, null);
-  }
+    for (const p of req) {
+      if (!profileCache.get(p)) profileCache.set(p, null);
+    }
 
-  return res;
+    return res;
+  });
 }
 
 export async function searchProfiles(text: string): Promise<NDKEvent[]> {
@@ -440,7 +446,7 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
       search,
       limit: 3,
     },
-    SEARCH_RELAYS,
+    SEARCH_RELAYS
   );
 
   for (const e of events) {
@@ -452,7 +458,7 @@ export async function searchProfiles(text: string): Promise<NDKEvent[]> {
 
 export async function searchSites(
   text: string,
-  until?: number,
+  until?: number
 ): Promise<[ReturnSettingsSiteDataType[], number, boolean]> {
   const limitFetchSites = 50;
   const filter: any = {
@@ -497,7 +503,7 @@ export const fetchCertDomain = async (domain: string) => {
   const reply = await fetchWithSession(
     `/cert?domain=${domain}`,
     undefined,
-    "POST",
+    "POST"
   );
   if (reply.status === 200) return reply.json();
   else throw new Error("Failed to issue certificate");
@@ -513,7 +519,7 @@ export const fetchAttachDomain = async (domain: string, site: string) => {
   const reply = await fetchWithSession(
     `/attach?domain=${domain}&site=${site}`,
     undefined,
-    "POST",
+    "POST"
   );
   if (reply.status === 200) return reply.json();
   else throw new Error("Failed to attach domain");
@@ -544,7 +550,7 @@ export const fetchPins = async (siteId: string) => {
       kinds: [KIND_PINNED_ON_SITE as NDKKind],
       authors: [site.admin_pubkey],
     },
-    [...site.admin_relays, ...SEARCH_RELAYS],
+    [...site.admin_relays, ...SEARCH_RELAYS]
   );
   console.log("pinList", pinList);
 
@@ -594,7 +600,7 @@ export const fetchPins = async (siteId: string) => {
   const valid = [...pinned].filter(
     (p) =>
       matchPostsToFilters(p, siteFilters) ||
-      submits.find((s) => s.id === eventId(p)),
+      submits.find((s) => s.id === eventId(p))
   );
   console.log("pinned valid", valid);
   const posts: Post[] = [];
@@ -647,11 +653,11 @@ export const savePins = async (siteId: string, ids: string[]) => {
 
   // publish
   const r = await nevent.publish(
-    NDKRelaySet.fromRelayUrls([...site.admin_relays, ...SEARCH_RELAYS], ndk),
+    NDKRelaySet.fromRelayUrls([...site.admin_relays, ...SEARCH_RELAYS], ndk)
   );
   console.log(
     "published pins event to",
-    [...r].map((r) => r.url),
+    [...r].map((r) => r.url)
   );
   if (!r.size) throw new Error("Failed to publish to relays");
 };

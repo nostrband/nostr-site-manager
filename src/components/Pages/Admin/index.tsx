@@ -48,6 +48,7 @@ export const AdminPage = () => {
                   path={pathAdmin}
                   isLinkToOpenSite
                   isPublic={false}
+                  isAuth={isAuth}
                 />
               </Container>
 

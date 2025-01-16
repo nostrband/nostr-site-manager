@@ -4,7 +4,7 @@ import { Button, Container } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
 import { useRouter } from "next/navigation";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
 
 import {
@@ -25,8 +25,10 @@ import {
 import { PreviewDashboardSite } from "./components/PreviewDashboardSite";
 import { LoadingButton } from "@mui/lab";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
+import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 
 export const Dashboard = () => {
+  const { isAuth } = useContext(AuthContext);
   const [isOpenConfirm, setOpenConfirm] = useState(false);
   const [isLoadingConnectKeys, setLoadingConnectKeys] = useState(false);
   const router = useRouter();
@@ -113,12 +115,13 @@ export const Dashboard = () => {
         {getSite && (
           <PreviewDashboardSite
             settingsLink={openSettings}
-            icon={getSite.icon}
             logo={getSite.logo}
             name={getSite.name}
             title={getSite.title}
             url={getSite.url}
             image={getSite.image}
+            adminPubkey={getSite.adminPubkey}
+            userPubkey={isAuth ? userPubkey : undefined}
             description={getSite.description}
             accentColor={getSite.accentColor}
             contributors={getSite.contributors}

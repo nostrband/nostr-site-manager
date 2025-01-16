@@ -62,7 +62,7 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
 }: PreviewDashboardSitePropsType) {
   // put them all into the same bucket
   pubkeysContributors = useMemo(
-    () => [...pubkeysContributors, adminPubkey],
+    () => [...new Set([...pubkeysContributors, adminPubkey])],
     [pubkeysContributors, adminPubkey]
   );
 

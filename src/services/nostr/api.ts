@@ -358,6 +358,12 @@ export async function fetchSites() {
             kinds: [KIND_SITE],
             "#u": [userPubkey],
           },
+          // contributor
+          {
+            // @ts-ignore
+            kinds: [KIND_SITE],
+            "#p": [userPubkey],
+          },
         ],
         relays,
         5000

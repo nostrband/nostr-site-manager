@@ -4,7 +4,7 @@ import { Button, Container } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
 import { useRouter } from "next/navigation";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
 
 import {
@@ -25,8 +25,10 @@ import {
 import { PreviewDashboardSite } from "./components/PreviewDashboardSite";
 import { LoadingButton } from "@mui/lab";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
+import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 
 export const Dashboard = () => {
+  const { isAuth } = useContext(AuthContext);
   const [isOpenConfirm, setOpenConfirm] = useState(false);
   const [isLoadingConnectKeys, setLoadingConnectKeys] = useState(false);
   const router = useRouter();
@@ -38,6 +40,9 @@ export const Dashboard = () => {
   const { siteId } = useGetSiteId();
 
   const getSite = data?.find((el) => el.id === siteId);
+
+  const userIsAdmin =
+    userPubkey && getSite && getSite.adminPubkey === userPubkey;
 
   const switchTheme = `/design?siteId=${siteId}&themeId=${getSite?.themeId}`;
 
@@ -113,12 +118,13 @@ export const Dashboard = () => {
         {getSite && (
           <PreviewDashboardSite
             settingsLink={openSettings}
-            icon={getSite.icon}
             logo={getSite.logo}
             name={getSite.name}
             title={getSite.title}
             url={getSite.url}
             image={getSite.image}
+            adminPubkey={getSite.adminPubkey}
+            userPubkey={isAuth ? userPubkey : undefined}
             description={getSite.description}
             accentColor={getSite.accentColor}
             contributors={getSite.contributors}
@@ -149,56 +155,57 @@ export const Dashboard = () => {
                   Posts
                 </Button>
 
-                <Button
-                  LinkComponent={Link}
-                  size="large"
-                  variant="outlined"
-                  color="decorate"
-                  href={switchTheme}
-                  fullWidth
-                  endIcon={<BrushIcon />}
-                >
-                  Theme
-                </Button>
-
-                <Button
-                  LinkComponent={Link}
-                  size="large"
-                  variant="outlined"
-                  color="decorate"
-                  href={openSettings}
-                  fullWidth
-                  endIcon={<SettingsIcon />}
-                >
-                  Settings
-                </Button>
-
-                {isNeedMigrateKey(siteId) && (
-                  <LoadingButton
-                    color="decorate"
-                    variant="outlined"
-                    type="submit"
-                    fullWidth
-                    size="large"
-                    loading={isLoadingConnectKeys}
-                    disabled={isLoadingConnectKeys}
-                    endIcon={<KeyIcon />}
-                    onClick={handleConnectKeys}
-                  >
-                    Connect keys
-                  </LoadingButton>
+                {userIsAdmin && (
+                  <>
+                    <Button
+                      LinkComponent={Link}
+                      size="large"
+                      variant="outlined"
+                      color="decorate"
+                      href={switchTheme}
+                      fullWidth
+                      endIcon={<BrushIcon />}
+                    >
+                      Theme
+                    </Button>
+                    <Button
+                      LinkComponent={Link}
+                      size="large"
+                      variant="outlined"
+                      color="decorate"
+                      href={openSettings}
+                      fullWidth
+                      endIcon={<SettingsIcon />}
+                    >
+                      Settings
+                    </Button>
+                    {isNeedMigrateKey(siteId) && (
+                      <LoadingButton
+                        color="decorate"
+                        variant="outlined"
+                        type="submit"
+                        fullWidth
+                        size="large"
+                        loading={isLoadingConnectKeys}
+                        disabled={isLoadingConnectKeys}
+                        endIcon={<KeyIcon />}
+                        onClick={handleConnectKeys}
+                      >
+                        Connect keys
+                      </LoadingButton>
+                    )}
+                    <Button
+                      size="large"
+                      variant="outlined"
+                      color="error"
+                      onClick={handeOpenConfirm}
+                      fullWidth
+                      endIcon={<TrashIcon />}
+                    >
+                      Delete
+                    </Button>
+                  </>
                 )}
-
-                <Button
-                  size="large"
-                  variant="outlined"
-                  color="error"
-                  onClick={handeOpenConfirm}
-                  fullWidth
-                  endIcon={<TrashIcon />}
-                >
-                  Delete
-                </Button>
               </StyledActions>
             }
           />

@@ -5,12 +5,14 @@ import { StyledGrid } from "./styled";
 import { PreviewSite } from "@/components/PreviewSite";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { memo } from "react";
+import { userPubkey } from "@/services/nostr/nostr";
 
 export const ListSites = memo(function ListSites({
   data,
   isLinkToOpenSite = false,
   isLink = true,
   isPublic = true,
+  isAuth = false,
   path = "",
 }: {
   data: ReturnSettingsSiteDataType[] | undefined;
@@ -18,6 +20,7 @@ export const ListSites = memo(function ListSites({
   isPublic?: boolean;
   isLinkToOpenSite?: boolean;
   path?: string;
+  isAuth?: boolean;
 }) {
   if (!data || data.length === 0) {
     return null;
@@ -31,7 +34,6 @@ export const ListSites = memo(function ListSites({
             <PreviewSite
               id={el.id}
               path={path}
-              icon={el.adminAvatar || el.icon || ""}
               logo={el.logo}
               name={el.name}
               title={el.title}
@@ -40,8 +42,8 @@ export const ListSites = memo(function ListSites({
               description={el.description}
               accentColor={el.accentColor}
               contributors={el.contributors}
-              adminAvatar={el.adminAvatar}
-              adminName={el.adminName}
+              adminPubkey={el.adminPubkey}
+              userPubkey={isAuth ? userPubkey : undefined}
               isPublic={isPublic}
               isLink={isLink}
               isLinkToOpenSite={isLinkToOpenSite}

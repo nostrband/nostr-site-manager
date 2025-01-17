@@ -23,7 +23,7 @@ import { useSnackbar } from "notistack";
 
 const mutex = new Mutex();
 
-export const Publishing = () => {
+const Publishing = () => {
   const router = useRouter();
   const { isAuth } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
@@ -143,3 +143,5 @@ export const Publishing = () => {
     </StyledWrap>
   );
 };
+
+export default Publishing

@@ -2,29 +2,16 @@ import { fetchProfiles } from "@/services/nostr/api";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { useState, useEffect } from "react";
 
-const useContributors = (
-  pubkeysContributors: string[],
-  isSeveralAuthor: boolean,
-) => {
+const useContributors = (pubkeysContributors: string[]) => {
   const [contributors, setContributors] = useState<NDKEvent[]>([]);
 
   useEffect(() => {
-    if (isSeveralAuthor) {
-      fetchProfiles(pubkeysContributors)
-        .then((p) => {
-          if (p.length) {
-            setContributors(p);
-          } else {
-            setContributors([]);
-          }
-        })
-        .catch(() => {
-          setContributors([]);
-        });
-    } else {
-      setContributors([]);
-    }
-  }, [pubkeysContributors, isSeveralAuthor]);
+    fetchProfiles(pubkeysContributors)
+      .then(setContributors)
+      .catch(() => {
+        setContributors([]);
+      });
+  }, [pubkeysContributors]);
 
   return contributors;
 };

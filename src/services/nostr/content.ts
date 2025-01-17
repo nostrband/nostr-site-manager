@@ -30,6 +30,7 @@ import {
   SUBMIT_STATE_REMOVE,
   tags,
   Profile,
+  OUTBOX_RELAYS,
 } from "libnostrsite";
 import {
   NDKEvent,
@@ -39,6 +40,7 @@ import {
 } from "@nostr-dev-kit/ndk";
 import { marked } from "marked";
 import { SERVER_PUBKEY } from "./consts";
+import { countItems, shuffleArray } from "./utils";
 
 export type SearchPost = Post & {
   submitterPubkey: string;
@@ -72,27 +74,77 @@ export const suggestPosts = async (siteId: string) => {
 
   const existing = await filterSitePosts(siteId, {});
 
+  const authors = [...new Set(existing.map((e) => e.event.pubkey))];
+  const kinds = [...new Set(existing.map((e) => e.event.kind!))];
+  const allHashtags = existing.map((e) => tags(e.event, "t").map((t) => t[1])).flat();
+  const hashtagCounts = countItems(allHashtags);
+  const hashtags = [...hashtagCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map((t) => t[0]);
+
+  if (hashtags.length > 10) hashtags.length = 10;
+
   // use existing content to find authors, kinds and hashtags
-  return searchPosts(
+  const sameAuthorPosts = await searchPosts(
     siteId,
     {
-      authors: [...new Set(existing.map((e) => e.event.pubkey))],
-      kinds: [...new Set(existing.map((e) => e.event.kind!))],
-      hashtags: [
-        ...new Set(
-          existing.map((e) => tags(e.event, "t").map((t) => t[1])).flat(),
-        ),
-      ],
+      authors,
+      kinds,
+      hashtags,
     },
     // onlyNew
-    true,
+    true
+  );
+  if (sameAuthorPosts.length) return sameAuthorPosts;
+
+  // everything by these authors is imported, look
+  // at other authors for the same hashtags
+
+  const contacts = await fetchEvents(
+    ndk,
+    {
+      kinds: [3],
+      authors,
+    },
+    OUTBOX_RELAYS,
+    3000
+  );
+  console.log("contacts", contacts);
+  const followed = [
+    ...new Set(
+      [...contacts]
+        .map((c) =>
+          c.tags
+            .filter((t) => t.length > 1 && t[0] === "p" && t[1].length === 64)
+            .map((t) => t[1])
+        )
+        .flat()
+    ),
+  ];
+
+  // throttle,
+  // shuffle first to make sure we don't have bias against old followed
+  // profiles that are likely to be dead already
+  shuffleArray(followed);
+  if (followed.length > 100) followed.length = 100;
+
+  console.log("followed", followed);
+  return await searchPosts(
+    siteId,
+    {
+      authors: followed,
+      kinds,
+      hashtags,
+    },
+    // onlyNew
+    true
   );
 };
 
 export const searchPosts = async (
   siteId: string,
   { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
-  onlyNew?: boolean,
+  onlyNew?: boolean
 ): Promise<SearchPost[]> => {
   console.log("searchPosts", {
     authors,
@@ -182,7 +234,7 @@ export const searchPosts = async (
     // hard to fetch relays for all of them, so for now we just opt-in
     // to use search relays for finding posts to submit
     SEARCH_RELAYS,
-    5000,
+    5000
   );
 
   console.log("searched events", events);
@@ -225,10 +277,10 @@ export const searchPosts = async (
           arr.reduce(
             (minCreatedAt: number, e: NDKEvent) =>
               Math.min(minCreatedAt, e.created_at!),
-            arr[0].created_at!,
+            arr[0].created_at!
           ) - 1, // before that last one of current set
       },
-      onlyNew,
+      onlyNew
     );
   }
 
@@ -250,7 +302,7 @@ export async function getSiteContributors(siteId: string) {
 
 export async function filterSitePosts(
   siteId: string,
-  { authors, kinds, hashtags, since, until, search }: TypeSearchPosts,
+  { authors, kinds, hashtags, since, until, search }: TypeSearchPosts
 ): Promise<SearchPost[]> {
   console.log("filterSitePosts", {
     authors,
@@ -316,7 +368,7 @@ export async function filterSitePosts(
         ...f,
         search,
       })),
-      relays,
+      relays
     );
 
     // used to mark as 'auto-submitted'
@@ -327,7 +379,7 @@ export async function filterSitePosts(
 
     // make sure it matches our other local filters (skip replies etc)
     const valid = [...autoEvents].filter((e) =>
-      matchPostsToFilters(e, autoFilters),
+      matchPostsToFilters(e, autoFilters)
     );
 
     // convert filtered events to posts
@@ -608,13 +660,19 @@ export async function submitPost(
     kind,
     url,
     remove,
-  }: { id: string; author: string; kind: number; url: string; remove: boolean },
+  }: { id: string; author: string; kind: number; url: string; remove: boolean }
 ) {
   const site = await getSiteSettings(siteId);
   if (!site) throw new Error("Unknown site");
 
   if (userIsDelegated && site.event.pubkey !== SERVER_PUBKEY)
     throw new Error("Can't submit in delegated mode");
+
+  if (
+    site.admin_pubkey !== userPubkey &&
+    !site.contributor_pubkeys.includes(userPubkey)
+  )
+    throw new Error("Only admin or contributor can submit posts");
 
   // we need event itself and a relay hint
   let submittedEvent = cache.get(id);
@@ -689,11 +747,11 @@ export async function submitPost(
 
   // publish
   const r = await nevent.publish(
-    NDKRelaySet.fromRelayUrls([...userRelays, ...SEARCH_RELAYS], ndk),
+    NDKRelaySet.fromRelayUrls([...userRelays, ...SEARCH_RELAYS], ndk)
   );
   console.log(
     "published submit event to",
-    [...r].map((r) => r.url),
+    [...r].map((r) => r.url)
   );
   if (!r.size) throw new Error("Failed to publish to relays");
 

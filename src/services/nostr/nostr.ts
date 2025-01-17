@@ -451,3 +451,21 @@ export async function filterDeleted(events: NDKEvent[], relays: string[]) {
     }
   }
 }
+
+export function parseProfileEvent(pubkey: string, e?: NDKEvent) {
+  const npub = nip19.npubEncode(pubkey).substring(0, 8) + "...";
+  let name = npub;
+  let img = undefined;
+  if (e) {
+    try {
+      const meta = JSON.parse(e.content);
+      name = meta.display_name || meta.name || npub;
+      img = meta.picture;
+    } catch {}
+  }
+  return {
+    name,
+    img,
+  };
+}
+

@@ -44,7 +44,7 @@ import { nip19 } from "nostr-tools";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { NPUB_PRO_DOMAIN } from "@/consts";
 import { fetchSubmits } from "./content";
-import { Mutex } from "./themes";
+import { Mutex } from "./utils";
 
 // FIXME reuse decls from libnostrsite
 const KIND_PINNED_ON_SITE = 30516;
@@ -53,6 +53,10 @@ const sites: Site[] = [];
 const packageThemes = new Map<string, string>();
 export const parser = new NostrParser("http://localhost/");
 let sitesPromise: Promise<void> | undefined = undefined;
+
+const profileCache = new Map<string, NDKEvent | null>();
+const profileFetchMutex = new Mutex();
+
 
 export function hasSite(id: string) {
   return sites.findIndex((s) => s.id === id) >= 0;
@@ -402,9 +406,6 @@ addOnAuth(async (type: string) => {
   // clear sites on logout
   if (type === "logout") sites.length = 0;
 });
-
-const profileCache = new Map<string, NDKEvent | null>();
-const profileFetchMutex = new Mutex();
 
 export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
   return profileFetchMutex.run(async () => {

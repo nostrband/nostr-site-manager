@@ -13,3 +13,38 @@ export function countItems<T>(array: T[]): Map<T, number> {
   });
   return count;
 }
+
+type MutexEntry = {
+  cb: () => Promise<any>;
+  ok: (r: any) => void;
+  err: (r: any) => void;
+};
+
+export class Mutex {
+  private queue: MutexEntry[] = [];
+  private running = false;
+
+  private async execute() {
+    const { cb, ok, err } = this.queue.shift()!;
+    this.running = true;
+    try {
+      ok(await cb());
+    } catch (e) {
+      err(e);
+    }
+    this.running = false;
+    if (this.queue.length > 0) this.execute();
+  }
+
+  public hasPending() {
+    return this.queue.length > 0;
+  }
+
+  public async run<T>(cb: () => Promise<T>) {
+    return new Promise<T>(async (ok, err) => {
+      this.queue.push({ cb, ok, err });
+      if (!this.running && this.queue.length === 1) this.execute();
+    });
+  }
+}
+

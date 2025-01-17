@@ -10,7 +10,6 @@ import {
 import { Button } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  Mutex,
   getPreviewPublishingState,
   getPreviewSiteInfo,
   publishPreviewSite,
@@ -20,6 +19,7 @@ import { AuthContext } from "@/services/nostr/nostr";
 import { Site } from "libnostrsite";
 import { Alert, AlertTitle } from "@mui/lab";
 import { useSnackbar } from "notistack";
+import { Mutex } from "@/services/nostr/utils";
 
 const mutex = new Mutex();
 

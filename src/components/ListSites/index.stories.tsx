@@ -20,6 +20,7 @@ const MOCK_DATA_OBJ: ReturnSettingsSiteDataType = {
   id: "",
   themeId: "",
   themeName: "",
+  autoSubmit: false,
   name: "Author Name",
   title: "Galaxe top projects",
   description:

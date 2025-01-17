@@ -1,6 +1,8 @@
 "use client";
-import { Design } from "@/components/Pages/Design";
 import { Suspense } from "react";
+import dynamic from 'next/dynamic'
+ 
+const Design = dynamic(() => import('../../components/Pages/Design'), { ssr: false })
 
 export default function DesignPage() {
   return (

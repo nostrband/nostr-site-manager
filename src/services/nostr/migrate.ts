@@ -1,5 +1,4 @@
 import { NDKEvent } from "@nostr-dev-kit/ndk";
-import { ReturnSettingsSiteDataType } from "../sites.service";
 import { SERVER_PUBKEY } from "./consts";
 import {
   fetchWithSession,
@@ -14,7 +13,6 @@ import {
 import { KIND_SITE, SITE_RELAY, eventId, tv } from "libnostrsite";
 import { nip19 } from "nostr-tools";
 import { fetchSites, findSiteEvent, resetSites } from "./api";
-import { NPUB_PRO_API } from "@/consts";
 
 export function isNeedMigrateKey(siteId: string) {
   const event = findSiteEvent(siteId);
@@ -114,7 +112,7 @@ export async function migrateToConnectedKey(siteId: string) {
 
     // migrate
     const reply = await fetchWithSession(
-      `${NPUB_PRO_API}/migrate?from=${siteId}&to=${newSiteId}&fromId=${siteEvent.id}&relays=${relays}`,
+      `/migrate?from=${siteId}&to=${newSiteId}&fromId=${siteEvent.id}&relays=${relays}`,
     );
     if (reply.status !== 200) throw new Error("Failed to migrate");
     const r = await reply.json();

@@ -1,6 +1,6 @@
 "use client";
-import { FC, memo, ReactNode, useCallback } from "react";
-import { Avatar, AvatarGroup, IconButton } from "@mui/material";
+import { FC, memo, ReactNode, useCallback, useMemo } from "react";
+import { Avatar, Box, IconButton } from "@mui/material";
 import {
   StyledCard,
   StyledWrapFooter,
@@ -15,6 +15,8 @@ import {
   StyledCardContent,
   StyledCardWrapAuthors,
   StyledCardAuthorName,
+  StyledCardAuthorStatus,
+  StyledAvatarGroup,
 } from "./styled";
 import { StyledAvatarSite } from "@/components/shared/styled";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
@@ -29,21 +31,21 @@ import {
 } from "@/components/Icons";
 import { nip19 } from "nostr-tools";
 import useContributors from "@/hooks/useContributors";
+import { parseProfileEvent } from "@/services/nostr/nostr";
 
 type PreviewSiteType = {
   path?: string;
   isLink?: boolean;
   isPublic?: boolean;
   isLinkToOpenSite?: boolean;
+  userPubkey?: string;
   id?: string;
 };
 
 export type PreviewSitePropsType = PreviewSiteType &
   Pick<
     ReturnSettingsSiteDataType,
-    | "icon"
-    | "adminAvatar"
-    | "adminName"
+    | "adminPubkey"
     | "description"
     | "contributors"
     | "image"
@@ -57,7 +59,6 @@ export type PreviewSitePropsType = PreviewSiteType &
 export const PreviewSite = memo(function PreviewSite({
   id,
   path,
-  icon,
   logo,
   name,
   title,
@@ -66,18 +67,36 @@ export const PreviewSite = memo(function PreviewSite({
   contributors: pubkeysContributors,
   accentColor,
   description,
-  adminAvatar = "",
-  adminName = "",
+  adminPubkey,
+  userPubkey,
   isLink = true,
   isPublic = false,
   isLinkToOpenSite = true,
 }: PreviewSitePropsType) {
+  // put them all into the same bucket
+  pubkeysContributors = useMemo(
+    () => [...new Set([...pubkeysContributors, adminPubkey])],
+    [pubkeysContributors, adminPubkey]
+  );
+
+  if (userPubkey && !pubkeysContributors.includes(userPubkey))
+    userPubkey = undefined;
+
   const { isLoaded: isLoadedLogo } = useImageLoader(logo);
   const { isLoaded: isLoadedImage } = useImageLoader(image);
   const isSeveralAuthor = pubkeysContributors.length > 1;
-  const contributors = useContributors(pubkeysContributors, isSeveralAuthor);
-  const prepareContributors =
-    contributors.length > 5 ? contributors.slice(0, 5) : contributors;
+
+  const allContributors = useContributors(pubkeysContributors);
+  const mainContributorPubkey = userPubkey || adminPubkey;
+  const otherPubkeys = pubkeysContributors.filter(
+    (p) => p !== mainContributorPubkey
+  );
+
+  const main = allContributors.find((c) => c.pubkey === mainContributorPubkey);
+  const mainProfile = parseProfileEvent(mainContributorPubkey, main);
+  const mainAvatar = mainProfile.img;
+  const mainName = mainProfile.name;
+
   const link = isPublic ? url : `${path}/${id}`;
 
   const WrapCard: FC<{ children: ReactNode }> = useCallback(
@@ -98,7 +117,7 @@ export const PreviewSite = memo(function PreviewSite({
         </>
       );
     },
-    [isLink, link],
+    [isLink, link]
   );
 
   return (
@@ -154,55 +173,39 @@ export const PreviewSite = memo(function PreviewSite({
             </StyledCardDescription>
           </StyledCardContent>
 
-          {isSeveralAuthor ? (
-            <StyledCardWrapAuthors>
-              <AvatarGroup spacing={20.5}>
-                {contributors.length
-                  ? prepareContributors.map((el, i) => {
-                      let meta = JSON.parse(el.content);
-
-                      const npub = el.pubkey
-                        ? nip19.npubEncode(el.pubkey).substring(0, 8) + "..."
-                        : "";
-                      const nameAuthor = meta.display_name || meta.name || npub;
-                      const img = meta.picture || "";
-
-                      return (
-                        <Avatar key={i} alt={nameAuthor} src={img}>
-                          <IconPerson />
-                        </Avatar>
+          <StyledCardWrapAuthors>
+            <Avatar src={mainAvatar} alt={mainName}>
+              <IconPerson />
+            </Avatar>
+            <Box
+              sx={{
+                width: "100%",
+                color: getContrastingTextColor(accentColor),
+              }}
+            >
+              <StyledCardAuthorName>{mainName}</StyledCardAuthorName>
+              <StyledCardAuthorStatus>
+                {mainContributorPubkey === adminPubkey
+                  ? "Admin"
+                  : "Contributor"}
+                {isSeveralAuthor && (
+                  <StyledAvatarGroup max={3}>
+                    {otherPubkeys.map((pubkey, i) => {
+                      const profile = allContributors.find(
+                        (c) => c.pubkey === pubkey
                       );
-                    })
-                  : pubkeysContributors.map((_, i) => {
+                      const info = parseProfileEvent(pubkey, profile);
                       return (
-                        <Avatar key={i}>
-                          <IconPerson />
+                        <Avatar key={i} alt={info.name} src={info.img || ""}>
+                          <IconPerson fontSize="inherit" />
                         </Avatar>
                       );
                     })}
-              </AvatarGroup>
-              <StyledCardAuthorName
-                sx={{
-                  color: getContrastingTextColor(accentColor),
-                }}
-              >
-                {pubkeysContributors.length} authors
-              </StyledCardAuthorName>
-            </StyledCardWrapAuthors>
-          ) : (
-            <StyledCardWrapAuthors>
-              <Avatar src={isPublic ? adminAvatar : icon}>
-                <IconPerson />
-              </Avatar>
-              <StyledCardAuthorName
-                sx={{
-                  color: getContrastingTextColor(accentColor),
-                }}
-              >
-                {isPublic ? adminName : name}
-              </StyledCardAuthorName>
-            </StyledCardWrapAuthors>
-          )}
+                  </StyledAvatarGroup>
+                )}
+              </StyledCardAuthorStatus>
+            </Box>
+          </StyledCardWrapAuthors>
         </StyledWrapFooter>
       </WrapCard>
     </StyledCard>

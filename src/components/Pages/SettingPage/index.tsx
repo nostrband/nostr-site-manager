@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import _ from "lodash";
 import { Button, Container } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { redirect, useParams } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
@@ -39,7 +39,10 @@ import {
 import Link from "next/link";
 import { ChevronLeftIcon } from "@/components/Icons";
 import { SearchSettingsField, Setting } from "./components/SearchSettingsField";
+import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { NostrJson } from "./components/NostrJson";
+import { ContentFilters } from "./components/ContentFilters";
+import { useBack } from "@/hooks/useBackPage";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -85,6 +88,7 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   postsPerPage: "",
   contentActionMain: "",
   contentActions: [],
+  autoSubmit: false,
   signupStartNjump: false,
 };
 
@@ -93,18 +97,21 @@ export const SettingPage = () => {
   const [initialData, setInitialData] = useState(initialSettingValue);
   const [choiceSetting, setChoiceSetting] = useState<Setting | null>(null);
   const { enqueueSnackbar } = useSnackbar();
-  const params = useParams();
-  const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const { siteId } = useGetSiteId();
+  const { back } = useBack();
+
   const {
     data,
     isLoading: isLoadingSetting,
     isFetching,
   } = useSettingsSite(siteId);
 
-  const backToDashboardLink = `/admin/${siteId}/dashboard`;
-
   const handleChoiceSetting = (setting: Setting | null) => {
     setChoiceSetting(setting);
+  };
+
+  const handleBack = () => {
+    back("dashboard");
   };
 
   const {
@@ -172,14 +179,14 @@ export const SettingPage = () => {
 
       setFieldValue(`navigation.${input.type}`, navigation);
     },
-    [setFieldValue, values.navigation]
+    [setFieldValue, values.navigation],
   );
 
   const handleChangeNavigationOrder = useCallback(
     (navigation: NavigationModelType) => {
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleAddLinkNavigation = useCallback(
@@ -189,42 +196,42 @@ export const SettingPage = () => {
         { title: "", link: "", id: "" + Date.now() },
       ]);
     },
-    [setFieldValue, values.navigation]
+    [setFieldValue, values.navigation],
   );
 
   const handleChangeHashtags = useCallback(
     (value: string | string[]) => {
       setFieldValue("hashtags", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeHashtagsHomePage = useCallback(
     (value: string | string[]) => {
       setFieldValue("hashtags_homepage", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeContributors = useCallback(
     (pubkeys: string[]) => {
       setFieldValue("contributors", pubkeys);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleUpdateWebSiteAddress = useCallback(
     async (url: string) => {
       setFieldValue("url", addHttps(url));
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeContentActions = useCallback(
     (value: string[]) => {
       setFieldValue("contentActions", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeSignupStartNjump = useCallback(
@@ -238,39 +245,46 @@ export const SettingPage = () => {
     (value: number | number[]) => {
       setFieldValue("kinds", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleOptionsMainCallAction = useCallback(
     (value: string) => {
       setFieldValue("contentActionMain", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeKindsHomePage = useCallback(
     (value: number | number[]) => {
       setFieldValue("kinds_homepage", value);
     },
-    [setFieldValue]
+    [setFieldValue],
+  );
+
+  const handleAutoSubmit = useCallback(
+    (value: boolean) => {
+      setFieldValue("autoSubmit", value);
+    },
+    [setFieldValue],
   );
 
   const handleChangeColor = useCallback(
     (color: string) => {
       setFieldValue("accentColor", color);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleRemoveLinkNavigation = useCallback(
     (input: { id: string; type: "primary" | "secondary" }) => {
       const navigation = values.navigation[input.type].filter(
-        (item) => item.id !== input.id
+        (item) => item.id !== input.id,
       );
 
       setFieldValue(`navigation.${[input.type]}`, navigation);
     },
-    [setFieldValue, values.navigation]
+    [setFieldValue, values.navigation],
   );
 
   useEffect(() => {
@@ -330,8 +344,7 @@ export const SettingPage = () => {
       <StyledWrap>
         <StyledTitle>
           <Button
-            LinkComponent={Link}
-            href={backToDashboardLink}
+            onClick={handleBack}
             color="primary"
             variant="text"
             sx={{ minWidth: "auto" }}
@@ -393,11 +406,13 @@ export const SettingPage = () => {
               isLoading={isLoading}
             />
 
-            <Content
+            <ContentFilters
               anchor={SETTINGS_CONFIG.content.anchor}
               handleChangeHashtags={handleChangeHashtags}
               contributors={values.contributors}
               selectedHashtags={values.hashtags}
+              autoSubmit={values.autoSubmit}
+              handleAutoSubmit={handleAutoSubmit}
               handleChangeKinds={handleChangeKinds}
               selectedKinds={values.kinds}
               submitForm={submitForm}

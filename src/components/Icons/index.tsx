@@ -28,7 +28,7 @@ export const IconLink = createSvgIcon(
       d="M10.5 2.25C10.5 1.83579 10.8358 1.5 11.25 1.5H15.75C16.1642 1.5 16.5 1.83579 16.5 2.25V6.75C16.5 7.16421 16.1642 7.5 15.75 7.5C15.3358 7.5 15 7.16421 15 6.75V3H11.25C10.8358 3 10.5 2.66421 10.5 2.25Z"
     />
   </svg>,
-  "IconLink"
+  "IconLink",
 );
 
 export const IconPerson = createSvgIcon(
@@ -52,7 +52,7 @@ export const IconPerson = createSvgIcon(
       d="M9.00089 13C7.33815 13 5.73913 13.7585 4.80204 14.9004C4.32645 15.48 3.99211 16.1971 3.96299 16.9919C3.93326 17.8036 4.22625 18.5958 4.83048 19.2871C6.30304 20.9716 8.65416 22 12.0009 22C15.3476 22 17.6987 20.9716 19.1713 19.2871C19.7755 18.5958 20.0685 17.8036 20.0388 16.9919C20.0097 16.1971 19.6753 15.48 19.1997 14.9004C18.2627 13.7585 16.6636 13 15.0009 13H9.00089Z"
     />
   </svg>,
-  "IconPerson"
+  "IconPerson",
 );
 
 export const IconPersonOutlined = createSvgIcon(
@@ -76,7 +76,7 @@ export const IconPersonOutlined = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "IconPersonOutlined"
+  "IconPersonOutlined",
 );
 
 export const BrokenBigIcon = createSvgIcon(
@@ -94,7 +94,7 @@ export const BrokenBigIcon = createSvgIcon(
       d="M65.073 61.1466H4.962C2.2329 61.1466 0 58.899 0 56.1519V5.8481C0 3.10101 2.2329 0.853398 4.962 0.853398L61.1816 0.853394H65.0777C67.796 0.853394 69.9996 3.05699 69.9996 5.77527V56.1519C70.035 58.899 67.8021 61.1466 65.073 61.1466ZM8.15185 5.8481C6.37971 5.8481 4.96199 7.27516 4.96199 9.05898V51.5943L26.5467 24.8993C27.5391 23.6863 29.3467 23.6863 30.3391 24.8993L38.1719 34.6033C39.1289 35.7806 40.901 35.8163 41.8934 34.6747L44.3035 31.9276C45.2605 30.8216 46.9972 30.8216 47.9541 31.9276L65.0376 51.5139L65.0376 9.12935C65.0376 7.31717 63.5685 5.8481 61.7563 5.8481H8.15185Z"
     />
   </svg>,
-  "BrokenBigIcon"
+  "BrokenBigIcon",
 );
 
 export const BrokenIcon = createSvgIcon(
@@ -110,7 +110,7 @@ export const BrokenIcon = createSvgIcon(
       d="M21 19.5V5.5C21 4.4 20.1 3.5 19 3.5H5C3.9 3.5 3 4.4 3 5.5V19.5C3 20.6 3.9 21.5 5 21.5H19C20.1 21.5 21 20.6 21 19.5ZM8.11812 14.491C8.31425 14.2388 8.69331 14.2327 8.89743 14.4785L10.6021 16.531C10.8064 16.7769 11.1858 16.7706 11.3818 16.5181L14.0982 13.0177C14.3005 12.7571 14.6953 12.7604 14.8932 13.0243L19 18.5H5L8.11812 14.491Z"
     />
   </svg>,
-  "BrokenIcon"
+  "BrokenIcon",
 );
 
 export const SearchIcon = createSvgIcon(
@@ -134,7 +134,7 @@ export const SearchIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "SearchIcon"
+  "SearchIcon",
 );
 
 export const NotFoundIcon = createSvgIcon(
@@ -164,7 +164,7 @@ export const NotFoundIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "NotFoundIcon"
+  "NotFoundIcon",
 );
 
 export const ArrowLeftIcon = createSvgIcon(
@@ -182,7 +182,7 @@ export const ArrowLeftIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ArrowLeftIcon"
+  "ArrowLeftIcon",
 );
 
 export const WebIcon = createSvgIcon(
@@ -218,7 +218,7 @@ export const WebIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "WebIcon"
+  "WebIcon",
 );
 
 export const PlusIcon = createSvgIcon(
@@ -242,7 +242,7 @@ export const PlusIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PlusIcon"
+  "PlusIcon",
 );
 
 export const ChevronLeftIcon = createSvgIcon(
@@ -260,7 +260,7 @@ export const ChevronLeftIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ChevronLeftIcon"
+  "ChevronLeftIcon",
 );
 
 export const ArrowRightIcon = createSvgIcon(
@@ -278,7 +278,7 @@ export const ArrowRightIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ArrowRightIcon"
+  "ArrowRightIcon",
 );
 
 export const SettingsIcon = createSvgIcon(
@@ -302,7 +302,7 @@ export const SettingsIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "SettingsIcon"
+  "SettingsIcon",
 );
 
 export const TrashIcon = createSvgIcon(
@@ -332,7 +332,7 @@ export const TrashIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "TrashIcon"
+  "TrashIcon",
 );
 
 export const AddImageIcon = createSvgIcon(
@@ -356,7 +356,7 @@ export const AddImageIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "AddImageIcon"
+  "AddImageIcon",
 );
 
 export const BrushIcon = createSvgIcon(
@@ -368,15 +368,13 @@ export const BrushIcon = createSvgIcon(
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M22.6292 8.72047C22.2426 8.27949 21.8198 7.87476 21.3486 7.42774C21.0949 7.18611 20.7566 7.07134 20.3458 7.07134C20.2794 7.07134 20.2129 7.07738 20.1465 7.08342C20.2431 6.36456 19.8444 5.8813 19.488 5.53094C19.2041 5.2591 18.5759 4.65502 17.9114 4.00865C17.5791 3.68849 17.2348 3.35021 16.9147 3.04213C16.8422 2.97568 16.7334 2.9636 16.6307 2.95152C16.6005 2.95152 16.5582 2.94548 16.5341 2.93944C16.522 2.91527 16.5099 2.8609 16.5039 2.82466C16.4797 2.71593 16.4495 2.58907 16.377 2.52262C15.9602 2.12393 15.7125 1.8823 15.6098 1.78565C15.5373 1.7192 15.4709 1.65274 15.4105 1.59234C15.1689 1.3507 14.9756 1.1574 14.5769 1.04263H14.5708C14.3594 0.9943 14.1903 0.988257 14.0513 1.01846C13.6103 1.12115 13.3325 1.40507 13.0425 1.70107C13.0123 1.73128 12.9881 1.76148 12.9579 1.78565C10.9282 3.82139 8.77166 5.984 5.95061 8.79901C5.43111 9.31851 5.28612 9.88635 5.51567 10.5025C5.5942 10.7079 5.73918 10.9193 5.94457 11.1428C6.25869 11.4751 6.59093 11.8013 6.91109 12.1214C7.05003 12.2604 7.18897 12.3993 7.32791 12.5383C7.5333 12.7436 7.62995 12.943 7.61183 13.1303C7.59371 13.3175 7.46081 13.4867 7.21918 13.6498C6.8809 13.8733 6.54261 14.0968 6.20432 14.3142C5.20155 14.9727 4.16254 15.6493 3.14768 16.3319L3.09935 16.3621C2.58589 16.7064 2.0543 17.0628 1.66769 17.5884C1.31732 18.0656 1.1059 18.5911 1.02737 19.1469C1.02133 19.1771 1.02132 19.2133 1.01528 19.2677C1.0032 19.5275 0.991119 19.7026 1.00924 19.9866C1.01528 20.053 1.02133 20.1134 1.02737 20.1799C1.19651 21.3337 1.95764 22.3062 3.06915 22.7774C3.51617 22.9707 3.98131 23.0613 4.44645 23.0613C5.12906 23.0613 5.79959 22.8559 6.37347 22.4452C6.91714 22.0585 7.2977 21.527 7.66619 20.9712C8.38505 19.902 9.09787 18.8086 9.79256 17.7454C9.98586 17.4494 10.1792 17.1534 10.3725 16.8574C10.5477 16.5916 10.7289 16.4466 10.9161 16.4285C11.1034 16.4104 11.3028 16.5071 11.5202 16.7245C11.6531 16.8574 11.7921 16.9964 11.925 17.1293C12.2391 17.4434 12.5592 17.7635 12.8794 18.0777C12.9881 18.1864 13.121 18.3072 13.2721 18.3978C13.9305 18.7905 14.6433 18.6697 15.2353 18.0777C17.6395 15.6734 20.0438 13.2752 22.442 10.871C22.5084 10.8045 22.5688 10.7381 22.6232 10.6777C23.1246 10.0917 23.1246 9.28227 22.6292 8.72047ZM14.0332 16.9541C13.9003 16.8212 13.7734 16.6943 13.6405 16.5614C13.2962 16.2171 12.9398 15.8547 12.5834 15.5043C11.931 14.864 11.1638 14.6646 10.3 14.9183C9.79256 15.0633 9.37574 15.3956 9.04954 15.8969L8.81394 16.2654C8.37901 16.942 7.92595 17.6427 7.47289 18.3253C6.92922 19.1469 6.43387 19.8839 5.91436 20.6088C5.39486 21.3337 4.66392 21.5934 3.86654 21.3457C3.20205 21.1403 2.79127 20.6873 2.6463 20.0047C2.50132 19.31 2.69462 18.724 3.20809 18.3072C3.83633 17.8058 4.50686 17.3528 5.15926 16.9178C5.70898 16.5554 6.27077 16.1929 6.81444 15.8426C7.25542 15.5587 7.71452 15.2627 8.16154 14.9667C9.22472 14.2659 9.53884 12.9913 8.90456 11.9342C8.7777 11.7228 8.60252 11.5294 8.46358 11.3905C8.11322 11.0341 7.76285 10.6777 7.41852 10.3394C7.30375 10.2246 7.19501 10.1159 7.08024 10.0011L8.07093 9.00439L15.0178 15.9513L14.0332 16.9541ZM16.2018 14.7371L9.29117 7.82039L14.3654 2.74009C14.4077 2.78237 14.456 2.82466 14.4983 2.86694C14.6433 2.99984 14.7943 3.13878 14.9272 3.29584C14.9393 3.31397 14.9454 3.39249 14.9272 3.44082C14.8185 3.69453 14.6977 3.95429 14.5889 4.20196C14.4742 4.46172 14.3534 4.72751 14.2386 4.99331C14.2023 5.07788 14.1178 5.27118 14.2386 5.38596C14.3231 5.47053 14.456 5.47053 14.6373 5.38596C15.0601 5.19265 15.489 4.98122 15.8998 4.78792C16.0146 4.73355 16.1293 4.67919 16.2381 4.62482L18.5034 6.89616C18.4792 6.93844 18.449 6.98073 18.4188 7.02301L15.5313 11.3241C15.5192 11.3361 15.5132 11.3543 15.5011 11.3663C15.4649 11.4147 15.4286 11.463 15.4105 11.5294C15.4105 11.5294 15.3561 11.7348 15.4588 11.8134C15.5313 11.8738 15.6521 11.8798 15.7427 11.8556C15.8092 11.8436 15.8636 11.8013 15.9058 11.765C15.9179 11.753 15.936 11.7409 15.9481 11.7288L20.231 8.81712C20.2733 8.79296 20.3096 8.76276 20.3458 8.7386L21.2761 9.66283L16.2018 14.7371Z"
-      fill="currentColor"
-    />
-    <path
-      d="M4.60352 20.2584C4.1263 20.2402 3.76989 19.8536 3.78801 19.3764C3.80614 18.9113 4.18671 18.5549 4.65185 18.5669C5.12907 18.579 5.49152 18.9656 5.47944 19.4368C5.46131 19.914 5.08074 20.2765 4.60352 20.2584Z"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12.1279 1.12761C12.5184 0.737084 13.1515 0.737084 13.5421 1.12761L16.3881 3.97364C16.7786 4.36417 16.7786 4.99733 16.3881 5.38786L16.1979 5.57805L17.458 5.51172C17.7411 5.49682 18.0172 5.60278 18.2177 5.80323L22.7942 10.3798C23.1848 10.7703 23.1848 11.4035 22.7942 11.794L16.0769 18.5113C14.9054 19.6829 13.0059 19.6829 11.8343 18.5113L11.1816 17.8586C10.6937 17.3707 9.87003 17.5118 9.57234 18.1343L8.83621 19.6734C8.64574 20.0717 8.38189 20.5925 7.95038 21.0293C7.56379 21.4206 6.88301 21.9786 5.96526 22.1376C4.97039 22.31 3.91764 21.9788 2.93035 20.9915C1.82268 19.8838 1.51071 18.7254 1.7914 17.6661C2.04395 16.713 2.72494 16.059 3.11667 15.7405C3.43709 15.48 3.78506 15.3072 4.04752 15.1817L5.7876 14.3495C6.41003 14.0518 6.55112 13.2281 6.06325 12.7403L5.41054 12.0876C4.23897 10.916 4.23897 9.01649 5.41054 7.84492L12.1279 1.12761ZM12.835 3.24893L9.16697 6.91692L17.0049 14.7549L20.6729 11.0869L17.1184 7.53237L13.7007 7.71225C13.2872 7.73401 12.9031 7.4987 12.7346 7.12047C12.5662 6.74223 12.6482 6.2993 12.941 6.00652L14.2668 4.68075L12.835 3.24893ZM15.5907 16.1691L7.75276 8.33113L6.82476 9.25913C6.43423 9.64966 6.43423 10.2828 6.82476 10.6733L7.47746 11.326C8.94108 12.7897 8.5178 15.2607 6.65051 16.1538L4.91043 16.986C4.65925 17.1061 4.49972 17.1936 4.37838 17.2923C4.09902 17.5194 3.81458 17.8391 3.72468 18.1784C3.66291 18.4115 3.63145 18.8642 4.34456 19.5773C4.95755 20.1903 5.38055 20.2091 5.62386 20.167C5.94429 20.1115 6.26411 19.8904 6.52753 19.6238C6.70435 19.4448 6.84894 19.1932 7.03195 18.8105L7.76807 17.2713C8.66113 15.404 11.1322 14.9808 12.5958 16.4444L13.2485 17.0971C13.639 17.4876 14.2722 17.4876 14.6627 17.0971L15.5907 16.1691Z"
       fill="currentColor"
     />
   </svg>,
-  "BrushIcon"
+  "BrushIcon",
 );
 
 export const EditIcon = createSvgIcon(
@@ -406,7 +404,7 @@ export const EditIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "EditIcon"
+  "EditIcon",
 );
 
 export const CheckIcon = createSvgIcon(
@@ -424,7 +422,7 @@ export const CheckIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CheckIcon"
+  "CheckIcon",
 );
 
 export const GrabIcon = createSvgIcon(
@@ -448,7 +446,7 @@ export const GrabIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "GrabIcon"
+  "GrabIcon",
 );
 
 export const PlusCircleIcon = createSvgIcon(
@@ -472,7 +470,7 @@ export const PlusCircleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PlusCircleIcon"
+  "PlusCircleIcon",
 );
 
 export const CodeIcon = createSvgIcon(
@@ -496,7 +494,7 @@ export const CodeIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CodeIcon"
+  "CodeIcon",
 );
 
 export const UserCircleIcon = createSvgIcon(
@@ -526,7 +524,7 @@ export const UserCircleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "UserCircleIcon"
+  "UserCircleIcon",
 );
 
 export const TitleIcon = createSvgIcon(
@@ -544,7 +542,7 @@ export const TitleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "TitleIcon"
+  "TitleIcon",
 );
 
 export const StarIcon = createSvgIcon(
@@ -562,7 +560,7 @@ export const StarIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "StarIcon"
+  "StarIcon",
 );
 
 export const StarRectangleIcon = createSvgIcon(
@@ -586,7 +584,7 @@ export const StarRectangleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "StarRectangleIcon"
+  "StarRectangleIcon",
 );
 
 export const PipetteIcon = createSvgIcon(
@@ -610,7 +608,7 @@ export const PipetteIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PipetteIcon"
+  "PipetteIcon",
 );
 
 export const NavigationIcon = createSvgIcon(
@@ -628,7 +626,7 @@ export const NavigationIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "NavigationIcon"
+  "NavigationIcon",
 );
 
 export const MessageIcon = createSvgIcon(
@@ -664,7 +662,7 @@ export const MessageIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "MessageIcon"
+  "MessageIcon",
 );
 
 export const LinkIcon = createSvgIcon(
@@ -694,7 +692,7 @@ export const LinkIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "LinkIcon"
+  "LinkIcon",
 );
 
 export const IosSmartphoneIcon = createSvgIcon(
@@ -718,7 +716,7 @@ export const IosSmartphoneIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "IosSmartphoneIcon"
+  "IosSmartphoneIcon",
 );
 
 export const HomeIcon = createSvgIcon(
@@ -742,7 +740,7 @@ export const HomeIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "HomeIcon"
+  "HomeIcon",
 );
 
 export const FIleTextIcon = createSvgIcon(
@@ -784,7 +782,7 @@ export const FIleTextIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "FIleTextIcon"
+  "FIleTextIcon",
 );
 
 export const ImageIcon = createSvgIcon(
@@ -814,7 +812,7 @@ export const ImageIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ImageIcon"
+  "ImageIcon",
 );
 
 export const InfoIcon = createSvgIcon(
@@ -844,7 +842,7 @@ export const InfoIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "InfoIcon"
+  "InfoIcon",
 );
 
 export const CrossIcon = createSvgIcon(
@@ -868,7 +866,7 @@ export const CrossIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CrossIcon"
+  "CrossIcon",
 );
 
 export const PinIcon = createSvgIcon(
@@ -884,7 +882,7 @@ export const PinIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PinIcon"
+  "PinIcon",
 );
 
 export const KeyIcon = createSvgIcon(
@@ -908,7 +906,7 @@ export const KeyIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "KeyIcon"
+  "KeyIcon",
 );
 
 export const CopyIcon = createSvgIcon(
@@ -932,7 +930,7 @@ export const CopyIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CopyIcon"
+  "CopyIcon",
 );
 
 export const CheckCircleIcon = createSvgIcon(
@@ -956,7 +954,7 @@ export const CheckCircleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CheckCircleIcon"
+  "CheckCircleIcon",
 );
 
 export const PinFillIcon = createSvgIcon(
@@ -972,7 +970,7 @@ export const PinFillIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PinFillIcon"
+  "PinFillIcon",
 );
 
 export const JsonCodeIcon = createSvgIcon(
@@ -1008,5 +1006,95 @@ export const JsonCodeIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "JsonCodeIcon"
+  "JsonCodeIcon",
+);
+
+export const CalendarIcon = createSvgIcon(
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M2 8C2 5.23858 4.23858 3 7 3H17C19.7614 3 22 5.23858 22 8V17C22 19.7614 19.7614 22 17 22H7C4.23858 22 2 19.7614 2 17V8ZM7 5C5.34315 5 4 6.34315 4 8V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V8C20 6.34315 18.6569 5 17 5H7Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M8 2C8.55228 2 9 2.44772 9 3V6C9 6.55228 8.55228 7 8 7C7.44772 7 7 6.55228 7 6V3C7 2.44772 7.44772 2 8 2Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M6 10C6 9.44772 6.44772 9 7 9H17C17.5523 9 18 9.44772 18 10C18 10.5523 17.5523 11 17 11H7C6.44772 11 6 10.5523 6 10Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M15 17C15 16.4477 15.4477 16 16 16L17 16C17.5523 16 18 16.4477 18 17C18 17.5523 17.5523 18 17 18H16C15.4477 18 15 17.5523 15 17Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M16 2C16.5523 2 17 2.44772 17 3V6C17 6.55228 16.5523 7 16 7C15.4477 7 15 6.55228 15 6V3C15 2.44772 15.4477 2 16 2Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "CalendarIcon",
+);
+
+export const FilterIcon = createSvgIcon(
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M3 16L8.96685 16C9.51914 16 9.96685 16.4477 9.96685 17C9.96685 17.5523 9.51914 18 8.96685 18L3 18C2.44772 18 2 17.5523 2 17C2 16.4477 2.44772 16 3 16Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M14 7C14 6.44772 14.4477 6 15 6H21C21.5523 6 22 6.44772 22 7C22 7.55228 21.5523 8 21 8H15C14.4477 8 14 7.55228 14 7Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M2 7C2 6.44772 2.44772 6 3 6H3.01C3.56228 6 4.01 6.44772 4.01 7C4.01 7.55228 3.56228 8 3.01 8H3C2.44772 8 2 7.55228 2 7Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M20 17C20 16.4477 20.4477 16 21 16H21.01C21.5623 16 22.01 16.4477 22.01 17C22.01 17.5523 21.5623 18 21.01 18H21C20.4477 18 20 17.5523 20 17Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M14.9337 15C13.8435 15 12.9503 15.8902 12.9503 17C12.9503 18.1098 13.8435 19 14.9337 19C16.0239 19 16.9172 18.1098 16.9172 17C16.9172 15.8902 16.0239 15 14.9337 15ZM10.9503 17C10.9503 14.7961 12.7285 13 14.9337 13C17.1389 13 18.9172 14.7961 18.9172 17C18.9172 19.2039 17.1389 21 14.9337 21C12.7285 21 10.9503 19.2039 10.9503 17Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M8.96682 5C7.87662 5 6.9834 5.8902 6.9834 7C6.9834 8.1098 7.87662 9 8.96682 9C10.057 9 10.9502 8.1098 10.9502 7C10.9502 5.8902 10.057 5 8.96682 5ZM4.9834 7C4.9834 4.79609 6.76162 3 8.96682 3C11.172 3 12.9502 4.79609 12.9502 7C12.9502 9.20391 11.172 11 8.96682 11C6.76162 11 4.9834 9.20391 4.9834 7Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "FilterIcon",
 );

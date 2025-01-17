@@ -27,4 +27,7 @@ export const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     minHeight: "50px",
     height: "50px",
   },
+  a: {
+    textDecoration: "none",
+  },
 }));

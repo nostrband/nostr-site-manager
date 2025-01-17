@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { Button, Container } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
 
 import {
@@ -17,14 +17,18 @@ import {
   ArrowRightIcon,
   BrushIcon,
   ChevronLeftIcon,
+  FIleTextIcon,
   KeyIcon,
   SettingsIcon,
   TrashIcon,
 } from "@/components/Icons";
 import { PreviewDashboardSite } from "./components/PreviewDashboardSite";
 import { LoadingButton } from "@mui/lab";
+import { useGetSiteId } from "@/hooks/useGetSiteId";
+import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 
 export const Dashboard = () => {
+  const { isAuth } = useContext(AuthContext);
   const [isOpenConfirm, setOpenConfirm] = useState(false);
   const [isLoadingConnectKeys, setLoadingConnectKeys] = useState(false);
   const router = useRouter();
@@ -33,14 +37,17 @@ export const Dashboard = () => {
   console.log({
     data,
   });
-  const params = useParams();
-  const siteId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const { siteId } = useGetSiteId();
 
   const getSite = data?.find((el) => el.id === siteId);
+
+  const userIsAdmin =
+    userPubkey && getSite && getSite.adminPubkey === userPubkey;
 
   const switchTheme = `/design?siteId=${siteId}&themeId=${getSite?.themeId}`;
 
   const openSettings = `/admin/${siteId}/settings`;
+  const openPostManagement = `/admin/${siteId}/posts`;
 
   const handeOpenConfirm = () => {
     setOpenConfirm(true);
@@ -111,12 +118,13 @@ export const Dashboard = () => {
         {getSite && (
           <PreviewDashboardSite
             settingsLink={openSettings}
-            icon={getSite.icon}
             logo={getSite.logo}
             name={getSite.name}
             title={getSite.title}
             url={getSite.url}
             image={getSite.image}
+            adminPubkey={getSite.adminPubkey}
+            userPubkey={isAuth ? userPubkey : undefined}
             description={getSite.description}
             accentColor={getSite.accentColor}
             contributors={getSite.contributors}
@@ -132,7 +140,7 @@ export const Dashboard = () => {
                   fullWidth
                   endIcon={<ArrowRightIcon />}
                 >
-                  Open website
+                  Open
                 </Button>
 
                 <Button
@@ -140,51 +148,64 @@ export const Dashboard = () => {
                   size="large"
                   variant="outlined"
                   color="decorate"
-                  href={switchTheme}
+                  href={openPostManagement}
                   fullWidth
-                  endIcon={<BrushIcon />}
+                  endIcon={<FIleTextIcon />}
                 >
-                  Theme settings
+                  Posts
                 </Button>
 
-                <Button
-                  LinkComponent={Link}
-                  size="large"
-                  variant="outlined"
-                  color="decorate"
-                  href={openSettings}
-                  fullWidth
-                  endIcon={<SettingsIcon />}
-                >
-                  Settings
-                </Button>
-
-                {isNeedMigrateKey(siteId) && (
-                  <LoadingButton
-                    color="decorate"
-                    variant="outlined"
-                    type="submit"
-                    fullWidth
-                    size="large"
-                    loading={isLoadingConnectKeys}
-                    disabled={isLoadingConnectKeys}
-                    endIcon={<KeyIcon />}
-                    onClick={handleConnectKeys}
-                  >
-                    Connect keys
-                  </LoadingButton>
+                {userIsAdmin && (
+                  <>
+                    <Button
+                      LinkComponent={Link}
+                      size="large"
+                      variant="outlined"
+                      color="decorate"
+                      href={switchTheme}
+                      fullWidth
+                      endIcon={<BrushIcon />}
+                    >
+                      Theme
+                    </Button>
+                    <Button
+                      LinkComponent={Link}
+                      size="large"
+                      variant="outlined"
+                      color="decorate"
+                      href={openSettings}
+                      fullWidth
+                      endIcon={<SettingsIcon />}
+                    >
+                      Settings
+                    </Button>
+                    {isNeedMigrateKey(siteId) && (
+                      <LoadingButton
+                        color="decorate"
+                        variant="outlined"
+                        type="submit"
+                        fullWidth
+                        size="large"
+                        loading={isLoadingConnectKeys}
+                        disabled={isLoadingConnectKeys}
+                        endIcon={<KeyIcon />}
+                        onClick={handleConnectKeys}
+                      >
+                        Connect keys
+                      </LoadingButton>
+                    )}
+                    <Button
+                      size="large"
+                      variant="outlined"
+                      color="error"
+                      onClick={handeOpenConfirm}
+                      fullWidth
+                      endIcon={<TrashIcon />}
+                    >
+                      Delete
+                    </Button>
+                  </>
                 )}
-
-                <Button
-                  size="large"
-                  variant="outlined"
-                  color="error"
-                  onClick={handeOpenConfirm}
-                  fullWidth
-                  endIcon={<TrashIcon />}
-                >
-                  Delete
-                </Button>
               </StyledActions>
             }
           />

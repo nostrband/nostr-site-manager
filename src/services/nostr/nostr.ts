@@ -6,21 +6,19 @@ import NDK, {
 } from "@nostr-dev-kit/ndk";
 import {
   eventId,
-  fetchEvent,
   fetchEvents,
   fetchOutboxRelays,
   fetchProfile,
   tags,
   tv,
-  tvs,
 } from "libnostrsite";
 import { createContext } from "react";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { sha256 } from "@noble/hashes/sha256";
 import { bytesToHex } from "@noble/hashes/utils";
 import { MIN_POW, minePow } from "./pow";
-import { NPUB_PRO_API } from "@/consts";
 import { nip19 } from "nostr-tools";
+import { NPUB_PRO_API } from "@/consts";
 
 export const AuthContext = createContext<{
   isAuth: boolean;
@@ -52,6 +50,7 @@ export let userIsDelegated = false;
 export let userIsReadOnly = false;
 export let userToken = "";
 let userTokenPubkey = "";
+const outboxCache = new Map<string, string[]>();
 
 const KIND_NIP98 = 27235;
 const KIND_DELETE = 5;
@@ -123,6 +122,21 @@ function setUserToken(token: string, pubkey: string) {
   } catch {}
 }
 
+export async function getOutboxRelays(pubkey: string) {
+  const c = outboxCache.get(pubkey);
+  if (c) return c;
+
+  const relays = [
+    ...new Set([
+      ...(await fetchOutboxRelays(ndk, [pubkey])),
+      ...DEFAULT_RELAYS,
+    ]),
+  ];
+
+  outboxCache.set(pubkey, relays);
+  return relays;
+}
+
 export async function onAuth(e: any) {
   console.log("nlAuth", e);
   const authed = e.detail.type !== "logout";
@@ -138,7 +152,7 @@ export async function onAuth(e: any) {
       setUserToken("", "");
     }
 
-    const outboxRelays = await fetchOutboxRelays(ndk, [userPubkey]);
+    const outboxRelays = await getOutboxRelays(userPubkey);
     userRelays.push(...outboxRelays);
     console.log("pubkey relays", userRelays);
 
@@ -251,6 +265,7 @@ export async function fetchWithSession(
   body: any | undefined = undefined,
   method?: string,
 ) {
+  url = `${NPUB_PRO_API}${url}`;
   try {
     method = method || (body ? "POST" : "GET");
     const fetchIt = async () => {
@@ -301,7 +316,7 @@ export async function publishSiteEvent(
     if (site.pubkey !== SERVER_PUBKEY)
       throw new Error("Cannot edit site signed by your keys in delegated mode");
     const reply = await fetchWithSession(
-      `${NPUB_PRO_API}/site?relays=${relays.join(",")}`,
+      `/site?relays=${relays.join(",")}`,
       site.rawEvent(),
     );
     if (reply.status !== 200) throw new Error("Failed to publish event");
@@ -325,6 +340,7 @@ export async function publishSiteEvent(
     // publish
     const set = NDKRelaySet.fromRelayUrls(relays, ndk);
     console.log("publishing to relays", relays, set);
+
     const r = await site.publish(set);
     console.log(
       "published site event to",
@@ -350,7 +366,7 @@ export async function deleteSiteEvent(site: NostrEvent, relays: string[]) {
     });
 
     const reply = await fetchWithSession(
-      `${NPUB_PRO_API}/site?relays=${relays.join(",")}&site=${naddr}&id=${site.id}`,
+      `/site?relays=${relays.join(",")}&site=${naddr}&id=${site.id}`,
       undefined,
       "DELETE",
     );
@@ -435,3 +451,21 @@ export async function filterDeleted(events: NDKEvent[], relays: string[]) {
     }
   }
 }
+
+export function parseProfileEvent(pubkey: string, e?: NDKEvent) {
+  const npub = nip19.npubEncode(pubkey).substring(0, 8) + "...";
+  let name = npub;
+  let img = undefined;
+  if (e) {
+    try {
+      const meta = JSON.parse(e.content);
+      name = meta.display_name || meta.name || npub;
+      img = meta.picture;
+    } catch {}
+  }
+  return {
+    name,
+    img,
+  };
+}
+

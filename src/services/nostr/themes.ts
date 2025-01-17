@@ -35,7 +35,7 @@ import {
   userRelays,
 } from "./nostr";
 import { nip19 } from "nostr-tools";
-import { NPUB_PRO_API, NPUB_PRO_DOMAIN, THEMES_PREVIEW } from "@/consts";
+import { NPUB_PRO_DOMAIN, THEMES_PREVIEW } from "@/consts";
 import { isEqual, omit } from "lodash";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
 import { bytesToHex, randomBytes } from "@noble/hashes/utils";
@@ -206,8 +206,8 @@ export class Mutex {
     return this.queue.length > 0;
   }
 
-  public async run(cb: () => Promise<any>) {
-    return new Promise(async (ok, err) => {
+  public async run<T>(cb: () => Promise<T>) {
+    return new Promise<T>(async (ok, err) => {
       this.queue.push({ cb, ok, err });
       if (!this.running && this.queue.length === 1) this.execute();
     });
@@ -519,7 +519,7 @@ async function preparePreviewSite() {
     // load posts
     await loadSite();
 
-    console.log("updated site event", site);
+    console.log("updated site event", site, hashtags);
   }
 
   // save local copy
@@ -774,7 +774,7 @@ export async function publishPreviewSite() {
         console.log("naddr", naddr);
         console.log("requesting domain", requestedDomain);
         const reply = await fetchWithSession(
-          `${NPUB_PRO_API}/reserve?domain=${requestedDomain}&site=${naddr}`,
+          `/reserve?domain=${requestedDomain}&site=${naddr}`,
         );
         if (reply.status !== 200)
           throw new Error("Failed to reserve domain name");
@@ -802,7 +802,7 @@ export async function publishPreviewSite() {
         const u = new URL(url);
         if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
           const reply = await fetchWithSession(
-            `${NPUB_PRO_API}/deploy?domain=${u.hostname}&site=${naddr}`,
+            `/deploy?domain=${u.hostname}&site=${naddr}`,
           );
           if (reply.status !== 200) throw new Error("Failed to deploy");
 
@@ -918,9 +918,7 @@ export async function prefetchThemes(ids: string[]) {
 }
 
 export async function checkNpubProDomain(domain: string, naddr: string) {
-  const reply = await fetchWithSession(
-    `${NPUB_PRO_API}/check?domain=${domain}&site=${naddr}`,
-  );
+  const reply = await fetchWithSession(`/check?domain=${domain}&site=${naddr}`);
   switch (reply.status) {
     case 200:
       return "ok";

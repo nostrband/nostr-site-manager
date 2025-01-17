@@ -78,7 +78,7 @@ const mutex = new Mutex();
 
 let mounted = false;
 
-export const Design = () => {
+const Design = () => {
   const router = useRouter();
   const { isAuth } = useContext(AuthContext);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -752,3 +752,5 @@ export const Design = () => {
     </>
   );
 };
+
+export default Design

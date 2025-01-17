@@ -23,6 +23,7 @@ import {
   matchPostsToFilters,
   parseAddr,
   parseATag,
+  eventId,
 } from "libnostrsite";
 import {
   addOnAuth,
@@ -41,14 +42,16 @@ import {
 } from "./nostr";
 import { nip19 } from "nostr-tools";
 import { SERVER_PUBKEY, SITE_RELAY } from "./consts";
-import { NPUB_PRO_API, NPUB_PRO_DOMAIN } from "@/consts";
+import { NPUB_PRO_DOMAIN } from "@/consts";
+import { fetchSubmits } from "./content";
+import { Mutex } from "./themes";
 
 // FIXME reuse decls from libnostrsite
 const KIND_PINNED_ON_SITE = 30516;
 
 const sites: Site[] = [];
 const packageThemes = new Map<string, string>();
-const parser = new NostrParser("http://localhost/");
+export const parser = new NostrParser("http://localhost/");
 let sitesPromise: Promise<void> | undefined = undefined;
 
 export function hasSite(id: string) {
@@ -120,7 +123,8 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   srm(e, "settings", "core");
   stv3(e, "settings", "core", "codeinjection_head", data.codeinjection_head);
   stv3(e, "settings", "core", "codeinjection_foot", data.codeinjection_foot);
-  stv3(e, "settings", "core", "posts_per_page", data.postsPerPage);
+  // ensure it's string!
+  stv3(e, "settings", "core", "posts_per_page", "" + data.postsPerPage);
   if (data.signupStartNjump)
     stv3(e, "settings", "core", "nostr_login.signup_start_njump", "true");
 
@@ -145,9 +149,11 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
 
   // edit tags
   srm(e, "include");
-  for (const t of [...new Set(data.hashtags)])
-    e.tags.push(["include", "t", t.replace("#", "")]);
-  if (!data.hashtags.length) stv(e, "include", "*");
+  if (data.autoSubmit) {
+    for (const t of [...new Set(data.hashtags)])
+      e.tags.push(["include", "t", t.replace("#", "")]);
+    if (!data.hashtags.length) stv(e, "include", "*");
+  }
   for (const t of [...new Set(data.hashtags_homepage)])
     e.tags.push(["include", "t", t.replace("#", ""), "", "homepage"]);
 
@@ -169,7 +175,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   // console.log("domain", domain, "oldDomain", oldDomain);
   if (domain && domain !== oldDomain) {
     const reply = await fetchWithSession(
-      `${NPUB_PRO_API}/reserve?domain=${domain}&site=${naddr}&no_retry=true`
+      `/reserve?domain=${domain}&site=${naddr}&no_retry=true`
     );
     if (reply.status !== 200) throw new Error("Failed to reserve");
     const r = await reply.json();
@@ -186,7 +192,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   {
     const reply = await fetchWithSession(
       // from=oldDomain - delete the old site after 7 days
-      `${NPUB_PRO_API}/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`
+      `/deploy?domain=${domain}&site=${naddr}&from=${oldDomain}`
     );
     if (reply.status !== 200) throw new Error("Failed to deploy");
 
@@ -219,7 +225,7 @@ export async function deleteSite(siteId: string) {
   }
 
   const reply = await fetchWithSession(
-    `${NPUB_PRO_API}/delete?domain=${domain}&site=${siteId}`
+    `/delete?domain=${domain}&site=${siteId}`
   );
   if (reply.status !== 200) throw new Error("Failed to delete domain");
   const r = await reply.json();
@@ -236,6 +242,7 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
     themeId: packageThemes.get(s.extensions?.[0].event_id || "") || "",
     themeName: s.extensions?.[0].petname || "",
     contributors: s.contributor_pubkeys,
+    autoSubmit: Boolean(s.include_all) || Boolean(s.include_tags?.length),
     hashtags:
       s.include_tags?.filter((t) => t.tag === "t").map((t) => "#" + t.value) ||
       [],
@@ -324,6 +331,11 @@ function parseSite(ne: NostrEvent) {
   return parser.parseSite(addr, e);
 }
 
+export async function getSiteSettings(siteId: string) {
+  await fetchSites();
+  return sites.find((s) => s.id === siteId);
+}
+
 export async function fetchSites() {
   console.log("fetchSites", userPubkey);
   if (!userPubkey) throw new Error("Auth please");
@@ -348,6 +360,12 @@ export async function fetchSites() {
             // @ts-ignore
             kinds: [KIND_SITE],
             "#u": [userPubkey],
+          },
+          // contributor
+          {
+            // @ts-ignore
+            kinds: [KIND_SITE],
+            "#p": [userPubkey],
           },
         ],
         relays,
@@ -386,40 +404,45 @@ addOnAuth(async (type: string) => {
 });
 
 const profileCache = new Map<string, NDKEvent | null>();
+const profileFetchMutex = new Mutex();
 
 export async function fetchProfiles(pubkeys: string[]): Promise<NDKEvent[]> {
-  const res = [];
-  const req = [];
-  for (const p of pubkeys) {
-    const c = profileCache.get(p);
-    if (c === undefined) {
-      req.push(p);
-    } else if (c !== null) {
-      res.push(c);
+  return profileFetchMutex.run(async () => {
+    const res: NDKEvent[] = [];
+    const req: string[] = [];
+    for (const p of pubkeys) {
+      const c = profileCache.get(p);
+      if (c === undefined) {
+        req.push(p);
+      } else if (c !== null) {
+        res.push(c);
+      }
     }
-  }
 
-  if (!req.length) return res;
+    if (!req.length) {
+      return res;
+    }
 
-  const events = await fetchEvents(
-    ndk,
-    {
-      kinds: [KIND_PROFILE],
-      authors: req,
-    },
-    OUTBOX_RELAYS
-  );
+    const events = await fetchEvents(
+      ndk,
+      {
+        kinds: [KIND_PROFILE],
+        authors: req,
+      },
+      OUTBOX_RELAYS
+    );
 
-  for (const e of events) {
-    profileCache.set(e.pubkey, e);
-    res.push(e);
-  }
+    for (const e of events) {
+      profileCache.set(e.pubkey, e);
+      res.push(e);
+    }
 
-  for (const p of req) {
-    if (!profileCache.get(p)) profileCache.set(p, null);
-  }
+    for (const p of req) {
+      if (!profileCache.get(p)) profileCache.set(p, null);
+    }
 
-  return res;
+    return res;
+  });
 }
 
 export async function searchProfiles(text: string): Promise<NDKEvent[]> {
@@ -487,7 +510,7 @@ export async function searchSites(
 
 export const fetchCertDomain = async (domain: string) => {
   const reply = await fetchWithSession(
-    `${NPUB_PRO_API}/cert?domain=${domain}`,
+    `/cert?domain=${domain}`,
     undefined,
     "POST"
   );
@@ -496,14 +519,14 @@ export const fetchCertDomain = async (domain: string) => {
 };
 
 export const fetchCertDomainStatus = async (domain: string) => {
-  const reply = await fetchWithSession(`${NPUB_PRO_API}/cert?domain=${domain}`);
+  const reply = await fetchWithSession(`/cert?domain=${domain}`);
   if (reply.status === 200) return reply.json();
   else throw new Error("Failed to fetch certificate status");
 };
 
 export const fetchAttachDomain = async (domain: string, site: string) => {
   const reply = await fetchWithSession(
-    `${NPUB_PRO_API}/attach?domain=${domain}&site=${site}`,
+    `/attach?domain=${domain}&site=${site}`,
     undefined,
     "POST"
   );
@@ -512,16 +535,14 @@ export const fetchAttachDomain = async (domain: string, site: string) => {
 };
 
 export const fetchAttachDomainStatus = async (domain: string, site: string) => {
-  const reply = await fetchWithSession(
-    `${NPUB_PRO_API}/attach?domain=${domain}&site=${site}`
-  );
+  const reply = await fetchWithSession(`/attach?domain=${domain}&site=${site}`);
 
   if (reply.status === 200) return reply.json();
   else throw new Error("Failed to fetch domain status");
 };
 
 export const fetchDomains = async (site: string) => {
-  const reply = await fetchWithSession(`${NPUB_PRO_API}/attach?site=${site}`);
+  const reply = await fetchWithSession(`/attach?site=${site}`);
   return reply.json();
 };
 
@@ -599,6 +620,7 @@ export const fetchPins = async (siteId: string) => {
   if (idFilter.ids?.length) pinFilters.push(idFilter);
   if (addrFilter.authors?.length) pinFilters.push(addrFilter);
 
+  console.log("pinFilters", pinFilters);
   if (!pinFilters.length) return [];
 
   const pinned = await fetchEvents(ndk, pinFilters, [
@@ -607,12 +629,19 @@ export const fetchPins = async (siteId: string) => {
   ]);
   console.log("pinned", pinned);
 
+  const submits = await fetchSubmits(site);
+
   const siteFilters = createSiteFilters({
     settings: site,
     limit: 10,
   });
 
-  const valid = [...pinned].filter((p) => matchPostsToFilters(p, siteFilters));
+  const valid = [...pinned].filter(
+    (p) =>
+      matchPostsToFilters(p, siteFilters) ||
+      submits.find((s) => s.id === eventId(p))
+  );
+  console.log("pinned valid", valid);
   const posts: Post[] = [];
   for (const e of valid) {
     const post = await parser.parseEvent(e);
@@ -627,6 +656,8 @@ export const savePins = async (siteId: string, ids: string[]) => {
 
   const site = sites.find((s) => s.id === siteId);
   if (!site) return [];
+
+  if (site.admin_pubkey !== userPubkey) throw new Error("Only admin can edit pins");
 
   const addr = parseAddr(siteId);
 

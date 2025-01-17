@@ -85,6 +85,7 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   postsPerPage: "",
   contentActionMain: "",
   contentActions: [],
+  signupStartNjump: false,
 };
 
 export const SettingPage = () => {
@@ -222,6 +223,13 @@ export const SettingPage = () => {
   const handleChangeContentActions = useCallback(
     (value: string[]) => {
       setFieldValue("contentActions", value);
+    },
+    [setFieldValue]
+  );
+
+  const handleChangeSignupStartNjump = useCallback(
+    (value: boolean) => {
+      setFieldValue("signupStartNjump", value);
     },
     [setFieldValue]
   );
@@ -416,6 +424,8 @@ export const SettingPage = () => {
               handleChange={handleChange}
               submitForm={submitForm}
               selectedContentActions={values.contentActions}
+              signupStartNjump={values.signupStartNjump}
+              handleSignupStartNjump={handleChangeSignupStartNjump}
               isLoading={isLoading}
             />
 

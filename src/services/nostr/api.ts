@@ -125,6 +125,8 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   stv3(e, "settings", "core", "codeinjection_foot", data.codeinjection_foot);
   // ensure it's string!
   stv3(e, "settings", "core", "posts_per_page", "" + data.postsPerPage);
+  if (data.signupStartNjump)
+    stv3(e, "settings", "core", "nostr_login.signup_start_njump", "true");
 
   // FIXME move to plugin settings later
   stv3(e, "settings", "core", "content_cta_main", data.contentActionMain);
@@ -288,6 +290,7 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
           id: "" + i,
         })) || [],
     },
+    signupStartNjump: s.config.get("nostr_login.signup_start_njump") === "true",
     postsPerPage: s.config.get("posts_per_page") || "",
     contentActionMain: s.config.get("content_cta_main") || "",
     contentActions: (s.config.get("content_cta_list") || "")
@@ -541,6 +544,36 @@ export const fetchAttachDomainStatus = async (domain: string, site: string) => {
 export const fetchDomains = async (site: string) => {
   const reply = await fetchWithSession(`/attach?site=${site}`);
   return reply.json();
+};
+
+export const searchPosts = async (siteId: string, query: string) => {
+  const site = sites.find((s) => s.id === siteId);
+  if (!site) return [];
+
+  const filters = createSiteFilters({
+    settings: site,
+    limit: 10,
+  });
+
+  console.log("search filters", filters);
+
+  const events = await fetchEvents(
+    ndk,
+    filters.map((f) => ({ ...f, search: query })),
+    SEARCH_RELAYS
+  );
+
+  console.log("searched events", events);
+
+  const valid = [...events].filter((e) => matchPostsToFilters(e, filters));
+
+  const posts: Post[] = [];
+  for (const e of valid) {
+    const post = await parser.parseEvent(e);
+    if (post) posts.push(post);
+  }
+
+  return posts;
 };
 
 export const fetchPins = async (siteId: string) => {

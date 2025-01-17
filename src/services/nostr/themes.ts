@@ -180,40 +180,6 @@ async function fetchPackages(themes: NDKEvent[] | NostrEvent[]) {
   return await fetchEvents(ndk, packageFilter, [SITE_RELAY], 10000);
 }
 
-type MutexEntry = {
-  cb: () => Promise<any>;
-  ok: (r: any) => void;
-  err: (r: any) => void;
-};
-
-export class Mutex {
-  private queue: MutexEntry[] = [];
-  private running = false;
-
-  private async execute() {
-    const { cb, ok, err } = this.queue.shift()!;
-    this.running = true;
-    try {
-      ok(await cb());
-    } catch (e) {
-      err(e);
-    }
-    this.running = false;
-    if (this.queue.length > 0) this.execute();
-  }
-
-  public hasPending() {
-    return this.queue.length > 0;
-  }
-
-  public async run<T>(cb: () => Promise<T>) {
-    return new Promise<T>(async (ok, err) => {
-      this.queue.push({ cb, ok, err });
-      if (!this.running && this.queue.length === 1) this.execute();
-    });
-  }
-}
-
 export async function setPreviewSettings(ns: PreviewSettings) {
   await prefetchThemesPromise;
 
@@ -525,25 +491,6 @@ async function preparePreviewSite() {
   // save local copy
   await storePreview();
 }
-
-// export async function preparePreview() {
-//   // make sure themes are ready
-//   await prefetchThemesPromise;
-
-//   // mutex
-//   if (preparePromise) await preparePromise;
-
-//   // prepare
-//   console.log("prepareState", prepareState);
-//   if (prepareState === "stale") {
-//     preparePromise = prepareUpdateSite().then(() => {
-//       prepareState = "ready";
-//       console.log("prepareState", prepareState);
-//     });
-//   }
-
-//   return preparePromise;
-// }
 
 async function getParsedTheme(id = "") {
   id = id || settings!.themeId;

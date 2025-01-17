@@ -15,7 +15,6 @@ import {
   setPreviewSettings,
   getPreviewHashtags,
   getPreviewKinds,
-  Mutex,
   getPreviewSiteInfo,
   PreviewSettings,
 } from "@/services/nostr/themes";
@@ -25,6 +24,7 @@ import { SpinnerCustom } from "@/components/SpinnerCustom";
 import { PreviewHeader } from "@/components/PreviewHeader";
 import { isEqual } from "lodash";
 import { useSnackbar } from "notistack";
+import { Mutex } from "@/services/nostr/utils";
 
 // const hashtags = [
 //   "#cooking",

@@ -28,7 +28,6 @@ import { useFormik } from "formik";
 import { MuiColorInput } from "mui-color-input";
 import { AuthContext } from "@/services/nostr/nostr";
 import {
-  Mutex,
   getPreviewSiteInfo,
   getPreviewSiteThemeCustomSettings,
   getPreviewThemeName,
@@ -43,6 +42,7 @@ import { useSnackbar } from "notistack";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { CustomConfigType } from "./types";
 import { generateFormFields } from "./utils";
+import { Mutex } from "@/services/nostr/utils";
 
 interface DesignValues {
   name: string;

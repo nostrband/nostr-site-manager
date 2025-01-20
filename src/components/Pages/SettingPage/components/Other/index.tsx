@@ -192,11 +192,17 @@ export const Other = memo(
           <FormControlLabel
             disabled={!isEdit}
             control={
-              <Switch checked={signupStartNjump} onChange={handleChangeSignupStartNjump} />
+              <Switch
+                checked={signupStartNjump}
+                onChange={handleChangeSignupStartNjump}
+              />
             }
-            label={signupStartNjump ? "Signup with Start.Njump.me ON" : "Signup with Start.Njump.me OFF"}
+            label={
+              signupStartNjump
+                ? "Signup with Start.Njump.me ON"
+                : "Signup with Start.Njump.me OFF"
+            }
           />
-
         </StyledFormFields>
       </StyledSettingBlock>
     );

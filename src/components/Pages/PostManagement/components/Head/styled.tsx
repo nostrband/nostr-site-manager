@@ -1,7 +1,7 @@
 "use client";
 import { styled } from "@mui/material/styles";
 import { PageTitle } from "@/components/shared/styled";
-import { Alert, AlertTitle, IconButton } from "@mui/material";
+import { Alert, AlertTitle, Box, Button, IconButton } from "@mui/material";
 
 export const StyledTitle = styled(PageTitle)(({ theme }) => ({
   display: "flex",
@@ -25,6 +25,16 @@ export const StyledAlertTitle = styled(AlertTitle)(() => ({
 }));
 
 export const StyledButtonInfo = styled(IconButton)(() => ({
-  marginLeft: "auto",
   fontSize: "24px",
+}));
+
+export const StyledFilterActions = styled(Box)(() => ({
+  marginLeft: "auto",
+  display: "flex",
+  alignItems: "center",
+  gap: "24px",
+}));
+
+export const StyledAddPostButton = styled(Button)(() => ({
+  width: "160px",
 }));

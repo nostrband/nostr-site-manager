@@ -6,6 +6,7 @@ import { InterDisplay } from "@/mui/theme";
 export const StyledButton = styled(Button)(() => ({
   borderRadius: "1000px",
   textTransform: "none",
+  color: "#000",
 }));
 
 export const StyledButtonGroup = styled(Box)(({ theme }) => ({

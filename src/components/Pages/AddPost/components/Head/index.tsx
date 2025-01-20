@@ -12,7 +12,7 @@ import {
 import { useBack } from "@/hooks/useBackPage";
 
 export const Head = ({ isSearchResult }: { isSearchResult: boolean }) => {
-  const flagAlert = "isOpenAlertInfo";
+  const flagAlert = "isOpenAlertInfoPostAdd";
   const { back } = useBack();
 
   const [isOpenAlertInfo, setOpenAlertInfo] = useState(false);

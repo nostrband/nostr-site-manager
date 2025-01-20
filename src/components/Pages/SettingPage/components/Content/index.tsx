@@ -40,7 +40,7 @@ interface ITitleDescription extends IBaseSetting {
 
 const kindsMap: { [key: number]: string } = {
   1: "Notes",
-  30023: "Long-form posts",
+  30023: "Articles",
 };
 
 export const Content = memo(

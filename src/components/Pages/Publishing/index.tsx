@@ -144,4 +144,4 @@ const Publishing = () => {
   );
 };
 
-export default Publishing
+export default Publishing;

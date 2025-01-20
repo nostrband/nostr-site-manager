@@ -192,7 +192,7 @@ const theme = createTheme({
       light: "#fff",
       main: "rgba(105, 111, 125, 0.08)",
       dark: "#A5A1A4",
-      contrastText: "#fff",
+      contrastText: "#292C34",
     },
     darkInfo: {
       light: "#fff",

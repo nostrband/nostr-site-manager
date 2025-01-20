@@ -27,7 +27,7 @@ export async function fetchNostrJson(siteId: string) {
     ndk,
     siteId,
     NOSTR_JSON_FILE,
-    relays
+    relays,
   );
 
   if (!nostrJsonEvent) return undefined;
@@ -78,7 +78,7 @@ export async function editNostrJson(siteId: string, content: string) {
 
   const reply = await fetchWithSession(
     // from=oldDomain - delete the old site after 7 days
-    `/deploy?site=${siteId}`
+    `/deploy?site=${siteId}`,
   );
   if (reply.status !== 200) throw new Error("Failed to deploy");
 

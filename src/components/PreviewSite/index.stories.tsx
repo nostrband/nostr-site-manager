@@ -38,7 +38,8 @@ export const Primary: Story = {
     accentColor: "#FF7BFD",
     description:
       "Galaxe top projects on Galaxe platform ✅. Chek out latest new from SocialFi 🔥",
-    adminPubkey: "f0ff87e7796ba86fc84b4807b25a5dee206d724c6f61aa8853975a39deeeff58",
+    adminPubkey:
+      "f0ff87e7796ba86fc84b4807b25a5dee206d724c6f61aa8853975a39deeeff58",
     isLink: true,
     isPublic: false,
     isLinkToOpenSite: true,

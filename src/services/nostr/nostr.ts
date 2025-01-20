@@ -468,4 +468,3 @@ export function parseProfileEvent(pubkey: string, e?: NDKEvent) {
     img,
   };
 }
-

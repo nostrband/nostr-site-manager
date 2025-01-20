@@ -24,6 +24,8 @@ export const PostManagement = () => {
   const [posts, setPosts] = useState<SearchPost[]>([]);
   const filterRef = useRef<FilterRef | null>(null);
 
+  const linkToAddPost = `/admin/${siteId}/posts/add`;
+
   const handleLoadMore = () => {
     const lastPost = posts.at(-1);
 
@@ -56,9 +58,10 @@ export const PostManagement = () => {
 
   return (
     <Container maxWidth="lg">
-      <Head />
+      <Head linkToAddPost={linkToAddPost} />
 
       <Filter
+        linkToAddPost={linkToAddPost}
         setIsEmpty={setIsEmpty}
         handleLoadingMore={setLoadingMore}
         ref={filterRef}

@@ -100,6 +100,7 @@ interface IFilter {
   setPosts: Dispatch<SetStateAction<SearchPost[]>>;
   setIsEmpty: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
+  linkToAddPost: string;
 }
 
 const transformObject = (input: InputObject): Partial<InputObject> => {
@@ -147,6 +148,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
       setPosts,
       handleLoadingMore,
       setIsEmpty,
+      linkToAddPost,
     },
     ref,
   ) => {
@@ -160,8 +162,6 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
       () => new URLSearchParams(params.toString()),
       [params],
     );
-
-    const linkToAddPost = `/admin/${siteId}/posts/add`;
 
     const [isOpenModal, setOpenModal] = useState(false);
 
@@ -721,8 +721,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
           </Dialog>
         )}
 
-        <StyledActionsButtonWrap>
-          {!isDesktop && (
+        {!isDesktop && (
+          <StyledActionsButtonWrap>
             <Button
               onClick={handleClickOpen}
               size="large"
@@ -733,19 +733,20 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
             >
               Filter
             </Button>
-          )}
-          <Button
-            LinkComponent={Link}
-            href={linkToAddPost}
-            size="large"
-            fullWidth
-            color="decorate"
-            variant="contained"
-            endIcon={<PlusIcon fontSize="inherit" />}
-          >
-            Add post
-          </Button>
-        </StyledActionsButtonWrap>
+
+            <Button
+              LinkComponent={Link}
+              href={linkToAddPost}
+              size="large"
+              fullWidth
+              color="decorate"
+              variant="contained"
+              endIcon={<PlusIcon fontSize="inherit" />}
+            >
+              Add post
+            </Button>
+          </StyledActionsButtonWrap>
+        )}
       </>
     );
   },

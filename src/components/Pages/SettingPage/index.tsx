@@ -238,7 +238,7 @@ export const SettingPage = () => {
     (value: boolean) => {
       setFieldValue("signupStartNjump", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeKinds = useCallback(

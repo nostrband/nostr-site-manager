@@ -76,7 +76,7 @@ export const PreviewSite = memo(function PreviewSite({
   // put them all into the same bucket
   pubkeysContributors = useMemo(
     () => [...new Set([...pubkeysContributors, adminPubkey])],
-    [pubkeysContributors, adminPubkey]
+    [pubkeysContributors, adminPubkey],
   );
 
   if (userPubkey && !pubkeysContributors.includes(userPubkey))
@@ -89,7 +89,7 @@ export const PreviewSite = memo(function PreviewSite({
   const allContributors = useContributors(pubkeysContributors);
   const mainContributorPubkey = userPubkey || adminPubkey;
   const otherPubkeys = pubkeysContributors.filter(
-    (p) => p !== mainContributorPubkey
+    (p) => p !== mainContributorPubkey,
   );
 
   const main = allContributors.find((c) => c.pubkey === mainContributorPubkey);
@@ -117,7 +117,7 @@ export const PreviewSite = memo(function PreviewSite({
         </>
       );
     },
-    [isLink, link]
+    [isLink, link],
   );
 
   return (
@@ -192,7 +192,7 @@ export const PreviewSite = memo(function PreviewSite({
                   <StyledAvatarGroup max={3}>
                     {otherPubkeys.map((pubkey, i) => {
                       const profile = allContributors.find(
-                        (c) => c.pubkey === pubkey
+                        (c) => c.pubkey === pubkey,
                       );
                       const info = parseProfileEvent(pubkey, profile);
                       return (

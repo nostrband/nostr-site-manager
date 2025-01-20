@@ -1,17 +1,27 @@
 "use client";
-import { ChevronLeftIcon, CrossIcon, InfoIcon } from "@/components/Icons";
+import {
+  ChevronLeftIcon,
+  CrossIcon,
+  InfoIcon,
+  PlusIcon,
+} from "@/components/Icons";
 import { Button, Collapse, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
+  StyledAddPostButton,
   StyledAlert,
   StyledAlertTitle,
   StyledButtonInfo,
+  StyledFilterActions,
   StyledTitle,
 } from "./styled";
 import { useBack } from "@/hooks/useBackPage";
+import Link from "next/link";
+import useResponsive from "@/hooks/useResponsive";
 
-export const Head = () => {
-  const flagAlert = "isOpenAlertInfo";
+export const Head = ({ linkToAddPost }: { linkToAddPost: string }) => {
+  const flagAlert = "isOpenAlertInfoPost";
+  const isDesktop = useResponsive("up", "sm");
   const { back } = useBack();
 
   const [isOpenAlertInfo, setOpenAlertInfo] = useState(false);
@@ -54,14 +64,29 @@ export const Head = () => {
           <ChevronLeftIcon />
         </Button>
         Posts
-        <StyledButtonInfo
-          onClick={handleOpenAlertInfo}
-          color="info"
-          aria-label="info"
-          size="small"
-        >
-          <InfoIcon fontSize="inherit" />
-        </StyledButtonInfo>
+        <StyledFilterActions>
+          {isDesktop && (
+            <StyledAddPostButton
+              LinkComponent={Link}
+              href={linkToAddPost}
+              size="large"
+              fullWidth
+              color="decorate"
+              variant="contained"
+              endIcon={<PlusIcon fontSize="inherit" />}
+            >
+              Add post
+            </StyledAddPostButton>
+          )}
+          <StyledButtonInfo
+            onClick={handleOpenAlertInfo}
+            color="info"
+            aria-label="info"
+            size="small"
+          >
+            <InfoIcon fontSize="inherit" />
+          </StyledButtonInfo>
+        </StyledFilterActions>
       </StyledTitle>
 
       <Collapse in={isOpenAlertInfo}>

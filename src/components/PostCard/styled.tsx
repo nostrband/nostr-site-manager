@@ -215,7 +215,7 @@ export const StyledAddButton = styled(
     : isWaiting
       ? "initial"
       : isAdded
-        ? "rgba(255, 62, 217, 0.5)"
+        ? "rgba(255, 62, 217, 0.3)"
         : "initial",
 }));
 

@@ -90,7 +90,11 @@ export const ModalSites = ({
       <StyledDialogContent sx={{ p: 0 }}>
         <Card
           elevation={0}
-          sx={{ borderTop: "1px solid #ececec", borderRadius: 0 }}
+          sx={{
+            borderTop: "1px solid #ececec",
+            borderRadius: 0,
+            padding: "16px",
+          }}
         >
           <StyledCardHeader
             avatar={
@@ -107,9 +111,10 @@ export const ModalSites = ({
               height="250"
               image={getSite?.image}
               alt={getSite?.name}
+              sx={{ marginTop: "16px", borderRadius: "8px" }}
             />
           ) : (
-            <StyledCardNoImage>
+            <StyledCardNoImage sx={{ marginTop: "16px" }}>
               <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
             </StyledCardNoImage>
           )}
@@ -117,7 +122,13 @@ export const ModalSites = ({
       </StyledDialogContent>
 
       <Box
-        sx={{ display: "flex", padding: 2, justifyContent: "space-between" }}
+        sx={{
+          display: "flex",
+          padding: 2,
+          paddingBottom: 0,
+          paddingTop: 0,
+          justifyContent: "space-between",
+        }}
       >
         <StyledIconButton color="primary" size="small" onClick={onPrevSite}>
           <ArrowBackIcon />

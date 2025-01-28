@@ -1,5 +1,6 @@
 "use client";
 
+import { SUPPORTED_KINDS, SUPPORTED_KIND_NAMES } from "@/consts";
 import {
   Checkbox,
   ListItemText,
@@ -9,11 +10,6 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-
-const kindsMap: { [key: number]: string } = {
-  1: "Notes",
-  30023: "Articles",
-};
 
 interface ITypesFilter {
   handleChangeTypes: (value: number[]) => void;
@@ -40,7 +36,7 @@ export const TypesFilter = ({
   };
 
   const getKinds = useCallback(async () => {
-    const dataKinds = [1, 30023];
+    const dataKinds = [...SUPPORTED_KINDS];
     setTypes(dataKinds);
   }, []);
 
@@ -58,13 +54,13 @@ export const TypesFilter = ({
         onChange={handleChange}
         input={<OutlinedInput label={label} />}
         renderValue={(selected) =>
-          selected.map((val) => kindsMap[val]).join(", ")
+          selected.map((val) => SUPPORTED_KIND_NAMES[val]).join(", ")
         }
       >
         {types.map((kind) => (
           <MenuItem key={kind} value={kind}>
             <Checkbox checked={selectedTypes.indexOf(kind) > -1} />
-            <ListItemText primary={kindsMap[kind]} />
+            <ListItemText primary={SUPPORTED_KIND_NAMES[kind]} />
           </MenuItem>
         ))}
       </Select>

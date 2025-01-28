@@ -26,6 +26,7 @@ import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import { fetchTopHashtags } from "@/services/nostr/themes";
 import useResponsive from "@/hooks/useResponsive";
+import { SUPPORTED_KINDS, SUPPORTED_KIND_NAMES } from "@/consts";
 
 interface ITitleDescription extends IBaseSetting {
   selectedHashtags: string[];
@@ -37,11 +38,6 @@ interface ITitleDescription extends IBaseSetting {
   title: string;
   description: string;
 }
-
-const kindsMap: { [key: number]: string } = {
-  1: "Notes",
-  30023: "Articles",
-};
 
 export const Content = memo(
   ({
@@ -107,12 +103,12 @@ export const Content = memo(
         target: { value },
       } = event;
       handleChangeKinds(
-        typeof value === "string" ? value.split(",").map(Number) : value,
+        typeof value === "string" ? value.split(",").map(Number) : value
       );
     };
 
     const getKinds = useCallback(async () => {
-      const dataKinds = [1, 30023];
+      const dataKinds = [...SUPPORTED_KINDS];
       setKinds(dataKinds);
     }, []);
 
@@ -151,7 +147,7 @@ export const Content = memo(
                   s.startsWith("#") ? s : `#${s}`;
 
                 const newValues = value.map((v) =>
-                  typeof v === "string" ? newHashtag(v) : newHashtag(v.title),
+                  typeof v === "string" ? newHashtag(v) : newHashtag(v.title)
                 );
                 const uniqueValues = [...new Set(newValues)];
                 handleChangeHashtags(uniqueValues);
@@ -172,12 +168,12 @@ export const Content = memo(
                       checked={selectedHashtags.indexOf(option.title) > -1}
                       onClick={(e) => {
                         const isSelected = selectedHashtags.includes(
-                          option.title,
+                          option.title
                         );
                         if (isSelected) {
                           e.stopPropagation();
                           const newSelectedHashtags = selectedHashtags.filter(
-                            (el) => el !== option.title,
+                            (el) => el !== option.title
                           );
 
                           handleChangeHashtags(newSelectedHashtags);
@@ -218,13 +214,13 @@ export const Content = memo(
               onChange={handleChange}
               input={<OutlinedInput disabled={!isEdit} label="Kinds" />}
               renderValue={(selected) =>
-                selected.map((val) => kindsMap[val]).join(", ")
+                selected.map((val) => SUPPORTED_KIND_NAMES[val]).join(", ")
               }
             >
               {kinds.map((kind, i) => (
                 <MenuItem key={i} value={kind}>
                   <Checkbox checked={selectedKinds.indexOf(kind) > -1} />
-                  <ListItemText primary={kindsMap[kind]} />
+                  <ListItemText primary={SUPPORTED_KIND_NAMES[kind]} />
                 </MenuItem>
               ))}
             </Select>
@@ -232,7 +228,7 @@ export const Content = memo(
         </StyledFormFields>
       </StyledSettingBlock>
     );
-  },
+  }
 );
 
 Content.displayName = "Content";

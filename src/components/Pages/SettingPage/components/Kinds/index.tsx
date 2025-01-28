@@ -9,7 +9,7 @@ import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { HASH_CONFIG, SUPPORTED_KIND_NAMES } from "@/consts";
+import { HASH_CONFIG, SUPPORTED_KINDS, SUPPORTED_KIND_NAMES } from "@/consts";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
@@ -43,7 +43,7 @@ export const Kinds = ({
   };
 
   const getKinds = useCallback(async () => {
-    const dataKinds = [1, 30023];
+    const dataKinds = [...SUPPORTED_KINDS];
     setKinds(dataKinds);
   }, []);
 

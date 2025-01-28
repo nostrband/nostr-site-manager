@@ -37,7 +37,7 @@
     "formik": "^2.4.6",
     "html-react-parser": "^5.2.1",
     "lexical": "^0.17.0",
-    "libnostrsite": "^1.0.99",
+    "libnostrsite": "^1.0.100",
     "lodash": "^4.17.21",
     "marked": "^15.0.4",
     "mui-color-input": "^5.0.1",

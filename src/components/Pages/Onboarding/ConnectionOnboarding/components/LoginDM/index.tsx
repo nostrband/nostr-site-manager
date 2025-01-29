@@ -79,7 +79,7 @@ export const LoginDM = ({ showEnterCode }: { showEnterCode: () => void }) => {
       </StyledDescriptionPage>
 
       <StyledVideo>
-        <video width="300" autoPlay loop muted>
+        <video playsInline width="300" autoPlay loop muted>
           <source src={"/video/1.mp4"} type="video/mp4" />
         </video>
       </StyledVideo>

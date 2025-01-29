@@ -98,7 +98,7 @@ export const LoginEnterCode = ({
       </StyledDescriptionPage>
 
       <StyledVideo>
-        <video width="300" autoPlay loop muted>
+        <video playsInline width="300" autoPlay loop muted>
           <source src={"/video/2.mp4"} type="video/mp4" />
         </video>
       </StyledVideo>

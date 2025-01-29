@@ -45,7 +45,7 @@ ndk.connect();
 
 export let userPubkey: string = "";
 export const userRelays: string[] = [];
-export let userProfile: NDKEvent | undefined = undefined;
+export let userProfile: NostrEvent | undefined = undefined;
 export let userIsDelegated = false;
 export let userIsReadOnly = false;
 export let userToken = "";
@@ -55,16 +55,27 @@ const outboxCache = new Map<string, string[]>();
 const KIND_NIP98 = 27235;
 const KIND_DELETE = 5;
 
+function getLocal(name: string) {
+  try {
+    return JSON.parse(localStorage.getItem(name) || "");
+  } catch {}
+}
+
 try {
   userToken = window.localStorage.getItem("token") || "";
   userTokenPubkey = window.localStorage.getItem("tokenPubkey") || "";
+  const lastAuth = getLocal("localAuth");
+  if (lastAuth) {
+    console.log("last auth", lastAuth);
+    onAuth({ detail: lastAuth });
+  }
 } catch {}
 
 export function srm(e: NDKEvent | NostrEvent, name: string, name1?: string) {
   if (!name1) e.tags = e.tags.filter((t) => t.length < 2 || t[0] !== name);
   else
     e.tags = e.tags.filter(
-      (t) => t.length < 3 || t[0] !== name || t[1] !== name1,
+      (t) => t.length < 3 || t[0] !== name || t[1] !== name1
     );
 }
 
@@ -78,10 +89,10 @@ export function stv2(
   e: NDKEvent | NostrEvent,
   prefix: string,
   name: string,
-  value: string,
+  value: string
 ) {
   const t = e.tags.find(
-    (t) => t.length >= 3 && t[0] === prefix && t[1] === name,
+    (t) => t.length >= 3 && t[0] === prefix && t[1] === name
   );
   if (t) t[2] = value;
   else e.tags.push([prefix, name, value]);
@@ -92,11 +103,10 @@ export function stv3(
   prefix: string,
   name: string,
   subname: string,
-  value: string,
+  value: string
 ) {
   const t = e.tags.find(
-    (t) =>
-      t.length >= 4 && t[0] === prefix && t[1] === name && t[2] === subname,
+    (t) => t.length >= 4 && t[0] === prefix && t[1] === name && t[2] === subname
   );
   if (t) t[3] = value;
   else e.tags.push([prefix, name, subname, value]);
@@ -113,7 +123,7 @@ export function addOnAuth(cb: (type: string) => Promise<void>) {
 }
 
 function setUserToken(token: string, pubkey: string) {
-  console.log("set token", pubkey, token);
+  // console.log("set token", pubkey, token);
   userToken = token;
   userTokenPubkey = pubkey;
   try {
@@ -138,10 +148,11 @@ export async function getOutboxRelays(pubkey: string) {
 }
 
 export async function onAuth(e: any) {
-  console.log("nlAuth", e);
+  localStorage.setItem("localAuth", JSON.stringify(e.detail));
+
   const authed = e.detail.type !== "logout";
   if (authed) {
-    userPubkey = await window.nostr!.getPublicKey();
+    userPubkey = e.detail.pubkey; //await window.nostr!.getPublicKey();
     console.log("pubkey", userPubkey);
 
     userIsDelegated = e.detail.method === "otp";
@@ -152,11 +163,26 @@ export async function onAuth(e: any) {
       setUserToken("", "");
     }
 
-    const outboxRelays = await getOutboxRelays(userPubkey);
-    userRelays.push(...outboxRelays);
-    console.log("pubkey relays", userRelays);
+    const fetch = async () => {
+      const outboxRelays = await getOutboxRelays(userPubkey);
+      userRelays.push(...outboxRelays);
+      console.log("pubkey relays", userRelays);
+      userProfile = (await fetchProfile(ndk, userPubkey))?.rawEvent();
 
-    userProfile = await fetchProfile(ndk, userPubkey);
+      localStorage.setItem("localUserRelays", JSON.stringify(userRelays));
+      if (userProfile)
+        localStorage.setItem("localUserProfile", JSON.stringify(userProfile));
+      else localStorage.setItem("localUserProfile", "");
+    };
+
+    const cachedRelays = getLocal("localUserRelays");
+    const cachedProfile = getLocal("localUserProfile");
+
+    // start updating
+    const promise = fetch();
+
+    // wait until update if have no cached value
+    if (!cachedRelays || !cachedProfile) await promise;
 
     localStorage.setItem("localUserPubkey", userPubkey);
   } else {
@@ -165,6 +191,8 @@ export async function onAuth(e: any) {
     userProfile = undefined;
     setUserToken("", "");
     localStorage.removeItem("localUserPubkey");
+    localStorage.removeItem("localUserRelays");
+    localStorage.removeItem("localUserProfile");
   }
 
   for (const cb of onAuths) await cb(e.detail.type);
@@ -208,7 +236,7 @@ async function fetchAuthed({
       "in",
       Date.now() - start,
       "ms",
-      minedEvent,
+      minedEvent
     );
     authEvent = new NDKEvent(ndk, minedEvent);
   }
@@ -263,7 +291,7 @@ async function getSessionToken() {
 export async function fetchWithSession(
   url: string,
   body: any | undefined = undefined,
-  method?: string,
+  method?: string
 ) {
   url = `${NPUB_PRO_API}${url}`;
   try {
@@ -308,7 +336,7 @@ export async function fetchWithSession(
 
 export async function publishSiteEvent(
   site: NDKEvent,
-  relays: string[],
+  relays: string[]
 ): Promise<NostrEvent> {
   // if we're signed in with OTP
   // or if we're editing delegated site
@@ -317,7 +345,7 @@ export async function publishSiteEvent(
       throw new Error("Cannot edit site signed by your keys in delegated mode");
     const reply = await fetchWithSession(
       `/site?relays=${relays.join(",")}`,
-      site.rawEvent(),
+      site.rawEvent()
     );
     if (reply.status !== 200) throw new Error("Failed to publish event");
 
@@ -344,7 +372,7 @@ export async function publishSiteEvent(
     const r = await site.publish(set);
     console.log(
       "published site event to",
-      [...r].map((r) => r.url),
+      [...r].map((r) => r.url)
     );
     if (!r.size) throw new Error("Failed to publish to relays");
 
@@ -356,7 +384,7 @@ export async function deleteSiteEvent(site: NostrEvent, relays: string[]) {
   if (userIsDelegated || (site.pubkey === SERVER_PUBKEY && tv(site, "u"))) {
     if (site.pubkey !== SERVER_PUBKEY)
       throw new Error(
-        "Cannot delete site signed by your keys in delegated mode",
+        "Cannot delete site signed by your keys in delegated mode"
       );
 
     const naddr = nip19.naddrEncode({
@@ -368,7 +396,7 @@ export async function deleteSiteEvent(site: NostrEvent, relays: string[]) {
     const reply = await fetchWithSession(
       `/site?relays=${relays.join(",")}&site=${naddr}&id=${site.id}`,
       undefined,
-      "DELETE",
+      "DELETE"
     );
     if (reply.status !== 200) throw new Error("Failed to delete site");
 
@@ -397,7 +425,7 @@ export async function deleteSiteEvent(site: NostrEvent, relays: string[]) {
     const r = await delReq.publish(NDKRelaySet.fromRelayUrls(relays, ndk));
     console.log(
       "published delete site request to",
-      [...r].map((r) => r.url),
+      [...r].map((r) => r.url)
     );
     if (!r.size) throw new Error("Failed to publish to relays");
   }

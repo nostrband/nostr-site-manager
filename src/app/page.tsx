@@ -1,6 +1,6 @@
 "use client";
-import { Onboarding } from "@/components/Pages/Onboarding";
+import { Landing } from "@/components/Pages/Landing";
 
-export default function OnboardingPage() {
-  return <Onboarding />;
+export default function LandingPage() {
+  return <Landing />;
 }

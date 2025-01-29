@@ -43,7 +43,7 @@
     "mui-color-input": "^5.0.1",
     "next": "^14.2.3",
     "nostr-tools": "^1.17.0",
-    "notistack": "^3.0.1",
+    "notistack": "^3.0.2",
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",

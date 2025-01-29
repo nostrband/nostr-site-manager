@@ -74,6 +74,18 @@ declare module "@mui/material/Checkbox" {
   }
 }
 
+declare module "@mui/material/LinearProgress" {
+  interface LinearProgressPropsColorOverrides {
+    decorate: true;
+  }
+}
+
+declare module "@mui/material/CircularProgress" {
+  interface CircularProgressPropsColorOverrides {
+    decorate: true;
+  }
+}
+
 declare module "@mui/material/IconButton" {
   interface IconButtonPropsColorOverrides {
     textColorDanger: true;
@@ -139,12 +151,12 @@ const theme = createTheme({
     secondary: {
       main: "#696F7D",
     },
-    info: {
-      light: "#0000EE",
-      main: "#0000EE",
-      dark: "#0000EE",
-      contrastText: "#0000EE",
-    },
+    // info: {
+    //   light: "#0000EE",
+    //   main: "#0000EE",
+    //   dark: "#0000EE",
+    //   contrastText: "#0000EE",
+    // },
     error: {
       main: red.A400,
     },
@@ -354,6 +366,18 @@ const theme = createTheme({
           maxWidth: "1240px",
           "@media (min-width: 900px)": {
             maxWidth: "940px",
+          },
+        },
+      },
+    },
+    MuiStepIcon: {
+      styleOverrides: {
+        root: {
+          "&.Mui-active": {
+            color: "#FF3ED9",
+          },
+          "&.Mui-completed": {
+            color: "#FF3ED9",
           },
         },
       },

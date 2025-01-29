@@ -173,6 +173,7 @@ export const StyledCardContent = styled(CardContent)(() => ({
 
 export const StyledCardWrapAuthors = styled(Box)(() => ({
   display: "flex",
+  alignItems: "center",
   gap: AUTHORS_CONTENT_SPACING,
   marginTop: "auto",
   padding: CARD_PADDING,

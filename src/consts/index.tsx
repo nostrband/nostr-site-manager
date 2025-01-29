@@ -51,6 +51,8 @@ import microLieblingDemo from "../../public/images/preview-theme/micro-liebling-
 export const NPUB_PRO_DOMAIN = "npub.pro";
 export const NPUB_PRO_API = "https://api.npubpro.com";
 
+export const OTP_LENGTH = 6;
+
 export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
   1: "Notes",
   30023: "Article",
@@ -251,6 +253,24 @@ export const SETTINGS_CONFIG = {
     group: "Growth",
     description: "",
     isComingSoon: true,
+  },
+};
+
+export const STEPS_ONBOARDING_CONFIG = {
+  start: {
+    title: "Start",
+    slug: "onboarding",
+    step: 1,
+  },
+  connection: {
+    title: "Connection",
+    slug: "connection",
+    step: 2,
+  },
+  "create-site": {
+    title: "Create site",
+    slug: "create-site",
+    step: 3,
   },
 };
 

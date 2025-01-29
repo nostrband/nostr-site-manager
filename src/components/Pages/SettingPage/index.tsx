@@ -36,7 +36,6 @@ import {
   StyledWrapSectionSettings,
   StyledWrapSettings,
 } from "./styled";
-import Link from "next/link";
 import { ChevronLeftIcon } from "@/components/Icons";
 import { SearchSettingsField, Setting } from "./components/SearchSettingsField";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
@@ -139,7 +138,7 @@ export const SettingPage = () => {
             autoHideDuration: 3000,
             variant: "success",
             anchorOrigin: {
-              horizontal: "right",
+              horizontal: "left",
               vertical: "bottom",
             },
           });
@@ -148,7 +147,7 @@ export const SettingPage = () => {
             autoHideDuration: 3000,
             variant: "error",
             anchorOrigin: {
-              horizontal: "right",
+              horizontal: "left",
               vertical: "bottom",
             },
           });

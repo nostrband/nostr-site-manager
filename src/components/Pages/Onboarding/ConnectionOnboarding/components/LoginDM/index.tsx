@@ -66,12 +66,16 @@ export const LoginDM = ({ showEnterCode }: { showEnterCode: () => void }) => {
     router.back();
   };
 
+  const handleAdvanced = () => {
+    document.dispatchEvent(new CustomEvent("nlLaunch", { detail: "welcome-login" }));
+  }
+
   return (
     <>
-      <StyledTitlePage>Log in with DM</StyledTitlePage>
+      <StyledTitlePage>Log in with a code</StyledTitlePage>
       <StyledDescriptionPage variant="body2">
-        Please enter your user name or npub, and we will send you a direct
-        message with a one-time code.
+        Enter your user name or npub. You will receive a direct
+        message with a code.
       </StyledDescriptionPage>
 
       <StyledVideo>
@@ -81,11 +85,11 @@ export const LoginDM = ({ showEnterCode }: { showEnterCode: () => void }) => {
       </StyledVideo>
 
       <FormControl fullWidth size={sizeField}>
-        <InputLabel htmlFor="npub">Npub account</InputLabel>
+        <InputLabel htmlFor="npub">npub... or name@domain.com</InputLabel>
         <OutlinedInput
           id="npub"
           name="npub"
-          label="Npub account"
+          label="npub... or name@domain.com"
           onChange={handleChange}
           value={values.npub}
           onBlur={handleBlur}
@@ -120,6 +124,7 @@ export const LoginDM = ({ showEnterCode }: { showEnterCode: () => void }) => {
           color="decorate"
           variant="text"
           startIcon={<KeyIcon />}
+          onClick={handleAdvanced}
         >
           Advanced
         </Button>

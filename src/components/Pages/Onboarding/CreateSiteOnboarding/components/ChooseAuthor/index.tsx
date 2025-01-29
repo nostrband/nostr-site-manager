@@ -30,9 +30,9 @@ export const ChooseAuthor = () => {
 
   return (
     <>
-      <StyledTitlePage>Oops. You don’t have any posts</StyledTitlePage>
+      <StyledTitlePage>Oops! You don’t have any posts yet.</StyledTitlePage>
       <StyledDescriptionPage variant="body2">
-        Please choose another author
+        Let&apos;s make a sample site with someone else&apos;s content. Choose an author below:
       </StyledDescriptionPage>
 
       <StyledWrapAuthors>
@@ -52,11 +52,11 @@ export const ChooseAuthor = () => {
             </StyledAuthorDescription>
             <StyledDivider />
             <StyledAuthorText>
-              You can create a site from that user&apos;s content
+              You can create a sample &lt;microblog&gt; using content by &lt;Sergio Torres 1&gt;
             </StyledAuthorText>
 
             <Button color="decorate" size="large" variant="contained" fullWidth>
-              Create a website
+              Create a &lt;microblog&gt;
             </Button>
           </>
         ) : (

@@ -9,9 +9,9 @@ import Link from "next/link";
 export const Start = () => {
   return (
     <>
-      <StyledTitlePage>Let&apos;s Build a Sample Website</StyledTitlePage>
+      <StyledTitlePage>Let&apos;s Make a Sample Site?</StyledTitlePage>
       <StyledDescriptionPage variant="body2">
-        Unleash Your Creativity with Our Easy-to-Use Website Builder!
+        Learn by doing, you can start right now and improve the website later.
       </StyledDescriptionPage>
       <StyledActions>
         <Button
@@ -32,7 +32,7 @@ export const Start = () => {
           color="decorate"
           variant="contained"
         >
-          Sure
+          Create a site
         </Button>
       </StyledActions>
     </>

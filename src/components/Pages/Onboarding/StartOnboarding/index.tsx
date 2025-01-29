@@ -9,9 +9,13 @@ import Link from "next/link";
 export const StartOnboarding = () => {
   return (
     <>
-      <StyledTitlePage>Are you from Nostr?</StyledTitlePage>
+      <StyledTitlePage>Are you on Nostr?</StyledTitlePage>
       <StyledDescriptionPage variant="body2">
-        Have you ever published any content in the Nostr apps?
+        Do you have an account on the{" "}
+        <Link href={"https://nostr.org/"} target="_blank">
+          Nostr network
+        </Link>
+        ? Don&apos;t worry, it is not necessary to get started.
       </StyledDescriptionPage>
       <StyledActions>
         <Button

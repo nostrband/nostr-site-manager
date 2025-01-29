@@ -94,7 +94,7 @@ export const LoginEnterCode = ({
     <>
       <StyledTitlePage>Enter your code</StyledTitlePage>
       <StyledDescriptionPage variant="body2">
-        We have sent you a 6 significant code to your Nostr app.
+        Please enter the 6-digit code we sent you as a direct message.
       </StyledDescriptionPage>
 
       <StyledVideo>

@@ -95,7 +95,7 @@ export const HeaderLayout = () => {
           <StyledBadgeWrap>
             {isLoaded ? (
               <StyledBadgeAvatar variant="square" src={getSite?.icon}>
-                {getSite?.name[0]}
+                {getSite?.title[0]}
               </StyledBadgeAvatar>
             ) : (
               <StyledBadgeAvatar variant="square">
@@ -103,7 +103,7 @@ export const HeaderLayout = () => {
               </StyledBadgeAvatar>
             )}
 
-            <StyledBadgeTitle variant="body2">{getSite?.name}</StyledBadgeTitle>
+            <StyledBadgeTitle variant="body2">{getSite?.title}</StyledBadgeTitle>
           </StyledBadgeWrap>
         </Link>
       )}

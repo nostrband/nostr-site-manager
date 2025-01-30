@@ -36,6 +36,7 @@ export const DEFAULT_RELAYS = [
   SITE_RELAY,
 ];
 export const SEARCH_RELAYS = ["wss://relay.nostr.band/"];
+export const SEARCH_RELAYS_SPAM = ["wss://relay.nostr.band/all"];
 const onAuths: [(type: string) => Promise<void>, boolean][] = [];
 
 export let ndk: NDK = new NDK({

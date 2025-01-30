@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { ChevronLeftIcon, UserAddIcon } from "@/components/Icons";
 import { useRouter } from "next/navigation";
+import { signup } from "@/services/nostr/onboard";
 
 const initialValues: { username: string } = {
   username: "",
@@ -28,11 +29,11 @@ export const SignUp = () => {
     initialValues,
     onSubmit: async (values) => {
       setLoading(true);
-
-      setTimeout(() => {
-        setLoading(false);
-
-        enqueueSnackbar("Internal service error", {
+      try {
+        await signup(values.username);
+        router.push("/onboarding/create-site");
+      } catch (e) {
+        enqueueSnackbar("Error: " + e, {
           autoHideDuration: 3000,
           variant: "error",
           anchorOrigin: {
@@ -40,7 +41,9 @@ export const SignUp = () => {
             vertical: "bottom",
           },
         });
-      }, 3000);
+      } finally {
+        setLoading(false);
+      }
     },
   });
 

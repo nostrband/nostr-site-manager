@@ -5,8 +5,21 @@ import {
   StyledTitlePage,
 } from "../styled";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/services/nostr/nostr";
+import { useContext, useEffect } from "react";
 
 export const StartOnboarding = () => {
+  const router = useRouter();
+  const { isAuth, isLoading } = useContext(AuthContext);
+
+  // redirect to final step if we're already in
+  useEffect(() => {
+    if (isAuth) router.push("/onboarding/create-site");
+  }, [isAuth, isLoading]);
+
+  if (isLoading) return;
+
   return (
     <>
       <StyledTitlePage>Are you on Nostr?</StyledTitlePage>

@@ -321,8 +321,11 @@ export async function fetchWithSession(
 
 export async function publishSiteEvent(
   site: NDKEvent,
-  relays: string[]
+  relays?: string[]
 ): Promise<NostrEvent> {
+
+  relays = relays || [SITE_RELAY, ...userRelays];
+
   // if we're signed in with OTP
   // or if we're editing delegated site
   if (userIsDelegated || (site.pubkey === SERVER_PUBKEY && tv(site, "u"))) {

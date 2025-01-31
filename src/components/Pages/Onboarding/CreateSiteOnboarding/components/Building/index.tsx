@@ -7,7 +7,8 @@ import {
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
-import { detectContentType } from "@/services/nostr/onboard";
+import { createSite, detectContentType } from "@/services/nostr/onboard";
+import { enqueueSnackbar } from "notistack";
 
 export const Building = () => {
   const [progress, setProgress] = useState(0);
@@ -22,21 +23,42 @@ export const Building = () => {
 
   // FIXME pass pubkey of chosen author
   const pubkey = userPubkey;
-  if (progress === 0) {
-    detectContentType(pubkey).then(([type, kinds]) => {
-      console.log("pubkey", pubkey, type, kinds);
-      if (!type) {
-        router.replace("/onboarding/create-site?step=chooseAuthor");
-      } else {
-        // FIXME create site!
-      }
-    });
-  }
 
   useEffect(() => {
+    if (progress > 0) return;
+
+    // 30 sec / 100% = 300ms
+    console.log("set interval");
     const timer = setInterval(() => {
-      setProgress((prevProgress) => prevProgress + 3);
-    }, 100);
+      console.log("timer");
+      setProgress((prevProgress) => (prevProgress + 1) % 100);
+    }, 300);
+
+    detectContentType(pubkey).then(async ([type, kinds]) => {
+      console.log("pubkey", pubkey, type, kinds);
+      if (!type) {
+        clearInterval(timer);
+        setProgress(0);
+        router.replace("/onboarding/create-site?step=chooseAuthor");
+      } else {
+        try {
+          await new Promise(ok => setTimeout(ok, 10000));
+          await createSite(pubkey, type, kinds);
+          setProgress(100);
+        } catch (e) {
+          enqueueSnackbar("Error: " + e, {
+            autoHideDuration: 3000,
+            variant: "warning",
+            anchorOrigin: {
+              horizontal: "left",
+              vertical: "bottom",
+            },
+          });
+        } finally {
+          clearInterval(timer);
+        }
+      }
+    });
 
     return () => {
       clearInterval(timer);
@@ -78,13 +100,14 @@ export const Building = () => {
           >{`${Math.round(progress)}%`}</Typography>
         </Box>
       </Box>
-      <StyledTitlePage>We are building your website</StyledTitlePage>
+      <StyledTitlePage>We are making your sample website</StyledTitlePage>
       <StyledDescriptionPage variant="body2">
         It takes about 10 seconds to create a website, please stand by
       </StyledDescriptionPage>
       <StyledAlert severity="info">
-        We generate the site from your Nostr application content. Basic
-        information and your publications will be added to the site
+        We are populating the site with content from Nostr. You
+        can change site settings and manage the content
+        later on inside your dashboard.
       </StyledAlert>
     </>
   );

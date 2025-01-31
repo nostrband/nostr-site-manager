@@ -40,7 +40,7 @@ import {
 } from "@nostr-dev-kit/ndk";
 import { marked } from "marked";
 import { SERVER_PUBKEY } from "./consts";
-import { countItems, shuffleArray } from "./utils";
+import { countItems, eventIdToTag, shuffleArray } from "./utils";
 
 export type SearchPost = Post & {
   submitterPubkey: string;
@@ -611,18 +611,6 @@ export async function fetchSubmits(site: Site) {
 
   submitsCache.set(site.id, posts);
   return posts;
-}
-
-function eventIdToTag(id: string) {
-  const { type, data } = nip19.decode(id);
-  switch (type) {
-    case "note":
-      return data;
-    case "naddr":
-      return `${data.kind}:${data.pubkey}:${data.identifier}`;
-    default:
-      throw new Error("Invalid related id " + id);
-  }
 }
 
 async function getSubmitEvent(pubkey: string, id: string) {

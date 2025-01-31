@@ -9,9 +9,10 @@ import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
 import { Button, CircularProgress } from "@mui/material";
 import { ArrowRightIcon, ChevronLeftIcon } from "@/components/Icons";
-import { useRouter } from "next/navigation";
 import OTPInput from "@/components/OTPInput";
 import { OTP_LENGTH } from "@/consts";
+import axios from "axios";
+import { loginOTP } from "@/services/nostr/onboard";
 
 const initialValues: { code: string } = {
   code: "",
@@ -19,51 +20,35 @@ const initialValues: { code: string } = {
 
 export const LoginEnterCode = ({
   showLoginDM,
+  pubkey
 }: {
   showLoginDM: () => void;
+  pubkey: string
 }) => {
   const [isLoading, setLoading] = useState(false);
-  const [isFirstSend, setFirstSend] = useState(false);
-
-  const router = useRouter();
 
   const { values, submitForm, setFieldValue } = useFormik({
     initialValues,
     onSubmit: async (values) => {
-      if (isFirstSend) {
-        setLoading(true);
+      setLoading(true);
 
-        setTimeout(() => {
-          setLoading(false);
+      const {code} = values
 
-          router.push("/onboarding/create-site");
-
-          enqueueSnackbar("Log in success!", {
-            autoHideDuration: 3000,
-            variant: "success",
-            anchorOrigin: {
-              horizontal: "left",
-              vertical: "bottom",
-            },
-          });
-        }, 3000);
-      } else {
-        setLoading(true);
-
-        setTimeout(() => {
-          setLoading(false);
-
-          setFirstSend(true);
-
-          enqueueSnackbar("Your code is incorrect, please try again", {
-            autoHideDuration: 3000,
-            variant: "warning",
-            anchorOrigin: {
-              horizontal: "left",
-              vertical: "bottom",
-            },
-          });
-        }, 3000);
+      try {
+        const otpData = await axios.get(`https://api.npubpro.com/authotp?pubkey=${pubkey}&code=${code}`)
+        
+        await loginOTP(pubkey, otpData.data)
+      } catch (e) {
+        enqueueSnackbar("Your code is incorrect, please try again", {
+          autoHideDuration: 3000,
+          variant: "warning",
+          anchorOrigin: {
+            horizontal: "left",
+            vertical: "bottom",
+          },
+        });
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -89,6 +74,34 @@ export const LoginEnterCode = ({
   const handleBack = () => {
     showLoginDM();
   };
+
+  const handleResetCode = async () => {
+    try {
+      await axios.get(
+        `https://api.npubpro.com/otp?pubkey=${pubkey}`
+      );
+
+      enqueueSnackbar("New code send!", {
+        autoHideDuration: 3000,
+        variant: "success",
+        anchorOrigin: {
+          horizontal: "left",
+          vertical: "bottom",
+        },
+      });
+    } catch (e) {
+      enqueueSnackbar("No send code", {
+        autoHideDuration: 3000,
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "left",
+          vertical: "bottom",
+        },
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <>
@@ -128,7 +141,7 @@ export const LoginEnterCode = ({
         >
           Back
         </Button>
-        <Button size="small" color="decorate" variant="text">
+        <Button disabled={isLoading} onClick={handleResetCode} size="small" color="decorate" variant="text">
           Resend the code
         </Button>
       </StyledActions>

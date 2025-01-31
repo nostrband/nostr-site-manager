@@ -13,6 +13,7 @@ import OTPInput from "@/components/OTPInput";
 import { OTP_LENGTH } from "@/consts";
 import axios from "axios";
 import { loginOTP } from "@/services/nostr/onboard";
+import { useRouter } from "next/navigation";
 
 const initialValues: { code: string } = {
   code: "",
@@ -26,6 +27,7 @@ export const LoginEnterCode = ({
   pubkey: string
 }) => {
   const [isLoading, setLoading] = useState(false);
+  const router = useRouter();
 
   const { values, submitForm, setFieldValue } = useFormik({
     initialValues,
@@ -36,8 +38,8 @@ export const LoginEnterCode = ({
 
       try {
         const otpData = await axios.get(`https://api.npubpro.com/authotp?pubkey=${pubkey}&code=${code}`)
-        
         await loginOTP(pubkey, otpData.data)
+        router.push("/onboarding/create-site");
       } catch (e) {
         enqueueSnackbar("Your code is incorrect, please try again", {
           autoHideDuration: 3000,

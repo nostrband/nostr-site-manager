@@ -57,7 +57,7 @@ export async function loginOTP(pubkey: string, otpData: any) {
     type: "login",
     method: "otp",
     pubkey,
-    otpData,
+    otpData: JSON.stringify(otpData),
   });
 }
 

@@ -19,7 +19,6 @@ export const Building = () => {
   useEffect(() => {
     if (!isAuth && !isLoading) router.replace("/onboarding/start");
   }, [isAuth, isLoading]);
-  if (isLoading) return;
 
   // FIXME pass pubkey of chosen author
   const pubkey = userPubkey;
@@ -49,6 +48,8 @@ export const Building = () => {
   //     router.push("/onboarding/create-site?step=chooseAuthor");
   //   }
   // }, [progress, router]);
+
+  if (isLoading) return;
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   StyledAlert,
   StyledDescriptionPage,
@@ -6,10 +6,33 @@ import {
 } from "../../../styled";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { AuthContext, userPubkey } from "@/services/nostr/nostr";
+import { detectContentType } from "@/services/nostr/onboard";
 
 export const Building = () => {
   const [progress, setProgress] = useState(0);
   const router = useRouter();
+
+  const { isAuth, isLoading } = useContext(AuthContext);
+
+  // redirect to login if not authed
+  useEffect(() => {
+    if (!isAuth && !isLoading) router.replace("/onboarding/start");
+  }, [isAuth, isLoading]);
+  if (isLoading) return;
+
+  // FIXME pass pubkey of chosen author
+  const pubkey = userPubkey;
+  if (progress === 0) {
+    detectContentType(pubkey).then(([type, kinds]) => {
+      console.log("pubkey", pubkey, type, kinds);
+      if (!type) {
+        router.replace("/onboarding/create-site?step=chooseAuthor");
+      } else {
+        // FIXME create site!
+      }
+    });
+  }
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -21,11 +44,11 @@ export const Building = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (progress > 100) {
-      router.push("/onboarding/create-site?step=chooseAuthor");
-    }
-  }, [progress, router]);
+  // useEffect(() => {
+  //   if (progress > 100) {
+  //     router.push("/onboarding/create-site?step=chooseAuthor");
+  //   }
+  // }, [progress, router]);
 
   return (
     <>

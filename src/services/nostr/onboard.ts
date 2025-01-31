@@ -143,8 +143,8 @@ export async function createSite(
   // hmm if it's their own site then why not import everything?
   // - to make the site more beautiful
   // - bcs there won't be auto-submit soon!
-  // ok, so kinds are passed but after site template is created 
-  // we should remove all "include" and "kind" tags and 
+  // ok, so kinds are passed but after site template is created
+  // we should remove all "include" and "kind" tags and
   // submit some posts.
 
   // there's a lot of internal login in generating a site,
@@ -157,15 +157,22 @@ export async function createSite(
   // we will no longer be creating sites with different author,
   // in onboarding that's "sample site", later on we should
   // probably create empty sites without navigation
-  // and without content... 
+  // and without content...
 
   // hmm... it's actually pretty useful to be able to
-  // create site "from other author's perspective"... 
+  // create site "from other author's perspective"...
   // so maybe we should keep that thing?
 
   // need more thinking here!
 
+  // ok suppose we won't be enabling auto-submit on new sites
+  // any more, that means we can just change the existing
+  // implementation to remove include/kind tags and to submit
+  // 10 last posts, right? we just add 'type' to params instead of
+  // hashtags and kinds?
 
+  // we use this same logic for creating site, for changing theme,
+  // and for editing theme. these are actually 3 different actions.
 
   setPreviewSettings({
     themeId: theme.id,

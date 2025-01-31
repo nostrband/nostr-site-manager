@@ -17,7 +17,7 @@ export const CreateSiteOnboarding = () => {
 
   // redirect to login if not authed
   useEffect(() => {
-    if (!isAuth) router.push("/onboarding/start");
+    if (!isAuth && !isLoading) router.replace("/onboarding/start");
   }, [isAuth, isLoading]);
 
   if (isLoading) return;

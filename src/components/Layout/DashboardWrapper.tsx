@@ -11,7 +11,8 @@ import { AuthContext } from "@/services/nostr/nostr";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 
 export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
-  const [isLogin, setLogin] = useState(false);
+  // assume true to avoid showing "login" button before page fully loads
+  const [isLogin, setLogin] = useState(true);
   const { siteId } = useGetSiteId();
   const pathname = usePathname();
   const router = useRouter();
@@ -34,13 +35,13 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
         router.push(pathAdmin);
       }
     },
-    [pathAdmin, router, isPathAdminAdd],
+    [pathAdmin, router, isPathAdminAdd]
   );
 
   useEffect(() => {
-    if (isAuth && !isLoading) {
-      setLogin(true);
-    }
+    if (!isAuth) setLogin(false);
+
+    if (isAuth && !isLoading) setLogin(true);
 
     if (!isAuth && !isPathAdmin && !isLoading) {
       return redirect(`/admin`);

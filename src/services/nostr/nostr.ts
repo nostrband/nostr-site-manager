@@ -46,7 +46,7 @@ ndk.connect();
 
 export let userPubkey: string = "";
 export const userRelays: string[] = [];
-export let userProfile: NDKEvent | undefined = undefined;
+export let userProfile: NostrEvent | undefined = undefined;
 export let userIsDelegated = false;
 export let userIsReadOnly = false;
 export let userToken = "";
@@ -56,9 +56,20 @@ const outboxCache = new Map<string, string[]>();
 const KIND_NIP98 = 27235;
 const KIND_DELETE = 5;
 
+function getLocal(name: string) {
+  try {
+    return JSON.parse(localStorage.getItem(name) || "");
+  } catch {}
+}
+
 try {
   userToken = window.localStorage.getItem("token") || "";
   userTokenPubkey = window.localStorage.getItem("tokenPubkey") || "";
+  const lastAuth = getLocal("localAuth");
+  if (lastAuth) {
+    console.log("last auth", lastAuth);
+    onAuth({ detail: lastAuth });
+  }
 } catch {}
 
 export function srm(e: NDKEvent | NostrEvent, name: string, name1?: string) {
@@ -117,7 +128,7 @@ export function addOnAuthOnce(cb: (type: string) => Promise<void>) {
 }
 
 function setUserToken(token: string, pubkey: string) {
-  console.log("set token", pubkey, token);
+  // console.log("set token", pubkey, token);
   userToken = token;
   userTokenPubkey = pubkey;
   try {
@@ -142,10 +153,11 @@ export async function getOutboxRelays(pubkey: string) {
 }
 
 export async function onAuth(e: any) {
-  console.log("nlAuth", e);
+  localStorage.setItem("localAuth", JSON.stringify(e.detail));
+
   const authed = e.detail.type !== "logout";
   if (authed) {
-    userPubkey = await window.nostr!.getPublicKey();
+    userPubkey = e.detail.pubkey; //await window.nostr!.getPublicKey();
     console.log("pubkey", userPubkey);
 
     userIsDelegated = e.detail.method === "otp";
@@ -156,11 +168,26 @@ export async function onAuth(e: any) {
       setUserToken("", "");
     }
 
-    const outboxRelays = await getOutboxRelays(userPubkey);
-    userRelays.push(...outboxRelays);
-    console.log("pubkey relays", userRelays);
+    const fetch = async () => {
+      const outboxRelays = await getOutboxRelays(userPubkey);
+      userRelays.push(...outboxRelays);
+      console.log("pubkey relays", userRelays);
+      userProfile = (await fetchProfile(ndk, userPubkey))?.rawEvent();
 
-    userProfile = await fetchProfile(ndk, userPubkey);
+      localStorage.setItem("localUserRelays", JSON.stringify(userRelays));
+      if (userProfile)
+        localStorage.setItem("localUserProfile", JSON.stringify(userProfile));
+      else localStorage.setItem("localUserProfile", "");
+    };
+
+    const cachedRelays = getLocal("localUserRelays");
+    const cachedProfile = getLocal("localUserProfile");
+
+    // start updating
+    const promise = fetch();
+
+    // wait until update if have no cached value
+    if (!cachedRelays || !cachedProfile) await promise;
 
     localStorage.setItem("localUserPubkey", userPubkey);
   } else {
@@ -169,6 +196,8 @@ export async function onAuth(e: any) {
     userProfile = undefined;
     setUserToken("", "");
     localStorage.removeItem("localUserPubkey");
+    localStorage.removeItem("localUserRelays");
+    localStorage.removeItem("localUserProfile");
   }
 
   // all cbs (once and repeated)

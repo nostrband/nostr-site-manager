@@ -28,6 +28,7 @@ import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
 import { fetchTopHashtags } from "@/services/nostr/themes";
 import useResponsive from "@/hooks/useResponsive";
+import { SUPPORTED_KINDS, SUPPORTED_KIND_NAMES } from "@/consts";
 
 interface IContentFilters extends IBaseSetting {
   selectedHashtags: string[];
@@ -41,11 +42,6 @@ interface IContentFilters extends IBaseSetting {
   description: string;
   autoSubmit: boolean;
 }
-
-const kindsMap: { [key: number]: string } = {
-  1: "Notes",
-  30023: "Articles",
-};
 
 export const ContentFilters = memo(
   ({
@@ -124,7 +120,7 @@ export const ContentFilters = memo(
     };
 
     const getKinds = useCallback(async () => {
-      const dataKinds = [1, 30023];
+      const dataKinds = [...SUPPORTED_KINDS];
       setKinds(dataKinds);
     }, []);
 
@@ -249,13 +245,13 @@ export const ContentFilters = memo(
                   onChange={handleChange}
                   input={<OutlinedInput disabled={!autoSubmit} label="Kinds" />}
                   renderValue={(selected) =>
-                    selected.map((val) => kindsMap[val]).join(", ")
+                    selected.map((val) => SUPPORTED_KIND_NAMES[val]).join(", ")
                   }
                 >
                   {kinds.map((kind, i) => (
                     <MenuItem key={i} value={kind}>
                       <Checkbox checked={selectedKinds.indexOf(kind) > -1} />
-                      <ListItemText primary={kindsMap[kind]} />
+                      <ListItemText primary={SUPPORTED_KIND_NAMES[kind]} />
                     </MenuItem>
                   ))}
                 </Select>

@@ -88,7 +88,7 @@ export const ActionsUser = () => {
           <StyledBadgeWrap>
             {isLoaded ? (
               <StyledBadgeAvatar variant="square" src={getSite?.icon}>
-                {getSite?.name[0]}
+                {getSite?.title[0]}
               </StyledBadgeAvatar>
             ) : (
               <StyledBadgeAvatar variant="square">
@@ -96,7 +96,7 @@ export const ActionsUser = () => {
               </StyledBadgeAvatar>
             )}
 
-            <StyledBadgeTitle variant="body2">{getSite?.name}</StyledBadgeTitle>
+            <StyledBadgeTitle variant="body2">{getSite?.title}</StyledBadgeTitle>
           </StyledBadgeWrap>
         </Link>
       )}

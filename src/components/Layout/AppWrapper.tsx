@@ -2,23 +2,25 @@
 import { ReactNode, useEffect, useState } from "react";
 import { SnackbarProvider } from "notistack";
 import Script from "next/script";
-import { AuthContext, onAuth } from "@/services/nostr/nostr";
+import { AuthContext, onAuth, userPubkey } from "@/services/nostr/nostr";
 import { BodyWrapper } from "./MainContent";
 import { Notification } from "../Notification";
 
+let addedHandlers = false;
 export const AppWrapper = ({ children }: { children: ReactNode }) => {
   const [authed, setAuthed] = useState({
-    isAuth: false,
-    isLoading: true,
+    isAuth: !!userPubkey,
+    isLoading: false,
   });
 
   useEffect(() => {
-    setAuthed((prev) => ({
-      ...prev,
-      isLoading: localStorage.getItem("localUserPubkey") ? true : false,
-    }));
+    if (addedHandlers) return;
 
+    // we're being added 2 times without this check
+    addedHandlers = true;
     document.addEventListener("nlAuth", async (e: any) => {
+      console.log("nlAuth", e);
+
       setAuthed((prev) => ({
         ...prev,
         isLoading: true,

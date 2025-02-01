@@ -477,6 +477,18 @@ async function postProcess(posts: SearchPost[]) {
   posts.sort((a, b) => b.event.created_at - a.event.created_at);
 }
 
+// FIXME switch to libnostrsite's impl
+export function parseNaddr(naddr: string) {
+  if (!naddr) return undefined;
+  try {
+    const { type, data } = nip19.decode(naddr);
+    if (type === "naddr") return data;
+  } catch (e) {
+    console.log("Bad naddr", naddr, e);
+  }
+  return undefined;
+}
+
 export async function fetchPost(site: Site, id: string) {
   let event = cache.get(id);
   if (!event) {
@@ -524,9 +536,10 @@ export async function fetchPost(site: Site, id: string) {
     "#s": [s_tag],
   };
   if (post.id.startsWith("naddr")) {
-    const postAddr = parseAddr(post.id);
+    const postAddr = parseNaddr(post.id);
+    if (!postAddr) throw new Error("Bad post id");
     filter["#a"] = [
-      `${post.event.kind}:${post.event.pubkey}:${postAddr.identifier}`,
+      `${postAddr.kind}:${postAddr.pubkey}:${postAddr.identifier}`,
     ];
   } else {
     filter["#e"] = [post.event.id!];

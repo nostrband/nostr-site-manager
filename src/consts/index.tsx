@@ -63,13 +63,25 @@ export type TypesScreens = (typeof SCREEN)[keyof typeof SCREEN];
 
 export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
   1: "Notes",
-  30023: "Article",
+  30023: "Articles",
+  20: "Olas photos",
+  34235: "Horizontal videos",
+  34236: "Vertical videos",
+  1063: "Files",
   // 31337: "Music tracks",
 };
+
+export const SUPPORTED_KINDS = Object.keys(SUPPORTED_KIND_NAMES).map((k) =>
+  Number(k)
+);
 
 export const SUPPORTED_KIND_NAMES_SINGLE: { [key: number]: string } = {
   1: "Note",
   30023: "Article",
+  20: "Olas photo",
+  34235: "Horizontal video",
+  34236: "Vertical video",
+  1063: "File",
   // 31337: "Music tracks",
 };
 

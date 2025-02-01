@@ -5,13 +5,22 @@ import {
   StyledTitlePage,
 } from "../../../styled";
 import Link from "next/link";
+import { SCREEN, TypesScreens } from "@/consts";
 
-export const Start = () => {
+interface StartProps {
+  setScreen: (screen: TypesScreens) => void;
+}
+
+export const Start = ({setScreen}: StartProps) => {
+  const handleBuilding = () => {
+    setScreen(SCREEN.BUILDING)
+  }
+
   return (
     <>
-      <StyledTitlePage>Let&apos;s Make a Sample Site?</StyledTitlePage>
+      <StyledTitlePage>Hello Username, Let&apos;s Build a Sample Website</StyledTitlePage>
       <StyledDescriptionPage variant="body2">
-        Learn by doing, you can start right now and improve the website later.
+        Unleash Your Creativity with Our Easy-to-Use Website Builder!
       </StyledDescriptionPage>
       <StyledActions>
         <Button
@@ -25,8 +34,7 @@ export const Start = () => {
           Skip
         </Button>
         <Button
-          LinkComponent={Link}
-          href="/onboarding/create-site?step=building"
+          onClick={handleBuilding}
           fullWidth
           size="large"
           color="decorate"

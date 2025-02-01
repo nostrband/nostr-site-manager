@@ -32,7 +32,11 @@ const initialValues: LoginDMValues = {
   npub: "",
 };
 
-export const LoginDM = ({ showEnterCode }: { showEnterCode: (pubkey: string) => void }) => {
+export const LoginDM = ({
+  showEnterCode,
+}: {
+  showEnterCode: (pubkey: string) => void;
+}) => {
   const [isLoading, setLoading] = useState(false);
   const isDesktop = useResponsive("up", "sm");
   const sizeField = isDesktop ? "medium" : "small";
@@ -48,14 +52,18 @@ export const LoginDM = ({ showEnterCode }: { showEnterCode: (pubkey: string) => 
         const { npub } = values;
 
         if (yup.string().email().isValidSync(npub)) {
-          console.log("Это email:", npub);
-
           try {
-            await axios.get(
-              `https://domain.com/.well-know/nostr.json?name=${npub}`
+            const [name, domain] = npub.split("@");
+            
+            if (!name || !domain) {
+              throw new Error("Invalid email format");
+            }
+
+            const res = await axios.get(
+              `https://${domain}/.well-known/nostr.json?name=${name}`
             );
 
-            // showEnterCode(decoded.data as string)
+            showEnterCode(res.data.names[name])
           } catch (e) {
             enqueueSnackbar("Error bad name", {
               autoHideDuration: 3000,
@@ -68,8 +76,8 @@ export const LoginDM = ({ showEnterCode }: { showEnterCode: (pubkey: string) => 
           } finally {
             setLoading(false);
           }
-          //@ts-ignore
-        } else if (npub.startsWith("npub")) {
+      
+        } else if (String(npub).startsWith("npub")) {
           try {
             const decoded = nip19.decode(npub);
 
@@ -77,7 +85,7 @@ export const LoginDM = ({ showEnterCode }: { showEnterCode: (pubkey: string) => 
               `https://api.npubpro.com/otp?pubkey=${decoded.data}`
             );
 
-            showEnterCode(decoded.data as string)
+            showEnterCode(decoded.data as string);
           } catch (error) {
             enqueueSnackbar("Error bad name", {
               autoHideDuration: 3000,

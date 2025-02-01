@@ -1,17 +1,20 @@
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Start } from "./components/Start";
 import { Building } from "./components/Building";
 import { ChooseAuthor } from "./components/ChooseAuthor";
-import { useContext, useEffect } from "react";
-import { AuthContext } from "@/services/nostr/nostr";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext, userPubkey } from "@/services/nostr/nostr";
+import { SCREEN, TypesScreens } from "@/consts";
+import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 
 export const CreateSiteOnboarding = () => {
-  const params = useSearchParams();
   const router = useRouter();
 
-  const stepCreateSite = params.get("step");
+  // FIXME pass pubkey of chosen author
+  const pubkey = userPubkey;
 
-  const isBuildingSite = stepCreateSite === "building";
+  const [screen, setScreen] = useState<TypesScreens>("start");
+  const [author, setAuthor] = useState<TypesScreens>(pubkey);
 
   const { isAuth, isLoading } = useContext(AuthContext);
 
@@ -20,11 +23,25 @@ export const CreateSiteOnboarding = () => {
     if (!isAuth && !isLoading) router.replace("/onboarding/start");
   }, [isAuth, isLoading]);
 
-  if (isLoading) return;
-
-  if (!params.size) {
-    return <Start />;
+  if (isLoading) {
+    return (
+      <SpinerWrap>
+        <SpinerCircularProgress />
+      </SpinerWrap>
+    );
   }
 
-  return isBuildingSite ? <Building /> : <ChooseAuthor />;
+  if (screen === SCREEN.START) {
+    return <Start setScreen={setScreen} />;
+  }
+
+  if (screen === SCREEN.BUILDING) {
+    return <Building setScreen={setScreen} pubkey={author} />;
+  }
+
+  if (screen === SCREEN.CHOOSE_AUTHOR) {
+    return <ChooseAuthor setAuthor={setAuthor} setScreen={setScreen} />;
+  }
+
+  return <Start setScreen={setScreen} />;
 };

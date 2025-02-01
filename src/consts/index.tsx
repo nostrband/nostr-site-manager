@@ -53,6 +53,14 @@ export const NPUB_PRO_API = "https://api.npubpro.com";
 
 export const OTP_LENGTH = 6;
 
+export const SCREEN = {
+  START: "start",
+  BUILDING: "building",
+  CHOOSE_AUTHOR: "chooseAuthor",
+};
+
+export type TypesScreens = (typeof SCREEN)[keyof typeof SCREEN];
+
 export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
   1: "Notes",
   30023: "Article",

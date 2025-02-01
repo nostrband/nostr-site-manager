@@ -36,7 +36,8 @@ export const DEFAULT_RELAYS = [
   SITE_RELAY,
 ];
 export const SEARCH_RELAYS = ["wss://relay.nostr.band/"];
-const onAuths: ((type: string) => Promise<void>)[] = [];
+export const SEARCH_RELAYS_SPAM = ["wss://relay.nostr.band/all"];
+const onAuths: [(type: string) => Promise<void>, boolean][] = [];
 
 export let ndk: NDK = new NDK({
   explicitRelayUrls: DEFAULT_RELAYS,
@@ -119,7 +120,11 @@ export function stag(e: NDKEvent | NostrEvent, tag: string[]) {
 }
 
 export function addOnAuth(cb: (type: string) => Promise<void>) {
-  onAuths.push(cb);
+  onAuths.push([cb, false]);
+}
+
+export function addOnAuthOnce(cb: (type: string) => Promise<void>) {
+  onAuths.push([cb, true]);
 }
 
 function setUserToken(token: string, pubkey: string) {
@@ -195,7 +200,16 @@ export async function onAuth(e: any) {
     localStorage.removeItem("localUserProfile");
   }
 
-  for (const cb of onAuths) await cb(e.detail.type);
+  // all cbs (once and repeated)
+  const cbs = onAuths.map((c) => c[0]);
+
+  // keep repeated only
+  const rept = onAuths.filter((c) => !c[1]);
+  onAuths.length = 0;
+  onAuths.push(...rept);
+
+  // call all cbs
+  for (const cb of cbs) await cb(e.detail.type);
 
   return authed;
 }
@@ -336,8 +350,11 @@ export async function fetchWithSession(
 
 export async function publishSiteEvent(
   site: NDKEvent,
-  relays: string[]
+  relays?: string[]
 ): Promise<NostrEvent> {
+
+  relays = relays || [SITE_RELAY, ...userRelays];
+
   // if we're signed in with OTP
   // or if we're editing delegated site
   if (userIsDelegated || (site.pubkey === SERVER_PUBKEY && tv(site, "u"))) {

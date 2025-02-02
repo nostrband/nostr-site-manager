@@ -63,7 +63,12 @@ function convertPosts(posts: Post[]) {
   return pins;
 }
 
-export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
+interface PinnedNotesProps {
+  siteId: string
+  isLoading: boolean
+}
+
+export const PinnedNotes = memo(({ siteId, isLoading: isSideLoading }: PinnedNotesProps) => {
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -195,8 +200,8 @@ export const PinnedNotes = memo(({ siteId }: { siteId: string }) => {
           {SETTINGS_CONFIG.pinnedContent.title}
           {!userIsDelegated && (
             <SaveButton
-              isEdit={isEdit}
-              isLoading={isLoading}
+              isEdit={isEdit || isSideLoading}
+              isLoading={isLoading || isSideLoading}
               handleAction={handleAction}
             />
           )}

@@ -6,7 +6,7 @@ import {
   StyledSettingBlock,
   StyledTitleBlock,
 } from "../../styled";
-import { Typography, Button, FormControl } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
@@ -15,7 +15,7 @@ import { CustomDomainForm } from "../CustomDomainForm";
 import { fetchDomains } from "@/services/nostr/api";
 import { enqueueSnackbar } from "notistack";
 import { userIsReadOnly } from "@/services/nostr/nostr";
-import { PlusCircleIcon, PlusIcon } from "@/components/Icons";
+import { PlusCircleIcon } from "@/components/Icons";
 
 interface ICustomDomains extends IBaseSetting {
   siteId: string;

@@ -15,14 +15,14 @@ export const StyledDialogTitle = styled(DialogTitle)(() => ({
 }));
 
 export const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
-  width: "348px",
+  maxWidth: 348,
+  width: "100%",
   padding: 16,
   overflow: "visible",
   display: "flex",
   flexDirection: "column",
   gap: 16,
   [theme.breakpoints.down("sm")]: {
-    width: "100%",
     maxWidth: 300,
   },
 }));

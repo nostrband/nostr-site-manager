@@ -20,7 +20,12 @@ import { SETTINGS_CONFIG } from "@/consts";
 import { editNostrJson, fetchNostrJson } from "@/services/nostr/files";
 import { enqueueSnackbar } from "notistack";
 
-export const NostrJson = memo(({ siteId }: { siteId: string }) => {
+interface NostrJsonProps {
+  siteId: string
+  isLoading: boolean
+}
+
+export const NostrJson = memo(({ siteId, isLoading: isSideLoading }: NostrJsonProps) => {
   const [isLoading, setLoading] = useState(false);
   const [isEdit, setEdit] = useState(false);
   const [isError, setError] = useState(false);
@@ -127,8 +132,8 @@ export const NostrJson = memo(({ siteId }: { siteId: string }) => {
         <StyledTitleBlock>
           {SETTINGS_CONFIG.nostrJson.title}
           <SaveButton
-            isEdit={isEdit}
-            isLoading={isLoading}
+            isEdit={isEdit || isSideLoading}
+            isLoading={isLoading || isSideLoading}
             handleAction={handleAction}
           />
         </StyledTitleBlock>
@@ -139,7 +144,7 @@ export const NostrJson = memo(({ siteId }: { siteId: string }) => {
       </StyledHeadSettingBlock>
 
       <StyledFormFields>
-        <FormControl disabled={!isEdit} fullWidth size="small" error={isError}>
+        <FormControl disabled={!isEdit || isSideLoading} fullWidth size="small" error={isError}>
           <InputLabel htmlFor="nostr_json">Nostr.json file content</InputLabel>
           <OutlinedInput
             inputRef={inputRef}

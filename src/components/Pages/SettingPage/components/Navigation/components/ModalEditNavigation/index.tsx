@@ -43,10 +43,24 @@ export const ModalEditNavigation = ({
 
   const resetValues = useRef({ title, link });
 
+  const { values, submitForm, handleChange, handleBlur, errors, setValues } =
+    useFormik({
+      initialValues: {
+        title,
+        link,
+      },
+      validationSchema: validationSchemaEditNavigation,
+      onSubmit: async () => {
+        handleClose(false);
+
+        resetValues.current = { ...values };
+      },
+    });
+
   const handleCancel = () => {
     if (
       resetValues.current.link.length === 0 &&
-      resetValues.current.link.length === 0
+      resetValues.current.title.length === 0
     ) {
       handleClose(true);
 
@@ -54,6 +68,11 @@ export const ModalEditNavigation = ({
     }
 
     handleClose(false);
+
+    setValues({
+      title: resetValues.current.title,
+      link: resetValues.current.link,
+    });
 
     handleResetNavigation({
       id,
@@ -64,19 +83,6 @@ export const ModalEditNavigation = ({
       },
     });
   };
-
-  const { values, submitForm, handleChange, handleBlur, errors } = useFormik({
-    initialValues: {
-      title,
-      link,
-    },
-    validationSchema: validationSchemaEditNavigation,
-    onSubmit: async () => {
-      handleClose(false);
-
-      resetValues.current = { ...values };
-    },
-  });
 
   return (
     <StyledDialog

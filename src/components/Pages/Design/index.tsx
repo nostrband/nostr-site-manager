@@ -744,6 +744,7 @@ const Design = () => {
             fullWidth
             size="medium"
             color="decorate"
+            disabled={isLoading}
           >
             Publish
           </Button>

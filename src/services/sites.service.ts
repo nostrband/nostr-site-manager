@@ -10,6 +10,7 @@ export type ReturnSitesDataType = {
   url: string;
 };
 
+export type LevelNavigation = { title: string; link: string; id: string }[];
 export type ReturnSettingsSiteDataType = {
   id: string;
   themeId: string;
@@ -44,8 +45,8 @@ export type ReturnSettingsSiteDataType = {
   contributors: string[];
 
   navigation: {
-    primary: { title: string; link: string; id: string }[];
-    secondary: { title: string; link: string; id: string }[];
+    primary: LevelNavigation;
+    secondary: LevelNavigation;
   };
   autoSubmit: boolean;
   hashtags: string[];

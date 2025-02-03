@@ -35,7 +35,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
         router.push(pathAdmin);
       }
     },
-    [pathAdmin, router, isPathAdminAdd]
+    [pathAdmin, router, isPathAdminAdd],
   );
 
   useEffect(() => {

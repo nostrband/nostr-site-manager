@@ -9,6 +9,7 @@ import {
 import { Box } from "@mui/material";
 import { ModalEditNavigation } from "../ModalEditNavigation";
 import { useEffect, useState } from "react";
+import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
 
 interface IItemNavigation {
   id: string;
@@ -19,17 +20,14 @@ interface IItemNavigation {
     id: string;
     type: "primary" | "secondary";
   }) => void;
-  handleChangeNavigation: (input: {
-    id: string;
-    type: "primary" | "secondary";
-    field: "title" | "link";
-    value: string;
-  }) => void;
+  handleChangeNavigation: (input: InputNavigation) => void;
+  handleResetNavigation: (input: InputNavigationReset) => void;
 }
 
 export const ItemNavigation = ({
   handleChangeNavigation,
   handleRemoveLinkNavigation,
+  handleResetNavigation,
   id,
   title,
   link,
@@ -37,10 +35,10 @@ export const ItemNavigation = ({
 }: IItemNavigation) => {
   const [isOpen, setOpen] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = (deleted: boolean) => {
     setOpen(false);
 
-    if (title.length === 0 && link.length === 0) {
+    if (deleted) {
       handleRemoveLinkNavigation({
         id,
         type: "primary",
@@ -102,6 +100,7 @@ export const ItemNavigation = ({
         id={id}
         link={link}
         title={title}
+        handleResetNavigation={handleResetNavigation}
         handleChangeNavigation={handleChangeNavigation}
         handleClose={handleClose}
       />

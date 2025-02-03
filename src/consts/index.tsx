@@ -62,7 +62,7 @@ export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
 };
 
 export const SUPPORTED_KINDS = Object.keys(SUPPORTED_KIND_NAMES).map((k) =>
-  Number(k)
+  Number(k),
 );
 
 export const SUPPORTED_KIND_NAMES_SINGLE: { [key: number]: string } = {

@@ -6,3 +6,16 @@ export interface IBaseSetting {
   submitForm: () => Promise<void>;
   isLoading: boolean;
 }
+
+export type InputNavigation = {
+  id: string;
+  type: "primary" | "secondary";
+  field: "title" | "link";
+  value: string;
+};
+
+export type InputNavigationReset = {
+  id: string;
+  type: "primary" | "secondary";
+  fields: { title: string; link: string };
+};

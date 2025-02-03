@@ -103,7 +103,9 @@ export const HeaderLayout = () => {
               </StyledBadgeAvatar>
             )}
 
-            <StyledBadgeTitle variant="body2">{getSite?.title}</StyledBadgeTitle>
+            <StyledBadgeTitle variant="body2">
+              {getSite?.title}
+            </StyledBadgeTitle>
           </StyledBadgeWrap>
         </Link>
       )}

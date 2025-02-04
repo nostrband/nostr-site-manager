@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { SETTINGS_CONFIG } from "@/consts";
-import { addHttps } from "@/utils";
+import { addHttps, resetLevelNavigation, updateLevelNavigation } from "@/utils";
 import { editSite } from "@/services/nostr/api";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
 import { TitleDescription } from "./components/TitleDescription";
@@ -36,13 +36,13 @@ import {
   StyledWrapSectionSettings,
   StyledWrapSettings,
 } from "./styled";
-import Link from "next/link";
 import { ChevronLeftIcon } from "@/components/Icons";
 import { SearchSettingsField, Setting } from "./components/SearchSettingsField";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { NostrJson } from "./components/NostrJson";
 import { ContentFilters } from "./components/ContentFilters";
 import { useBack } from "@/hooks/useBackPage";
+import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -160,33 +160,34 @@ export const SettingPage = () => {
   });
 
   const handleChangeNavigation = useCallback(
-    (input: {
-      id: string;
-      type: "primary" | "secondary";
-      field: "title" | "link";
-      value: string;
-    }) => {
-      const navigation = values.navigation[input.type].map((item) => {
-        if (item.id === input.id) {
-          return {
-            ...item,
-            [input.field]: input.value,
-          };
-        }
-
-        return item;
-      });
+    (input: InputNavigation) => {
+      const navigation = updateLevelNavigation(
+        values.navigation[input.type],
+        input,
+      );
 
       setFieldValue(`navigation.${input.type}`, navigation);
     },
-    [setFieldValue, values.navigation]
+    [setFieldValue, values.navigation],
+  );
+
+  const handleResetNavigation = useCallback(
+    (input: InputNavigationReset) => {
+      const navigation = resetLevelNavigation(
+        values.navigation[input.type],
+        input,
+      );
+
+      setFieldValue(`navigation.${input.type}`, navigation);
+    },
+    [setFieldValue, values.navigation],
   );
 
   const handleChangeNavigationOrder = useCallback(
     (navigation: NavigationModelType) => {
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleAddLinkNavigation = useCallback(
@@ -196,95 +197,95 @@ export const SettingPage = () => {
         { title: "", link: "", id: "" + Date.now() },
       ]);
     },
-    [setFieldValue, values.navigation]
+    [setFieldValue, values.navigation],
   );
 
   const handleChangeHashtags = useCallback(
     (value: string | string[]) => {
       setFieldValue("hashtags", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeHashtagsHomePage = useCallback(
     (value: string | string[]) => {
       setFieldValue("hashtags_homepage", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeContributors = useCallback(
     (pubkeys: string[]) => {
       setFieldValue("contributors", pubkeys);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleUpdateWebSiteAddress = useCallback(
     async (url: string) => {
       setFieldValue("url", addHttps(url));
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeContentActions = useCallback(
     (value: string[]) => {
       setFieldValue("contentActions", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeSignupStartNjump = useCallback(
     (value: boolean) => {
       setFieldValue("signupStartNjump", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeKinds = useCallback(
     (value: number | number[]) => {
       setFieldValue("kinds", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleOptionsMainCallAction = useCallback(
     (value: string) => {
       setFieldValue("contentActionMain", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeKindsHomePage = useCallback(
     (value: number | number[]) => {
       setFieldValue("kinds_homepage", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleAutoSubmit = useCallback(
     (value: boolean) => {
       setFieldValue("autoSubmit", value);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleChangeColor = useCallback(
     (color: string) => {
       setFieldValue("accentColor", color);
     },
-    [setFieldValue]
+    [setFieldValue],
   );
 
   const handleRemoveLinkNavigation = useCallback(
     (input: { id: string; type: "primary" | "secondary" }) => {
       const navigation = values.navigation[input.type].filter(
-        (item) => item.id !== input.id
+        (item) => item.id !== input.id,
       );
 
       setFieldValue(`navigation.${[input.type]}`, navigation);
     },
-    [setFieldValue, values.navigation]
+    [setFieldValue, values.navigation],
   );
 
   useEffect(() => {
@@ -499,6 +500,7 @@ export const SettingPage = () => {
             <Navigation
               navigation={values.navigation}
               handleChangeNavigation={handleChangeNavigation}
+              handleResetNavigation={handleResetNavigation}
               handleChangeNavigationOrder={handleChangeNavigationOrder}
               submitForm={submitForm}
               isLoading={isLoading}

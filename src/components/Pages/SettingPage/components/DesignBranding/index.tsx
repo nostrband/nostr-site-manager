@@ -14,16 +14,11 @@ interface DesignBrandingProps {
   siteId: string;
   themeName: string;
   themeId: string;
-  isLoading: boolean
+  isLoading: boolean;
 }
 
 export const DesignBranding = memo(
-  ({
-    siteId,
-    themeName,
-    themeId,
-    isLoading
-  }: DesignBrandingProps) => {
+  ({ siteId, themeName, themeId, isLoading }: DesignBrandingProps) => {
     const router = useRouter();
 
     const switchTheme = () => {

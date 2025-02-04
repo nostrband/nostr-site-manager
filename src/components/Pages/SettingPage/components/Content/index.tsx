@@ -103,7 +103,7 @@ export const Content = memo(
         target: { value },
       } = event;
       handleChangeKinds(
-        typeof value === "string" ? value.split(",").map(Number) : value
+        typeof value === "string" ? value.split(",").map(Number) : value,
       );
     };
 
@@ -147,7 +147,7 @@ export const Content = memo(
                   s.startsWith("#") ? s : `#${s}`;
 
                 const newValues = value.map((v) =>
-                  typeof v === "string" ? newHashtag(v) : newHashtag(v.title)
+                  typeof v === "string" ? newHashtag(v) : newHashtag(v.title),
                 );
                 const uniqueValues = [...new Set(newValues)];
                 handleChangeHashtags(uniqueValues);
@@ -168,12 +168,12 @@ export const Content = memo(
                       checked={selectedHashtags.indexOf(option.title) > -1}
                       onClick={(e) => {
                         const isSelected = selectedHashtags.includes(
-                          option.title
+                          option.title,
                         );
                         if (isSelected) {
                           e.stopPropagation();
                           const newSelectedHashtags = selectedHashtags.filter(
-                            (el) => el !== option.title
+                            (el) => el !== option.title,
                           );
 
                           handleChangeHashtags(newSelectedHashtags);
@@ -228,7 +228,7 @@ export const Content = memo(
         </StyledFormFields>
       </StyledSettingBlock>
     );
-  }
+  },
 );
 
 Content.displayName = "Content";

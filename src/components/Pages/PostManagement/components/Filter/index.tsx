@@ -157,7 +157,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
     const isDesktop = useResponsive("up", "sm");
     const sizeField = isDesktop ? "medium" : "small";
 
-    const testRef = useRef(false)
+    const [manualLoad, setManualLoad] = useState(false);
 
     const router = useRouter();
     const params = useSearchParams();
@@ -330,7 +330,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
             searchParams.delete("authors");
           }
 
-          testRef.current = true
+          setManualLoad(true);
 
           router.push(`?${searchParams.toString()}`);
 
@@ -510,8 +510,16 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
       const search = params.get("search") || "";
 
-      if (since) {setSelectedDateSince(new Date(since))} else {setSelectedDateSince(null)};
-      if (until) {setSelectedDateUntil(new Date(until))} else {setSelectedDateUntil(null)};
+      if (since) {
+        setSelectedDateSince(new Date(since));
+      } else {
+        setSelectedDateSince(null);
+      }
+      if (until) {
+        setSelectedDateUntil(new Date(until));
+      } else {
+        setSelectedDateUntil(null);
+      }
 
       setFieldValue("kinds", kinds);
       setFieldValue("hashtags", hashtags);
@@ -534,18 +542,18 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
       const transformedObject = transformObject(prepareData);
 
-      if (siteData && !testRef.current) {
+      if (siteData && !manualLoad) {
         getFilterSitePosts(transformedObject, siteData.id);
       }
-    }, [siteData, params, testRef.current]);
+    }, [siteData, params, manualLoad]);
 
     useEffect(() => {
       const handlePopState = () => {
-        testRef.current = false
+        setManualLoad(false);
       };
-  
+
       window.addEventListener("popstate", handlePopState);
-  
+
       return () => {
         window.removeEventListener("popstate", handlePopState);
       };

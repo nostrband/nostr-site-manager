@@ -37,6 +37,7 @@ import {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -155,6 +156,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
     const [isOpenMoreFilter, setOpenMoreFilter] = useState(false);
     const isDesktop = useResponsive("up", "sm");
     const sizeField = isDesktop ? "medium" : "small";
+
+    const testRef = useRef(false)
 
     const router = useRouter();
     const params = useSearchParams();
@@ -327,6 +330,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
             searchParams.delete("authors");
           }
 
+          testRef.current = true
+
           router.push(`?${searchParams.toString()}`);
 
           if (siteData) {
@@ -483,6 +488,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
             setFieldValue("authors", []);
           });
+      } else {
+        setFieldValue("authors", []);
       }
 
       const kinds = params.get("kinds")
@@ -503,8 +510,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
       const search = params.get("search") || "";
 
-      if (since) setSelectedDateSince(new Date(since));
-      if (until) setSelectedDateUntil(new Date(until));
+      if (since) {setSelectedDateSince(new Date(since))} else {setSelectedDateSince(null)};
+      if (until) {setSelectedDateUntil(new Date(until))} else {setSelectedDateUntil(null)};
 
       setFieldValue("kinds", kinds);
       setFieldValue("hashtags", hashtags);
@@ -527,10 +534,22 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
       const transformedObject = transformObject(prepareData);
 
-      if (siteData && params.size !== 0) {
+      if (siteData && !testRef.current) {
         getFilterSitePosts(transformedObject, siteData.id);
       }
-    }, [siteData]);
+    }, [siteData, params, testRef.current]);
+
+    useEffect(() => {
+      const handlePopState = () => {
+        testRef.current = false
+      };
+  
+      window.addEventListener("popstate", handlePopState);
+  
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+      };
+    }, []);
 
     const renderFilterContent = (
       <StyledWrapFilter>

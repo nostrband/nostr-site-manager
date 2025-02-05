@@ -201,6 +201,8 @@ export const AuthorFilter = ({
       loading={isLoading}
       options={mergeAuthors}
       disableCloseOnSelect
+      disableClearable
+      limitTags={1}
       freeSolo
       size={size}
       value={selectedAuthors}

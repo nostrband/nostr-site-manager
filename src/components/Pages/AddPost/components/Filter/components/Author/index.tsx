@@ -198,9 +198,11 @@ export const AuthorFilter = ({
     <Autocomplete
       id={id}
       multiple
+      disableClearable
       loading={isLoading}
       options={mergeAuthors}
       disableCloseOnSelect
+      limitTags={1}
       freeSolo
       size={size}
       value={selectedAuthors}

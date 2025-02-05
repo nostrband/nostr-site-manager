@@ -14,7 +14,11 @@ import {
 } from "@hello-pangea/dnd";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
-import { IBaseSetting } from "@/types/setting.types";
+import {
+  IBaseSetting,
+  InputNavigation,
+  InputNavigationReset,
+} from "@/types/setting.types";
 import { SETTINGS_CONFIG } from "@/consts";
 import {
   StyledItemNavigation,
@@ -31,12 +35,8 @@ export type NavigationModelType = {
 
 interface ITitleDescription extends IBaseSetting {
   navigation: NavigationModelType;
-  handleChangeNavigation: (input: {
-    id: string;
-    type: "primary" | "secondary";
-    field: "title" | "link";
-    value: string;
-  }) => void;
+  handleChangeNavigation: (input: InputNavigation) => void;
+  handleResetNavigation: (input: InputNavigationReset) => void;
   handleAddLinkNavigation: (type: "primary" | "secondary") => void;
   handleChangeNavigationOrder: (navigation: NavigationModelType) => void;
   handleRemoveLinkNavigation: (input: {
@@ -51,6 +51,7 @@ export const Navigation = memo(
     handleChangeNavigation,
     handleChangeNavigationOrder,
     handleAddLinkNavigation,
+    handleResetNavigation,
     submitForm,
     isLoading,
     handleRemoveLinkNavigation,
@@ -117,6 +118,7 @@ export const Navigation = memo(
                               isEdit={isEdit}
                               title={el.title}
                               link={el.link}
+                              handleResetNavigation={handleResetNavigation}
                               handleRemoveLinkNavigation={
                                 handleRemoveLinkNavigation
                               }

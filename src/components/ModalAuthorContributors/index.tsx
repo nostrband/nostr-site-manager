@@ -164,28 +164,26 @@ export const ModalAuthorContributors = ({
               const imgContributor = dataContributor?.picture || "";
 
               return (
-                <>
-                  <StyledAuthorWrap>
-                    <StyledAuthor key={i}>
-                      <Avatar
-                        alt={nameContributor}
-                        src={imgContributor}
-                        sx={{ width: 40, height: 40 }}
-                      />
-                      <StyledAuthorName>{nameContributor}</StyledAuthorName>
-                    </StyledAuthor>
+                <StyledAuthorWrap key={i}>
+                  <StyledAuthor>
+                    <Avatar
+                      alt={nameContributor}
+                      src={imgContributor}
+                      sx={{ width: 40, height: 40 }}
+                    />
+                    <StyledAuthorName>{nameContributor}</StyledAuthorName>
+                  </StyledAuthor>
 
-                    <Button
-                      onClick={() => handleDeleteContributor(el.pubkey)}
-                      variant="text"
-                      color="error"
-                      sx={{ minWidth: "auto" }}
-                      disabled={contributors.length === 1}
-                    >
-                      <TrashIcon color="inherit" />
-                    </Button>
-                  </StyledAuthorWrap>
-                </>
+                  <Button
+                    onClick={() => handleDeleteContributor(el.pubkey)}
+                    variant="text"
+                    color="error"
+                    sx={{ minWidth: "auto" }}
+                    disabled={contributors.length === 1}
+                  >
+                    <TrashIcon color="inherit" />
+                  </Button>
+                </StyledAuthorWrap>
               );
             })}
           </StyledAuthorGroup>

@@ -96,7 +96,7 @@ const prefetchThemesPromise = (async function prefetchThemes() {
   if (!globalThis.document) return;
 
   const addrs = THEMES_PREVIEW.map((t) => t.id).map(
-    (n) => nip19.decode(n).data as nip19.AddressPointer
+    (n) => nip19.decode(n).data as nip19.AddressPointer,
   );
 
   const themeFilter = {
@@ -133,7 +133,7 @@ async function ensureSiteTheme(site: NDKEvent) {
       ids: [eid],
     },
     [SITE_RELAY],
-    2000
+    2000,
   );
   if (!pkg) throw new Error("Theme package not found");
 
@@ -148,7 +148,7 @@ async function ensureSiteTheme(site: NDKEvent) {
   if (
     themes.find(
       (t) =>
-        t.pubkey === themeAddr.pubkey && tv(t, "d") === themeAddr.identifier
+        t.pubkey === themeAddr.pubkey && tv(t, "d") === themeAddr.identifier,
     )
   )
     return;
@@ -164,7 +164,7 @@ async function ensureSiteTheme(site: NDKEvent) {
       "#d": [themeAddr.identifier],
     },
     [SITE_RELAY],
-    2000
+    2000,
   );
   if (!theme) throw new Error("Theme not found");
 
@@ -186,7 +186,7 @@ export async function setPreviewSettings(ns: PreviewSettings) {
 
   let updated = !isEqual(
     omit(settings, ["themeId", "design"]),
-    omit(ns, "themeId", "design")
+    omit(ns, "themeId", "design"),
   );
 
   let newContribs = !site;
@@ -300,13 +300,13 @@ export async function fetchTopHashtags(pubkeys: string[]) {
       limit: 50,
     })),
     relays,
-    1000
+    1000,
   );
 
   const topTags = new Map<string, number>();
   for (const t of [...events]
     .map((e) =>
-      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1])
+      e.tags.filter((t) => t.length >= 2 && t[0] === "t").map((t) => t[1]),
     )
     .flat()) {
     let c = topTags.get(t) || 0;
@@ -421,7 +421,7 @@ async function preparePreviewSite() {
     stv(
       event,
       "d",
-      d_tag + ":" + bytesToHex(randomBytes(userIsDelegated ? 8 : 3))
+      d_tag + ":" + bytesToHex(randomBytes(userIsDelegated ? 8 : 3)),
     );
 
     if (userIsDelegated) {
@@ -544,7 +544,7 @@ async function renderPreviewHtml(path: string = "/") {
 
 export async function renderPreview(
   iframe: HTMLIFrameElement,
-  path: string = "/"
+  path: string = "/",
 ) {
   if (!iframe) throw new Error("No iframe");
   const html = await renderPreviewHtml(path);
@@ -640,7 +640,7 @@ async function fetchSite() {
       authors: [addr.pubkey],
       "#d": [addr.identifier],
     },
-    [SITE_RELAY, ...addr.relays]
+    [SITE_RELAY, ...addr.relays],
   );
   console.log("loaded site event", siteId, event);
 
@@ -720,7 +720,7 @@ export async function publishPreviewSite() {
         console.log("naddr", naddr);
         console.log("requesting domain", requestedDomain);
         const reply = await fetchWithSession(
-          `/reserve?domain=${requestedDomain}&site=${naddr}`
+          `/reserve?domain=${requestedDomain}&site=${naddr}`,
         );
         if (reply.status !== 200)
           throw new Error("Failed to reserve domain name");
@@ -748,7 +748,7 @@ export async function publishPreviewSite() {
         const u = new URL(url);
         if (u.hostname.endsWith("." + NPUB_PRO_DOMAIN)) {
           const reply = await fetchWithSession(
-            `/deploy?domain=${u.hostname}&site=${naddr}`
+            `/deploy?domain=${u.hostname}&site=${naddr}`,
           );
           if (reply.status !== 200) throw new Error("Failed to deploy");
 
@@ -798,7 +798,7 @@ export async function getPreviewSiteThemeCustomSettings() {
   if (cached) return cached;
 
   const packageJsonTag = tags(pkg, "f").find(
-    (t) => t.length >= 4 && t[2] === "package.json"
+    (t) => t.length >= 4 && t[2] === "package.json",
   );
   if (!packageJsonTag || !packageJsonTag[3]) {
     console.warn("no package json in theme package", pkg);

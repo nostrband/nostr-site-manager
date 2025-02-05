@@ -10,16 +10,15 @@ import { BrushIcon } from "@/components/Icons";
 import { StyledText } from "./styled";
 import { SaveButton } from "../SaveButton";
 
+interface DesignBrandingProps {
+  siteId: string;
+  themeName: string;
+  themeId: string;
+  isLoading: boolean;
+}
+
 export const DesignBranding = memo(
-  ({
-    siteId,
-    themeName,
-    themeId,
-  }: {
-    siteId: string;
-    themeName: string;
-    themeId: string;
-  }) => {
+  ({ siteId, themeName, themeId, isLoading }: DesignBrandingProps) => {
     const router = useRouter();
 
     const switchTheme = () => {
@@ -33,8 +32,8 @@ export const DesignBranding = memo(
             {SETTINGS_CONFIG.theme.title}
 
             <SaveButton
-              isEdit={false}
-              isLoading={false}
+              isEdit={isLoading}
+              isLoading={isLoading}
               startIcon={<BrushIcon />}
               text="Theme settings"
               handleAction={switchTheme}

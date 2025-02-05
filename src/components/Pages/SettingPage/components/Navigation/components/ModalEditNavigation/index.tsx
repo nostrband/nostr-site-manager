@@ -16,6 +16,8 @@ import useResponsive from "@/hooks/useResponsive";
 import { CheckIcon, CrossIcon } from "@/components/Icons";
 import { useFormik } from "formik";
 import { validationSchemaEditNavigation } from "@/validations/rules";
+import { useRef } from "react";
+import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
 
 interface IModalEditNavigation {
   id: string;
@@ -23,18 +25,15 @@ interface IModalEditNavigation {
   link: string;
   isOpen: boolean;
   handleClose: (deleted: boolean) => void;
-  handleChangeNavigation: (input: {
-    id: string;
-    type: "primary" | "secondary";
-    field: "title" | "link";
-    value: string;
-  }) => void;
+  handleChangeNavigation: (input: InputNavigation) => void;
+  handleResetNavigation: (input: InputNavigationReset) => void;
 }
 
 export const ModalEditNavigation = ({
   isOpen,
   handleClose,
   handleChangeNavigation,
+  handleResetNavigation,
   id,
   title,
   link,
@@ -42,20 +41,48 @@ export const ModalEditNavigation = ({
   const isDesktop = useResponsive("up", "sm");
   const sizeField = isDesktop ? "medium" : "small";
 
-  const handleCancel = () => {
-    handleClose(false);
-  };
+  const resetValues = useRef({ title, link });
 
-  const { submitForm, handleChange, handleBlur, errors } = useFormik({
-    initialValues: {
-      title: "",
-      link: "",
-    },
-    validationSchema: validationSchemaEditNavigation,
-    onSubmit: async () => {
-      handleClose(false);
-    },
-  });
+  const { values, submitForm, handleChange, handleBlur, errors, setValues } =
+    useFormik({
+      initialValues: {
+        title,
+        link,
+      },
+      validationSchema: validationSchemaEditNavigation,
+      onSubmit: async () => {
+        handleClose(false);
+
+        resetValues.current = { ...values };
+      },
+    });
+
+  const handleCancel = () => {
+    if (
+      resetValues.current.link.length === 0 &&
+      resetValues.current.title.length === 0
+    ) {
+      handleClose(true);
+
+      return;
+    }
+
+    handleClose(false);
+
+    setValues({
+      title: resetValues.current.title,
+      link: resetValues.current.link,
+    });
+
+    handleResetNavigation({
+      id,
+      type: "primary",
+      fields: {
+        title: resetValues.current.title,
+        link: resetValues.current.link,
+      },
+    });
+  };
 
   return (
     <StyledDialog
@@ -105,7 +132,7 @@ export const ModalEditNavigation = ({
           )}
         </FormControl>
 
-        <FormControl fullWidth size={sizeField} error={Boolean(errors.title)}>
+        <FormControl fullWidth size={sizeField} error={Boolean(errors.link)}>
           <InputLabel htmlFor="link">Link</InputLabel>
 
           <OutlinedInput

@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { SETTINGS_CONFIG } from "@/consts";
-import { addHttps } from "@/utils";
+import { addHttps, resetLevelNavigation, updateLevelNavigation } from "@/utils";
 import { editSite } from "@/services/nostr/api";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
 import { TitleDescription } from "./components/TitleDescription";
@@ -42,6 +42,7 @@ import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { NostrJson } from "./components/NostrJson";
 import { ContentFilters } from "./components/ContentFilters";
 import { useBack } from "@/hooks/useBackPage";
+import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -159,22 +160,23 @@ export const SettingPage = () => {
   });
 
   const handleChangeNavigation = useCallback(
-    (input: {
-      id: string;
-      type: "primary" | "secondary";
-      field: "title" | "link";
-      value: string;
-    }) => {
-      const navigation = values.navigation[input.type].map((item) => {
-        if (item.id === input.id) {
-          return {
-            ...item,
-            [input.field]: input.value,
-          };
-        }
+    (input: InputNavigation) => {
+      const navigation = updateLevelNavigation(
+        values.navigation[input.type],
+        input,
+      );
 
-        return item;
-      });
+      setFieldValue(`navigation.${input.type}`, navigation);
+    },
+    [setFieldValue, values.navigation],
+  );
+
+  const handleResetNavigation = useCallback(
+    (input: InputNavigationReset) => {
+      const navigation = resetLevelNavigation(
+        values.navigation[input.type],
+        input,
+      );
 
       setFieldValue(`navigation.${input.type}`, navigation);
     },
@@ -443,7 +445,7 @@ export const SettingPage = () => {
               isLoading={isLoading}
             />
 
-            <PinnedNotes siteId={values.id} />
+            <PinnedNotes isLoading={isLoading} siteId={values.id} />
           </StyledWrapSectionSettings>
 
           <StyledTitleSection>Design</StyledTitleSection>
@@ -458,6 +460,7 @@ export const SettingPage = () => {
             />
 
             <DesignBranding
+              isLoading={isLoading}
               siteId={values.id}
               themeName={values.themeName}
               themeId={values.themeId}
@@ -497,6 +500,7 @@ export const SettingPage = () => {
             <Navigation
               navigation={values.navigation}
               handleChangeNavigation={handleChangeNavigation}
+              handleResetNavigation={handleResetNavigation}
               handleChangeNavigationOrder={handleChangeNavigationOrder}
               submitForm={submitForm}
               isLoading={isLoading}
@@ -522,7 +526,7 @@ export const SettingPage = () => {
 
           <StyledTitleSection>Files</StyledTitleSection>
 
-          <NostrJson siteId={values.id} />
+          <NostrJson isLoading={isLoading} siteId={values.id} />
 
           <StyledTitleSection>Growth</StyledTitleSection>
 

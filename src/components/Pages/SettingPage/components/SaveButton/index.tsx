@@ -96,7 +96,13 @@ export const SaveButton = ({
           disabled={disabled || isLoading}
           onClick={handleAction}
           startIcon={
-            isEdit ? <CheckIcon /> : startIcon ? startIcon : <EditIcon />
+            isLoading ? undefined : isEdit ? (
+              <CheckIcon />
+            ) : startIcon ? (
+              startIcon
+            ) : (
+              <EditIcon />
+            )
           }
         >
           {isEdit ? "Save" : text}

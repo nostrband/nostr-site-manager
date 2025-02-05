@@ -24,6 +24,7 @@ interface ICardMedia {
   alt?: string;
   isDesktop: boolean;
   height?: number;
+  src?: string;
 }
 
 interface ILoadingButton {
@@ -52,11 +53,11 @@ export const StyledCardNoImage = styled(
   forwardRef<HTMLDivElement, BoxType>(function MainContentName(props, ref) {
     const exclude = new Set(["isDesktop"]);
     const omitProps = Object.fromEntries(
-      Object.entries(props).filter((e) => !exclude.has(e[0])),
+      Object.entries(props).filter((e) => !exclude.has(e[0]))
     );
 
     return <Box ref={ref} {...omitProps} />;
-  }),
+  })
 )(({ isDesktop, theme }) => ({
   flex: `0 0 ${isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL}px`,
   height: isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL,
@@ -73,14 +74,33 @@ export const StyledCardMedia = styled(
     function MainContentName(props, ref) {
       const exclude = new Set(["isDesktop, height"]);
       const omitProps = Object.fromEntries(
-        Object.entries(props).filter((e) => !exclude.has(e[0])),
+        Object.entries(props).filter((e) => !exclude.has(e[0]))
       );
 
       return <CardMedia ref={ref} {...omitProps} />;
-    },
-  ),
+    }
+  )
 )(({ isDesktop, theme, height }) => ({
   flex: `0 0 ${isDesktop ? (isNumber(height) ? height : CARD_MEDIA_HEIGHT) : CARD_MEDIA_HEIGHT_SMALL}px`,
+  height: isDesktop
+    ? isNumber(height)
+      ? height
+      : CARD_MEDIA_HEIGHT
+    : CARD_MEDIA_HEIGHT_SMALL,
+  borderRadius: theme.shape.borderRadius,
+}));
+
+export const StyledCardVideo = styled(
+  forwardRef<HTMLVideoElement, ICardMedia>(function VideoPlayer(props, ref) {
+    const exclude = new Set(["isDesktop, height"]);
+    const omitProps = Object.fromEntries(
+      Object.entries(props).filter((e) => !exclude.has(e[0]))
+    );
+
+    return <video controls  ref={ref} {...omitProps} />;
+  })
+)(({ isDesktop, theme, height }) => ({
+  // flex: `0 0 ${isDesktop ? (isNumber(height) ? height : CARD_MEDIA_HEIGHT) : CARD_MEDIA_HEIGHT_SMALL}px`,
   height: isDesktop
     ? isNumber(height)
       ? height
@@ -229,12 +249,12 @@ export const StyledAddButton = styled(
     function MainContentName(props, ref) {
       const exclude = new Set(["isSending", "isWaiting", "isAdded"]);
       const omitProps = Object.fromEntries(
-        Object.entries(props).filter((e) => !exclude.has(e[0])),
+        Object.entries(props).filter((e) => !exclude.has(e[0]))
       );
 
       return <LoadingButton ref={ref} {...omitProps} />;
-    },
-  ),
+    }
+  )
 )(({ isSending, isWaiting, isAdded }) => ({
   background: isSending
     ? "initial"

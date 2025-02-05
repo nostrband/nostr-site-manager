@@ -135,7 +135,7 @@ const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>,
+  ref: React.Ref<unknown>
 ) {
   return <Slide direction="right" ref={ref} {...props} />;
 });
@@ -151,7 +151,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
       setIsEmpty,
       linkToAddPost,
     },
-    ref,
+    ref
   ) => {
     const [isOpenMoreFilter, setOpenMoreFilter] = useState(false);
     const isDesktop = useResponsive("up", "sm");
@@ -163,7 +163,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
     const params = useSearchParams();
     const searchParams = useMemo(
       () => new URLSearchParams(params.toString()),
-      [params],
+      [params]
     );
 
     const [isOpenModal, setOpenModal] = useState(false);
@@ -191,10 +191,10 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
     const [contributors, setContributors] = useState<string[]>([]);
 
     const [selectedDateSince, setSelectedDateSince] = useState<Date | null>(
-      null,
+      null
     );
     const [selectedUntilSince, setSelectedDateUntil] = useState<Date | null>(
-      null,
+      null
     );
 
     const isLoadingFilter = isLoadingSetting || isFetching || isLoading;
@@ -202,7 +202,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
     const getFilterSitePosts = async (
       formData: Partial<InputObject>,
       id: string,
-      isLoadMore?: boolean,
+      isLoadMore?: boolean
     ) => {
       if (isLoadMore) {
         handleLoadingMore(true);
@@ -282,6 +282,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
           search: values.search,
         };
 
+        console.log({ values, prepareData });
+
         const transformedObject = transformObject(prepareData);
 
         if (isLoadMore) {
@@ -319,7 +321,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
           }
 
           if (prepareData.hashtags.length) {
-            searchParams.set("hashtags", values.hashtags.join(","));
+            searchParams.set("hashtags", prepareData.hashtags.join(","));
           } else {
             searchParams.delete("hashtags");
           }
@@ -345,21 +347,21 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
       (value: OptionAuthorType[]) => {
         setFieldValue("authors", value);
       },
-      [setFieldValue],
+      [setFieldValue]
     );
 
     const handleChangeHashtags = useCallback(
       (value: string[]) => {
         setFieldValue("hashtags", value);
       },
-      [setFieldValue],
+      [setFieldValue]
     );
 
     const handleChangeTypes = useCallback(
       (value: number[]) => {
         setFieldValue("kinds", value);
       },
-      [setFieldValue],
+      [setFieldValue]
     );
 
     const handleDateSinceChange = (newValue: Date | null) => {
@@ -522,7 +524,10 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
       }
 
       setFieldValue("kinds", kinds);
-      setFieldValue("hashtags", hashtags);
+      setFieldValue(
+        "hashtags",
+        hashtags.map((str) => `#${str}`)
+      );
       setFieldValue("since", since);
       setFieldValue("until", until);
       setFieldValue("search", search);
@@ -776,7 +781,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
         )}
       </>
     );
-  },
+  }
 );
 
 FilterComponent.displayName = "FilterComponent";

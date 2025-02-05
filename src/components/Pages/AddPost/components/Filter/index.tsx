@@ -30,6 +30,7 @@ import {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -126,7 +127,7 @@ const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>,
+  ref: React.Ref<unknown>
 ) {
   return <Slide direction="right" ref={ref} {...props} />;
 });
@@ -142,17 +143,19 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
       setIsEmpty,
       handleLoadingMore,
     },
-    ref,
+    ref
   ) => {
     const [isOpenMoreFilter, setOpenMoreFilter] = useState(false);
     const isDesktop = useResponsive("up", "sm");
     const sizeField = isDesktop ? "medium" : "small";
 
+    const [manualLoad, setManualLoad] = useState(false);
+
     const router = useRouter();
     const params = useSearchParams();
     const searchParams = useMemo(
       () => new URLSearchParams(params.toString()),
-      [params],
+      [params]
     );
 
     const [isOpenModal, setOpenModal] = useState(false);
@@ -180,10 +183,10 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
     const [contributors, setContributors] = useState<string[]>([]);
 
     const [selectedDateSince, setSelectedDateSince] = useState<Date | null>(
-      null,
+      null
     );
     const [selectedUntilSince, setSelectedDateUntil] = useState<Date | null>(
-      null,
+      null
     );
 
     const isLoadingFilter = isLoadingSetting || isFetching || isLoading;
@@ -191,7 +194,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
     const getSearchPosts = async (
       formData: Partial<InputObject>,
       id: string,
-      isLoadMore?: boolean,
+      isLoadMore?: boolean
     ) => {
       if (isLoadMore) {
         handleLoadingMore(true);
@@ -318,7 +321,9 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
             searchParams.delete("authors");
           }
 
-          router.push(`?${searchParams.toString()}`);
+          setManualLoad(true);
+
+          router.push(`?${searchParams.toString()}`)
 
           if (siteData) {
             await getSearchPosts(transformedObject, siteData.id);
@@ -331,21 +336,21 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
       (value: OptionAuthorType[]) => {
         setFieldValue("authors", value);
       },
-      [setFieldValue],
+      [setFieldValue]
     );
 
     const handleChangeHashtags = useCallback(
       (value: string[]) => {
         setFieldValue("hashtags", value);
       },
-      [setFieldValue],
+      [setFieldValue]
     );
 
     const handleChangeTypes = useCallback(
       (value: number[]) => {
         setFieldValue("kinds", value);
       },
-      [setFieldValue],
+      [setFieldValue]
     );
 
     const handleDateSinceChange = (newValue: Date | null) => {
@@ -379,9 +384,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
       setSelectedDateSince(null);
       setSelectedDateUntil(null);
 
-      const searchParamsReset = new URLSearchParams("");
-
-      router.push(`?${searchParamsReset.toString()}`);
+      submitForm()
     };
 
     const handleLoadMore = (until: number) => {
@@ -406,6 +409,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
       );
     }, [values]);
 
+    const [isFirstLoad, setFirstLoad] = useState(true)
+
     const getSuggestPosts = useCallback(async () => {
       try {
         const suggestPostsData = await suggestPosts(siteId);
@@ -415,14 +420,18 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
         console.log(error);
       } finally {
         handleLoading(false);
+        setFirstLoad(false)
+        setManualLoad(true)
       }
     }, [siteId, setPosts, handleLoading]);
-
+ 
     useEffect(() => {
-      if (params.size === 0) {
+      if (params.size === 0 && isFirstLoad) {
         getSuggestPosts();
+      } else {
+        setFirstLoad(false)
       }
-    }, [getSuggestPosts, params]);
+    }, [getSuggestPosts]);
 
     useEffect(() => {
       if (siteData) {
@@ -436,7 +445,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
             ...siteData.contributors,
           ].filter(
             (author, index, self) =>
-              index === self.findIndex((a) => a === author),
+              index === self.findIndex((a) => a === author)
           );
 
           setContributors(mergeContributors);
@@ -492,6 +501,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
             setFieldValue("authors", []);
           });
+      } else {
+        setFieldValue("authors", []);
       }
 
       const kinds = params.get("kinds")
@@ -512,11 +523,22 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
       const search = params.get("search") || "";
 
-      if (since) setSelectedDateSince(new Date(since));
-      if (until) setSelectedDateUntil(new Date(until));
+      if (since) {
+        setSelectedDateSince(new Date(since));
+      } else {
+        setSelectedDateSince(null);
+      }
+      if (until) {
+        setSelectedDateUntil(new Date(until));
+      } else {
+        setSelectedDateUntil(null);
+      }
 
       setFieldValue("kinds", kinds);
-      setFieldValue("hashtags", hashtags);
+      setFieldValue(
+        "hashtags",
+        hashtags.map((str) => `#${str}`)
+      );
       setFieldValue("since", since);
       setFieldValue("until", until);
       setFieldValue("search", search);
@@ -536,12 +558,24 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
       const transformedObject = transformObject(prepareData);
 
-      if (siteData && params.size !== 0) {
+      if (siteData && !manualLoad && !isFirstLoad) {
         setSearchResult(true);
 
-        getSearchPosts(transformedObject, siteData.id);
+        getSearchPosts(transformedObject, siteData.id)
       }
-    }, [siteData]);
+    }, [siteData, manualLoad, params, isFirstLoad, ]);
+
+    useEffect(() => {
+      const handlePopState = () => {
+        setManualLoad(false);
+      };
+
+      window.addEventListener("popstate", handlePopState);
+
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+      };
+    }, []);
 
     const renderFilterContent = (
       <StyledWrapFilter>
@@ -748,7 +782,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
         )}
       </>
     );
-  },
+  }
 );
 
 FilterComponent.displayName = "FilterComponent";

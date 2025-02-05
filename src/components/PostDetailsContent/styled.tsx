@@ -97,10 +97,9 @@ export const StyledCardVideo = styled(
       Object.entries(props).filter((e) => !exclude.has(e[0]))
     );
 
-    return <video controls  ref={ref} {...omitProps} />;
+    return <video controls playsInline ref={ref} {...omitProps} />;
   })
 )(({ isDesktop, theme, height }) => ({
-  // flex: `0 0 ${isDesktop ? (isNumber(height) ? height : CARD_MEDIA_HEIGHT) : CARD_MEDIA_HEIGHT_SMALL}px`,
   height: isDesktop
     ? isNumber(height)
       ? height

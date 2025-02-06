@@ -3,6 +3,7 @@ import {
   SEARCH_RELAYS,
   SEARCH_RELAYS_SPAM,
   addOnAuth,
+  fetchWithSession,
   ndk,
   publishSiteEvent,
   srm,
@@ -26,23 +27,27 @@ import {
   eventId,
   fetchEvents,
   getProfileSlug,
+  isAudioUrl,
   isImageUrl,
   isVideoUrl,
   prepareSite,
   tv,
 } from "libnostrsite";
-import { NDKEvent, NostrEvent } from "@nostr-dev-kit/ndk";
-import { THEMES_PREVIEW } from "@/consts";
+import { NDKEvent, NDKRelaySet, NostrEvent } from "@nostr-dev-kit/ndk";
+import { NPUB_PRO_DOMAIN, THEMES_PREVIEW } from "@/consts";
 import { fetchThemePackage, setSiteThemePackage } from "./themes";
 import { bytesToHex, randomBytes } from "@noble/hashes/utils";
 import { SERVER_PUBKEY } from "./consts";
 import { eventIdToTag } from "./utils";
+import { signSubmitEvent } from "./content";
+import { resetSites } from "./api";
 
-const DEFAULT_THEMES = {
+const DEFAULT_THEMES: any = {
   blog: THEMES_PREVIEW.find((t) => t.name === "Simply"),
   photo: THEMES_PREVIEW.find((t) => t.name === "Edge"),
   video: THEMES_PREVIEW.find((t) => t.name === "Paway"),
   note: THEMES_PREVIEW.find((t) => t.name === "Micro-simply"),
+  podcast: THEMES_PREVIEW.find((t) => t.name === "Wave"),
 };
 
 export async function setAuth(event: any) {
@@ -84,7 +89,7 @@ export async function loginOTP(pubkey: string, otpData: any) {
   });
 }
 
-export type SiteType = "" | "blog" | "photo" | "video" | "note";
+export type SiteType = "" | "blog" | "photo" | "video" | "note" | "podcast";
 
 async function fetchContent(pubkey: string, kinds: number[], min: number) {
   return await fetchEvents(
@@ -113,6 +118,11 @@ function isVideo(parser: NostrParser, r: NDKEvent) {
 function isImage(parser: NostrParser, r: NDKEvent) {
   const links: string[] = parser.parseLinks(r);
   return links.find((l) => isImageUrl(l, r as NostrEvent));
+}
+
+function isAudio(parser: NostrParser, r: NDKEvent) {
+  const links: string[] = parser.parseLinks(r);
+  return links.find((l) => isAudioUrl(l, r as NostrEvent));
 }
 
 export async function detectContentType(
@@ -166,43 +176,6 @@ export async function createSite(
   const theme = DEFAULT_THEMES[type];
   if (!theme) throw new Error("Invalid theme name");
 
-  // difference vs old onboarding:
-  // no include tags,
-  // instead we auto-submit last 10 posts right?
-  // hmm if it's their own site then why not import everything?
-  // - to make the site more beautiful
-  // - bcs there won't be auto-submit soon!
-  // ok, so kinds are passed but after site template is created
-  // we should remove all "include" and "kind" tags and
-  // submit some posts.
-
-  // there's a lot of internal login in generating a site,
-  // one of them relates to setting up navigation from existing
-  // content, which means we FIRST have to get the siteId,
-  // then need to submit some posts, and then LOAD them,
-  // and then init the navigation and save the site
-
-  // also shall we use admin-contrib subdomain this time?
-  // we will no longer be creating sites with different author,
-  // in onboarding that's "sample site", later on we should
-  // probably create empty sites without navigation
-  // and without content...
-
-  // hmm... it's actually pretty useful to be able to
-  // create site "from other author's perspective"...
-  // so maybe we should keep that thing?
-
-  // need more thinking here!
-
-  // ok suppose we won't be enabling auto-submit on new sites
-  // any more, that means we can just change the existing
-  // implementation to remove include/kind tags and to submit
-  // 10 last posts, right? we just add 'type' to params instead of
-  // hashtags and kinds?
-
-  // we use this same logic for creating site, for changing theme,
-  // and for editing theme. these are actually 3 different actions.
-
   const pkg = await fetchThemePackage(theme.id);
 
   // start from zero, prepare site event from input settings,
@@ -252,14 +225,16 @@ export async function createSite(
 
   // drop these - we're manually adding posts
   srm(site, "include");
-  srm(site, "kinds");
+  srm(site, "kind");
+  // remove the contributor
+  srm(site, "p");
 
   // set current theme
   setSiteThemePackage(pkg, site);
 
   console.log("site", site.rawEvent());
 
-  const POST_NUM = 10;
+  const POST_NUM = 16;
   // fetch 10x events to make sure we have enough after filtering
   const events = await fetchContent(pubkey, kinds, POST_NUM * 10);
 
@@ -270,6 +245,8 @@ export async function createSite(
     if (e.kind === KIND_NOTE && type !== "note") {
       if (type === "video" && isVideo(parser, e)) good.push(e);
       else if (type === "photo" && isImage(parser, e)) good.push(e);
+      else if (type === "podcast" && (isAudio(parser, e) || isVideo(parser, e)))
+        good.push(e);
     } else {
       good.push(e);
     }
@@ -278,11 +255,6 @@ export async function createSite(
   console.log("good", good);
 
   const identifier = tv(site, "d") || "";
-  // const siteId = nip19.naddrEncode({
-  //   identifier,
-  //   kind: site.kind!,
-  //   pubkey: site.pubkey,
-  // });
   const siteAddress = `${site.kind!}:${site.pubkey}:${identifier}`;
   for (const e of good) {
     const id = eventId(e);
@@ -313,11 +285,54 @@ export async function createSite(
     if (eventIdTag.includes(":")) event.tags.push(["a", eventIdTag, relayHint]);
     else event.tags.push(["e", eventIdTag, relayHint!]);
 
-    console.log("submit ", id, event);
+    const nevent = await signSubmitEvent(event);
+    const r = await nevent.publish(
+      NDKRelaySet.fromRelayUrls([...userRelays, ...SEARCH_RELAYS], ndk)
+    );
+
+    console.log("submit ", id, nevent.rawEvent(), "to relays", r.size);
   }
 
-  // const event = await publishSiteEvent(site);
+  // naddr to reserve and deploy
+  const naddr = nip19.naddrEncode({
+    identifier: identifier,
+    kind: site.kind!,
+    pubkey: site.pubkey,
+  });
+  console.log("publishing", naddr, site);
 
-  // now we're ready
-//  console.log("prepared site event", site);
+  // reserve a subdomain
+  const requestedDomain = tv(site, "d")!.split(":")[0].replace("_", "-");
+  console.log("naddr", naddr);
+  console.log("requesting domain", requestedDomain);
+  const reply = await fetchWithSession(
+    `/reserve?domain=${requestedDomain}&site=${naddr}`
+  );
+  if (reply.status !== 200) throw new Error("Failed to reserve domain name");
+  const reserve = await reply.json();
+  console.log(Date.now(), "got domain", reserve);
+
+  // set reserved domain to the event
+  const subdomain = reserve.domain.split("." + NPUB_PRO_DOMAIN)[0];
+  console.log("received domain", subdomain);
+  const origin = `https://${reserve.domain}/`;
+  srm(site, "r");
+  stv(site, "r", origin);
+
+  // publish site event
+  const event = await publishSiteEvent(site);
+  console.log("published site event", event);
+
+  // deploy
+  const deployReply = await fetchWithSession(
+    `/deploy?domain=${new URL(origin).hostname}&site=${naddr}`
+  );
+  if (deployReply.status !== 200) throw new Error("Failed to deploy");
+  const r = await deployReply.json();
+  console.log(Date.now(), "deployed", r);
+
+  // make sure sites cache is clear to fetch this newly published site
+  resetSites();
+
+  return naddr;
 }

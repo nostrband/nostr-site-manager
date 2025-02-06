@@ -126,7 +126,7 @@ export const LoginDM = ({
 
   return (
     <>
-      <StyledTitlePage>Log in with a code</StyledTitlePage>
+      <StyledTitlePage>Log in</StyledTitlePage>
       <StyledDescriptionPage variant="body2">
         Enter your user name or npub. You will receive a direct message with a
         code.

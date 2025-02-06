@@ -5,22 +5,41 @@ import {
   StyledTitlePage,
 } from "../../../styled";
 import Link from "next/link";
-import { SCREEN, TypesScreens } from "@/consts";
+import {
+  AuthContext,
+  parseProfileEvent,
+  userProfile,
+  userPubkey,
+} from "@/services/nostr/nostr";
+import { useContext, useEffect, useState } from "react";
+import { SiteType } from "@/services/nostr/onboard";
 
 interface StartProps {
-  setScreen: (screen: TypesScreens) => void;
+  createSite: (author: string, type: SiteType, kinds: number[]) => void;
 }
 
-export const Start = ({setScreen}: StartProps) => {
+export const Start = ({ createSite }: StartProps) => {
+  const { isAuth } = useContext(AuthContext);
+  const [username, setUsername] = useState("");
+
   const handleBuilding = () => {
-    setScreen(SCREEN.BUILDING)
-  }
+    createSite(userPubkey, '', []);
+  };
+
+  useEffect(() => {
+    if (isAuth) {
+      const { name } = parseProfileEvent(userPubkey, userProfile);
+      setUsername(name.slice(0, 1).toUpperCase() + name.slice(1));
+    }
+  }, [isAuth]);
 
   return (
     <>
-      <StyledTitlePage>Hello Username, Let&apos;s Build a Sample Website</StyledTitlePage>
+      <StyledTitlePage>
+        Hello{username ? ` ${username}` : ""}, Let&apos;s Make a Sample Website!
+      </StyledTitlePage>
       <StyledDescriptionPage variant="body2">
-        Unleash Your Creativity with Our Easy-to-Use Website Builder!
+        Create a draft website quickly, and then gradually improve it later.
       </StyledDescriptionPage>
       <StyledActions>
         <Button

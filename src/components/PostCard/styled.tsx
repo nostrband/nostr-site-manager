@@ -14,6 +14,7 @@ import {
 import { grey } from "@mui/material/colors";
 import { forwardRef } from "react";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
+import zIndex from "@mui/material/styles/zIndex";
 
 const POST_CARD_PADDING = 16;
 const CARD_MEDIA_HEIGHT = 160;
@@ -65,14 +66,63 @@ export const StyledCardNoImage = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   fontSize: 60,
   color: "#fff",
+  position: "relative",
+}));
+
+export const StyledCardVideoWrap = styled(Box)(({ theme }) => ({
+  flex: `0 0 ${CARD_MEDIA_HEIGHT}px`,
+  background: grey[300],
+  display: "flex",
+  height: CARD_MEDIA_HEIGHT,
+  width: "100%",
+  borderRadius: theme.shape.borderRadius,
+  overflow: "hidden",
+  position: "relative",
+  "&::before": {
+    content: '""',
+    height: "100%",
+    left: 0,
+    objectFit: "cover",
+    position: "absolute",
+    top: 0,
+    width: "100%",
+    background: "#000",
+    opacity: "0.2",
+    zIndex: "1",
+  },
+}));
+
+export const StyledCardVideoPlayButton = styled(Box)(({ theme }) => ({
+  background: theme.palette.decorate.main,
+  borderRadius: "50%",
+  height: 56,
+  width: 56,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  position: "relative",
+  zIndex: "1",
+  margin: 'auto',
+  color: '#fff'
+}));
+
+export const StyledCardVideo = styled("video")(() => ({
+  bottom: 0,
+  height: "100%",
+  left: 0,
+  objectFit: "cover",
+  position: "absolute",
+  right: 0,
+  top: 0,
+  width: "100%",
 }));
 
 export const StyledCardMedia = styled(
   forwardRef<HTMLImageElement, IStyledCardMedia>(
     function StyledCardMediaName(props, ref) {
       return <CardMedia ref={ref} {...props} />;
-    },
-  ),
+    }
+  )
 )(({ theme }) => ({
   flex: `0 0 ${CARD_MEDIA_HEIGHT}px`,
   height: CARD_MEDIA_HEIGHT,
@@ -176,7 +226,7 @@ export const StyledPostAuthorName = styled(Box)(() => ({
 export const StyledLink = styled(
   forwardRef<HTMLLinkElement, LinkProps>(function MainContentName(props, ref) {
     return <Link component="nav" ref={ref} {...props} />;
-  }),
+  })
 )(() => ({
   height: "100%",
   textDecoration: "none",
@@ -199,12 +249,12 @@ export const StyledAddButton = styled(
     function MainContentName(props, ref) {
       const exclude = new Set(["isSending", "isWaiting", "isAdded"]);
       const omitProps = Object.fromEntries(
-        Object.entries(props).filter((e) => !exclude.has(e[0])),
+        Object.entries(props).filter((e) => !exclude.has(e[0]))
       );
 
       return <LoadingButton ref={ref} {...omitProps} />;
-    },
-  ),
+    }
+  )
 )(({ isSending, isWaiting, isAdded, theme }) => ({
   width: "88px",
   height: "32px",

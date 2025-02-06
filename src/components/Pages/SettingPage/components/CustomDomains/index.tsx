@@ -2,6 +2,7 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import {
   StyledDescriptionBlock,
+  StyledFormFields,
   StyledHeadSettingBlock,
   StyledSettingBlock,
   StyledTitleBlock,
@@ -16,6 +17,7 @@ import { fetchDomains } from "@/services/nostr/api";
 import { enqueueSnackbar } from "notistack";
 import { userIsReadOnly } from "@/services/nostr/nostr";
 import { PlusCircleIcon } from "@/components/Icons";
+import { ItemDomain } from "./components/ItemDomain";
 
 interface ICustomDomains extends IBaseSetting {
   siteId: string;
@@ -101,19 +103,13 @@ export const CustomDomains = memo(
             </StyledDescriptionBlock>
           )}
 
-          <StyledDescriptionBlock>
-            {Boolean(listDomains.length) ? (
-              <>
-                {listDomains.map((el, i) => (
-                  <Typography key={i} variant="body2">
-                    {el}
-                  </Typography>
-                ))}
-              </>
-            ) : (
-              SETTINGS_CONFIG.customDomains.description
-            )}
-          </StyledDescriptionBlock>
+          <StyledFormFields>
+            {Boolean(listDomains.length)
+              ? listDomains.map((el, i) => (
+                  <ItemDomain disabled={!isEdit} siteId={siteId} key={i} domain={el} />
+                ))
+              : SETTINGS_CONFIG.customDomains.description}
+          </StyledFormFields>
         </StyledHeadSettingBlock>
 
         <Button
@@ -136,7 +132,7 @@ export const CustomDomains = memo(
         />
       </StyledSettingBlock>
     );
-  },
+  }
 );
 
 CustomDomains.displayName = "CustomDomains";

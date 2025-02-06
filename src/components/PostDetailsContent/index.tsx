@@ -10,6 +10,7 @@ import {
   StyledCardText,
   StyledCardTitle,
   StyledCardTitleFeature,
+  StyledCardVideo,
   StyledCardWrapAuthor,
   StyledComingSoon,
   StyledDate,
@@ -73,6 +74,7 @@ export const PostDetailsContent = memo(
       submitterProfile,
       primary_author,
       autoSubmitted,
+      videos,
     } = post;
 
     const handleShowMore = () => {
@@ -99,6 +101,8 @@ export const PostDetailsContent = memo(
     const [isSending, setIsSending] = useState<boolean>(false);
 
     const isAdded = Boolean(submitterPubkey);
+
+    const isVideos = Boolean(videos.length);
 
     const [progress, setProgress] = useState<number>(0);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
@@ -190,7 +194,7 @@ export const PostDetailsContent = memo(
     return (
       <>
         <StyledCard>
-          {isLoadedImage && feature_image && (
+          {isLoadedImage && feature_image ? (
             <StyledCardMedia
               component="img"
               isDesktop={isDesktop}
@@ -198,7 +202,13 @@ export const PostDetailsContent = memo(
               alt={title || url}
               height={heightCardMedia}
             />
-          )}
+          ) : isVideos ? (
+            <StyledCardVideo
+              isDesktop={isDesktop}
+              height={heightCardMedia}
+              src={videos[0]}
+            />
+          ) : null}
 
           <StyledDate variant="body2">
             <span>{datePost}</span>
@@ -334,7 +344,7 @@ export const PostDetailsContent = memo(
         </Grid>
       </>
     );
-  },
+  }
 );
 
 PostDetailsContent.displayName = "PostDetailsContent";

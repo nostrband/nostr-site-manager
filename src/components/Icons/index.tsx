@@ -1099,6 +1099,22 @@ export const FilterIcon = createSvgIcon(
   "FilterIcon"
 );
 
+export const PlayIcon = createSvgIcon(
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M21.5 10.268C22.8333 11.0378 22.8333 12.9623 21.5 13.7321L8 21.5264C6.66667 22.2962 5 21.3339 5 19.7943L5 4.20586C5 2.66626 6.66667 1.70401 8 2.47381L21.5 10.268Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "PlayIcon"
+);
+
 export const MaxMinSizeIcon = createSvgIcon(
   <svg
     width="18"

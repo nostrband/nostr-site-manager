@@ -12,6 +12,9 @@ import {
   StyledCardNoImage,
   StyledCardText,
   StyledCardTitle,
+  StyledCardVideo,
+  StyledCardVideoPlayButton,
+  StyledCardVideoWrap,
   StyledCardWrapAuthor,
   StyledDate,
   StyledLink,
@@ -23,8 +26,14 @@ import {
 import { memo, MouseEvent, useEffect, useState } from "react";
 import useImageLoader from "@/hooks/useImageLoader";
 import { format, parseISO } from "date-fns";
-import { BrokenBigIcon, CheckCircleIcon, IconPerson, PlusIcon } from "../Icons";
-import { Chip, CircularProgress, Dialog } from "@mui/material";
+import {
+  BrokenBigIcon,
+  CheckCircleIcon,
+  IconPerson,
+  PlayIcon,
+  PlusIcon,
+} from "../Icons";
+import { Box, Chip, CircularProgress, Dialog } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import { StyledTooltip } from "../Tooltip/styled";
@@ -56,7 +65,10 @@ export const PostCard = memo(
       submitterProfile,
       primary_author,
       autoSubmitted,
+      videos,
     } = post;
+
+    console.log({ videos });
 
     const { isLoaded: isLoadedImage } = useImageLoader(feature_image);
     const params = useSearchParams();
@@ -71,6 +83,8 @@ export const PostCard = memo(
     const [isOpenModal, setOpenModal] = useState<boolean>(false);
 
     const isAdded = Boolean(submitterPubkey);
+
+    const isVideos = Boolean(videos.length);
 
     const [progress, setProgress] = useState<number>(0);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
@@ -214,6 +228,13 @@ export const PostCard = memo(
                   image={feature_image}
                   alt={title || url}
                 />
+              ) : isVideos ? (
+                <StyledCardVideoWrap>
+                  <StyledCardVideoPlayButton>
+                    <PlayIcon />
+                  </StyledCardVideoPlayButton>
+                  <StyledCardVideo preload="meta" src={videos[0]} />
+                </StyledCardVideoWrap>
               ) : (
                 <StyledCardNoImage>
                   <BrokenBigIcon fontSize="inherit" sx={{ margin: "auto" }} />
@@ -274,7 +295,7 @@ export const PostCard = memo(
         />
       </>
     );
-  },
+  }
 );
 
 PostCard.displayName = "PostCard";

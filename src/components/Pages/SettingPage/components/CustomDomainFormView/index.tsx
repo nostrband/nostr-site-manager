@@ -26,11 +26,14 @@ import {
   fetchCertDomain,
   fetchCertDomainStatus,
   fetchAttachDomain,
+  fetchAttachDomainStatus,
 } from "@/services/nostr/api";
 import { DomainInfo, parseDomain } from "@/utils/web/domain-suffixes";
 import { ArrowRightIcon, CrossIcon, CheckIcon } from "@/components/Icons";
 import { ReadOnlyInput } from "../CustomDomainForm/components/ReadOnlyInput";
 import { SpinerCircularProgress } from "@/components/Spiner";
+
+const ERROR_MESSAGE_INITIAL = "Failed, please retry";
 
 export const CustomDomainFormView = ({
   siteId,
@@ -45,6 +48,8 @@ export const CustomDomainFormView = ({
 }) => {
   const [isLoading, setLoading] = useState(false);
   const [valueOption, setValueOption] = useState("");
+  const [errorMessage, setErrorMessage] = useState(ERROR_MESSAGE_INITIAL);
+
   const [stepForm, setStepForm] = useState<
     | "edit-dns"
     | "start"
@@ -52,6 +57,7 @@ export const CustomDomainFormView = ({
     | "edit-dns-error"
     | "choose-options"
     | "success-edit-dns"
+    | "choose-options-success"
     | "choose-options-error"
   >("start");
 
@@ -75,118 +81,86 @@ export const CustomDomainFormView = ({
   const [domainInfo, setDomainInfo] = useState<DomainInfo | undefined>();
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const certDomain = async (domainValue: string) => {
+  const handleToChoiceOptions = async () => {
     setLoading(true);
 
+    try {
+      const res = await fetchAttachDomainStatus(domain, siteId);
+
+      setRedirectionOptions(res);
+      setStepForm("choose-options-success");
+      if (res.status !== "Deployed") {
+        setErrorMessage(`Status: ${res.status}`);
+      }
+      if (res?.www) {
+        setValueOption(`www.${domain}`);
+      }
+    } catch (e: any) {
+      console.log(e);
+      enqueueSnackbar("Error: " + e.toString(), {
+        autoHideDuration: 3000,
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
+      });
+      setStepForm("choose-options-error");
+      setErrorMessage(ERROR_MESSAGE_INITIAL);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkStatus = useCallback(async (domainValue: string) => {
+    setLoading(true);
     const info = parseDomain(domainValue);
     console.log("info", info);
     setDomainInfo(info);
 
     try {
-      const res = await fetchCertDomain(domainValue);
+      const res = await fetchCertDomainStatus(domainValue);
 
       setDataDns(res);
-      setStepForm("edit-dns");
-    } catch (e: any) {
-      console.log(e);
-      enqueueSnackbar("Error: " + e.toString(), {
-        autoHideDuration: 3000,
-        variant: "error",
-        anchorOrigin: {
-          horizontal: "right",
-          vertical: "bottom",
-        },
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleToChoiceOptions = async () => {
-    setLoading(true);
-
-    try {
-      const res = await fetchAttachDomain(domain, siteId);
-
-      setRedirectionOptions(res);
-      setStepForm("choose-options");
-    } catch (e: any) {
-      console.log(e);
-      enqueueSnackbar("Error: " + e.toString(), {
-        autoHideDuration: 3000,
-        variant: "error",
-        anchorOrigin: {
-          horizontal: "right",
-          vertical: "bottom",
-        },
-      });
-      setLoading(false);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const checkStatus = useCallback(
-    async (domainValue: string) => {
-      setLoading(true);
-      try {
-        const res = await fetchCertDomainStatus(domainValue);
-        if (res.status !== "ISSUED") {
-          setTimeout(checkStatus, 5000);
+      if (res.status !== "ISSUED") {
+        // setTimeout(checkStatus, 5000);
+        setStepForm("edit-dns-error");
+        setErrorMessage(`Status: ${res.status}`);
+      } else {
+        setStepForm("edit-dns-success");
+        if (info!.isApex) {
+          setValueOption(`www.${domainValue}`);
         } else {
-          setStepForm("edit-dns-success");
-          if (domainInfo!.isApex) {
+          if (domainValue.split(".").includes("www")) {
             setValueOption(`www.${domainValue}`);
           } else {
-            if (domainValue.split(".").includes("www")) {
-              setValueOption(`www.${domainValue}`);
-            } else {
-              setValueOption(domainValue);
-            }
-
-            if (redirectionOptions?.www) {
-              setValueOption(`www.${domainValue}`);
-            }
+            setValueOption(domainValue);
           }
-
-          enqueueSnackbar("Certificate ready", {
-            autoHideDuration: 3000,
-            variant: "success",
-            anchorOrigin: {
-              horizontal: "right",
-              vertical: "bottom",
-            },
-          });
         }
-      } catch (e: any) {
-        console.log(e);
-        enqueueSnackbar("Error: " + e.toString(), {
-          autoHideDuration: 3000,
-          variant: "error",
-          anchorOrigin: {
-            horizontal: "right",
-            vertical: "bottom",
-          },
-        });
-        setStepForm("edit-dns-error");
-      } finally {
-        setLoading(false);
       }
-    },
-    [domainInfo]
-  );
+    } catch (e: any) {
+      console.log(e);
+      enqueueSnackbar("Error: " + e.toString(), {
+        autoHideDuration: 3000,
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
+      });
+      setStepForm("edit-dns-error");
+      setErrorMessage(ERROR_MESSAGE_INITIAL);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (domain && isOpen) {
-      certDomain(domain);
-    }
-  }, [domain, isOpen]);
-
-  useEffect(() => {
-    if (domain && stepForm === "edit-dns") {
       checkStatus(domain);
     }
-  }, [domain, stepForm, checkStatus]);
+  }, [domain, isOpen, checkStatus]);
 
   useEffect(() => {
     if (
@@ -287,7 +261,7 @@ export const CustomDomainFormView = ({
                   icon={<CrossIcon fontSize="inherit" />}
                   severity="error"
                 >
-                  Failed, please retry
+                  {errorMessage}
                 </Alert>
               )}
 
@@ -307,7 +281,8 @@ export const CustomDomainFormView = ({
           )}
 
           {(stepForm === "choose-options" ||
-            stepForm === "choose-options-error") && (
+            stepForm === "choose-options-error" ||
+            stepForm === "choose-options-success") && (
             <>
               {domainInfo!.isApex && (
                 <>
@@ -371,6 +346,26 @@ export const CustomDomainFormView = ({
                     1
                   )}
                 </>
+              )}
+
+              {stepForm === "choose-options-success" && (
+                <Alert
+                  icon={<CheckIcon fontSize="inherit" />}
+                  severity="success"
+                  sx={{ justifyContent: "center" }}
+                >
+                  DNS ready!
+                </Alert>
+              )}
+
+              {stepForm === "choose-options-error" && (
+                <Alert
+                  sx={{ justifyContent: "center" }}
+                  icon={<CrossIcon fontSize="inherit" />}
+                  severity="error"
+                >
+                  {errorMessage}
+                </Alert>
               )}
 
               {!domainInfo!.isApex && (

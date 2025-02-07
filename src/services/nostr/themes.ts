@@ -333,20 +333,26 @@ async function loadSite() {
   hashtags = await fetchTopHashtags(info.contributor_pubkeys);
 }
 
-function setSiteThemePackage(theme: NDKEvent) {
-  if (!site || !theme) throw new Error("Bad params");
+export function setSiteThemePackage(theme: NDKEvent, s?: NDKEvent) {
+  s = s || site;
+  if (!s || !theme) throw new Error("Bad params");
   const title = tv(theme, "title") || "";
   const version = tv(theme, "version") || "";
   const name = title + (version ? " v." + version : "");
 
-  srm(site, "x");
-  stag(site, [
+  srm(s, "x");
+  stag(s, [
     "x",
     theme.id,
     SITE_RELAY,
     tv(theme, "x") || "", // package hash
     name,
   ]);
+}
+
+export async function fetchThemePackage(id: string) {
+  await prefetchThemesPromise;
+  return getThemePackage(id);
 }
 
 function getThemePackage(id = "") {
@@ -375,7 +381,6 @@ async function preparePreviewSite() {
 
   // new site?
   if (!site || !settings.siteId) {
-    //|| (!site.id && !settings.design)) {
     // start from zero, prepare site event from input settings,
     // fill everything with defaults
     const event = await prepareSite(ndk, userPubkey, {
@@ -599,7 +604,7 @@ async function publishPreview() {
   const pkg = getThemePackage();
   setSiteThemePackage(pkg);
 
-  const event = await publishSiteEvent(site, [SITE_RELAY, ...userRelays]);
+  const event = await publishSiteEvent(site);
 
   // return naddr
   return eventId(event);

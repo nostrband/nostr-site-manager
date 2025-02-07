@@ -139,7 +139,7 @@ export const SettingPage = () => {
             autoHideDuration: 3000,
             variant: "success",
             anchorOrigin: {
-              horizontal: "right",
+              horizontal: "left",
               vertical: "bottom",
             },
           });
@@ -148,7 +148,7 @@ export const SettingPage = () => {
             autoHideDuration: 3000,
             variant: "error",
             anchorOrigin: {
-              horizontal: "right",
+              horizontal: "left",
               vertical: "bottom",
             },
           });

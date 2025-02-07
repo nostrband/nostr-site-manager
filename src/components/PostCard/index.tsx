@@ -233,7 +233,7 @@ export const PostCard = memo(
                   <StyledCardVideoPlayButton>
                     <PlayIcon />
                   </StyledCardVideoPlayButton>
-                  <StyledCardVideo preload="meta" src={videos[0]} />
+                  <StyledCardVideo preload="meta" src={videos[0]+"#t=0.1"} />
                 </StyledCardVideoWrap>
               ) : (
                 <StyledCardNoImage>

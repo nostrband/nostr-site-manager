@@ -68,8 +68,6 @@ export const PostCard = memo(
       videos,
     } = post;
 
-    console.log({ videos });
-
     const { isLoaded: isLoadedImage } = useImageLoader(feature_image);
     const params = useSearchParams();
     const queryParams = `${params.toString()}${backSlug ? `${params.size ? "&" : ""}backSlug=${backSlug}` : ""}`;
@@ -233,7 +231,7 @@ export const PostCard = memo(
                   <StyledCardVideoPlayButton>
                     <PlayIcon />
                   </StyledCardVideoPlayButton>
-                  <StyledCardVideo preload="meta" src={videos[0]} />
+                  <StyledCardVideo preload="meta" src={videos[0]+"#t=0.1"} />
                 </StyledCardVideoWrap>
               ) : (
                 <StyledCardNoImage>

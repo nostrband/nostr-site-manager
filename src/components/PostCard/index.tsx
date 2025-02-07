@@ -68,8 +68,6 @@ export const PostCard = memo(
       videos,
     } = post;
 
-    console.log({ videos });
-
     const { isLoaded: isLoadedImage } = useImageLoader(feature_image);
     const params = useSearchParams();
     const queryParams = `${params.toString()}${backSlug ? `${params.size ? "&" : ""}backSlug=${backSlug}` : ""}`;

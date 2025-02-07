@@ -3,10 +3,12 @@ import { styled } from "@mui/material/styles";
 import {
   Avatar,
   Box,
+  BoxProps,
   Card,
   CardMedia,
   CardMediaProps,
   Chip,
+  Fab,
   Link,
   LinkProps,
   Typography,
@@ -14,14 +16,20 @@ import {
 import { grey } from "@mui/material/colors";
 import { forwardRef } from "react";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
-import zIndex from "@mui/material/styles/zIndex";
+import { isNumber } from "lodash";
 
 const POST_CARD_PADDING = 16;
-const CARD_MEDIA_HEIGHT = 160;
+const CARD_MEDIA_HEIGHT = 364;
+const CARD_MEDIA_HEIGHT_SMALL = 160;
 
 interface ICardMedia {
   alt?: string;
+  isDesktop: boolean;
+  height?: number;
+  src?: string;
 }
+
+export type BoxType = ICardMedia & BoxProps;
 
 interface ILoadingButton {
   isSending: boolean;
@@ -57,11 +65,20 @@ export const StyledCardHead = styled(Box)(() => ({
   alignItems: "center",
 }));
 
-export const StyledCardNoImage = styled(Box)(({ theme }) => ({
-  flex: `0 0 ${CARD_MEDIA_HEIGHT}px`,
+export const StyledCardNoImage = styled(
+  forwardRef<HTMLDivElement, BoxType>(function MainContentName(props, ref) {
+    const exclude = new Set(["isDesktop"]);
+    const omitProps = Object.fromEntries(
+      Object.entries(props).filter((e) => !exclude.has(e[0])),
+    );
+
+    return <Box ref={ref} {...omitProps} />;
+  }),
+)(({ isDesktop, theme }) => ({
+  flex: `0 0 ${isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL}px`,
+  height: isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL,
   background: grey[300],
   display: "flex",
-  height: CARD_MEDIA_HEIGHT,
   width: "100%",
   borderRadius: theme.shape.borderRadius,
   fontSize: 60,
@@ -69,11 +86,20 @@ export const StyledCardNoImage = styled(Box)(({ theme }) => ({
   position: "relative",
 }));
 
-export const StyledCardVideoWrap = styled(Box)(({ theme }) => ({
-  flex: `0 0 ${CARD_MEDIA_HEIGHT}px`,
+export const StyledCardVideoWrap = styled(
+  forwardRef<HTMLVideoElement, BoxType>(function MainContentName(props, ref) {
+    const exclude = new Set(["isDesktop"]);
+    const omitProps = Object.fromEntries(
+      Object.entries(props).filter((e) => !exclude.has(e[0])),
+    );
+
+    return <Box ref={ref} {...omitProps} />;
+  }),
+)(({ isDesktop, theme }) => ({
+  flex: `0 0 ${isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL}px`,
+  height: isDesktop ? CARD_MEDIA_HEIGHT : CARD_MEDIA_HEIGHT_SMALL,
   background: grey[300],
   display: "flex",
-  height: CARD_MEDIA_HEIGHT,
   width: "100%",
   borderRadius: theme.shape.borderRadius,
   overflow: "hidden",
@@ -102,8 +128,8 @@ export const StyledCardVideoPlayButton = styled(Box)(({ theme }) => ({
   justifyContent: "center",
   position: "relative",
   zIndex: "1",
-  margin: 'auto',
-  color: '#fff'
+  margin: "auto",
+  color: "#fff",
 }));
 
 export const StyledCardVideo = styled("video")(() => ({
@@ -117,15 +143,37 @@ export const StyledCardVideo = styled("video")(() => ({
   width: "100%",
 }));
 
+export const StyledCardMediaWrap = styled(Box)(() => ({
+  position: 'relative'
+}));
+
+export const StyledCardMediaZoom = styled(Fab)(() => ({
+  position: 'absolute',
+  right: 4,
+  bottom: 4,
+  zIndex: 2,
+  background: 'rgba(105, 111, 125, 0.12)',
+  color: 'rgba(105, 111, 125, 1)'
+}));
+
 export const StyledCardMedia = styled(
   forwardRef<HTMLImageElement, IStyledCardMedia>(
-    function StyledCardMediaName(props, ref) {
-      return <CardMedia ref={ref} {...props} />;
-    }
-  )
-)(({ theme }) => ({
-  flex: `0 0 ${CARD_MEDIA_HEIGHT}px`,
-  height: CARD_MEDIA_HEIGHT,
+    function MainContentName(props, ref) {
+      const exclude = new Set(["isDesktop, height"]);
+      const omitProps = Object.fromEntries(
+        Object.entries(props).filter((e) => !exclude.has(e[0])),
+      );
+
+      return <CardMedia ref={ref} {...omitProps} />;
+    },
+  ),
+)(({ isDesktop, theme, height }) => ({
+  flex: `0 0 ${isDesktop ? (isNumber(height) ? height : CARD_MEDIA_HEIGHT) : CARD_MEDIA_HEIGHT_SMALL}px`,
+  height: isDesktop
+    ? isNumber(height)
+      ? height
+      : CARD_MEDIA_HEIGHT
+    : CARD_MEDIA_HEIGHT_SMALL,
   borderRadius: theme.shape.borderRadius,
 }));
 
@@ -226,7 +274,7 @@ export const StyledPostAuthorName = styled(Box)(() => ({
 export const StyledLink = styled(
   forwardRef<HTMLLinkElement, LinkProps>(function MainContentName(props, ref) {
     return <Link component="nav" ref={ref} {...props} />;
-  })
+  }),
 )(() => ({
   height: "100%",
   textDecoration: "none",
@@ -249,12 +297,12 @@ export const StyledAddButton = styled(
     function MainContentName(props, ref) {
       const exclude = new Set(["isSending", "isWaiting", "isAdded"]);
       const omitProps = Object.fromEntries(
-        Object.entries(props).filter((e) => !exclude.has(e[0]))
+        Object.entries(props).filter((e) => !exclude.has(e[0])),
       );
 
       return <LoadingButton ref={ref} {...omitProps} />;
-    }
-  )
+    },
+  ),
 )(({ isSending, isWaiting, isAdded, theme }) => ({
   width: "88px",
   height: "32px",

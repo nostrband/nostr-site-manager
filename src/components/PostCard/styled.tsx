@@ -149,11 +149,14 @@ export const StyledCardMediaWrap = styled(Box)(() => ({
 
 export const StyledCardMediaZoom = styled(Fab)(() => ({
   position: 'absolute',
-  right: 4,
-  bottom: 4,
+  right: 8,
+  bottom: 8,
   zIndex: 2,
-  background: 'rgba(105, 111, 125, 0.12)',
-  color: 'rgba(105, 111, 125, 1)'
+  fontSize: '18px',
+  background: '#fff',
+  height: '34px',
+  width: '34px',
+  minHeight: '34px'
 }));
 
 export const StyledCardMedia = styled(

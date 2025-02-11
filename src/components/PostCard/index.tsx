@@ -24,10 +24,22 @@ import {
   StyledTags,
   StyledTypePost,
 } from "./styled";
-import { memo, MouseEvent, useEffect, useState } from "react";
+import {
+  memo,
+  MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import useImageLoader from "@/hooks/useImageLoader";
 import { format, parseISO } from "date-fns";
-import { CheckCircleIcon, IconPerson, PlayIcon, PlusIcon, SearchIcon } from "../Icons";
+import {
+  CheckCircleIcon,
+  IconPerson,
+  PlayIcon,
+  PlusIcon,
+  SearchIcon,
+} from "../Icons";
 import { Chip, CircularProgress } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
@@ -36,6 +48,7 @@ import { useSearchParams } from "next/navigation";
 import { SUPPORTED_KIND_NAMES_SINGLE } from "@/consts";
 import { PostDetailsModal } from "../PostDetailsModal";
 import useResponsive from "@/hooks/useResponsive";
+import { PhotoViewer } from "../PhotoViewer";
 
 export const PostCard = memo(
   ({
@@ -75,6 +88,7 @@ export const PostCard = memo(
     const isDesktop = useResponsive("up", "sm");
 
     const [isWaiting, setIsWaiting] = useState<boolean>(false);
+    const [isOpenPhoto, setOpenPhoto] = useState<boolean>(false);
     const [isSending, setIsSending] = useState<boolean>(false);
     const [isOpenModal, setOpenModal] = useState<boolean>(false);
 
@@ -162,6 +176,17 @@ export const PostCard = memo(
       }
     };
 
+    const handleOpenPhoto = (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      setOpenPhoto(true);
+    };
+
+    const handleClosePhoto = () => {
+      setOpenPhoto(false);
+    };
+
     useEffect(() => {
       return () => {
         if (timer) {
@@ -222,15 +247,15 @@ export const PostCard = memo(
               </StyledCardHead>
               {isLoadedImage && feature_image ? (
                 <StyledCardMediaWrap>
-                <StyledCardMedia
-                  component="img"
-                  image={feature_image}
-                  isDesktop={isDesktop}
-                  alt={title || url}
-                />
-                <StyledCardMediaZoom size="medium">
-                  <SearchIcon />
-                </StyledCardMediaZoom>
+                  <StyledCardMedia
+                    component="img"
+                    image={feature_image}
+                    isDesktop={isDesktop}
+                    alt={title || url}
+                  />
+                  <StyledCardMediaZoom onClick={handleOpenPhoto} size="small">
+                    <SearchIcon fontSize="inherit" />
+                  </StyledCardMediaZoom>
                 </StyledCardMediaWrap>
               ) : isVideos ? (
                 <StyledCardVideoWrap isDesktop={isDesktop}>
@@ -293,9 +318,17 @@ export const PostCard = memo(
           handleCloseModalPost={handleCloseModalPost}
           updateExternalPost={updatePost}
         />
+
+        {feature_image ? (
+          <PhotoViewer
+            isOpen={isOpenPhoto}
+            src={feature_image}
+            onClose={handleClosePhoto}
+          />
+        ) : null}
       </>
     );
-  },
+  }
 );
 
 PostCard.displayName = "PostCard";

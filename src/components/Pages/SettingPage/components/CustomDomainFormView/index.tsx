@@ -180,7 +180,7 @@ export const CustomDomainFormView = ({
 
   const renderDNS = (
     dns: { name: string; value: string; type: string },
-    i: number
+    i: number,
   ) => (
     <Fragment key={i}>
       <StyledDialogSubTitle>DNS record #{i + 1}</StyledDialogSubTitle>
@@ -239,7 +239,7 @@ export const CustomDomainFormView = ({
                               .filter((s) => !!s)
                               .join("."),
                       },
-                      i
+                      i,
                     )}
                     {dataDns.dnsValidation.length !== i + 1 && <Divider />}
                   </>
@@ -334,7 +334,7 @@ export const CustomDomainFormView = ({
                       name: `www.${domain}` === valueOption ? "www" : "",
                       value: redirectionOptions!.cnameDomain!,
                     },
-                    0
+                    0,
                   )}
                   <Divider />
                   {renderDNS(
@@ -343,7 +343,7 @@ export const CustomDomainFormView = ({
                       name: `www.${domain}` === valueOption ? "" : "www",
                       value: redirectionOptions!.redirectIps[0]!,
                     },
-                    1
+                    1,
                   )}
                 </>
               )}
@@ -383,7 +383,7 @@ export const CustomDomainFormView = ({
                       name: domainInfo!.sub,
                       value: redirectionOptions!.cnameDomain!,
                     },
-                    0
+                    0,
                   )}
                   <Typography sx={{ mb: 1, maxWidth: "400px" }} variant="body2">
                     Make sure to remove other CNAME and A records for this name,

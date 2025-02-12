@@ -106,7 +106,12 @@ export const CustomDomains = memo(
           <StyledFormFields>
             {Boolean(listDomains.length)
               ? listDomains.map((el, i) => (
-                  <ItemDomain disabled={!isEdit} siteId={siteId} key={i} domain={el} />
+                  <ItemDomain
+                    disabled={!isEdit}
+                    siteId={siteId}
+                    key={i}
+                    domain={el}
+                  />
                 ))
               : SETTINGS_CONFIG.customDomains.description}
           </StyledFormFields>
@@ -132,7 +137,7 @@ export const CustomDomains = memo(
         />
       </StyledSettingBlock>
     );
-  }
+  },
 );
 
 CustomDomains.displayName = "CustomDomains";

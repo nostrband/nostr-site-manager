@@ -102,7 +102,7 @@ export const StyledActionsButtonWrap = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   gap: "16px",
-  zIndex: "1",
+  zIndex: "2",
   [theme.breakpoints.down("sm")]: {
     bottom: 0,
     borderRadius: 0,

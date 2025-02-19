@@ -37,6 +37,7 @@ import {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -58,6 +59,7 @@ import { DatePickerField } from "./components/DatePickerField";
 import Link from "next/link";
 import { nip19 } from "nostr-tools";
 import { fetchProfiles } from "@/services/nostr/api";
+import { ScrollTop } from "@/components/ScrollTop";
 
 export interface FilterRef {
   handleLoadMore: (createdAtTime: number) => void;
@@ -93,7 +95,11 @@ const initialValues: {
   loadMoreUntil: 0,
 };
 
-interface IFilter {
+interface Props {
+  window?: () => Window;
+}
+
+interface IFilter extends Props {
   handleLoading: (state: boolean) => void;
   handleLoadingMore: (state: boolean) => void;
   siteId: string;
@@ -149,12 +155,15 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
       handleLoadingMore,
       setIsEmpty,
       linkToAddPost,
+      ...props
     },
     ref,
   ) => {
     const [isOpenMoreFilter, setOpenMoreFilter] = useState(false);
     const isDesktop = useResponsive("up", "sm");
     const sizeField = isDesktop ? "medium" : "small";
+
+    const [manualLoad, setManualLoad] = useState(false);
 
     const router = useRouter();
     const params = useSearchParams();
@@ -279,6 +288,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
           search: values.search,
         };
 
+        console.log({ values, prepareData });
+
         const transformedObject = transformObject(prepareData);
 
         if (isLoadMore) {
@@ -316,7 +327,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
           }
 
           if (prepareData.hashtags.length) {
-            searchParams.set("hashtags", values.hashtags.join(","));
+            searchParams.set("hashtags", prepareData.hashtags.join(","));
           } else {
             searchParams.delete("hashtags");
           }
@@ -326,6 +337,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
           } else {
             searchParams.delete("authors");
           }
+
+          setManualLoad(true);
 
           router.push(`?${searchParams.toString()}`);
 
@@ -483,6 +496,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
             setFieldValue("authors", []);
           });
+      } else {
+        setFieldValue("authors", []);
       }
 
       const kinds = params.get("kinds")
@@ -503,16 +518,27 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
       const search = params.get("search") || "";
 
-      if (since) setSelectedDateSince(new Date(since));
-      if (until) setSelectedDateUntil(new Date(until));
+      if (since) {
+        setSelectedDateSince(new Date(since));
+      } else {
+        setSelectedDateSince(null);
+      }
+      if (until) {
+        setSelectedDateUntil(new Date(until));
+      } else {
+        setSelectedDateUntil(null);
+      }
 
       setFieldValue("kinds", kinds);
-      setFieldValue("hashtags", hashtags);
+      setFieldValue(
+        "hashtags",
+        hashtags.map((str) => `#${str}`),
+      );
       setFieldValue("since", since);
       setFieldValue("until", until);
       setFieldValue("search", search);
 
-      if (kinds.length !== 0 || hashtags.length !== 0 || since || until) {
+      if (hashtags.length !== 0 || since || until) {
         setOpenMoreFilter(true);
       }
 
@@ -527,10 +553,22 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
 
       const transformedObject = transformObject(prepareData);
 
-      if (siteData && params.size !== 0) {
+      if (siteData && !manualLoad) {
         getFilterSitePosts(transformedObject, siteData.id);
       }
-    }, [siteData]);
+    }, [siteData, params, manualLoad]);
+
+    useEffect(() => {
+      const handlePopState = () => {
+        setManualLoad(false);
+      };
+
+      window.addEventListener("popstate", handlePopState);
+
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+      };
+    }, []);
 
     const renderFilterContent = (
       <StyledWrapFilter>
@@ -567,7 +605,20 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
           </StyledTitleFilter>
 
           <Grid container spacing={{ xs: "24px", sm: "16px" }}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4} lg={4}>
+              <StyledFormControl fullWidth size={sizeField}>
+                <StyledFormControlLabel htmlFor="kinds-select">
+                  Kinds
+                </StyledFormControlLabel>
+                <TypesFilter
+                  label="Kinds"
+                  id="kinds-select"
+                  selectedTypes={values.kinds}
+                  handleChangeTypes={handleChangeTypes}
+                />
+              </StyledFormControl>
+            </Grid>
+            <Grid item xs={12} sm={4} lg={4}>
               <StyledFormControl fullWidth>
                 <AuthorFilter
                   label="Author"
@@ -579,8 +630,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
                 />
               </StyledFormControl>
             </Grid>
-
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4} lg={4}>
               <StyledFormControl fullWidth size={sizeField}>
                 <StyledFormControlLabel htmlFor="search-content">
                   Search string
@@ -601,33 +651,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
           <Collapse in={isDesktop ? isOpenMoreFilter : true}>
             <StyledWrapField>
               <Grid container spacing={{ xs: "24px", sm: "16px" }}>
-                <Grid item xs={12} sm={6} lg={3}>
-                  <StyledFormControl fullWidth size={sizeField}>
-                    <StyledFormControlLabel htmlFor="kinds-select">
-                      Kinds
-                    </StyledFormControlLabel>
-                    <TypesFilter
-                      label="Kinds"
-                      id="kinds-select"
-                      selectedTypes={values.kinds}
-                      handleChangeTypes={handleChangeTypes}
-                    />
-                  </StyledFormControl>
-                </Grid>
-                <Grid item xs={12} sm={6} lg={3}>
-                  <StyledFormControl fullWidth>
-                    <HashtagsFilter
-                      size={sizeField}
-                      label="Hashtags"
-                      contributors={
-                        siteData?.contributors ? siteData?.contributors : []
-                      }
-                      selectedHashtags={values.hashtags}
-                      handleChangeHashtags={handleChangeHashtags}
-                    />
-                  </StyledFormControl>
-                </Grid>
-                <Grid item xs={12} sm={6} lg={3}>
+                <Grid item xs={12} sm={4} lg={4}>
                   <StyledFormControl fullWidth>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DatePickerField
@@ -639,7 +663,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
                     </LocalizationProvider>
                   </StyledFormControl>
                 </Grid>
-                <Grid item xs={12} sm={6} lg={3}>
+                <Grid item xs={12} sm={4} lg={4}>
                   <StyledFormControl fullWidth>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DatePickerField
@@ -649,6 +673,19 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
                         sizeField={sizeField}
                       />
                     </LocalizationProvider>
+                  </StyledFormControl>
+                </Grid>
+                <Grid item xs={12} sm={4} lg={4}>
+                  <StyledFormControl fullWidth>
+                    <HashtagsFilter
+                      size={sizeField}
+                      label="Hashtags"
+                      contributors={
+                        siteData?.contributors ? siteData?.contributors : []
+                      }
+                      selectedHashtags={values.hashtags}
+                      handleChangeHashtags={handleChangeHashtags}
+                    />
                   </StyledFormControl>
                 </Grid>
               </Grid>
@@ -662,7 +699,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
               justifyContent="space-between"
               flexDirection={{ xs: "column", sm: "row" }}
             >
-              <Grid item xs={12} sm={6} lg={3}>
+              <Grid item xs={12} sm={4} lg={4}>
                 <Button
                   onClick={handleClearFilter}
                   startIcon={<CrossIcon fontSize="inherit" />}
@@ -675,7 +712,7 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
                   Clear all
                 </Button>
               </Grid>
-              <Grid item xs={12} sm={6} lg={3}>
+              <Grid item xs={12} sm={4} lg={4}>
                 <LoadingButton
                   onClick={() => {
                     if (isDesktop) {
@@ -747,6 +784,8 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
             </Button>
           </StyledActionsButtonWrap>
         )}
+
+        <ScrollTop position={isDesktop ? undefined : [76, 18]} {...props} />
       </>
     );
   },

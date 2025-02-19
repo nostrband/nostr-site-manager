@@ -16,6 +16,9 @@ export const StyledEmptyBlock = styled(Box)(() => ({
 export const StyledWrapListPosts = styled(Box)(({ theme }) => ({
   paddingTop: "24px",
   paddingBottom: "100px",
+  display: "flex",
+  flexDirection: "column",
+  gap: 24,
   [theme.breakpoints.down("sm")]: {
     paddingTop: "0",
     paddingBottom: "80px",
@@ -27,11 +30,13 @@ export const StyledShowMore = styled(Box)(({ theme }) => ({
   maxWidth: 320,
   marginLeft: "auto",
   marginRight: "auto",
-  // borderRadius: theme.shape.borderRadius,
-  // background: "#fff",
-  // padding: 8,
   marginTop: 25,
   [theme.breakpoints.down("md")]: {
     marginBottom: 25,
   },
+}));
+
+export const StyledWrap = styled(Box)(() => ({
+  maxWidth: 720,
+  margin: "0 auto",
 }));

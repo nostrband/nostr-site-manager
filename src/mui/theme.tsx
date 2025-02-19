@@ -98,6 +98,7 @@ declare module "@mui/material/Fab" {
   interface FabPropsColorOverrides {
     decorate: true;
     primary: true;
+    lightInfo: true;
   }
 }
 

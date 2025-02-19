@@ -9,9 +9,13 @@ import {
   StyledCardDescription,
   StyledCardHead,
   StyledCardMedia,
-  StyledCardNoImage,
+  StyledCardMediaWrap,
+  StyledCardMediaZoom,
   StyledCardText,
   StyledCardTitle,
+  StyledCardVideo,
+  StyledCardVideoPlayButton,
+  StyledCardVideoWrap,
   StyledCardWrapAuthor,
   StyledDate,
   StyledLink,
@@ -20,17 +24,31 @@ import {
   StyledTags,
   StyledTypePost,
 } from "./styled";
-import { memo, MouseEvent, useEffect, useState } from "react";
+import {
+  memo,
+  MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import useImageLoader from "@/hooks/useImageLoader";
 import { format, parseISO } from "date-fns";
-import { BrokenBigIcon, CheckCircleIcon, IconPerson, PlusIcon } from "../Icons";
-import { Chip, CircularProgress, Dialog } from "@mui/material";
+import {
+  CheckCircleIcon,
+  IconPerson,
+  PlayIcon,
+  PlusIcon,
+  SearchIcon,
+} from "../Icons";
+import { Chip, CircularProgress } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import { StyledTooltip } from "../Tooltip/styled";
 import { useSearchParams } from "next/navigation";
 import { SUPPORTED_KIND_NAMES_SINGLE } from "@/consts";
 import { PostDetailsModal } from "../PostDetailsModal";
+import useResponsive from "@/hooks/useResponsive";
+import { PhotoViewer } from "../PhotoViewer";
 
 export const PostCard = memo(
   ({
@@ -56,6 +74,7 @@ export const PostCard = memo(
       submitterProfile,
       primary_author,
       autoSubmitted,
+      videos,
     } = post;
 
     const { isLoaded: isLoadedImage } = useImageLoader(feature_image);
@@ -66,11 +85,18 @@ export const PostCard = memo(
     const datePost = format(date, "MMM dd, yyyy");
     const timePost = format(date, "HH:hh");
 
+    const isDesktop = useResponsive("up", "sm");
+
     const [isWaiting, setIsWaiting] = useState<boolean>(false);
+    const [isOpenPhoto, setOpenPhoto] = useState<boolean>(false);
     const [isSending, setIsSending] = useState<boolean>(false);
     const [isOpenModal, setOpenModal] = useState<boolean>(false);
 
     const isAdded = Boolean(submitterPubkey);
+
+    const isVideos = Boolean(videos.length);
+
+    const isTitle = event.kind !== 1;
 
     const [progress, setProgress] = useState<number>(0);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
@@ -150,6 +176,17 @@ export const PostCard = memo(
       }
     };
 
+    const handleOpenPhoto = (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      setOpenPhoto(true);
+    };
+
+    const handleClosePhoto = () => {
+      setOpenPhoto(false);
+    };
+
     useEffect(() => {
       return () => {
         if (timer) {
@@ -209,16 +246,25 @@ export const PostCard = memo(
                 </StyledAddButton>
               </StyledCardHead>
               {isLoadedImage && feature_image ? (
-                <StyledCardMedia
-                  component="img"
-                  image={feature_image}
-                  alt={title || url}
-                />
-              ) : (
-                <StyledCardNoImage>
-                  <BrokenBigIcon fontSize="inherit" sx={{ margin: "auto" }} />
-                </StyledCardNoImage>
-              )}
+                <StyledCardMediaWrap>
+                  <StyledCardMedia
+                    component="img"
+                    image={feature_image}
+                    isDesktop={isDesktop}
+                    alt={title || url}
+                  />
+                  <StyledCardMediaZoom onClick={handleOpenPhoto} size="small">
+                    <SearchIcon fontSize="inherit" />
+                  </StyledCardMediaZoom>
+                </StyledCardMediaWrap>
+              ) : isVideos ? (
+                <StyledCardVideoWrap isDesktop={isDesktop}>
+                  <StyledCardVideoPlayButton>
+                    <PlayIcon />
+                  </StyledCardVideoPlayButton>
+                  <StyledCardVideo preload="meta" src={videos[0] + "#t=0.1"} />
+                </StyledCardVideoWrap>
+              ) : null}
 
               <StyledDate variant="body2">
                 <span>{datePost}</span>
@@ -234,7 +280,7 @@ export const PostCard = memo(
               </StyledDate>
 
               <StyledCardText>
-                <StyledCardTitle>{title}</StyledCardTitle>
+                {isTitle && <StyledCardTitle>{title}</StyledCardTitle>}
                 <StyledCardDescription variant="body2">
                   {event.content}
                 </StyledCardDescription>
@@ -272,9 +318,17 @@ export const PostCard = memo(
           handleCloseModalPost={handleCloseModalPost}
           updateExternalPost={updatePost}
         />
+
+        {feature_image ? (
+          <PhotoViewer
+            isOpen={isOpenPhoto}
+            src={feature_image}
+            onClose={handleClosePhoto}
+          />
+        ) : null}
       </>
     );
-  },
+  }
 );
 
 PostCard.displayName = "PostCard";

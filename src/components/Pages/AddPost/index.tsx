@@ -10,6 +10,7 @@ import {
   SpinerWrapSites,
   StyledEmptyBlock,
   StyledShowMore,
+  StyledWrap,
   StyledWrapListPosts,
 } from "./styled";
 import { NotFoundIcon } from "@/components/Icons";
@@ -57,65 +58,67 @@ export const AddPost = () => {
 
   return (
     <Container maxWidth="lg">
-      <Head isSearchResult={isSearchResult} />
+      <StyledWrap>
+        <Head isSearchResult={isSearchResult} />
 
-      <Filter
-        setIsEmpty={setIsEmpty}
-        handleLoadingMore={setLoadingMore}
-        ref={filterRef}
-        setPosts={setPosts}
-        siteId={siteId}
-        handleLoading={setloadingPosts}
-        isLoading={isLoadingPosts}
-        setSearchResult={setSearchResult}
-      />
+        <Filter
+          setIsEmpty={setIsEmpty}
+          handleLoadingMore={setLoadingMore}
+          ref={filterRef}
+          setPosts={setPosts}
+          siteId={siteId}
+          handleLoading={setloadingPosts}
+          isLoading={isLoadingPosts}
+          setSearchResult={setSearchResult}
+        />
 
-      {isNotFound && !isLoadingPosts && (
-        <StyledEmptyBlock>
-          <Alert icon={<NotFoundIcon fontSize="inherit" />} severity="warning">
-            <b>Posts not found</b>
-          </Alert>
-        </StyledEmptyBlock>
-      )}
+        {isNotFound && !isLoadingPosts && (
+          <StyledEmptyBlock>
+            <Alert
+              icon={<NotFoundIcon fontSize="inherit" />}
+              severity="warning"
+            >
+              <b>Posts not found</b>
+            </Alert>
+          </StyledEmptyBlock>
+        )}
 
-      {isLoadingPosts && (
-        <SpinerWrapSites>
-          <SpinerCircularProgress />
-        </SpinerWrapSites>
-      )}
+        {isLoadingPosts && (
+          <SpinerWrapSites>
+            <SpinerCircularProgress />
+          </SpinerWrapSites>
+        )}
 
-      {!isNotFound && !isLoadingPosts && (
-        <StyledWrapListPosts>
-          <Grid container spacing={{ xs: "24px" }}>
+        {!isNotFound && !isLoadingPosts && (
+          <StyledWrapListPosts>
             {posts.map((post, index) => {
               return (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <PostCard
-                    updatePost={updatePost}
-                    siteId={siteId}
-                    post={post}
-                    backSlug="add"
-                  />
-                </Grid>
+                <PostCard
+                  key={index}
+                  updatePost={updatePost}
+                  siteId={siteId}
+                  post={post}
+                  backSlug="add"
+                />
               );
             })}
-          </Grid>
 
-          <StyledShowMore>
-            <LoadingButton
-              disabled={isLoadingMore}
-              loading={isLoadingMore}
-              variant="outlined"
-              color="decorate"
-              fullWidth
-              size="large"
-              onClick={handleLoadMore}
-            >
-              {isEmpty ? "Try again" : "Load more"}
-            </LoadingButton>
-          </StyledShowMore>
-        </StyledWrapListPosts>
-      )}
+            <StyledShowMore>
+              <LoadingButton
+                disabled={isLoadingMore}
+                loading={isLoadingMore}
+                variant="outlined"
+                color="decorate"
+                fullWidth
+                size="large"
+                onClick={handleLoadMore}
+              >
+                {isEmpty ? "Try again" : "Load more"}
+              </LoadingButton>
+            </StyledShowMore>
+          </StyledWrapListPosts>
+        )}
+      </StyledWrap>
     </Container>
   );
 };

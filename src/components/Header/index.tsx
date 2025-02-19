@@ -2,6 +2,7 @@
 import React from "react";
 import { Slide, useScrollTrigger } from "@mui/material";
 import { StyledAppBar, StyledToolbar } from "./styled";
+import { ScrollTop } from "../ScrollTop";
 
 interface PropsHeader {
   window?: () => Window;
@@ -28,7 +29,7 @@ export const Header: React.FC<PropsHeader> = ({ children, ...props }) => {
           <StyledToolbar>{children}</StyledToolbar>
         </StyledAppBar>
       </HideOnScroll>
-      <StyledToolbar />
+      <StyledToolbar id="toolbar-anchor" />
     </>
   );
 };

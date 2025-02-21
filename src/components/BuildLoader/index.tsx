@@ -1,4 +1,10 @@
-import { SettingsIcon } from "../Icons";
+import {
+  BrushIcon,
+  ImageIcon,
+  SyncIcon,
+  TypographyIcon,
+  UserRectangleIcon,
+} from "../Icons";
 import {
   GradientBottom,
   GradientTop,
@@ -9,11 +15,11 @@ import {
 
 export const BuildLoader = () => {
   const items = [
-    { text: "Processing account information", icon: <SettingsIcon /> },
-    { text: "Preparing content", icon: <SettingsIcon /> },
-    { text: "Selecting a font and uploading images", icon: <SettingsIcon /> },
-    { text: "Selecting or uploading a theme", icon: <SettingsIcon /> },
-    { text: "Synchronizing data", icon: <SettingsIcon /> },
+    { text: "Processing account information", icon: <UserRectangleIcon /> },
+    { text: "Preparing content", icon: <TypographyIcon /> },
+    { text: "Selecting a font and uploading images", icon: <ImageIcon /> },
+    { text: "Selecting or uploading a theme", icon: <BrushIcon /> },
+    { text: "Synchronizing data", icon: <SyncIcon /> },
   ];
 
   return (

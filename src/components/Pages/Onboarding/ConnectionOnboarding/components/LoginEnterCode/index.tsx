@@ -21,10 +21,10 @@ const initialValues: { code: string } = {
 
 export const LoginEnterCode = ({
   showLoginDM,
-  pubkey
+  pubkey,
 }: {
   showLoginDM: () => void;
-  pubkey: string
+  pubkey: string;
 }) => {
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
@@ -34,11 +34,13 @@ export const LoginEnterCode = ({
     onSubmit: async (values) => {
       setLoading(true);
 
-      const {code} = values
+      const { code } = values;
 
       try {
-        const otpData = await axios.get(`https://api.npubpro.com/authotp?pubkey=${pubkey}&code=${code}`)
-        await loginOTP(pubkey, otpData.data)
+        const otpData = await axios.get(
+          `https://api.npubpro.com/authotp?pubkey=${pubkey}&code=${code}`,
+        );
+        await loginOTP(pubkey, otpData.data);
         router.push("/onboarding/create-site");
       } catch (e) {
         enqueueSnackbar("Your code is incorrect, please try again", {
@@ -79,9 +81,7 @@ export const LoginEnterCode = ({
 
   const handleResetCode = async () => {
     try {
-      await axios.get(
-        `https://api.npubpro.com/otp?pubkey=${pubkey}`
-      );
+      await axios.get(`https://api.npubpro.com/otp?pubkey=${pubkey}`);
 
       enqueueSnackbar("New code send!", {
         autoHideDuration: 3000,
@@ -103,7 +103,7 @@ export const LoginEnterCode = ({
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <>
@@ -143,7 +143,13 @@ export const LoginEnterCode = ({
         >
           Back
         </Button>
-        <Button disabled={isLoading} onClick={handleResetCode} size="small" color="decorate" variant="text">
+        <Button
+          disabled={isLoading}
+          onClick={handleResetCode}
+          size="small"
+          color="decorate"
+          variant="text"
+        >
           Resend the code
         </Button>
       </StyledActions>

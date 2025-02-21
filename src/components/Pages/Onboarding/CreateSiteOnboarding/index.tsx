@@ -1,6 +1,5 @@
 import { useRouter } from "next/navigation";
 import { Start } from "./components/Start";
-import { Building } from "./components/Building";
 import { ChooseAuthor } from "./components/ChooseAuthor";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
@@ -12,12 +11,14 @@ import {
   detectContentType,
 } from "@/services/nostr/onboard";
 import { enqueueSnackbar } from "notistack";
+import { BuildingScreen } from "@/components/BuildingScreen";
+import { useListSites } from "@/hooks/useListSites";
 
 export const CreateSiteOnboarding = () => {
   const router = useRouter();
+  const getSites = useListSites();
 
-  const [screen, setScreen] = useState<TypesScreens>("start");
-  const [progress, setProgress] = useState(0);
+  const [screen, setScreen] = useState<TypesScreens>(SCREEN.START);
 
   const { isAuth, isLoading } = useContext(AuthContext);
 
@@ -37,26 +38,36 @@ export const CreateSiteOnboarding = () => {
   const createSiteHandler = async (
     author: string,
     type: SiteType,
-    kinds: number[]
+    kinds: number[],
   ) => {
     if (!author) author = userPubkey;
 
     setScreen(SCREEN.BUILDING);
 
-    const timer = setInterval(() => {
-      setProgress((prevProgress) => (prevProgress + 1) % 100);
-    }, 300);
-
     const create = async (type: SiteType, kinds: number[]) => {
       console.log("pubkey", author, type, kinds);
       if (!type) {
-        clearInterval(timer);
         setScreen(SCREEN.CHOOSE_AUTHOR);
       } else {
         try {
           const addr = await createSite(author!, type, kinds);
-          setProgress(100);
+
           router.replace(`/admin/${addr}/dashboard/?created=true`);
+
+          getSites.refetch().then(({ data }) => {
+            router.replace(`/admin/${addr}/dashboard`);
+
+            const site = data?.find((el) => el.id === addr);
+
+            enqueueSnackbar(`Site ${site?.name} was created!`, {
+              autoHideDuration: 10000,
+              variant: "success",
+              anchorOrigin: {
+                horizontal: "right",
+                vertical: "top",
+              },
+            });
+          });
         } catch (e) {
           enqueueSnackbar("Error: " + e, {
             autoHideDuration: 3000,
@@ -66,8 +77,6 @@ export const CreateSiteOnboarding = () => {
               vertical: "bottom",
             },
           });
-        } finally {
-          clearInterval(timer);
         }
       }
     };
@@ -80,7 +89,7 @@ export const CreateSiteOnboarding = () => {
   };
 
   if (screen === SCREEN.BUILDING) {
-    return <Building progress={progress} />;
+    return <BuildingScreen />;
   }
 
   if (screen === SCREEN.CHOOSE_AUTHOR) {

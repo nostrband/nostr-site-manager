@@ -18,6 +18,13 @@ import {
   WebIcon,
 } from "@/components/Icons";
 
+import {
+  KIND_LONG_NOTE,
+  KIND_NOTE,
+  KIND_OLAS,
+  KIND_VIDEO_VERTICAL,
+} from "libnostrsite";
+
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
 import tasteDemo from "../../public/images/preview-theme/enki-demo.npub.pro.png";
@@ -47,6 +54,7 @@ import sourceDemo from "../../public/images/preview-theme/source-demo.npub.pro.p
 import mnmlDemo from "../../public/images/preview-theme/mnml-demo.npub.pro.png";
 import vitorsDemo from "../../public/images/preview-theme/vitors-demo.npub.pro.png";
 import microLieblingDemo from "../../public/images/preview-theme/micro-liebling-demo.png";
+import { SelectTypeSite, TypeAuthor } from "@/types";
 
 export const NPUB_PRO_DOMAIN = "npub.pro";
 export const NPUB_PRO_API = "https://api.npubpro.com";
@@ -110,6 +118,72 @@ export const TESTERS = [
   "3ba42e70f27a79467bb3377527818384fe41c720ceb3b367223cb896f9954cb2",
   // alex
   "b33f4a427387a151c82a5925b3c9fa631b240563a9c8b82f42af18655845fb2f",
+];
+
+export const LIST_SITE_TYPES: SelectTypeSite[] = [
+  {
+    type: "blog",
+    typename: "Blog",
+    description: "The blog is great for posts with text and images 1",
+    kinds: [KIND_LONG_NOTE],
+  },
+  {
+    type: "note",
+    typename: "Microblog",
+    description: "The blog is great for posts with text and images 1",
+    kinds: [KIND_NOTE],
+  },
+  {
+    type: "photo",
+    typename: "Photoblog",
+    description: "The blog is great for posts with text and images 1",
+    kinds: [KIND_OLAS],
+  },
+  {
+    type: "video",
+    typename: "Videoblog",
+    description: "The blog is great for posts with text and images 1",
+    kinds: [KIND_VIDEO_VERTICAL],
+  },
+  {
+    type: "podcast",
+    typename: "Podcast",
+    description: "The blog is great for posts with text and images 1",
+    kinds: [KIND_NOTE],
+  },
+];
+
+export const RECOMEND_AUTHORS: TypeAuthor[] = [
+  {
+    pubkey: "1bd32a386a7be6f688b3dc7c480efc21cd946b43eac14ba4ba7834ac77a23e69",
+    type: "note",
+    typename: "Microblog",
+    kinds: [KIND_NOTE],
+  },
+  {
+    pubkey: "97c70a44366a6535c145b333f973ea86dfdc2d7a99da618c40c64705ad98e322",
+    type: "blog",
+    typename: "Blog",
+    kinds: [KIND_LONG_NOTE],
+  },
+  {
+    pubkey: "7d33ba57d8a6e8869a1f1d5215254597594ac0dbfeb01b690def8c461b82db35",
+    type: "photo",
+    typename: "Photoblog",
+    kinds: [KIND_OLAS],
+  },
+  {
+    pubkey: "47f97d4e0a640c8a963d3fa71d9f0a6aad958afa505fefdedd6d529ef4122ef3",
+    type: "video",
+    typename: "Videoblog",
+    kinds: [KIND_VIDEO_VERTICAL],
+  },
+  {
+    pubkey: "7f573f55d875ce8edc528edf822949fd2ab9f9c65d914a40225663b0a697be07",
+    type: "podcast",
+    typename: "Podcast",
+    kinds: [KIND_NOTE],
+  },
 ];
 
 export const HASH_CONFIG = {

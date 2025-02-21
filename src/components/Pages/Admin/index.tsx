@@ -55,7 +55,7 @@ export const AdminPage = () => {
               <StyledButtonAddWrap>
                 <StyledButtonAdd
                   LinkComponent={Link}
-                  href="/admin/add"
+                  href="/admin/create-site"
                   color="decorate"
                   variant="contained"
                   size="large"

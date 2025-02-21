@@ -100,13 +100,13 @@ async function fetchContent(pubkey: string, kinds: number[], min: number) {
       limit: min,
     },
     SEARCH_RELAYS_SPAM,
-    1000
+    1000,
   );
 }
 
 function isRoot(n: NDKEvent) {
   return !n.tags.find(
-    (t) => t.length >= 4 && (t[0] === "a" || t[0] === "e") && t[3] === "root"
+    (t) => t.length >= 4 && (t[0] === "a" || t[0] === "e") && t[3] === "root",
   );
 }
 
@@ -126,7 +126,7 @@ function isAudio(parser: NostrParser, r: NDKEvent) {
 }
 
 export async function detectContentType(
-  pubkey: string
+  pubkey: string,
 ): Promise<[SiteType, number[]]> {
   const fetch = async (kinds: number[], min: number) => {
     return await fetchContent(pubkey, kinds, min);
@@ -170,7 +170,7 @@ export async function detectContentType(
 export async function createSite(
   pubkey: string,
   type: SiteType,
-  kinds: number[]
+  kinds: number[],
 ) {
   if (!type) throw new Error("Invalid type");
   const theme = DEFAULT_THEMES[type];
@@ -214,7 +214,7 @@ export async function createSite(
   stv(
     site,
     "d",
-    d_tag + ":" + bytesToHex(randomBytes(userIsDelegated ? 8 : 3))
+    d_tag + ":" + bytesToHex(randomBytes(userIsDelegated ? 8 : 3)),
   );
 
   if (userIsDelegated) {
@@ -287,7 +287,7 @@ export async function createSite(
 
     const nevent = await signSubmitEvent(event);
     const r = await nevent.publish(
-      NDKRelaySet.fromRelayUrls([...userRelays, ...SEARCH_RELAYS], ndk)
+      NDKRelaySet.fromRelayUrls([...userRelays, ...SEARCH_RELAYS], ndk),
     );
 
     console.log("submit ", id, nevent.rawEvent(), "to relays", r.size);
@@ -306,7 +306,7 @@ export async function createSite(
   console.log("naddr", naddr);
   console.log("requesting domain", requestedDomain);
   const reply = await fetchWithSession(
-    `/reserve?domain=${requestedDomain}&site=${naddr}`
+    `/reserve?domain=${requestedDomain}&site=${naddr}`,
   );
   if (reply.status !== 200) throw new Error("Failed to reserve domain name");
   const reserve = await reply.json();
@@ -325,7 +325,7 @@ export async function createSite(
 
   // deploy
   const deployReply = await fetchWithSession(
-    `/deploy?domain=${new URL(origin).hostname}&site=${naddr}`
+    `/deploy?domain=${new URL(origin).hostname}&site=${naddr}`,
   );
   if (deployReply.status !== 200) throw new Error("Failed to deploy");
   const r = await deployReply.json();

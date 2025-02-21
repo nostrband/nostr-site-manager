@@ -4,7 +4,7 @@ import { MainWrapper } from "@/components/Layout/MainContent";
 import { HeaderAdmin } from "@/components/Layout/HeaderAdmin";
 import { StepperOnboarding } from "@/components/StepperOnboarding";
 import { Container } from "@mui/material";
-import { StyledWrapChildren } from "./styled";
+import { StyledWrapOnboardingChildren } from "@/components/shared/styled";
 
 export const OnboardingWrapper = ({ children }: { children: ReactNode }) => {
   return (
@@ -13,7 +13,7 @@ export const OnboardingWrapper = ({ children }: { children: ReactNode }) => {
       <StepperOnboarding />
 
       <Container maxWidth="lg">
-        <StyledWrapChildren>{children}</StyledWrapChildren>
+        <StyledWrapOnboardingChildren>{children}</StyledWrapOnboardingChildren>
       </Container>
     </MainWrapper>
   );

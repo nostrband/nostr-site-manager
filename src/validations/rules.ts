@@ -31,7 +31,7 @@ export const validationSchemaMakePrivateSite = yup.object().shape({
       "Password is required when private",
       function (value) {
         return !(this.parent.isPrivate === true && value === undefined);
-      }
+      },
     ),
 });
 
@@ -61,7 +61,7 @@ export const validationSchemaLoginDM = yup.object({
         }
 
         return false;
-      }
+      },
     )
     .required("Required field"),
 });

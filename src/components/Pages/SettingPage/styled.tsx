@@ -65,17 +65,6 @@ export const StyledComingSoonProfile = styled(Box)(() => ({
   textAlign: "center",
 }));
 
-export const StyledTitle = styled(PageTitle)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  paddingBottom: 24,
-  gap: 8,
-  paddingTop: 40,
-  [theme.breakpoints.down("sm")]: {
-    paddingTop: 16,
-  },
-}));
-
 export const StyledTitleSection = styled(PageTitle)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
     fontSize: "20px",

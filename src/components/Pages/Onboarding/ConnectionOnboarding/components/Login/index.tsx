@@ -4,16 +4,16 @@ import { LoginEnterCode } from "../LoginEnterCode";
 
 export const Login = () => {
   const [isShowEnterCode, setShowEnterCode] = useState(false);
-  const [pubkey, setPubkey] = useState('');
+  const [pubkey, setPubkey] = useState("");
 
   const showEnterCode = (pubkey: string) => {
     setShowEnterCode(true);
-    setPubkey(pubkey)
+    setPubkey(pubkey);
   };
 
   const showLoginDM = () => {
     setShowEnterCode(false);
-    setPubkey('')
+    setPubkey("");
   };
 
   return isShowEnterCode ? (

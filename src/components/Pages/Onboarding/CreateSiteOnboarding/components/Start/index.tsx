@@ -23,7 +23,7 @@ export const Start = ({ createSite }: StartProps) => {
   const [username, setUsername] = useState("");
 
   const handleBuilding = () => {
-    createSite(userPubkey, '', []);
+    createSite(userPubkey, "", []);
   };
 
   useEffect(() => {

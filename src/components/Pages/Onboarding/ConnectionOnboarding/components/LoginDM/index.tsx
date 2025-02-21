@@ -54,16 +54,16 @@ export const LoginDM = ({
         if (yup.string().email().isValidSync(npub)) {
           try {
             const [name, domain] = npub.split("@");
-            
+
             if (!name || !domain) {
               throw new Error("Invalid email format");
             }
 
             const res = await axios.get(
-              `https://${domain}/.well-known/nostr.json?name=${name}`
+              `https://${domain}/.well-known/nostr.json?name=${name}`,
             );
 
-            showEnterCode(res.data.names[name])
+            showEnterCode(res.data.names[name]);
           } catch (e) {
             enqueueSnackbar("Error bad name", {
               autoHideDuration: 3000,
@@ -76,13 +76,12 @@ export const LoginDM = ({
           } finally {
             setLoading(false);
           }
-      
         } else if (String(npub).startsWith("npub")) {
           try {
             const decoded = nip19.decode(npub);
 
             await axios.get(
-              `https://api.npubpro.com/otp?pubkey=${decoded.data}`
+              `https://api.npubpro.com/otp?pubkey=${decoded.data}`,
             );
 
             showEnterCode(decoded.data as string);
@@ -118,7 +117,7 @@ export const LoginDM = ({
 
   const handleAdvanced = () => {
     document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "welcome-login" })
+      new CustomEvent("nlLaunch", { detail: "welcome-login" }),
     );
   };
 

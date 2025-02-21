@@ -21,7 +21,7 @@ export const PhotoViewer = ({ src, isOpen, onClose }: PhotoViewerProps) => {
       slides={[{ src }]}
       open={isOpen}
       close={onClose}
-      carousel={{ finite: true }} 
+      carousel={{ finite: true }}
     />
   );
 };

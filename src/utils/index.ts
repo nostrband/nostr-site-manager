@@ -1,4 +1,7 @@
+import { fetchProfiles } from "@/services/nostr/api";
+import { parseProfileEvent } from "@/services/nostr/nostr";
 import { LevelNavigation } from "@/services/sites.service";
+import { TypeAuthor } from "@/types";
 import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
 
 export const addHttps = (url: string): string => {
@@ -44,4 +47,27 @@ export const resetLevelNavigation = (
   });
 
   return navigation;
+};
+
+export const getRecomendAuthors = async (
+  authors: TypeAuthor[],
+  callback: (authors: TypeAuthor[]) => void,
+) => {
+  try {
+    const pubkeys = authors.map((u) => u.pubkey);
+    const profiles = await fetchProfiles(pubkeys);
+
+    if (!profiles || profiles.length === 0) return;
+
+    const updatedAuthors = authors.map((u) => {
+      const profile = profiles.find((p) => p.pubkey === u.pubkey);
+      if (!profile) return u;
+      const { name, img, about } = parseProfileEvent(u.pubkey, profile);
+      return { ...u, name, img, about };
+    });
+
+    callback(updatedAuthors);
+  } catch (error) {
+    console.error("Failed to load profiles:", error);
+  }
 };

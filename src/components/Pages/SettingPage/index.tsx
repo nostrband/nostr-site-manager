@@ -30,7 +30,6 @@ import { Logo } from "./components/Logo";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import {
   SearchSettingsFieldWrap,
-  StyledTitle,
   StyledTitleSection,
   StyledWrap,
   StyledWrapSectionSettings,
@@ -43,6 +42,7 @@ import { NostrJson } from "./components/NostrJson";
 import { ContentFilters } from "./components/ContentFilters";
 import { useBack } from "@/hooks/useBackPage";
 import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
+import { StyledTitlePage } from "@/components/shared/styled";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -343,7 +343,7 @@ export const SettingPage = () => {
   return (
     <Container maxWidth="lg">
       <StyledWrap>
-        <StyledTitle>
+        <StyledTitlePage>
           <Button
             onClick={handleBack}
             color="primary"
@@ -353,7 +353,7 @@ export const SettingPage = () => {
             <ChevronLeftIcon />
           </Button>
           Settings
-        </StyledTitle>
+        </StyledTitlePage>
 
         <SearchSettingsFieldWrap>
           <SearchSettingsField

@@ -19,7 +19,7 @@ export const GetStarted = () => {
         <StyledTitle>Start by creating your first website</StyledTitle>
         <Button
           LinkComponent={Link}
-          href="/admin/add"
+          href="/admin/create-site"
           size="large"
           color="decorate"
           variant="contained"

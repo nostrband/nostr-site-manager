@@ -61,4 +61,3 @@ export function eventIdToTag(id: string) {
       throw new Error("Invalid related id " + id);
   }
 }
-

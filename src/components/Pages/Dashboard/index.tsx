@@ -12,7 +12,7 @@ import {
   migrateToConnectedKey,
 } from "@/services/nostr/migrate";
 import { useSnackbar } from "notistack";
-import { StyledActions, StyledTitle, StyledWrapDashboard } from "./styled";
+import { StyledActions, StyledWrapDashboard } from "./styled";
 import {
   ArrowRightIcon,
   BrushIcon,
@@ -26,6 +26,7 @@ import { PreviewDashboardSite } from "./components/PreviewDashboardSite";
 import { LoadingButton } from "@mui/lab";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
+import { StyledTitlePage } from "@/components/shared/styled";
 
 export const Dashboard = () => {
   const { isAuth } = useContext(AuthContext);
@@ -102,7 +103,7 @@ export const Dashboard = () => {
   return (
     <Container maxWidth="lg">
       <StyledWrapDashboard>
-        <StyledTitle>
+        <StyledTitlePage>
           <Button
             LinkComponent={Link}
             href="/admin"
@@ -113,7 +114,7 @@ export const Dashboard = () => {
             <ChevronLeftIcon />
           </Button>
           Dashboard
-        </StyledTitle>
+        </StyledTitlePage>
 
         {getSite && (
           <PreviewDashboardSite

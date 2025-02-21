@@ -1,6 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Alert, Avatar, Box, Divider, Typography } from "@mui/material";
+import { Avatar, Box, Divider, Typography } from "@mui/material";
 import { ChevronLeftIcon } from "@/components/Icons";
 
 export const StyledTitlePage = styled(Typography)(({ theme }) => ({
@@ -40,12 +40,6 @@ export const StyledVideo = styled(Box)(({ theme }) => ({
   video: {
     width: "inherit",
     verticalAlign: "middle",
-  },
-}));
-
-export const StyledAlert = styled(Alert)(() => ({
-  ".MuiAlert-icon": {
-    color: "#0000EE",
   },
 }));
 

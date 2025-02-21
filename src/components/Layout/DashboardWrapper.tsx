@@ -21,7 +21,9 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const { isAuth, isLoading } = useContext(AuthContext);
 
   const isPathAdmin = pathname === "/admin";
-  const isPathAdminAdd = pathname === "/admin/add";
+  const isPathAdminAdd = ["/admin/add", "/admin/create-site"].includes(
+    pathname,
+  );
 
   const getValidParamsId = useCallback(
     (list: ReturnSitesDataType[], id: string | string[], url: string) => {
@@ -30,6 +32,8 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
       if (isPathAdminAdd) {
         return;
       }
+
+      console.log({ isId });
 
       if (!isId) {
         router.push(pathAdmin);
@@ -52,7 +56,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
     if (data) {
       getValidParamsId(data, siteId, pathname);
     }
-  }, [data, getValidParamsId, siteId, pathname]);
+  }, [data, getValidParamsId, siteId, pathname, isAuth]);
 
   const login = async () => {
     await window.nostr!.getPublicKey();

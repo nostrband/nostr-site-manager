@@ -41,7 +41,7 @@ export const AdminPage = () => {
           {data?.length ? (
             <StyledWrapPage>
               <Container maxWidth="lg">
-                <StyledTitle>Your websites</StyledTitle>
+                <StyledTitle>Your sites</StyledTitle>
 
                 <ListSites
                   data={data}
@@ -61,7 +61,7 @@ export const AdminPage = () => {
                   size="large"
                   fullWidth
                 >
-                  Create new website
+                  Create new site
                   <PlusIcon />
                 </StyledButtonAdd>
               </StyledButtonAddWrap>

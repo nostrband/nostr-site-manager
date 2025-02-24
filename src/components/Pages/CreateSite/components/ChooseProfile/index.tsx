@@ -8,6 +8,7 @@ import {
   Menu,
   MenuItem,
   OutlinedInput,
+  Typography,
 } from "@mui/material";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -20,7 +21,7 @@ import {
   StyledWrapAuthor,
 } from "../../styled";
 import { StyledTitle, StyledWrapBlock } from "../StartScreen/styled";
-import { LIST_SITE_TYPES, RECOMEND_AUTHORS } from "@/consts";
+import { LIST_SITE_TYPES, RECOMMENDED_AUTHORS } from "@/consts";
 import { TypeAuthor } from "@/types";
 import { getRecomendAuthors } from "@/utils";
 import { debounce } from "lodash";
@@ -37,7 +38,7 @@ export const ChooseProfile = ({ author, selectAuthor }: ChooseProfileProps) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [authorList, setAuthorList] = useState<TypeAuthor[]>([]);
   const [authorRecomendList, setAuthorRecomendList] = useState<TypeAuthor[]>(
-    [],
+    []
   );
   const [isloading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -70,7 +71,7 @@ export const ChooseProfile = ({ author, selectAuthor }: ChooseProfileProps) => {
             type,
             kinds,
           };
-        }),
+        })
       );
 
       setAuthorList(profilesWithContentType);
@@ -84,11 +85,11 @@ export const ChooseProfile = ({ author, selectAuthor }: ChooseProfileProps) => {
 
   const debouncedFetch = useMemo(
     () => debounce((query: string) => fetchSearchResults(query), 300),
-    [],
+    []
   );
 
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const { value } = event.target;
     setInputValue(value);
@@ -109,13 +110,18 @@ export const ChooseProfile = ({ author, selectAuthor }: ChooseProfileProps) => {
   };
 
   useEffect(() => {
-    getRecomendAuthors(RECOMEND_AUTHORS, setAuthorRecomendList);
+    getRecomendAuthors(RECOMMENDED_AUTHORS, setAuthorRecomendList);
   }, []);
 
   return (
     <>
       <StyledWrapBlock ref={buttonRef} id="basic-button">
-        <StyledTitle>Choose a profile</StyledTitle>
+        <StyledTitle>User Profile</StyledTitle>
+
+        <Typography typography={"body2"}>
+          Pre-populate the site with user&apos;s posts and profile data like name,
+          icon and description. Can be adjusted later.
+        </Typography>
 
         <StyledSelectButton
           onClick={handleClick}

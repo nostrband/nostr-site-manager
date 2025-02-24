@@ -17,7 +17,7 @@ export const WorksOfflineBenefit = () => {
         <Grid item xs={12} sm={6}>
           <StyledTitleFullBlock>Works like an App</StyledTitleFullBlock>
           <StyledSubTitleFullBlock>
-            Your website can be added to home screen and works offline for your
+            Your site can be added to home screen and works offline for your
             readers&apos; convenience.
           </StyledSubTitleFullBlock>
         </Grid>

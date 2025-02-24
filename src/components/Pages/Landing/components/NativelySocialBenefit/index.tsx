@@ -25,7 +25,7 @@ export const NativelySocialBenefit = () => {
       </StyledGroupIcon>
 
       <StyledTitle>
-        <span>Natively Social.</span> Your website is part of a global open
+        <span>Natively Social.</span> Your site is part of a global open
         social network with powerful tools like chats, direct messages, digital
         payments and more...
       </StyledTitle>

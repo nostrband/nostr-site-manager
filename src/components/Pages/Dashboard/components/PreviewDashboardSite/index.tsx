@@ -114,7 +114,7 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
         >
           <AddImageIcon fontSize="inherit" />
 
-          <StyledTextAddImage>Add a website cover image</StyledTextAddImage>
+          <StyledTextAddImage>Add a site cover image</StyledTextAddImage>
         </StyledCardAddImage>
       )}
 

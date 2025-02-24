@@ -16,7 +16,7 @@ export const GetStarted = () => {
           justifyContent: "center",
         }}
       >
-        <StyledTitle>Start by creating your first website</StyledTitle>
+        <StyledTitle>Start by creating your first site</StyledTitle>
         <Button
           LinkComponent={Link}
           href="/admin/create-site"
@@ -24,7 +24,7 @@ export const GetStarted = () => {
           color="decorate"
           variant="contained"
         >
-          Create website &rarr;
+          Create site &rarr;
         </Button>
       </Box>
     </Container>

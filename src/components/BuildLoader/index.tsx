@@ -15,11 +15,11 @@ import {
 
 export const BuildLoader = () => {
   const items = [
-    { text: "Processing account information", icon: <UserRectangleIcon /> },
-    { text: "Preparing content", icon: <TypographyIcon /> },
-    { text: "Selecting a font and uploading images", icon: <ImageIcon /> },
-    { text: "Selecting or uploading a theme", icon: <BrushIcon /> },
-    { text: "Synchronizing data", icon: <SyncIcon /> },
+    { text: "Processing profile information", icon: <UserRectangleIcon /> },
+    { text: "Importing content", icon: <TypographyIcon /> },
+    { text: "Detecting types of content", icon: <ImageIcon /> },
+    { text: "Fetching the theme", icon: <BrushIcon /> },
+    { text: "Rendering site pages", icon: <SyncIcon /> },
   ];
 
   return (

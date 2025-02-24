@@ -23,7 +23,7 @@ export const FAQ = () => {
           </Grid>
           <StyledGridItem item xs={12} sm={6}>
             <StyledTitleDescription>
-              Websites are Nostr events, the themes are open-source
+              Sites are Nostr events, the themes are open-source
               <a href="https://ghost.org" target="_blank">
                 Ghost
               </a>
@@ -101,9 +101,9 @@ export const FAQ = () => {
           </Grid>
           <StyledGridItem item xs={12} sm={6}>
             <StyledTitleDescription>
-              The npub.pro website engine follows the outbox model, which means
+              The npub.pro site engine follows the outbox model, which means
               that if some relay blocks your events and you change your relay
-              list, your website will fetch events from your new relays. We are
+              list, your site will fetch events from your new relays. We are
               making sure that your Nostr site is as robust as your Nostr
               profile.
             </StyledTitleDescription>
@@ -114,11 +114,11 @@ export const FAQ = () => {
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <StyledTitleFAQ>Is npub.pro website free?</StyledTitleFAQ>
+            <StyledTitleFAQ>Is npub.pro site free?</StyledTitleFAQ>
           </Grid>
           <StyledGridItem item xs={12} sm={6}>
             <StyledTitleDescription>
-              We will host your website for free on <em>your-name</em>.npub.pro
+              We will host your site for free on <em>your-name</em>.npub.pro
               address. If you want to attach a custom domain and get other
               benefits, you can switch to a <a href="#pro">Pro plan</a>. You can
               also self-host a Nostr site &mdash; all the data is on relays, the

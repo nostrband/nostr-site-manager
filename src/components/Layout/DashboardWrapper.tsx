@@ -75,7 +75,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
               Login
             </Button>
             <Typography sx={{ marginTop: "15px" }}>
-              Please log in to manager your websites.
+              Please log in to manager your sites.
             </Typography>
           </Box>
         </StyledWrapCenter>

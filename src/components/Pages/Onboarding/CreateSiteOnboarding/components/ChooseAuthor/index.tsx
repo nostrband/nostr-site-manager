@@ -17,7 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import { SiteType } from "@/services/nostr/onboard";
 import { TypeAuthor } from "@/types";
-import { RECOMEND_AUTHORS } from "@/consts";
+import { RECOMMENDED_AUTHORS } from "@/consts";
 import { getRecomendAuthors } from "@/utils";
 
 interface ChooseAuthorProps {
@@ -25,11 +25,11 @@ interface ChooseAuthorProps {
 }
 
 export const ChooseAuthor = ({ createSite }: ChooseAuthorProps) => {
-  const [authors, setAuthors] = useState<TypeAuthor[]>(RECOMEND_AUTHORS);
+  const [authors, setAuthors] = useState<TypeAuthor[]>(RECOMMENDED_AUTHORS);
   const [authorData, setAuthorData] = useState<TypeAuthor | null>(null);
 
   useEffect(() => {
-    getRecomendAuthors(RECOMEND_AUTHORS, setAuthors);
+    getRecomendAuthors(RECOMMENDED_AUTHORS, setAuthors);
   }, []);
 
   const handleCloseAuthor = () => {

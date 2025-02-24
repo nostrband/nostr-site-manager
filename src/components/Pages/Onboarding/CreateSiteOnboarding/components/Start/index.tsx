@@ -36,10 +36,10 @@ export const Start = ({ createSite }: StartProps) => {
   return (
     <>
       <StyledTitlePage>
-        Hello{username ? ` ${username}` : ""}, Let&apos;s Make a Sample Website!
+        Hello{username ? ` ${username}` : ""}, Let&apos;s Make a Sample Site!
       </StyledTitlePage>
       <StyledDescriptionPage variant="body2">
-        Create a draft website quickly, and then gradually improve it later.
+        Create a draft site quickly, and then gradually improve it later.
       </StyledDescriptionPage>
       <StyledActions>
         <Button

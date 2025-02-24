@@ -1,5 +1,5 @@
 import { CheckCircleIcon, ChevronLeftIcon } from "@/components/Icons";
-import { Box, Chip, Menu, MenuItem } from "@mui/material";
+import { Box, Chip, Menu, MenuItem, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import {
   StyledMenuItemContent,
@@ -48,7 +48,12 @@ export const SelectSiteType = ({
   return (
     <>
       <StyledWrapBlock ref={buttonRef} id="basic-button">
-        <StyledTitle>Select a site type</StyledTitle>
+        <StyledTitle>Site Type</StyledTitle>
+
+        <Typography typography={"body2"}>
+          Pre-populate the site design theme and features to suit the chosen
+          type. Can be adjusted later.
+        </Typography>
 
         {isRecomended && (
           <StyledWrapChip>

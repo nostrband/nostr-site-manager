@@ -37,6 +37,7 @@ export const StartScreen = ({ createSite }: StartScreenProps) => {
 
   const handleCreateSite = async () => {
     if (author) {
+      console.log("handleCreateSite", author.pubkey, typeSite.type, typeSite.kinds);
       await createSite(author.pubkey, typeSite.type, typeSite.kinds);
     }
   };
@@ -86,7 +87,7 @@ export const StartScreen = ({ createSite }: StartScreenProps) => {
         >
           <ChevronLeftIcon />
         </Button>
-        New website
+        New site
       </StyledTitleStartPage>
 
       {isLoading ? (
@@ -109,7 +110,7 @@ export const StartScreen = ({ createSite }: StartScreenProps) => {
             variant="contained"
             fullWidth
           >
-            Create a website
+            Create the site
           </Button>
         </>
       )}

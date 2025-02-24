@@ -22,6 +22,7 @@ import {
   KIND_LONG_NOTE,
   KIND_NOTE,
   KIND_OLAS,
+  KIND_VIDEO_HORIZONTAL,
   KIND_VIDEO_VERTICAL,
 } from "libnostrsite";
 
@@ -124,36 +125,36 @@ export const LIST_SITE_TYPES: SelectTypeSite[] = [
   {
     type: "blog",
     typename: "Blog",
-    description: "The blog is great for posts with text and images 1",
+    description: "Optimized for long-form articles",
     kinds: [KIND_LONG_NOTE],
   },
   {
     type: "note",
     typename: "Microblog",
-    description: "The blog is great for posts with text and images 1",
+    description: "Optimized for short notes, similar to X/Twitter",
     kinds: [KIND_NOTE],
   },
   {
     type: "photo",
     typename: "Photoblog",
-    description: "The blog is great for posts with text and images 1",
+    description: "Optimized to display pictures and photographs",
     kinds: [KIND_OLAS],
   },
   {
     type: "video",
     typename: "Videoblog",
-    description: "The blog is great for posts with text and images 1",
-    kinds: [KIND_VIDEO_VERTICAL],
+    description: "Optimized to display video clips and long-form videos",
+    kinds: [KIND_VIDEO_VERTICAL, KIND_VIDEO_HORIZONTAL],
   },
   {
     type: "podcast",
     typename: "Podcast",
-    description: "The blog is great for posts with text and images 1",
+    description: "Optimized for audio and video podcasts",
     kinds: [KIND_NOTE],
   },
 ];
 
-export const RECOMEND_AUTHORS: TypeAuthor[] = [
+export const RECOMMENDED_AUTHORS: TypeAuthor[] = [
   {
     pubkey: "1bd32a386a7be6f688b3dc7c480efc21cd946b43eac14ba4ba7834ac77a23e69",
     type: "note",
@@ -218,7 +219,7 @@ export const HASH_CONFIG = {
 
 export const SETTINGS_CONFIG = {
   websiteAddress: {
-    title: "Website address",
+    title: "Site address",
     anchor: HASH_CONFIG.URL,
     icon: <LinkIcon />,
     group: "General settings",
@@ -259,7 +260,7 @@ export const SETTINGS_CONFIG = {
     icon: <CodeIcon />,
     group: "General settings",
     description:
-      "You can add custom html/css/js code into the header and footer of your website",
+      "You can add custom html/css/js code into the header and footer of your site",
   },
   other: {
     title: "Other settings",
@@ -302,21 +303,21 @@ export const SETTINGS_CONFIG = {
     anchor: HASH_CONFIG.LOGO,
     icon: <StarIcon />,
     group: "Design",
-    description: "Website logo",
+    description: "Site logo",
   },
   icon: {
     title: "Icon",
     anchor: HASH_CONFIG.ICON,
     icon: <StarRectangleIcon />,
     group: "Design",
-    description: "Website icon",
+    description: "Site icon",
   },
   image: {
     title: "Image",
     anchor: HASH_CONFIG.IMAGE,
     icon: <ImageIcon />,
     group: "Design",
-    description: "Website cover image",
+    description: "Site cover image",
   },
   navigation: {
     title: "Navigation",

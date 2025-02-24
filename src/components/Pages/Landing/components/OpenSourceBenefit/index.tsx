@@ -17,7 +17,7 @@ export const OpenSourceBenefit = () => {
           Open-source and self-hostable.
         </StyledTitleFullBlock>
         <StyledSubTitleFullBlock>
-          Use our high-performance infrastructure to power your website or host
+          Use our high-performance infrastructure to power your site or host
           yourself &mdash; all data is on your Nostr relays.
         </StyledSubTitleFullBlock>
       </Box>

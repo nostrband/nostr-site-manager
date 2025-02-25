@@ -7,4 +7,5 @@ export const StyledLogo = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
   cursor: "pointer",
+  flexShrink: 0,
 }));

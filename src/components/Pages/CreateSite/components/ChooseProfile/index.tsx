@@ -38,7 +38,7 @@ export const ChooseProfile = ({ author, selectAuthor }: ChooseProfileProps) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [authorList, setAuthorList] = useState<TypeAuthor[]>([]);
   const [authorRecomendList, setAuthorRecomendList] = useState<TypeAuthor[]>(
-    []
+    [],
   );
   const [isloading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -71,7 +71,7 @@ export const ChooseProfile = ({ author, selectAuthor }: ChooseProfileProps) => {
             type,
             kinds,
           };
-        })
+        }),
       );
 
       setAuthorList(profilesWithContentType);
@@ -85,11 +85,11 @@ export const ChooseProfile = ({ author, selectAuthor }: ChooseProfileProps) => {
 
   const debouncedFetch = useMemo(
     () => debounce((query: string) => fetchSearchResults(query), 300),
-    []
+    [],
   );
 
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     const { value } = event.target;
     setInputValue(value);
@@ -119,8 +119,8 @@ export const ChooseProfile = ({ author, selectAuthor }: ChooseProfileProps) => {
         <StyledTitle>User Profile</StyledTitle>
 
         <Typography typography={"body2"}>
-          Pre-populate the site with user&apos;s posts and profile data like name,
-          icon and description. Can be adjusted later.
+          Pre-populate the site with user&apos;s posts and profile data like
+          name, icon and description. Can be adjusted later.
         </Typography>
 
         <StyledSelectButton

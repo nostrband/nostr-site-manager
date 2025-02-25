@@ -1300,3 +1300,51 @@ export const SyncIcon = createSvgIcon(
   </svg>,
   "SyncIcon",
 );
+
+export const MoreIcon = createSvgIcon(
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 17C13.1046 17 14 17.8954 14 19C14 20.1046 13.1046 21 12 21C10.8954 21 10 20.1046 10 19C10 17.8954 10.8954 17 12 17Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 3C13.1046 3 14 3.89543 14 5C14 6.10457 13.1046 7 12 7C10.8954 7 10 6.10457 10 5C10 3.89543 10.8954 3 12 3Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "MoreIcon",
+);
+
+export const DashboardIcon = createSvgIcon(
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M2 6C2 3.79086 3.79086 2 6 2H7C9.20914 2 11 3.79086 11 6V7C11 9.20914 9.20914 11 7 11H6C3.79086 11 2 9.20914 2 7V6ZM6 4C4.89543 4 4 4.89543 4 6V7C4 8.10457 4.89543 9 6 9H7C8.10457 9 9 8.10457 9 7V6C9 4.89543 8.10457 4 7 4H6ZM13 6C13 3.79086 14.7909 2 17 2H18C20.2091 2 22 3.79086 22 6V7C22 9.20914 20.2091 11 18 11H17C14.7909 11 13 9.20914 13 7V6ZM17 4C15.8954 4 15 4.89543 15 6V7C15 8.10457 15.8954 9 17 9H18C19.1046 9 20 8.10457 20 7V6C20 4.89543 19.1046 4 18 4H17ZM2 17C2 14.7909 3.79086 13 6 13H7C9.20914 13 11 14.7909 11 17V18C11 20.2091 9.20914 22 7 22H6C3.79086 22 2 20.2091 2 18V17ZM6 15C4.89543 15 4 15.8954 4 17V18C4 19.1046 4.89543 20 6 20H7C8.10457 20 9 19.1046 9 18V17C9 15.8954 8.10457 15 7 15H6ZM13 17C13 14.7909 14.7909 13 17 13H18C20.2091 13 22 14.7909 22 17V18C22 20.2091 20.2091 22 18 22H17C14.7909 22 13 20.2091 13 18V17ZM17 15C15.8954 15 15 15.8954 15 17V18C15 19.1046 15.8954 20 17 20H18C19.1046 20 20 19.1046 20 18V17C20 15.8954 19.1046 15 18 15H17Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "DashboardIcon",
+);

@@ -37,7 +37,12 @@ export const StartScreen = ({ createSite }: StartScreenProps) => {
 
   const handleCreateSite = async () => {
     if (author) {
-      console.log("handleCreateSite", author.pubkey, typeSite.type, typeSite.kinds);
+      console.log(
+        "handleCreateSite",
+        author.pubkey,
+        typeSite.type,
+        typeSite.kinds,
+      );
       await createSite(author.pubkey, typeSite.type, typeSite.kinds);
     }
   };

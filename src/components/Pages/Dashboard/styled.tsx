@@ -7,10 +7,3 @@ export const StyledWrapDashboard = styled(Box)(() => ({
   width: "100%",
   margin: "0 auto",
 }));
-
-export const StyledActions = styled(Box)(() => ({
-  display: "flex",
-  flexDirection: "column",
-  gap: "16px",
-  marginTop: "16px",
-}));

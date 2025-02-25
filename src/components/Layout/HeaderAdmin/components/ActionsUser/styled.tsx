@@ -1,6 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
+import { Box, ListItemIcon, Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { grey } from "@mui/material/colors";
 
@@ -30,6 +30,15 @@ export const StyledBadgeWrap = styled(Box)(() => ({
   gap: "4px",
   borderRadius: "8px",
   height: 34,
+  maxWidth: 300,
+}));
+
+export const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
+  color: theme.palette.decorate.main,
+}));
+
+export const StyledListItemIconDelete = styled(ListItemIcon)(({ theme }) => ({
+  color: theme.palette.error.main,
 }));
 
 export const StyledBadgeAvatar = styled(Avatar)(() => ({
@@ -44,4 +53,12 @@ export const StyledBadgeTitle = styled(Typography)(() => ({
   fontSize: "14px",
   lineHeight: "22px",
   fontWeight: "500",
+
+  width: "100%",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  display: "-webkit-box",
+  WebkitLineClamp: "1",
+  WebkitBoxOrient: "vertical",
+  wordWrap: "break-word",
 }));

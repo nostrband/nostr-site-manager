@@ -6,4 +6,5 @@ export const StyledWrapDashboard = styled(Box)(() => ({
   maxWidth: "348px",
   width: "100%",
   margin: "0 auto",
+  paddingBottom: 32,
 }));

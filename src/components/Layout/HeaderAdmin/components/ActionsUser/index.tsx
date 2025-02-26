@@ -22,6 +22,7 @@ import {
   BrushIcon,
   DashboardIcon,
   FIleTextIcon,
+  IconLink,
   KeyIcon,
   MoreIcon,
   SettingsIcon,
@@ -190,6 +191,19 @@ export const ActionsUser = () => {
             open={isOpenMenuSite}
             onClose={handleCloseMenuSite}
           >
+            {getSite?.url && (
+              <MenuItem
+                component={Link}
+                href={getSite.url}
+                target="_blank"
+                onClick={handleCloseMenuSite}
+              >
+                <StyledListItemIcon>
+                  <IconLink fontSize="small" />
+                </StyledListItemIcon>
+                <ListItemText>Open site</ListItemText>
+              </MenuItem>
+            )}
             <MenuItem
               component={Link}
               href={linkToDashboard}

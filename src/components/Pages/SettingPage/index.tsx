@@ -3,7 +3,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import _ from "lodash";
 import { Button, Container } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { redirect } from "next/navigation";
+import {
+  redirect,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
@@ -43,6 +48,13 @@ import { ContentFilters } from "./components/ContentFilters";
 import { useBack } from "@/hooks/useBackPage";
 import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
 import { StyledTitlePage } from "@/components/shared/styled";
+
+const mockIdsTask = [
+  { id: "838y3737,", anchor: SETTINGS_CONFIG.titleDescription.anchor },
+  { id: "73g7f38", anchor: SETTINGS_CONFIG.icon.anchor },
+  { id: "h37f3", anchor: SETTINGS_CONFIG.navigation.anchor },
+  { id: "38jfhu", anchor: SETTINGS_CONFIG.theme.anchor },
+];
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -331,6 +343,35 @@ export const SettingPage = () => {
       }
     }
   }, [choiceSetting]);
+
+  const params = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    const idTask = params.get("idTask");
+
+    if (idTask && !isLoadingSetting && !isFetching) {
+      const task = mockIdsTask.find((el) => el.id === idTask);
+
+      if (task) {
+        const element = document.getElementById(task.anchor);
+
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+          // setDoneTask
+          enqueueSnackbar("Task is done!", {
+            autoHideDuration: 5000,
+            variant: "success",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "top",
+            },
+          });
+        }
+      }
+    }
+  }, [params, isLoadingSetting, isFetching, enqueueSnackbar]);
 
   if (isLoadingSetting || isFetching) {
     return (

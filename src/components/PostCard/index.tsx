@@ -92,7 +92,7 @@ export const PostCard = memo(
     const [isOpenPhoto, setOpenPhoto] = useState<boolean>(false);
     const [isSending, setIsSending] = useState<boolean>(false);
     const [isOpenModal, setOpenModal] = useState<boolean>(false);
-    
+
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);
     const srcVideo = isVisible ? `${videos[0]}#t=0.1` : "";
@@ -288,11 +288,11 @@ export const PostCard = memo(
                   </StyledCardMediaZoom>
                 </StyledCardMediaWrap>
               ) : isVideos ? (
-                <StyledCardVideoWrap ref={videoRef} isDesktop={isDesktop}>
+                <StyledCardVideoWrap isDesktop={isDesktop}>
                   <StyledCardVideoPlayButton>
                     <PlayIcon />
                   </StyledCardVideoPlayButton>
-                  <StyledCardVideo preload="metadata" src={srcVideo} />
+                  <StyledCardVideo ref={videoRef} preload="metadata" src={srcVideo} />
                 </StyledCardVideoWrap>
               ) : null}
 

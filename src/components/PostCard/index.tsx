@@ -29,6 +29,7 @@ import {
   MouseEvent,
   MouseEventHandler,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import useImageLoader from "@/hooks/useImageLoader";
@@ -195,6 +196,36 @@ export const PostCard = memo(
       };
     }, [timer]);
 
+    const videoRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            observer.unobserve(entry.target);
+          }
+        },
+        {
+          rootMargin: "0px",
+          threshold: 0.1,
+        }
+      );
+
+      if (videoRef.current) {
+        observer.observe(videoRef.current);
+      }
+
+      return () => {
+        if (videoRef.current) {
+          observer.unobserve(videoRef.current);
+        }
+      };
+    }, []);
+
+    console.log({ isVisible, title });
+
     return (
       <>
         <StyledCard>
@@ -258,11 +289,17 @@ export const PostCard = memo(
                   </StyledCardMediaZoom>
                 </StyledCardMediaWrap>
               ) : isVideos ? (
-                <StyledCardVideoWrap isDesktop={isDesktop}>
+                <StyledCardVideoWrap ref={videoRef} isDesktop={isDesktop}>
                   <StyledCardVideoPlayButton>
                     <PlayIcon />
                   </StyledCardVideoPlayButton>
-                  <StyledCardVideo preload="metadata" src={`${videos[0]}#t=0.1`} />
+
+                  {isVisible && (
+                    <StyledCardVideo
+                      preload="metadata"
+                      src={`/api/video?url=https://nostr.download/18305d77ce6ee6f186cf57a4ed8977e7c0736c6ec4308976c5186aa62d682545.mp4#t=0.1`}
+                    />
+                  )}
                 </StyledCardVideoWrap>
               ) : null}
 

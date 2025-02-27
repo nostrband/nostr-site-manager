@@ -91,7 +91,7 @@ export const AddPost = () => {
 
         {!isNotFound && !isLoadingPosts && (
           <StyledWrapListPosts>
-            {posts.map((post, index) => {
+            {[posts[41], posts[42], posts[43]].map((post, index) => {
               return (
                 <PostCard
                   key={index}

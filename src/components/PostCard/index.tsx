@@ -293,7 +293,7 @@ export const PostCard = memo(
                   <StyledCardVideoPlayButton>
                     <PlayIcon />
                   </StyledCardVideoPlayButton>
-                  {isVisible && <StyledCardVideo preload="metadata" src={`/api/video?url=${videos[0]}#t=0.1`} />}
+                  {isVisible && <StyledCardVideo preload="metadata" src={`${videos[0]}#t=0.1`} />}
                 </StyledCardVideoWrap>
               ) : null}
 

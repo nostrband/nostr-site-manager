@@ -196,9 +196,11 @@ export const PostCard = memo(
       };
     }, [timer]);
 
+
+
     const videoRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
-
+  
     useEffect(() => {
       const observer = new IntersectionObserver(
         ([entry]) => {
@@ -208,23 +210,21 @@ export const PostCard = memo(
           }
         },
         {
-          rootMargin: "0px",
+          rootMargin: '0px',
           threshold: 0.1,
         }
       );
-
+  
       if (videoRef.current) {
         observer.observe(videoRef.current);
       }
-
+  
       return () => {
         if (videoRef.current) {
           observer.unobserve(videoRef.current);
         }
       };
     }, []);
-
-    console.log({ isVisible, title });
 
     return (
       <>
@@ -293,12 +293,7 @@ export const PostCard = memo(
                   <StyledCardVideoPlayButton>
                     <PlayIcon />
                   </StyledCardVideoPlayButton>
-                  {isVisible && (
-                    <StyledCardVideo
-                      preload="metadata"
-                      src={`/api/video?url=https://nostr.download/18305d77ce6ee6f186cf57a4ed8977e7c0736c6ec4308976c5186aa62d682545.mp4#t=0.1`}
-                    />
-                  )}
+                  {isVisible && <StyledCardVideo preload="metadata" src={`/api/video?url=${videos[0]}#t=0.1`} />}
                 </StyledCardVideoWrap>
               ) : null}
 

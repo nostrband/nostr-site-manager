@@ -209,7 +209,7 @@ export const ActionsUser = () => {
               <StyledListItemIcon>
                 <FIleTextIcon fontSize="small" />
               </StyledListItemIcon>
-              <ListItemText>Post</ListItemText>
+              <ListItemText>Posts</ListItemText>
             </MenuItem>
 
             {userIsAdmin && (

@@ -10,6 +10,7 @@ import { PreviewDashboardSite } from "./components/PreviewDashboardSite";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 import { StyledTitlePage } from "@/components/shared/styled";
+import { TasksUser } from "./components/TasksUser";
 
 export const Dashboard = () => {
   const { isAuth } = useContext(AuthContext);
@@ -61,7 +62,7 @@ export const Dashboard = () => {
             description={getSite.description}
             accentColor={getSite.accentColor}
             contributors={getSite.contributors}
-            actions={<></>}
+            actions={<TasksUser id={getSite.id} />}
           />
         )}
       </StyledWrapDashboard>

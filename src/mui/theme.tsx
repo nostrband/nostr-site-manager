@@ -383,6 +383,28 @@ const theme = createTheme({
         },
       },
     },
+
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          minHeight: "42px",
+        },
+        indicator: {
+          backgroundColor: "#FF3ED9",
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          minHeight: "42px",
+          textTransform: "none",
+          "&.Mui-selected": {
+            color: "#FF3ED9",
+          },
+        },
+      },
+    },
   },
 });
 

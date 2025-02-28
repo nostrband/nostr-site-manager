@@ -16,14 +16,13 @@ import { AuthContext, userPubkey } from "@/services/nostr/nostr";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { CircularProgress, ListItemText } from "@mui/material";
+import { ListItemText } from "@mui/material";
 import {
   BrokenIcon,
   BrushIcon,
   DashboardIcon,
   FIleTextIcon,
   IconLink,
-  KeyIcon,
   MoreIcon,
   SettingsIcon,
   TrashIcon,
@@ -34,21 +33,14 @@ import { useGetSiteId } from "@/hooks/useGetSiteId";
 import Link from "next/link";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
 import { useRouter } from "next/navigation";
-import { useSnackbar } from "notistack";
-import {
-  isNeedMigrateKey,
-  migrateToConnectedKey,
-} from "@/services/nostr/migrate";
 
 export const ActionsUser = () => {
   const { isAuth } = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [isOpenMenuSite, setOpenSite] = useState(false);
-  const [isLoadingConnectKeys, setLoadingConnectKeys] = useState(false);
   const router = useRouter();
   const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
   const [isOpenConfirm, setOpenConfirm] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
 
   const badgeRef = useRef<HTMLElement>(null);
 
@@ -65,39 +57,6 @@ export const ActionsUser = () => {
   const linkPostManagement = `/admin/${siteId}/posts`;
 
   const { isLoaded } = useImageLoader(getSite ? getSite.icon : "");
-
-  const handleConnectKeys = async () => {
-    setLoadingConnectKeys(true);
-
-    try {
-      const newSiteId = await migrateToConnectedKey(siteId);
-      enqueueSnackbar("Keys connected!", {
-        autoHideDuration: 3000,
-        variant: "success",
-        anchorOrigin: {
-          horizontal: "right",
-          vertical: "bottom",
-        },
-      });
-      setTimeout(() => {
-        setLoadingConnectKeys(false);
-
-        router.push(`/admin/${newSiteId}`);
-      }, 500);
-    } catch (e: any) {
-      setLoadingConnectKeys(false);
-
-      console.log("error", e);
-      enqueueSnackbar("Error: " + e.toString(), {
-        autoHideDuration: 3000,
-        variant: "error",
-        anchorOrigin: {
-          horizontal: "right",
-          vertical: "bottom",
-        },
-      });
-    }
-  };
 
   const handeOpenConfirm = () => {
     setOpenConfirm(true);
@@ -249,22 +208,6 @@ export const ActionsUser = () => {
                   </StyledListItemIcon>
                   <ListItemText>Settings</ListItemText>
                 </MenuItem>
-
-                {isNeedMigrateKey(siteId) && (
-                  <MenuItem
-                    onClick={handleConnectKeys}
-                    disabled={isLoadingConnectKeys}
-                  >
-                    <StyledListItemIcon>
-                      {isLoadingConnectKeys ? (
-                        <CircularProgress size={20} />
-                      ) : (
-                        <KeyIcon fontSize="small" />
-                      )}
-                    </StyledListItemIcon>
-                    <ListItemText>Connect keys</ListItemText>
-                  </MenuItem>
-                )}
 
                 <MenuItem onClick={handeOpenConfirm}>
                   <StyledListItemIconDelete>

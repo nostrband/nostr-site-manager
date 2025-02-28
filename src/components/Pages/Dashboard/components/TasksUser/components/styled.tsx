@@ -5,7 +5,7 @@ import { forwardRef } from "react";
 import { grey } from "@mui/material/colors";
 
 interface StyledWrapProps {
-  isCompleted: boolean;
+  isCompleted?: boolean;
 }
 
 export type IBox = StyledWrapProps & BoxProps;
@@ -19,7 +19,7 @@ export const StyledWrap = styled(
 
     return <Box ref={ref} {...omitProps} />;
   }),
-)(({ isCompleted, theme }) => ({
+)(({ isCompleted = false, theme }) => ({
   display: "flex",
   paddingTop: 16,
   alignItems: "center",
@@ -43,7 +43,7 @@ export const StyledIcon = styled(
 
     return <Box ref={ref} {...omitProps} />;
   }),
-)(({ isCompleted, theme }) => ({
+)(({ isCompleted = false, theme }) => ({
   display: "flex",
   color: isCompleted ? theme.palette.success.main : theme.palette.decorate.main,
 }));

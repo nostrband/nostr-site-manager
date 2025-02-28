@@ -4,7 +4,7 @@ import {
   StyledIconChevron,
   StyledText,
   StyledWrap,
-} from "./styled";
+} from "../styled";
 
 export type TaskType = {
   text: string;

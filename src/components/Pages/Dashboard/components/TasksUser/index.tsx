@@ -13,6 +13,12 @@ import { Tab } from "@mui/material";
 import { CheckCircleIcon, FIleTextIcon } from "@/components/Icons";
 import { ItemTask, TaskType } from "./components/ItemTask";
 import { useRouter } from "next/navigation";
+import { useSnackbar } from "notistack";
+import {
+  isNeedMigrateKey,
+  migrateToConnectedKey,
+} from "@/services/nostr/migrate";
+import { ItemButton } from "./components/ItemButton";
 
 interface TasksUserProps {
   id: string;
@@ -55,6 +61,8 @@ export const TasksUser = ({ id }: TasksUserProps) => {
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isLoading, setLoading] = useState(true);
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+  const [isLoadingConnectKeys, setLoadingConnectKeys] = useState(false);
 
   const todoTasks = tasks.filter((el) => !el.isCompleted);
   const completedTasks = tasks.filter((el) => el.isCompleted);
@@ -82,6 +90,39 @@ export const TasksUser = ({ id }: TasksUserProps) => {
     const linkSettings = `/admin/${id}/settings?idTask=${idTask}`;
 
     router.push(linkSettings);
+  };
+
+  const handleConnectKeys = async () => {
+    setLoadingConnectKeys(true);
+
+    try {
+      const newSiteId = await migrateToConnectedKey(id);
+      enqueueSnackbar("Keys connected!", {
+        autoHideDuration: 3000,
+        variant: "success",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
+      });
+      setTimeout(() => {
+        setLoadingConnectKeys(false);
+
+        router.push(`/admin/${newSiteId}`);
+      }, 500);
+    } catch (e: any) {
+      setLoadingConnectKeys(false);
+
+      console.log("error", e);
+      enqueueSnackbar("Error: " + e.toString(), {
+        autoHideDuration: 3000,
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
+      });
+    }
   };
 
   useEffect(() => {
@@ -120,6 +161,12 @@ export const TasksUser = ({ id }: TasksUserProps) => {
                 value="completed"
               />
             </TabList>
+            {isNeedMigrateKey(id) && (
+              <ItemButton
+                isLoading={isLoadingConnectKeys}
+                onClick={handleConnectKeys}
+              />
+            )}
             <StyledTabPanel value="todo">
               {todoTasks.map((el, i) => {
                 return <ItemTask key={i} task={el} onOpen={handleOpen} />;

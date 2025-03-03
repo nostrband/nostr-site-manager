@@ -81,7 +81,7 @@ export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
 };
 
 export const SUPPORTED_KINDS = Object.keys(SUPPORTED_KIND_NAMES).map((k) =>
-  Number(k),
+  Number(k)
 );
 
 export const SUPPORTED_KIND_NAMES_SINGLE: { [key: number]: string } = {
@@ -247,12 +247,12 @@ export const SETTINGS_CONFIG = {
     description: "",
   },
   content: {
-    title: "Content filters",
+    title: "Auto-import of new posts",
     anchor: HASH_CONFIG.CONTENT,
     icon: <FIleTextIcon />,
     group: "General settings",
     description:
-      "Enable auto-submission to publish events of chosen kinds and hashtags by the site contributors",
+      "Enable auto-import to publish new posts of chosen kinds and hashtags by the site contributors",
   },
   plugins: {
     title: "Plugins",
@@ -280,9 +280,16 @@ export const SETTINGS_CONFIG = {
     title: "App name",
     anchor: HASH_CONFIG.APP_NAME,
     icon: <IosSmartphoneIcon />,
-    group: "Design",
+    group: "App on homescreen",
     description:
       "Short name for your site, displayed when users add it to homescreen",
+  },
+  icon: {
+    title: "App Icon",
+    anchor: HASH_CONFIG.ICON,
+    icon: <StarRectangleIcon />,
+    group: "App on homescreen",
+    description: "Icon of the site when users add it to homescreen",
   },
   theme: {
     title: "Theme",
@@ -304,13 +311,6 @@ export const SETTINGS_CONFIG = {
     icon: <StarIcon />,
     group: "Design",
     description: "Site logo",
-  },
-  icon: {
-    title: "Icon",
-    anchor: HASH_CONFIG.ICON,
-    icon: <StarRectangleIcon />,
-    group: "Design",
-    description: "Site icon",
   },
   image: {
     title: "Image",

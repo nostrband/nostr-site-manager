@@ -5,13 +5,7 @@ import {
   StyledText,
   StyledWrap,
 } from "../styled";
-
-export type TaskType = {
-  text: string;
-  isCompleted: boolean;
-  paymentPlan: string;
-  id: string;
-};
+import { TaskType } from "@/types";
 
 interface ItemTaskProps {
   task: TaskType;

@@ -11,7 +11,7 @@ import {
 import { TabContext, TabList } from "@mui/lab";
 import { Tab } from "@mui/material";
 import { CheckCircleIcon, FIleTextIcon } from "@/components/Icons";
-import { ItemTask, TaskType } from "./components/ItemTask";
+import { ItemTask } from "./components/ItemTask";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import {
@@ -19,43 +19,12 @@ import {
   migrateToConnectedKey,
 } from "@/services/nostr/migrate";
 import { ItemButton } from "./components/ItemButton";
+import { TaskType } from "@/types";
+import { fetchTasks, setDoneTask } from "@/services/nostr/tasks";
 
 interface TasksUserProps {
   id: string;
 }
-
-const mockTasks: TaskType[] = [
-  {
-    text: "Title task",
-    isCompleted: false,
-    paymentPlan: "base",
-    id: "838y3737",
-  },
-  {
-    text: "Icon task",
-    isCompleted: false,
-    paymentPlan: "pro",
-    id: "73g7f38",
-  },
-  {
-    text: "Navigation task",
-    isCompleted: false,
-    paymentPlan: "base",
-    id: "h37f3",
-  },
-  {
-    text: "Theme task",
-    isCompleted: false,
-    paymentPlan: "base",
-    id: "38jfhu",
-  },
-  {
-    text: "Task 5",
-    isCompleted: true,
-    paymentPlan: "base",
-    id: "734gf73f",
-  },
-];
 
 export const TasksUser = ({ id }: TasksUserProps) => {
   const [tasks, setTasks] = useState<TaskType[]>([]);
@@ -71,24 +40,22 @@ export const TasksUser = ({ id }: TasksUserProps) => {
 
   const handleChange = (
     event: React.SyntheticEvent,
-    newValue: "todo" | "completed",
+    newValue: "todo" | "completed"
   ) => {
     setValue(newValue);
   };
 
-  const getTasks = useCallback((id: string) => {
+  const getTasks = useCallback(async (id: string) => {
+    // FIXME use id to
     setLoading(true);
-    setTimeout(() => {
-      console.log(id);
-
-      setTasks(mockTasks);
-      setLoading(false);
-    }, 100);
+    const tasks = await fetchTasks(id);
+    setTasks(tasks);
+    setLoading(false);
   }, []);
 
   const handleOpen = (idTask: string) => {
+    setDoneTask(id, idTask);
     const linkSettings = `/admin/${id}/settings?idTask=${idTask}`;
-
     router.push(linkSettings);
   };
 
@@ -132,9 +99,9 @@ export const TasksUser = ({ id }: TasksUserProps) => {
   return (
     <StyledWrap>
       <StyledDivider />
-      <StyledTitle>Your Task List Awaits!</StyledTitle>
+      <StyledTitle>Let's Improve It!</StyledTitle>
       <StyledDescription variant="body2">
-        Exploring new horizons: a journey of discovery
+        One step at a time, slow but steady.
       </StyledDescription>
       {isLoading ? (
         <SpinerWrap>
@@ -146,7 +113,7 @@ export const TasksUser = ({ id }: TasksUserProps) => {
             <TabList
               variant="fullWidth"
               onChange={handleChange}
-              aria-label="lab API tabs example"
+              aria-label="Tasks"
             >
               <Tab
                 icon={<FIleTextIcon />}
@@ -161,13 +128,13 @@ export const TasksUser = ({ id }: TasksUserProps) => {
                 value="completed"
               />
             </TabList>
-            {isNeedMigrateKey(id) && (
-              <ItemButton
-                isLoading={isLoadingConnectKeys}
-                onClick={handleConnectKeys}
-              />
-            )}
             <StyledTabPanel value="todo">
+              {isNeedMigrateKey(id) && (
+                <ItemButton
+                  isLoading={isLoadingConnectKeys}
+                  onClick={handleConnectKeys}
+                />
+              )}
               {todoTasks.map((el, i) => {
                 return <ItemTask key={i} task={el} onOpen={handleOpen} />;
               })}

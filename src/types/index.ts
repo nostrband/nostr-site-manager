@@ -16,3 +16,10 @@ export type SelectTypeSite = {
   description: string;
   kinds: number[];
 };
+
+export type TaskType = {
+  text: string;
+  isCompleted: boolean;
+  paymentPlan: string;
+  id: string;
+};

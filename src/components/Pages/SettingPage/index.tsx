@@ -3,12 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import _ from "lodash";
 import { Button, Container } from "@mui/material";
 import { useSnackbar } from "notistack";
-import {
-  redirect,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
@@ -48,13 +43,7 @@ import { ContentFilters } from "./components/ContentFilters";
 import { useBack } from "@/hooks/useBackPage";
 import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
 import { StyledTitlePage } from "@/components/shared/styled";
-
-const mockIdsTask = [
-  { id: "838y3737,", anchor: SETTINGS_CONFIG.titleDescription.anchor },
-  { id: "73g7f38", anchor: SETTINGS_CONFIG.icon.anchor },
-  { id: "h37f3", anchor: SETTINGS_CONFIG.navigation.anchor },
-  { id: "38jfhu", anchor: SETTINGS_CONFIG.theme.anchor },
-];
+import { SITE_TASK_SETTINGS } from "@/services/nostr/tasks";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -175,31 +164,31 @@ export const SettingPage = () => {
     (input: InputNavigation) => {
       const navigation = updateLevelNavigation(
         values.navigation[input.type],
-        input,
+        input
       );
 
       setFieldValue(`navigation.${input.type}`, navigation);
     },
-    [setFieldValue, values.navigation],
+    [setFieldValue, values.navigation]
   );
 
   const handleResetNavigation = useCallback(
     (input: InputNavigationReset) => {
       const navigation = resetLevelNavigation(
         values.navigation[input.type],
-        input,
+        input
       );
 
       setFieldValue(`navigation.${input.type}`, navigation);
     },
-    [setFieldValue, values.navigation],
+    [setFieldValue, values.navigation]
   );
 
   const handleChangeNavigationOrder = useCallback(
     (navigation: NavigationModelType) => {
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleAddLinkNavigation = useCallback(
@@ -209,95 +198,95 @@ export const SettingPage = () => {
         { title: "", link: "", id: "" + Date.now() },
       ]);
     },
-    [setFieldValue, values.navigation],
+    [setFieldValue, values.navigation]
   );
 
   const handleChangeHashtags = useCallback(
     (value: string | string[]) => {
       setFieldValue("hashtags", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeHashtagsHomePage = useCallback(
     (value: string | string[]) => {
       setFieldValue("hashtags_homepage", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeContributors = useCallback(
     (pubkeys: string[]) => {
       setFieldValue("contributors", pubkeys);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleUpdateWebSiteAddress = useCallback(
     async (url: string) => {
       setFieldValue("url", addHttps(url));
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeContentActions = useCallback(
     (value: string[]) => {
       setFieldValue("contentActions", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeSignupStartNjump = useCallback(
     (value: boolean) => {
       setFieldValue("signupStartNjump", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeKinds = useCallback(
     (value: number | number[]) => {
       setFieldValue("kinds", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleOptionsMainCallAction = useCallback(
     (value: string) => {
       setFieldValue("contentActionMain", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeKindsHomePage = useCallback(
     (value: number | number[]) => {
       setFieldValue("kinds_homepage", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleAutoSubmit = useCallback(
     (value: boolean) => {
       setFieldValue("autoSubmit", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeColor = useCallback(
     (color: string) => {
       setFieldValue("accentColor", color);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleRemoveLinkNavigation = useCallback(
     (input: { id: string; type: "primary" | "secondary" }) => {
       const navigation = values.navigation[input.type].filter(
-        (item) => item.id !== input.id,
+        (item) => item.id !== input.id
       );
 
       setFieldValue(`navigation.${[input.type]}`, navigation);
     },
-    [setFieldValue, values.navigation],
+    [setFieldValue, values.navigation]
   );
 
   useEffect(() => {
@@ -337,7 +326,10 @@ export const SettingPage = () => {
       const element = document.getElementById(choiceSetting.anchor);
 
       if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
 
         setChoiceSetting(null);
       }
@@ -345,22 +337,24 @@ export const SettingPage = () => {
   }, [choiceSetting]);
 
   const params = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
+  // const pathname = usePathname();
+  // const router = useRouter();
 
   useEffect(() => {
     const idTask = params.get("idTask");
 
     if (idTask && !isLoadingSetting && !isFetching) {
-      const task = mockIdsTask.find((el) => el.id === idTask);
+      const task = SITE_TASK_SETTINGS.find((el) => el.id === idTask);
 
       if (task) {
         const element = document.getElementById(task.anchor);
 
         if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "start" });
-          // setDoneTask
-          enqueueSnackbar("Task is done!", {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+          enqueueSnackbar("Task completed!", {
             autoHideDuration: 5000,
             variant: "success",
             anchorOrigin: {
@@ -489,7 +483,7 @@ export const SettingPage = () => {
             <PinnedNotes isLoading={isLoading} siteId={values.id} />
           </StyledWrapSectionSettings>
 
-          <StyledTitleSection>Design</StyledTitleSection>
+          <StyledTitleSection>App on homescreen</StyledTitleSection>
 
           <StyledWrapSectionSettings>
             <AppName
@@ -500,6 +494,18 @@ export const SettingPage = () => {
               isLoading={isLoading}
             />
 
+            <Icon
+              icon={values.icon}
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              isLoading={isLoading}
+            />
+          </StyledWrapSectionSettings>
+
+          <StyledTitleSection>Design</StyledTitleSection>
+
+          <StyledWrapSectionSettings>
             <DesignBranding
               isLoading={isLoading}
               siteId={values.id}
@@ -516,14 +522,6 @@ export const SettingPage = () => {
 
             <Logo
               logo={values.logo}
-              handleBlur={handleBlur}
-              handleChange={handleChange}
-              submitForm={submitForm}
-              isLoading={isLoading}
-            />
-
-            <Icon
-              icon={values.icon}
               handleBlur={handleBlur}
               handleChange={handleChange}
               submitForm={submitForm}

@@ -99,7 +99,7 @@ export const TasksUser = ({ id }: TasksUserProps) => {
   return (
     <StyledWrap>
       <StyledDivider />
-      <StyledTitle>Let's Improve It!</StyledTitle>
+      <StyledTitle>Let&apos;s Improve It!</StyledTitle>
       <StyledDescription variant="body2">
         One step at a time, slow but steady.
       </StyledDescription>

@@ -74,6 +74,8 @@ const MOCK_DATA_OBJ: ReturnSettingsSiteDataType = {
   contentActionMain: "",
   contentActions: [""],
   signupStartNjump: false,
+  sendStats: false,
+  sendStatsDev: false,
 };
 
 const generateMockData = (count: number) => {

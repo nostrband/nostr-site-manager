@@ -43,6 +43,8 @@ import { NostrJson } from "./components/NostrJson";
 import { ContentFilters } from "./components/ContentFilters";
 import { useBack } from "@/hooks/useBackPage";
 import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
+import { AnalyticsAdmin } from "./components/AnalyticsAdmin";
+import { AnalyticsDev } from "./components/AnalyticsDev";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -90,6 +92,8 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   contentActions: [],
   autoSubmit: false,
   signupStartNjump: false,
+  sendStats: false,
+  sendStatsDev: false
 };
 
 export const SettingPage = () => {
@@ -135,7 +139,7 @@ export const SettingPage = () => {
 
         try {
           await editSite(values);
-          enqueueSnackbar("Edit data success!", {
+          enqueueSnackbar("Saved the settings and updated your site!", {
             autoHideDuration: 3000,
             variant: "success",
             anchorOrigin: {
@@ -163,31 +167,31 @@ export const SettingPage = () => {
     (input: InputNavigation) => {
       const navigation = updateLevelNavigation(
         values.navigation[input.type],
-        input,
+        input
       );
 
       setFieldValue(`navigation.${input.type}`, navigation);
     },
-    [setFieldValue, values.navigation],
+    [setFieldValue, values.navigation]
   );
 
   const handleResetNavigation = useCallback(
     (input: InputNavigationReset) => {
       const navigation = resetLevelNavigation(
         values.navigation[input.type],
-        input,
+        input
       );
 
       setFieldValue(`navigation.${input.type}`, navigation);
     },
-    [setFieldValue, values.navigation],
+    [setFieldValue, values.navigation]
   );
 
   const handleChangeNavigationOrder = useCallback(
     (navigation: NavigationModelType) => {
       setFieldValue("navigation", navigation);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleAddLinkNavigation = useCallback(
@@ -197,95 +201,109 @@ export const SettingPage = () => {
         { title: "", link: "", id: "" + Date.now() },
       ]);
     },
-    [setFieldValue, values.navigation],
+    [setFieldValue, values.navigation]
   );
 
   const handleChangeHashtags = useCallback(
     (value: string | string[]) => {
       setFieldValue("hashtags", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeHashtagsHomePage = useCallback(
     (value: string | string[]) => {
       setFieldValue("hashtags_homepage", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeContributors = useCallback(
     (pubkeys: string[]) => {
       setFieldValue("contributors", pubkeys);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleUpdateWebSiteAddress = useCallback(
     async (url: string) => {
       setFieldValue("url", addHttps(url));
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeContentActions = useCallback(
     (value: string[]) => {
       setFieldValue("contentActions", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeSignupStartNjump = useCallback(
     (value: boolean) => {
       setFieldValue("signupStartNjump", value);
     },
-    [setFieldValue],
+    [setFieldValue]
+  );
+
+  const handleChangeSendStats = useCallback(
+    (value: boolean) => {
+      setFieldValue("sendStats", value);
+    },
+    [setFieldValue]
+  );
+
+  const handleChangeSendStatsDev = useCallback(
+    (value: boolean) => {
+      setFieldValue("sendStatsDev", value);
+    },
+    [setFieldValue]
   );
 
   const handleChangeKinds = useCallback(
     (value: number | number[]) => {
       setFieldValue("kinds", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleOptionsMainCallAction = useCallback(
     (value: string) => {
       setFieldValue("contentActionMain", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeKindsHomePage = useCallback(
     (value: number | number[]) => {
       setFieldValue("kinds_homepage", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleAutoSubmit = useCallback(
     (value: boolean) => {
       setFieldValue("autoSubmit", value);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleChangeColor = useCallback(
     (color: string) => {
       setFieldValue("accentColor", color);
     },
-    [setFieldValue],
+    [setFieldValue]
   );
 
   const handleRemoveLinkNavigation = useCallback(
     (input: { id: string; type: "primary" | "secondary" }) => {
       const navigation = values.navigation[input.type].filter(
-        (item) => item.id !== input.id,
+        (item) => item.id !== input.id
       );
 
       setFieldValue(`navigation.${[input.type]}`, navigation);
     },
-    [setFieldValue, values.navigation],
+    [setFieldValue, values.navigation]
   );
 
   useEffect(() => {
@@ -506,6 +524,26 @@ export const SettingPage = () => {
               isLoading={isLoading}
               handleAddLinkNavigation={handleAddLinkNavigation}
               handleRemoveLinkNavigation={handleRemoveLinkNavigation}
+            />
+          </StyledWrapSectionSettings>
+
+          <StyledTitleSection>Analytics</StyledTitleSection>
+          <StyledWrapSectionSettings>
+            <AnalyticsAdmin
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              sendStats={values.sendStats}
+              handleSendStats={handleChangeSendStats}
+              isLoading={isLoading}
+            />
+            <AnalyticsDev
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              sendStatsDev={values.sendStatsDev}
+              handleSendStatsDev={handleChangeSendStatsDev}
+              isLoading={isLoading}
             />
           </StyledWrapSectionSettings>
 

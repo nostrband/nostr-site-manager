@@ -65,6 +65,9 @@ export type ReturnSettingsSiteDataType = {
   contentActionMain: string;
   contentActions: string[];
   signupStartNjump: boolean;
+
+  sendStats: boolean;
+  sendStatsDev: boolean;
 };
 
 export const getSites = async (): Promise<ReturnSettingsSiteDataType[]> => {

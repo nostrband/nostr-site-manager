@@ -62,7 +62,7 @@ export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
 };
 
 export const SUPPORTED_KINDS = Object.keys(SUPPORTED_KIND_NAMES).map((k) =>
-  Number(k),
+  Number(k)
 );
 
 export const SUPPORTED_KIND_NAMES_SINGLE: { [key: number]: string } = {
@@ -130,6 +130,8 @@ export const HASH_CONFIG = {
   PINNED_NOTES: "pinned-notes",
   LOGO: "logo",
   NOSTR_JSON: "nostr-json",
+  STATS_ADMIN: "stats-admin",
+  STATS_DEV: "stats-dev",
 };
 
 export const SETTINGS_CONFIG = {
@@ -248,6 +250,22 @@ export const SETTINGS_CONFIG = {
     group: "Homepage",
     description:
       "Choose event kinds and hashtags that will be displayed on the homepage",
+  },
+  statsAdmin: {
+    title: "Analytics for you",
+    anchor: HASH_CONFIG.STATS_ADMIN,
+    icon: <HomeIcon />,
+    group: "Analytics",
+    description:
+      "Enable to send encrypted analytics for you on Nostr. Only you can decrypt and view what visitors are doing on your site. Analytics data includes visited URLs, user-agent strings, npubs of logged-in users. Does NOT include visitor IP addresses.",
+  },
+  statsDev: {
+    title: "Analytics for developers",
+    anchor: HASH_CONFIG.STATS_DEV,
+    icon: <HomeIcon />,
+    group: "Analytics",
+    description:
+      "Enable to send additional encrypted anonymised analytics for Npub.pro to help us improve the service. Npub.pro team will learn what visitors are doing on your site. Analytics data includes visited URLs, user-agent strings. Does NOT include visitor IP addresses and npubs of logged-in users.",
   },
   nostrJson: {
     title: "Nostr.json",

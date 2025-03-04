@@ -205,6 +205,9 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
 
   // parse updated site back
   sites[index] = parseSite(e);
+
+  // clear the temporary store
+  window.localStorage.removeItem(eventId(e));
 }
 
 export async function deleteSite(siteId: string) {

@@ -4,7 +4,7 @@ import { Button, Container } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
 import { useRouter } from "next/navigation";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
 
 import {
@@ -26,6 +26,7 @@ import { PreviewDashboardSite } from "./components/PreviewDashboardSite";
 import { LoadingButton } from "@mui/lab";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
+import { fetchSiteStats } from "@/services/nostr/stats";
 
 export const Dashboard = () => {
   const { isAuth } = useContext(AuthContext);
@@ -48,6 +49,10 @@ export const Dashboard = () => {
 
   const openSettings = `/admin/${siteId}/settings`;
   const openPostManagement = `/admin/${siteId}/posts`;
+
+  useEffect(() => {
+    fetchSiteStats(siteId).then((s) => console.log("site stats", s));
+  }, []);
 
   const handeOpenConfirm = () => {
     setOpenConfirm(true);

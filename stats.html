@@ -1,0 +1,152 @@
+<html>
+
+<body>
+  <script src="https://unpkg.com/nostr-tools/lib/nostr.bundle.js"></script>
+  <script src='https://www.unpkg.com/nostr-login@latest/dist/unpkg.js' data-perms="nip04_decrypt"></script>
+  <div id="chart"></div>
+  <div id="sites"></div>
+  <button id="start">Load stats</button>
+  <script>
+    const nostrTools = window.NostrTools;
+    let sites = new Map();
+    let nip46 = false;
+
+    async function show(id) {
+      const site = sites.get(id);
+      const types = {};
+      const types_uniq = {};
+      const users = {};
+      const totals = {};
+      const pubkeys = {};
+      const interval = 3600;
+      for (const e of site.events) {
+        const period = Math.floor(e.event.created_at / interval);
+        let type_action = e.content.type;
+        if (e.content.payload && e.content.payload.data && e.content.payload.data.action)
+          type_action += "_" + e.content.payload.data.action;
+
+        const total = totals[type_action] || { 
+          type: type_action, 
+          pubkeys: new Set()
+        };
+        totals[type_action] = total;
+        total.pubkeys.add(e.event.pubkey);
+
+        const key = type_action + "_" + period;
+        console.log("type_action", type_action, key);
+        const type = types[key] || {
+          tm: period * interval,
+          type: type_action,
+          count: 0
+        };
+        types[key] = type;
+        type.count = type.count + 1;
+
+        const type_uniq = types_uniq[key] || {
+          tm: period * interval,
+          type: type_action,
+          pubkeys: new Set()
+        };
+        types_uniq[key] = type_uniq;
+        type_uniq.pubkeys.add(e.event.pubkey);
+
+        if (e.content.user) {
+          const user = users[e.content.user] || { pubkey: e.content.user, events: [] }
+          users[e.content.user] = user;
+          user.events.push(e);
+
+          pubkeys[e.content.user] = 1;
+        }
+      }
+
+      console.log("chart", types, types_uniq, users);
+
+      let html = "Users:<ul>";
+      for (const k in totals) {
+        html += `<li>${k}: ${totals[k].pubkeys.size}</li>`;
+      }
+      html += "</ul>Npubs:<ul>";
+      for (const pubkey in pubkeys) {
+        const npub = nostrTools.nip19.npubEncode(pubkey);
+        html += `<li><a href='https://nostr.band/${npub}' target='_blank'>${npub}</a></li>`;
+      }
+      html += "</ul>"
+      document.querySelector("#chart").innerHTML = html;
+    }
+
+    async function start() {
+      const pubkey = await window.nostr.getPublicKey();
+      const relay = await nostrTools.Relay.connect('wss://stats.npubpro.com')
+      const queue = [];
+      await new Promise(ok => {
+        const sub = relay.subscribe([
+          {
+            kinds: [1995],
+            "#p": [pubkey]
+          },
+        ], {
+          async onevent(event) {
+            queue.push(event);
+          },
+          oneose() {
+            sub.close()
+            ok();
+          }
+        })
+      })
+
+      sites.clear();
+      const promises = [];
+      let lowLatency = false;
+      for (const event of queue) {
+        const process = async () => {
+          try {
+            const content = JSON.parse(await window.nostr.nip04.decrypt(event.pubkey, event.content));
+            console.log('event', content, event)
+            const { type, data } = nostrTools.nip19.decode(content.site);
+            if (type !== "naddr") throw new Error("Bad site");
+
+            const site = sites.get(content.site) || { id: content.site, events: [] };
+            site.events.push({ event, content });
+            sites.set(content.site, site);
+          } catch (e) {
+            console.log("bad event", e, event);
+          }
+        }
+
+        if (nip46) {
+          // protect against sending many reqs to a bunker
+          // that will require manual approval
+          if (!lowLatency) {
+            const start = Date.now();
+            await process();
+            lowLatency = (Date.now() - start) < 3000;
+          } else {
+            promises.push(process());
+          }
+        } else await process();
+      }
+      await Promise.all(promises);
+
+      let html = "Sites: <ul>";
+      for (const site of sites.values()) {
+        html += `<li>
+          <a href='#' onclick="show('${site.id}')">${site.id}</a>: ${site.events.length}
+        </li>`;
+      }
+      html += "</ul>"
+
+      document.querySelector("#sites").innerHTML = html;
+    }
+
+    const btn = document.querySelector("#start");
+    btn.addEventListener("click", start)
+
+    document.addEventListener("nlAuth", (e) => {
+      console.log("auth", e.detail);
+      nip46 = e.detail.type === "login" && e.detail.method === "connect";
+    })
+  </script>
+</body>
+
+</html>

@@ -118,107 +118,27 @@ export const ActionsUser = () => {
   return (
     <>
       {Boolean(siteId && getSite) && (
-        <StyledBadgeWrap ref={badgeRef}>
-          {isLoaded ? (
-            <StyledBadgeAvatar variant="square" src={getSite?.icon}>
-              {getSite?.title[0]}
-            </StyledBadgeAvatar>
-          ) : (
-            <StyledBadgeAvatar variant="square">
-              <BrokenIcon fontSize="inherit" />
-            </StyledBadgeAvatar>
-          )}
-
-          <StyledBadgeTitle variant="body2">{getSite?.title}</StyledBadgeTitle>
-
-          <IconButton onClick={handleOpenMenuSite} size="small">
-            <MoreIcon fontSize="inherit" />
-          </IconButton>
-
-          <Menu
-            sx={{ mt: "34px" }}
-            anchorEl={badgeRef.current}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={isOpenMenuSite}
-            onClose={handleCloseMenuSite}
-          >
-            {getSite?.url && (
-              <MenuItem
-                component={Link}
-                href={getSite.url}
-                target="_blank"
-                onClick={handleCloseMenuSite}
-              >
-                <StyledListItemIcon>
-                  <IconLink fontSize="small" />
-                </StyledListItemIcon>
-                <ListItemText>Open site</ListItemText>
-              </MenuItem>
+        <Link href={linkToDashboard}>
+          <StyledBadgeWrap ref={badgeRef}>
+            {isLoaded ? (
+              <StyledBadgeAvatar variant="square" src={getSite?.icon}>
+                {getSite?.title[0]}
+              </StyledBadgeAvatar>
+            ) : (
+              <StyledBadgeAvatar variant="square">
+                <BrokenIcon fontSize="inherit" />
+              </StyledBadgeAvatar>
             )}
-            <MenuItem
-              component={Link}
-              href={linkToDashboard}
-              onClick={handleCloseMenuSite}
-            >
-              <StyledListItemIcon>
-                <DashboardIcon fontSize="small" />
-              </StyledListItemIcon>
-              <ListItemText>Dashboard</ListItemText>
-            </MenuItem>
 
-            <MenuItem
-              component={Link}
-              href={linkPostManagement}
-              onClick={handleCloseMenuSite}
-            >
-              <StyledListItemIcon>
-                <FIleTextIcon fontSize="small" />
-              </StyledListItemIcon>
-              <ListItemText>Posts</ListItemText>
-            </MenuItem>
+            <StyledBadgeTitle variant="body2">
+              {getSite?.title}
+            </StyledBadgeTitle>
 
-            {userIsAdmin && (
-              <>
-                <MenuItem
-                  component={Link}
-                  href={linkSwitchTheme}
-                  onClick={handleCloseMenuSite}
-                >
-                  <StyledListItemIcon>
-                    <BrushIcon fontSize="small" />
-                  </StyledListItemIcon>
-                  <ListItemText>Theme</ListItemText>
-                </MenuItem>
-
-                <MenuItem
-                  component={Link}
-                  href={linkSettings}
-                  onClick={handleCloseMenuSite}
-                >
-                  <StyledListItemIcon>
-                    <SettingsIcon fontSize="small" />
-                  </StyledListItemIcon>
-                  <ListItemText>Settings</ListItemText>
-                </MenuItem>
-
-                <MenuItem onClick={handeOpenConfirm}>
-                  <StyledListItemIconDelete>
-                    <TrashIcon fontSize="small" />
-                  </StyledListItemIconDelete>
-                  <ListItemText>Delete</ListItemText>
-                </MenuItem>
-              </>
-            )}
-          </Menu>
-        </StyledBadgeWrap>
+            <IconButton onClick={handleOpenMenuSite} size="small">
+              <MoreIcon fontSize="inherit" />
+            </IconButton>
+          </StyledBadgeWrap>
+        </Link>
       )}
 
       <StyledUser>
@@ -255,6 +175,90 @@ export const ActionsUser = () => {
         siteId={siteId}
         handleClose={handeCloseConfirm}
       />
+
+      <Menu
+        sx={{ mt: "34px" }}
+        anchorEl={badgeRef.current}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        open={isOpenMenuSite}
+        onClose={handleCloseMenuSite}
+      >
+        {getSite?.url && (
+          <MenuItem
+            component={Link}
+            href={getSite.url}
+            target="_blank"
+            onClick={handleCloseMenuSite}
+          >
+            <StyledListItemIcon>
+              <IconLink fontSize="small" />
+            </StyledListItemIcon>
+            <ListItemText>Open site</ListItemText>
+          </MenuItem>
+        )}
+        <MenuItem
+          component={Link}
+          href={linkToDashboard}
+          onClick={handleCloseMenuSite}
+        >
+          <StyledListItemIcon>
+            <DashboardIcon fontSize="small" />
+          </StyledListItemIcon>
+          <ListItemText>Dashboard</ListItemText>
+        </MenuItem>
+
+        <MenuItem
+          component={Link}
+          href={linkPostManagement}
+          onClick={handleCloseMenuSite}
+        >
+          <StyledListItemIcon>
+            <FIleTextIcon fontSize="small" />
+          </StyledListItemIcon>
+          <ListItemText>Posts</ListItemText>
+        </MenuItem>
+
+        {userIsAdmin && (
+          <>
+            <MenuItem
+              component={Link}
+              href={linkSwitchTheme}
+              onClick={handleCloseMenuSite}
+            >
+              <StyledListItemIcon>
+                <BrushIcon fontSize="small" />
+              </StyledListItemIcon>
+              <ListItemText>Theme</ListItemText>
+            </MenuItem>
+
+            <MenuItem
+              component={Link}
+              href={linkSettings}
+              onClick={handleCloseMenuSite}
+            >
+              <StyledListItemIcon>
+                <SettingsIcon fontSize="small" />
+              </StyledListItemIcon>
+              <ListItemText>Settings</ListItemText>
+            </MenuItem>
+
+            <MenuItem onClick={handeOpenConfirm}>
+              <StyledListItemIconDelete>
+                <TrashIcon fontSize="small" />
+              </StyledListItemIconDelete>
+              <ListItemText>Delete</ListItemText>
+            </MenuItem>
+          </>
+        )}
+      </Menu>
     </>
   );
 };

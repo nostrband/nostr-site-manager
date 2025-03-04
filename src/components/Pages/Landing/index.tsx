@@ -10,7 +10,7 @@ import { Reviews } from "./components/Reviews";
 import { HeaderOnboardingScroll } from "@/components/HeaderOnboardingScroll";
 import { useEffect, useRef, useState } from "react";
 
-export const Landing = () => {
+const Landing = () => {
   const headerRef = useRef(null);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
 
@@ -23,7 +23,7 @@ export const Landing = () => {
         root: null,
         rootMargin: "0px",
         threshold: 0,
-      },
+      }
     );
 
     if (headerRef.current) {
@@ -53,3 +53,5 @@ export const Landing = () => {
     </>
   );
 };
+
+export default Landing;

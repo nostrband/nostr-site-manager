@@ -5,7 +5,7 @@ import { nip19 } from "nostr-tools";
 
 const KIND_STATS = 1995;
 
-interface SiteStats {
+export interface SiteStats {
   last7d: {
     totals: {
       visitors: number;
@@ -79,10 +79,7 @@ async function loadEvents() {
           // NOTE: talk directly to nostr-login bcs
           // NDKNip07Signer only supports single-threaded access
           // @ts-ignore
-          await window.nostr.nip04.decrypt(
-            event.pubkey,
-            event.content
-          )
+          await window.nostr.nip04.decrypt(event.pubkey, event.content)
         );
         console.log("stats event", content, event);
 
@@ -96,6 +93,11 @@ async function loadEvents() {
       }
     };
 
+    // NOTE: all key access methods except nip46 are fast so
+    // we can decrypt one-by-one. With nip46 we can send
+    // all requests in parallel (but beware - relay might be
+    // upset), but first we have to check that user
+    // has given permission for auto-decrypt without auth_url
     if (userNip46) {
       // protect against sending many reqs to a bunker
       // that will require manual approval
@@ -129,20 +131,65 @@ export async function fetchSiteStats(id: string) {
     last7d: {
       totals: {
         visitors: siteEvents.length,
-        pageviews: siteEvents.filter(e => e.content.type === "pageview").length,
-        auths: siteEvents.filter(e => e.content.type === "event" && e.content.payload.data?.action === "auth" && e.content.payload.data?.authType !== "logout").length,
-        signups: siteEvents.filter(e => e.content.type === "event" && e.content.payload.data?.action === "auth" && e.content.payload.data?.authType === "signup").length,
-        reactions: siteEvents.filter(e => e.content.type === "event" && e.content.payload.data?.action === "event-published").length,
+        pageviews: siteEvents.filter((e) => e.content.type === "pageview")
+          .length,
+        auths: siteEvents.filter(
+          (e) =>
+            e.content.type === "event" &&
+            e.content.payload.data?.action === "auth" &&
+            e.content.payload.data?.authType !== "logout"
+        ).length,
+        signups: siteEvents.filter(
+          (e) =>
+            e.content.type === "event" &&
+            e.content.payload.data?.action === "auth" &&
+            e.content.payload.data?.authType === "signup"
+        ).length,
+        reactions: siteEvents.filter(
+          (e) =>
+            e.content.type === "event" &&
+            e.content.payload.data?.action === "event-published"
+        ).length,
       },
       users: {
-        visit: new Set(siteEvents.map(e => e.event.pubkey)).size,
-        pageview: new Set(siteEvents.filter(e => e.content.type === "pageview").map(e => e.event.pubkey)).size,
-        auth: new Set(siteEvents.filter(e => e.content.type === "event" && e.content.payload.data?.action === "auth" && e.content.payload.data?.authType !== "logout").map(e => e.event.pubkey)).size,
-        signup: new Set(siteEvents.filter(e => e.content.type === "event" && e.content.payload.data?.action === "auth" && e.content.payload.data?.authType === "signup").map(e => e.event.pubkey)).size,
-        react: new Set(siteEvents.filter(e => e.content.type === "event" && e.content.payload.data?.action === "event-published").map(e => e.event.pubkey)).size,
+        visit: new Set(siteEvents.map((e) => e.event.pubkey)).size,
+        pageview: new Set(
+          siteEvents
+            .filter((e) => e.content.type === "pageview")
+            .map((e) => e.event.pubkey)
+        ).size,
+        auth: new Set(
+          siteEvents
+            .filter(
+              (e) =>
+                e.content.type === "event" &&
+                e.content.payload.data?.action === "auth" &&
+                e.content.payload.data?.authType !== "logout"
+            )
+            .map((e) => e.event.pubkey)
+        ).size,
+        signup: new Set(
+          siteEvents
+            .filter(
+              (e) =>
+                e.content.type === "event" &&
+                e.content.payload.data?.action === "auth" &&
+                e.content.payload.data?.authType === "signup"
+            )
+            .map((e) => e.event.pubkey)
+        ).size,
+        react: new Set(
+          siteEvents
+            .filter(
+              (e) =>
+                e.content.type === "event" &&
+                e.content.payload.data?.action === "event-published"
+            )
+            .map((e) => e.event.pubkey)
+        ).size,
       },
       pubkeys: [...pubkeys],
-    }
+    },
   };
 
   return stats;

@@ -96,7 +96,7 @@ export const StyledCardVideo = styled(
       Object.entries(props).filter((e) => !exclude.has(e[0])),
     );
 
-    return <video controls playsInline ref={ref} {...omitProps} />;
+    return <video preload="metadata" controls playsInline ref={ref} {...omitProps} />;
   }),
 )(({ isDesktop, theme, height }) => ({
   height: isDesktop

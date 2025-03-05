@@ -23,7 +23,7 @@ const Landing = () => {
         root: null,
         rootMargin: "0px",
         threshold: 0,
-      }
+      },
     );
 
     if (headerRef.current) {

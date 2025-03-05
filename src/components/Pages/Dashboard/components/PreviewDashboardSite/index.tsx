@@ -63,7 +63,7 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
   // put them all into the same bucket
   pubkeysContributors = useMemo(
     () => [...new Set([...pubkeysContributors, adminPubkey])],
-    [pubkeysContributors, adminPubkey]
+    [pubkeysContributors, adminPubkey],
   );
 
   // reset userPubkey if they're not a contributor
@@ -76,7 +76,7 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
   const allContributors = useContributors(pubkeysContributors);
   const mainContributorPubkey = userPubkey || adminPubkey;
   const otherPubkeys = pubkeysContributors.filter(
-    (p) => p !== mainContributorPubkey
+    (p) => p !== mainContributorPubkey,
   );
 
   const main = allContributors.find((c) => c.pubkey === mainContributorPubkey);
@@ -147,7 +147,7 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
                 <StyledAvatarGroup max={3}>
                   {otherPubkeys.map((pubkey, i) => {
                     const profile = allContributors.find(
-                      (c) => c.pubkey === pubkey
+                      (c) => c.pubkey === pubkey,
                     );
                     const info = parseProfileEvent(pubkey, profile);
                     return (

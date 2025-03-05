@@ -102,7 +102,7 @@ export async function setDoneTask(siteId: string, taskId: string) {
   const key = formatKey(siteId);
   const reply = await fetchWithSession(
     `/data?key=${key}&value=${encodeURIComponent(JSON.stringify(value))}`,
-    "POST"
+    "POST",
   );
   if (reply.status !== 200) throw new Error("Failed to reserve");
 }

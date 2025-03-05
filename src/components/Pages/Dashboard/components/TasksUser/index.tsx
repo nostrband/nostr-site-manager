@@ -31,16 +31,27 @@ export const TasksUser = ({ id }: TasksUserProps) => {
   const [isLoading, setLoading] = useState(true);
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
+
   const [isLoadingConnectKeys, setLoadingConnectKeys] = useState(false);
 
   const todoTasks = tasks.filter((el) => !el.isCompleted);
   const completedTasks = tasks.filter((el) => el.isCompleted);
 
   const [value, setValue] = useState<"todo" | "completed">("todo");
+  const [isGutter, setGutter] = useState(false);
+
+  const isMoreThanLimitTodo = todoTasks.length > 3;
+  const isMoreThanLimitCompleted = completedTasks.length > 3;
+
+  useEffect(() => {
+    if (navigator.userAgent.indexOf("Windows") !== -1) {
+      setGutter(true);
+    }
+  }, []);
 
   const handleChange = (
-    event: React.SyntheticEvent,
-    newValue: "todo" | "completed"
+    _: React.SyntheticEvent,
+    newValue: "todo" | "completed",
   ) => {
     setValue(newValue);
   };
@@ -128,7 +139,11 @@ export const TasksUser = ({ id }: TasksUserProps) => {
                 value="completed"
               />
             </TabList>
-            <StyledTabPanel value="todo">
+            <StyledTabPanel
+              isMoreThanLimit={isMoreThanLimitTodo}
+              isGutter={isGutter}
+              value="todo"
+            >
               {isNeedMigrateKey(id) && (
                 <ItemButton
                   isLoading={isLoadingConnectKeys}
@@ -139,7 +154,11 @@ export const TasksUser = ({ id }: TasksUserProps) => {
                 return <ItemTask key={i} task={el} onOpen={handleOpen} />;
               })}
             </StyledTabPanel>
-            <StyledTabPanel value="completed">
+            <StyledTabPanel
+              isMoreThanLimit={isMoreThanLimitCompleted}
+              isGutter={isGutter}
+              value="completed"
+            >
               {completedTasks.map((el, i) => {
                 return <ItemTask key={i} task={el} onOpen={handleOpen} />;
               })}

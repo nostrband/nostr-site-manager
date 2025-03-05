@@ -40,7 +40,7 @@ export const AnalyticsDev = memo(
     }, [isDisabled]);
 
     const handleChangeSendStats = (
-      event: React.ChangeEvent<HTMLInputElement>
+      event: React.ChangeEvent<HTMLInputElement>,
     ) => {
       handleSendStatsDev(event.target.checked);
     };
@@ -77,7 +77,7 @@ export const AnalyticsDev = memo(
         </StyledFormFields>
       </StyledSettingBlock>
     );
-  }
+  },
 );
 
 AnalyticsDev.displayName = "Analytics for developers";

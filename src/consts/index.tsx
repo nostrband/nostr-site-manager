@@ -1,4 +1,6 @@
 import {
+  BarChartIcon,
+  BarChartSendIcon,
   BrushIcon,
   CodeIcon,
   FIleTextIcon,
@@ -62,7 +64,7 @@ export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
 };
 
 export const SUPPORTED_KINDS = Object.keys(SUPPORTED_KIND_NAMES).map((k) =>
-  Number(k)
+  Number(k),
 );
 
 export const SUPPORTED_KIND_NAMES_SINGLE: { [key: number]: string } = {
@@ -243,18 +245,10 @@ export const SETTINGS_CONFIG = {
     group: "Design",
     description: "Primary site navigation",
   },
-  homepageContent: {
-    title: "Homepage content",
-    anchor: HASH_CONFIG.CONTENT_HOMEPAGE,
-    icon: <HomeIcon />,
-    group: "Homepage",
-    description:
-      "Choose event kinds and hashtags that will be displayed on the homepage",
-  },
   statsAdmin: {
     title: "Analytics for you",
     anchor: HASH_CONFIG.STATS_ADMIN,
-    icon: <HomeIcon />,
+    icon: <BarChartIcon />,
     group: "Analytics",
     description:
       "Enable to send encrypted analytics for you on Nostr. Only you can decrypt and view what visitors are doing on your site. Analytics data includes visited URLs, user-agent strings, npubs of logged-in users. Does NOT include visitor IP addresses.",
@@ -262,10 +256,18 @@ export const SETTINGS_CONFIG = {
   statsDev: {
     title: "Analytics for developers",
     anchor: HASH_CONFIG.STATS_DEV,
-    icon: <HomeIcon />,
+    icon: <BarChartSendIcon />,
     group: "Analytics",
     description:
       "Enable to send additional encrypted anonymised analytics for Npub.pro to help us improve the service. Npub.pro team will learn what visitors are doing on your site. Analytics data includes visited URLs, user-agent strings. Does NOT include visitor IP addresses and npubs of logged-in users.",
+  },
+  homepageContent: {
+    title: "Homepage content",
+    anchor: HASH_CONFIG.CONTENT_HOMEPAGE,
+    icon: <HomeIcon />,
+    group: "Homepage",
+    description:
+      "Choose event kinds and hashtags that will be displayed on the homepage",
   },
   nostrJson: {
     title: "Nostr.json",

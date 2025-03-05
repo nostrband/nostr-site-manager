@@ -35,7 +35,7 @@ export const AnalyticsAdmin = memo(
     }, [isDisabled]);
 
     const handleChangeSendStats = (
-      event: React.ChangeEvent<HTMLInputElement>
+      event: React.ChangeEvent<HTMLInputElement>,
     ) => {
       handleSendStats(event.target.checked);
     };
@@ -72,7 +72,7 @@ export const AnalyticsAdmin = memo(
         </StyledFormFields>
       </StyledSettingBlock>
     );
-  }
+  },
 );
 
 AnalyticsAdmin.displayName = "Analytics for site admin";

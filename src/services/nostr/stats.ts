@@ -67,7 +67,7 @@ async function loadEvents() {
       since,
     },
     STATS_RELAYS,
-    5000
+    5000,
   );
 
   const promises: Promise<void>[] = [];
@@ -79,7 +79,7 @@ async function loadEvents() {
           // NOTE: talk directly to nostr-login bcs
           // NDKNip07Signer only supports single-threaded access
           // @ts-ignore
-          await window.nostr.nip04.decrypt(event.pubkey, event.content)
+          await window.nostr.nip04.decrypt(event.pubkey, event.content),
         );
         console.log("stats event", content, event);
 
@@ -119,7 +119,7 @@ export async function fetchSiteStats(id: string) {
   const addr = parseAddr(id);
   const siteEvents = events.filter(
     (e) =>
-      e.addr.identifier === addr.identifier && e.addr.pubkey === addr.pubkey
+      e.addr.identifier === addr.identifier && e.addr.pubkey === addr.pubkey,
   );
 
   const pubkeys = new Set<string>();
@@ -137,18 +137,18 @@ export async function fetchSiteStats(id: string) {
           (e) =>
             e.content.type === "event" &&
             e.content.payload.data?.action === "auth" &&
-            e.content.payload.data?.authType !== "logout"
+            e.content.payload.data?.authType !== "logout",
         ).length,
         signups: siteEvents.filter(
           (e) =>
             e.content.type === "event" &&
             e.content.payload.data?.action === "auth" &&
-            e.content.payload.data?.authType === "signup"
+            e.content.payload.data?.authType === "signup",
         ).length,
         reactions: siteEvents.filter(
           (e) =>
             e.content.type === "event" &&
-            e.content.payload.data?.action === "event-published"
+            e.content.payload.data?.action === "event-published",
         ).length,
       },
       users: {
@@ -156,7 +156,7 @@ export async function fetchSiteStats(id: string) {
         pageview: new Set(
           siteEvents
             .filter((e) => e.content.type === "pageview")
-            .map((e) => e.event.pubkey)
+            .map((e) => e.event.pubkey),
         ).size,
         auth: new Set(
           siteEvents
@@ -164,9 +164,9 @@ export async function fetchSiteStats(id: string) {
               (e) =>
                 e.content.type === "event" &&
                 e.content.payload.data?.action === "auth" &&
-                e.content.payload.data?.authType !== "logout"
+                e.content.payload.data?.authType !== "logout",
             )
-            .map((e) => e.event.pubkey)
+            .map((e) => e.event.pubkey),
         ).size,
         signup: new Set(
           siteEvents
@@ -174,18 +174,18 @@ export async function fetchSiteStats(id: string) {
               (e) =>
                 e.content.type === "event" &&
                 e.content.payload.data?.action === "auth" &&
-                e.content.payload.data?.authType === "signup"
+                e.content.payload.data?.authType === "signup",
             )
-            .map((e) => e.event.pubkey)
+            .map((e) => e.event.pubkey),
         ).size,
         react: new Set(
           siteEvents
             .filter(
               (e) =>
                 e.content.type === "event" &&
-                e.content.payload.data?.action === "event-published"
+                e.content.payload.data?.action === "event-published",
             )
-            .map((e) => e.event.pubkey)
+            .map((e) => e.event.pubkey),
         ).size,
       },
       pubkeys: [...pubkeys],

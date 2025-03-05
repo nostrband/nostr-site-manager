@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
-import { Button, Container } from "@mui/material";
+import { Button, Container, Grid } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
 import { useRouter } from "next/navigation";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
 
 import {
@@ -12,7 +12,7 @@ import {
   migrateToConnectedKey,
 } from "@/services/nostr/migrate";
 import { useSnackbar } from "notistack";
-import { StyledActions, StyledTitle, StyledWrapDashboard } from "./styled";
+import { StyledActions, StyledTitle } from "./styled";
 import {
   ArrowRightIcon,
   BrushIcon,
@@ -26,7 +26,8 @@ import { PreviewDashboardSite } from "./components/PreviewDashboardSite";
 import { LoadingButton } from "@mui/lab";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { AuthContext, userPubkey } from "@/services/nostr/nostr";
-import { fetchSiteStats } from "@/services/nostr/stats";
+import { StyledWrap } from "@/components/shared/styled";
+import { AnalyticsSite } from "./components/AnalyticsSite";
 
 export const Dashboard = () => {
   const { isAuth } = useContext(AuthContext);
@@ -35,12 +36,14 @@ export const Dashboard = () => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { data, isLoading, isFetching } = useListSites();
-  console.log({
-    data,
-  });
+
   const { siteId } = useGetSiteId();
 
   const getSite = data?.find((el) => el.id === siteId);
+
+  console.log({
+    getSite,
+  });
 
   const userIsAdmin =
     userPubkey && getSite && getSite.adminPubkey === userPubkey;
@@ -49,10 +52,6 @@ export const Dashboard = () => {
 
   const openSettings = `/admin/${siteId}/settings`;
   const openPostManagement = `/admin/${siteId}/posts`;
-
-  useEffect(() => {
-    fetchSiteStats(siteId).then((s) => console.log("site stats", s));
-  }, []);
 
   const handeOpenConfirm = () => {
     setOpenConfirm(true);
@@ -106,7 +105,7 @@ export const Dashboard = () => {
 
   return (
     <Container maxWidth="lg">
-      <StyledWrapDashboard>
+      <StyledWrap>
         <StyledTitle>
           <Button
             LinkComponent={Link}
@@ -121,107 +120,117 @@ export const Dashboard = () => {
         </StyledTitle>
 
         {getSite && (
-          <PreviewDashboardSite
-            settingsLink={openSettings}
-            logo={getSite.logo}
-            name={getSite.name}
-            title={getSite.title}
-            url={getSite.url}
-            image={getSite.image}
-            adminPubkey={getSite.adminPubkey}
-            userPubkey={isAuth ? userPubkey : undefined}
-            description={getSite.description}
-            accentColor={getSite.accentColor}
-            contributors={getSite.contributors}
-            actions={
-              <StyledActions>
-                <Button
-                  target="_blank"
-                  LinkComponent={Link}
-                  size="large"
-                  variant="contained"
-                  color="decorate"
-                  href={getSite?.url}
-                  fullWidth
-                  endIcon={<ArrowRightIcon />}
-                >
-                  Open
-                </Button>
+          <Grid container spacing={{ xs: "24px" }}>
+            <Grid item xs={12} sm={6}>
+              <PreviewDashboardSite
+                settingsLink={openSettings}
+                logo={getSite.logo}
+                name={getSite.name}
+                title={getSite.title}
+                url={getSite.url}
+                image={getSite.image}
+                adminPubkey={getSite.adminPubkey}
+                userPubkey={isAuth ? userPubkey : undefined}
+                description={getSite.description}
+                accentColor={getSite.accentColor}
+                contributors={getSite.contributors}
+                actions={
+                  <StyledActions>
+                    <Button
+                      target="_blank"
+                      LinkComponent={Link}
+                      size="large"
+                      variant="contained"
+                      color="decorate"
+                      href={getSite.url}
+                      fullWidth
+                      endIcon={<ArrowRightIcon />}
+                    >
+                      Open
+                    </Button>
 
-                <Button
-                  LinkComponent={Link}
-                  size="large"
-                  variant="outlined"
-                  color="decorate"
-                  href={openPostManagement}
-                  fullWidth
-                  endIcon={<FIleTextIcon />}
-                >
-                  Posts
-                </Button>
-
-                {userIsAdmin && (
-                  <>
                     <Button
                       LinkComponent={Link}
                       size="large"
                       variant="outlined"
                       color="decorate"
-                      href={switchTheme}
+                      href={openPostManagement}
                       fullWidth
-                      endIcon={<BrushIcon />}
+                      endIcon={<FIleTextIcon />}
                     >
-                      Theme
+                      Posts
                     </Button>
-                    <Button
-                      LinkComponent={Link}
-                      size="large"
-                      variant="outlined"
-                      color="decorate"
-                      href={openSettings}
-                      fullWidth
-                      endIcon={<SettingsIcon />}
-                    >
-                      Settings
-                    </Button>
-                    {isNeedMigrateKey(siteId) && (
-                      <LoadingButton
-                        color="decorate"
-                        variant="outlined"
-                        type="submit"
-                        fullWidth
-                        size="large"
-                        loading={isLoadingConnectKeys}
-                        disabled={isLoadingConnectKeys}
-                        endIcon={<KeyIcon />}
-                        onClick={handleConnectKeys}
-                      >
-                        Connect keys
-                      </LoadingButton>
+
+                    {userIsAdmin && (
+                      <>
+                        <Button
+                          LinkComponent={Link}
+                          size="large"
+                          variant="outlined"
+                          color="decorate"
+                          href={switchTheme}
+                          fullWidth
+                          endIcon={<BrushIcon />}
+                        >
+                          Theme
+                        </Button>
+                        <Button
+                          LinkComponent={Link}
+                          size="large"
+                          variant="outlined"
+                          color="decorate"
+                          href={openSettings}
+                          fullWidth
+                          endIcon={<SettingsIcon />}
+                        >
+                          Settings
+                        </Button>
+                        {isNeedMigrateKey(siteId) && (
+                          <LoadingButton
+                            color="decorate"
+                            variant="outlined"
+                            type="submit"
+                            fullWidth
+                            size="large"
+                            loading={isLoadingConnectKeys}
+                            disabled={isLoadingConnectKeys}
+                            endIcon={<KeyIcon />}
+                            onClick={handleConnectKeys}
+                          >
+                            Connect keys
+                          </LoadingButton>
+                        )}
+                        <Button
+                          size="large"
+                          variant="outlined"
+                          color="error"
+                          onClick={handeOpenConfirm}
+                          fullWidth
+                          endIcon={<TrashIcon />}
+                        >
+                          Delete
+                        </Button>
+                      </>
                     )}
-                    <Button
-                      size="large"
-                      variant="outlined"
-                      color="error"
-                      onClick={handeOpenConfirm}
-                      fullWidth
-                      endIcon={<TrashIcon />}
-                    >
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </StyledActions>
-            }
-          />
-        )}
+                  </StyledActions>
+                }
+              />
 
-        <ModalConfirmDeleteSite
-          isOpen={isOpenConfirm}
-          siteId={siteId}
-          handleClose={handeCloseConfirm}
-        />
-      </StyledWrapDashboard>
+              <ModalConfirmDeleteSite
+                isOpen={isOpenConfirm}
+                siteId={siteId}
+                handleClose={handeCloseConfirm}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <AnalyticsSite
+                siteId={getSite.id}
+                isSendStats={getSite.sendStats}
+              />
+            </Grid>
+          </Grid>
+        )}
+      </StyledWrap>
     </Container>
   );
 };

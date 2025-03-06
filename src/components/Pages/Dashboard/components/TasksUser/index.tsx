@@ -89,6 +89,7 @@ export const TasksUser = ({ id }: TasksUserProps) => {
           vertical: "bottom",
         },
       });
+      
       setTimeout(() => {
         setLoadingConnectKeys(false);
 
@@ -150,7 +151,7 @@ export const TasksUser = ({ id }: TasksUserProps) => {
               isGutter={isGutter}
               value="todo"
             >
-              {isNeedMigrateKey(id) && (
+              {!isNeedMigrateKey(id) && (
                 <ItemButton
                   isLoading={isLoadingConnectKeys}
                   onClick={handleConnectKeys}

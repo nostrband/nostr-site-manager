@@ -20,7 +20,7 @@ export const ItemButton = ({ onClick, isLoading }: ItemButtonProps) => {
   };
 
   return (
-    <StyledWrap isCompleted={isLoading} onClick={handleClick}>
+    <StyledWrap onClick={handleClick}>
       {isLoading ? (
         <CircularProgress size={20} />
       ) : (

@@ -4,8 +4,7 @@ import {
   FIleTextIcon,
   HeartIcon,
   LoginIcon,
-  MailCheckIcon,
-  RoundChartIcon,
+  UsersIcon,
 } from "@/components/Icons";
 import { StyledCard, StyledCardTitleFeature } from "@/components/shared/styled";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
@@ -45,7 +44,7 @@ const initialStats = [
     title: "Users",
     key: "npubs",
     value: 0,
-    icon: <MailCheckIcon />,
+    icon: <UsersIcon />,
   },
   {
     title: "Sign-ups",

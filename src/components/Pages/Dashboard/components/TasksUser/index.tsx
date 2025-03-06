@@ -64,10 +64,16 @@ export const TasksUser = ({ id }: TasksUserProps) => {
     setLoading(false);
   }, []);
 
-  const handleOpen = (idTask: string) => {
-    setDoneTask(id, idTask);
-    const linkSettings = `/admin/${id}/settings?idTask=${idTask}`;
-    router.push(linkSettings);
+  const handleOpen = (idTask: string, isCompleted: boolean) => {
+    if (isCompleted) {
+      const linkSettingsCompleted = `/admin/${id}/settings?idTaskCompleted=${idTask}`;
+
+      router.push(linkSettingsCompleted);
+    } else {
+      setDoneTask(id, idTask);
+      const linkSettings = `/admin/${id}/settings?idTask=${idTask}`;
+      router.push(linkSettings);
+    }
   };
 
   const handleConnectKeys = async () => {

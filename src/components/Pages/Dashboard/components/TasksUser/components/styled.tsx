@@ -4,38 +4,29 @@ import { Box, BoxProps, Typography } from "@mui/material";
 import { forwardRef } from "react";
 import { grey } from "@mui/material/colors";
 
-interface StyledWrapProps {
+interface IconProps {
   isCompleted?: boolean;
 }
 
-export type IBox = StyledWrapProps & BoxProps;
+export type IIcon = IconProps & BoxProps;
 
-export const StyledWrap = styled(
-  forwardRef<HTMLAnchorElement, IBox>(function StyledWrapName(props, ref) {
-    const exclude = new Set(["isCompleted"]);
-    const omitProps = Object.fromEntries(
-      Object.entries(props).filter((e) => !exclude.has(e[0])),
-    );
-
-    return <Box ref={ref} {...omitProps} />;
-  }),
-)(({ isCompleted = false, theme }) => ({
+export const StyledWrap = styled(Box)(({ theme }) => ({
   display: "flex",
   paddingTop: 16,
   alignItems: "center",
   gap: 8,
   borderRadius: theme.shape.borderRadius,
   padding: 16,
-  cursor: isCompleted ? "initial" : "pointer",
+  cursor: "pointer",
   background: grey[100],
   transition: "0.3s",
   ":hover": {
-    background: isCompleted ? grey[100] : grey[200],
+    background: grey[200],
   },
 }));
 
 export const StyledIcon = styled(
-  forwardRef<HTMLAnchorElement, IBox>(function StyledWrapName(props, ref) {
+  forwardRef<HTMLAnchorElement, IIcon>(function StyledWrapName(props, ref) {
     const exclude = new Set(["isCompleted"]);
     const omitProps = Object.fromEntries(
       Object.entries(props).filter((e) => !exclude.has(e[0])),

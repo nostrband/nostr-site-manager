@@ -43,7 +43,10 @@ import { ContentFilters } from "./components/ContentFilters";
 import { useBack } from "@/hooks/useBackPage";
 import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
 import { StyledTitlePage } from "@/components/shared/styled";
-import { SITE_TASK_SETTINGS } from "@/services/nostr/tasks";
+import {
+  SITE_TASK_SETTINGS,
+  SiteTaskSettingType,
+} from "@/services/nostr/tasks";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -337,13 +340,9 @@ export const SettingPage = () => {
   }, [choiceSetting]);
 
   const params = useSearchParams();
-  // const pathname = usePathname();
-  // const router = useRouter();
 
-  useEffect(() => {
-    const idTask = params.get("idTask");
-
-    if (idTask && !isLoadingSetting && !isFetching) {
+  const scrollToTask = useCallback(
+    (idTask: string, isCompleted: boolean) => {
       const task = SITE_TASK_SETTINGS.find((el) => el.id === idTask);
 
       if (task) {
@@ -354,18 +353,35 @@ export const SettingPage = () => {
             behavior: "smooth",
             block: "start",
           });
-          enqueueSnackbar("Task completed!", {
-            autoHideDuration: 5000,
-            variant: "success",
-            anchorOrigin: {
-              horizontal: "right",
-              vertical: "top",
-            },
-          });
+
+          if (!isCompleted) {
+            enqueueSnackbar("Task completed!", {
+              autoHideDuration: 5000,
+              variant: "success",
+              anchorOrigin: {
+                horizontal: "right",
+                vertical: "top",
+              },
+            });
+          }
         }
       }
+    },
+    [enqueueSnackbar],
+  );
+
+  useEffect(() => {
+    const idTask = params.get("idTask");
+    const idTaskCompleted = params.get("idTaskCompleted");
+
+    if (idTask && !isLoadingSetting && !isFetching) {
+      scrollToTask(idTask, false);
     }
-  }, [params, isLoadingSetting, isFetching, enqueueSnackbar]);
+
+    if (idTaskCompleted && !isLoadingSetting && !isFetching) {
+      scrollToTask(idTaskCompleted, true);
+    }
+  }, [params, isLoadingSetting, isFetching, scrollToTask]);
 
   if (isLoadingSetting || isFetching) {
     return (

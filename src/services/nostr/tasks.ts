@@ -60,7 +60,12 @@ const SITE_TASKS: TaskType[] = [
   },
 ];
 
-export const SITE_TASK_SETTINGS = [
+export type SiteTaskSettingType = {
+  id: string;
+  anchor: string;
+};
+
+export const SITE_TASK_SETTINGS: SiteTaskSettingType[] = [
   { id: "1,", anchor: SETTINGS_CONFIG.titleDescription.anchor },
   { id: "2", anchor: SETTINGS_CONFIG.logo.anchor },
   { id: "3", anchor: SETTINGS_CONFIG.accentColor.anchor },

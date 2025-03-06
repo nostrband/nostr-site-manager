@@ -29,6 +29,7 @@ import {
   MouseEvent,
   MouseEventHandler,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import useImageLoader from "@/hooks/useImageLoader";
@@ -91,6 +92,10 @@ export const PostCard = memo(
     const [isOpenPhoto, setOpenPhoto] = useState<boolean>(false);
     const [isSending, setIsSending] = useState<boolean>(false);
     const [isOpenModal, setOpenModal] = useState<boolean>(false);
+
+    const videoRef = useRef<HTMLVideoElement | null>(null);
+    const [isVisible, setIsVisible] = useState(false);
+    const srcVideo = isVisible ? `${videos[0]}#t=0.1` : "";
 
     const isAdded = Boolean(submitterPubkey);
 
@@ -195,6 +200,31 @@ export const PostCard = memo(
       };
     }, [timer]);
 
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            observer.unobserve(entry.target);
+            setIsVisible(true);
+          }
+        },
+        {
+          rootMargin: "0px",
+          threshold: 0.1,
+        }
+      );
+
+      if (videoRef.current) {
+        observer.observe(videoRef.current);
+      }
+
+      return () => {
+        if (videoRef.current) {
+          observer.unobserve(videoRef.current);
+        }
+      };
+    }, []);
+
     return (
       <>
         <StyledCard>
@@ -262,7 +292,7 @@ export const PostCard = memo(
                   <StyledCardVideoPlayButton>
                     <PlayIcon />
                   </StyledCardVideoPlayButton>
-                  <StyledCardVideo preload="meta" src={videos[0] + "#t=0.1"} />
+                  <StyledCardVideo ref={videoRef} preload="metadata" src={srcVideo} />
                 </StyledCardVideoWrap>
               ) : null}
 

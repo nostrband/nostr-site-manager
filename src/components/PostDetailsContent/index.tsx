@@ -223,7 +223,7 @@ export const PostDetailsContent = memo(
             <StyledCardVideo
               isDesktop={isDesktop}
               height={heightCardMedia}
-              src={videos[0] + "#t=0.1"}
+              src={`${videos[0]}#t=0.1`}
             />
           ) : null}
 

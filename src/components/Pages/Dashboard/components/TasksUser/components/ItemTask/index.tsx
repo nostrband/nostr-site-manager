@@ -26,11 +26,9 @@ export const ItemTask = ({ task, onOpen }: ItemTaskProps) => {
 
       <StyledText>{task.text}</StyledText>
 
-      {!isCompleted && (
-        <StyledIconChevron>
-          <ChevronLeftIcon />
-        </StyledIconChevron>
-      )}
+      <StyledIconChevron>
+        <ChevronLeftIcon />
+      </StyledIconChevron>
     </StyledWrap>
   );
 };

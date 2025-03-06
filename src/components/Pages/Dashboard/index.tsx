@@ -41,9 +41,9 @@ export const Dashboard = () => {
 
   const getSite = data?.find((el) => el.id === siteId);
 
-  console.log({
-    getSite,
-  });
+  // console.log({
+  //   getSite,
+  // });
 
   const userIsAdmin =
     userPubkey && getSite && getSite.adminPubkey === userPubkey;

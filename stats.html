@@ -22,8 +22,8 @@
       for (const e of site.events) {
         const period = Math.floor(e.event.created_at / interval);
         let type_action = e.content.type;
-        if (e.content.payload && e.content.payload.data && e.content.payload.data.action)
-          type_action += "_" + e.content.payload.data.action;
+        if (e.content.data && e.content.data.action)
+          type_action += "_" + e.content.data.action;
 
         const total = totals[type_action] || { 
           type: type_action, 
@@ -103,6 +103,7 @@
           try {
             const content = JSON.parse(await window.nostr.nip04.decrypt(event.pubkey, event.content));
             console.log('event', content, event)
+            if (!content.url) return;
             const { type, data } = nostrTools.nip19.decode(content.site);
             if (type !== "naddr") throw new Error("Bad site");
 

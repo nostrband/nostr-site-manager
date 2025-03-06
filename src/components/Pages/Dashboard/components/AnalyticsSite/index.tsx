@@ -21,6 +21,7 @@ import {
 } from "./styled";
 import { Button } from "@mui/material";
 import Link from "next/link";
+import { userIsDelegated, userIsReadOnly } from "@/services/nostr/nostr";
 
 interface AnalyticsSiteProps {
   siteId: string;
@@ -29,31 +30,31 @@ interface AnalyticsSiteProps {
 
 const initialStats = [
   {
-    title: "Site visits",
-    key: "visitors",
-    value: 0,
-    icon: <BarChartIcon />,
-  },
-  {
-    title: "Pages",
+    title: "Page views",
     key: "pageviews",
     value: 0,
     icon: <FIleTextIcon />,
   },
   {
-    title: "Authorisations",
-    key: "auths",
+    title: "Visits",
+    key: "visits",
+    value: 0,
+    icon: <BarChartIcon />,
+  },
+  {
+    title: "Users",
+    key: "npubs",
     value: 0,
     icon: <MailCheckIcon />,
   },
   {
-    title: "Quantity of signups",
+    title: "Sign-ups",
     key: "signups",
     value: 0,
     icon: <LoginIcon />,
   },
   {
-    title: "Reactions",
+    title: "Reactions & comments",
     key: "reactions",
     value: 0,
     icon: <HeartIcon />,
@@ -88,17 +89,18 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
     }
   }, []);
 
+  const showStats = isSendStats && !userIsDelegated && !userIsReadOnly;
   useEffect(() => {
-    if (isSendStats) {
+    if (showStats) {
       getStats(siteId);
     }
   }, [isSendStats, siteId, getStats]);
 
   return (
     <StyledCard>
-      <StyledCardTitleFeature>Analytics</StyledCardTitleFeature>
-      {isSendStats ? (
-        isLoading ? (
+      <StyledCardTitleFeature>Analytics (last week)</StyledCardTitleFeature>
+      {showStats &&
+        (isLoading ? (
           <StyledStatsLoading>
             <SpinerWrap>
               <SpinerCircularProgress />
@@ -126,11 +128,26 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
               Analytics
             </Button> */}
           </>
-        )
-      ) : (
+        ))}
+      {isSendStats && userIsReadOnly && (
         <>
           <StyledStatsSubTitle variant="body2">
-            Please enable Analytics in Settings
+            Analytics not available in read-only mode.
+          </StyledStatsSubTitle>
+        </>
+      )}
+      {isSendStats && userIsDelegated && (
+        <>
+          <StyledStatsSubTitle variant="body2">
+            Connect keys to view encrypted analytics.
+          </StyledStatsSubTitle>
+        </>
+      )}
+      {!isSendStats && (
+        <>
+          <StyledStatsSubTitle variant="body2">
+            Please enable Analytics to receive encrypted statistics about your
+            site visitors.
           </StyledStatsSubTitle>
           <Button
             color="decorate"

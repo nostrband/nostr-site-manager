@@ -61,7 +61,11 @@ export const AnalyticsAdmin = memo(
           <FormControlLabel
             disabled={!isEdit}
             control={
-              <Switch checked={sendStats} onChange={handleChangeSendStats} />
+              <Switch
+                color="decorate"
+                checked={sendStats}
+                onChange={handleChangeSendStats}
+              />
             }
             label={
               sendStats

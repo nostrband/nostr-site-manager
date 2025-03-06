@@ -40,6 +40,7 @@ const BooleanField: React.FC<FieldProps> = React.memo(
       <FormControlLabel
         control={
           <Switch
+            color="decorate"
             checked={value}
             onChange={(_, v) =>
               setFieldValue(name, v).then(() => {

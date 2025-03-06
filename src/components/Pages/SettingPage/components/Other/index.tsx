@@ -193,6 +193,7 @@ export const Other = memo(
             disabled={!isEdit}
             control={
               <Switch
+                color="decorate"
                 checked={signupStartNjump}
                 onChange={handleChangeSignupStartNjump}
               />

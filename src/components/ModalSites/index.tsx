@@ -76,7 +76,7 @@ export const ModalSites = ({
     >
       <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
-          You already have {sites.length} website{sites.length > 1 ? "s" : ""}
+          You already have {sites.length} site{sites.length > 1 ? "s" : ""}
           <Fab
             onClick={handleClose}
             size="small"

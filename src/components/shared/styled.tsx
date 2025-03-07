@@ -50,3 +50,24 @@ export const StyledCardTitleFeature = styled(Box)(({ theme }) => ({
   lineHeight: "26px",
   color: theme.palette.primary.main,
 }));
+
+export const StyledTitlePage = styled(PageTitle)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  paddingBottom: 24,
+  gap: 8,
+  paddingTop: 40,
+  width: "100%",
+  [theme.breakpoints.down("sm")]: {
+    paddingTop: 16,
+  },
+}));
+
+export const StyledWrapOnboardingChildren = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: "16px",
+  maxWidth: 348,
+  margin: "0 auto",
+  alignItems: "center",
+}));

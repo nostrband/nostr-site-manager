@@ -140,6 +140,7 @@ export const ThemesOnboarding = () => {
               {displayedThemes.map((el, index) => (
                 <Grid item xs={4} sm={4} md={4} key={index}>
                   <ThemePreview
+                    alt={el.name}
                     preview={el.preview}
                     handleNavigate={() => handleNavigate(el.id)}
                   />

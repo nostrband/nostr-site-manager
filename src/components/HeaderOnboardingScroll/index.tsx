@@ -7,6 +7,7 @@ import {
 } from "@/components/HeaderOnboardingScroll/styled";
 import { Button } from "@mui/material";
 import { Logo } from "../Logo";
+import Link from "next/link";
 
 export const HeaderOnboardingScroll = ({
   isHeaderVisible,
@@ -24,7 +25,8 @@ export const HeaderOnboardingScroll = ({
             size="large"
             variant="contained"
             color="decorate"
-            href="#themes-onboarding"
+            LinkComponent={Link}
+            href="/onboarding"
           >
             <b>Get started &rarr;</b>
           </Button>

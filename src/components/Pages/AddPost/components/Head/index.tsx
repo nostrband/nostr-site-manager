@@ -1,15 +1,10 @@
 "use client";
 import { ChevronLeftIcon, CrossIcon, InfoIcon } from "@/components/Icons";
 import { Button, Collapse, IconButton } from "@mui/material";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  StyledAlert,
-  StyledAlertTitle,
-  StyledButtonInfo,
-  StyledTitle,
-} from "./styled";
+import { StyledAlert, StyledAlertTitle, StyledButtonInfo } from "./styled";
 import { useBack } from "@/hooks/useBackPage";
+import { StyledTitlePage } from "@/components/shared/styled";
 
 export const Head = ({ isSearchResult }: { isSearchResult: boolean }) => {
   const flagAlert = "isOpenAlertInfoPostAdd";
@@ -45,7 +40,7 @@ export const Head = ({ isSearchResult }: { isSearchResult: boolean }) => {
 
   return (
     <>
-      <StyledTitle>
+      <StyledTitlePage>
         <Button
           onClick={handleBack}
           color="primary"
@@ -63,7 +58,7 @@ export const Head = ({ isSearchResult }: { isSearchResult: boolean }) => {
         >
           <InfoIcon fontSize="inherit" />
         </StyledButtonInfo>
-      </StyledTitle>
+      </StyledTitlePage>
 
       <Collapse in={isOpenAlertInfo}>
         <StyledAlert

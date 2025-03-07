@@ -151,7 +151,7 @@ export const TasksUser = ({ id }: TasksUserProps) => {
               isGutter={isGutter}
               value="todo"
             >
-              {!isNeedMigrateKey(id) && (
+              {isNeedMigrateKey(id) && (
                 <ItemButton
                   isLoading={isLoadingConnectKeys}
                   onClick={handleConnectKeys}

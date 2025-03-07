@@ -65,7 +65,7 @@ export const ModalSites = ({
   if (!getSite) {
     return null;
   }
-  console.log("getSite", getSite);
+  // console.log("getSite", getSite);
 
   return (
     <StyledDialog

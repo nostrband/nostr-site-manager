@@ -358,7 +358,7 @@ export const PostCard = memo(
         ) : null}
       </>
     );
-  }
+  },
 );
 
 PostCard.displayName = "PostCard";

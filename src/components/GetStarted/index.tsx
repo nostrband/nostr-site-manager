@@ -16,15 +16,15 @@ export const GetStarted = () => {
           justifyContent: "center",
         }}
       >
-        <StyledTitle>Start by creating your first website</StyledTitle>
+        <StyledTitle>Start by creating your first site</StyledTitle>
         <Button
           LinkComponent={Link}
-          href="/admin/add"
+          href="/admin/create-site"
           size="large"
           color="decorate"
           variant="contained"
         >
-          Create website &rarr;
+          Create site &rarr;
         </Button>
       </Box>
     </Container>

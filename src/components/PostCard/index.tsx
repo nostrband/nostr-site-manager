@@ -211,7 +211,7 @@ export const PostCard = memo(
         {
           rootMargin: "0px",
           threshold: 0.1,
-        }
+        },
       );
 
       if (videoRef.current) {
@@ -292,7 +292,11 @@ export const PostCard = memo(
                   <StyledCardVideoPlayButton>
                     <PlayIcon />
                   </StyledCardVideoPlayButton>
-                  <StyledCardVideo ref={videoRef} preload="metadata" src={srcVideo} />
+                  <StyledCardVideo
+                    ref={videoRef}
+                    preload="metadata"
+                    src={srcVideo}
+                  />
                 </StyledCardVideoWrap>
               ) : null}
 

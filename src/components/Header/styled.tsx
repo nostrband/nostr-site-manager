@@ -23,6 +23,7 @@ export const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   minHeight: "50px",
   height: "50px",
   left: 0,
+  gap: 8,
   [theme.breakpoints.up("sm")]: {
     minHeight: "50px",
     height: "50px",

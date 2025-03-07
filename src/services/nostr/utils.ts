@@ -1,3 +1,5 @@
+import { nip19 } from "nostr-tools";
+
 // https://stackoverflow.com/a/12646864
 export function shuffleArray<T>(array: T[]) {
   for (let i = array.length - 1; i >= 0; i--) {
@@ -45,5 +47,17 @@ export class Mutex {
       this.queue.push({ cb, ok, err });
       if (!this.running && this.queue.length === 1) this.execute();
     });
+  }
+}
+
+export function eventIdToTag(id: string) {
+  const { type, data } = nip19.decode(id);
+  switch (type) {
+    case "note":
+      return data;
+    case "naddr":
+      return `${data.kind}:${data.pubkey}:${data.identifier}`;
+    default:
+      throw new Error("Invalid related id " + id);
   }
 }

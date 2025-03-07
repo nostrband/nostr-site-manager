@@ -130,6 +130,8 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   stv3(e, "settings", "core", "posts_per_page", "" + data.postsPerPage);
   if (data.signupStartNjump)
     stv3(e, "settings", "core", "nostr_login.signup_start_njump", "true");
+  if (data.sendStats) stv3(e, "settings", "core", "send_stats", "true");
+  if (data.sendStatsDev) stv3(e, "settings", "core", "send_stats_dev", "true");
 
   // FIXME move to plugin settings later
   stv3(e, "settings", "core", "content_cta_main", data.contentActionMain);
@@ -205,6 +207,9 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
 
   // parse updated site back
   sites[index] = parseSite(e);
+
+  // clear the temporary store
+  window.localStorage.removeItem(eventId(e));
 }
 
 export async function deleteSite(siteId: string) {
@@ -294,6 +299,8 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
         })) || [],
     },
     signupStartNjump: s.config.get("nostr_login.signup_start_njump") === "true",
+    sendStats: s.config.get("send_stats") === "true",
+    sendStatsDev: s.config.get("send_stats_dev") === "true",
     postsPerPage: s.config.get("posts_per_page") || "",
     contentActionMain: s.config.get("content_cta_main") || "",
     contentActions: (s.config.get("content_cta_list") || "")

@@ -147,19 +147,23 @@ export const ContentFilters = memo(
           <FormControlLabel
             disabled={!isEdit}
             control={
-              <Switch checked={autoSubmit} onChange={handleChangeAutoSubmit} />
+              <Switch
+                color="decorate"
+                checked={autoSubmit}
+                onChange={handleChangeAutoSubmit}
+              />
             }
             label={autoSubmit ? "Auto-import ON" : "Auto-import OFF"}
           />
 
           {autoSubmit && (
             <>
-              <FormControl disabled={!autoSubmit} fullWidth>
+              <FormControl disabled={!isEdit} fullWidth>
                 <Autocomplete
                   multiple
                   options={mergedOptions}
                   disableCloseOnSelect
-                  disabled={!autoSubmit}
+                  disabled={!isEdit}
                   freeSolo
                   value={selectedHashtags}
                   inputValue={inputValue}
@@ -190,7 +194,7 @@ export const ContentFilters = memo(
                     return (
                       <ListItem {...optionProps} key={key}>
                         <Checkbox
-                          disabled={!autoSubmit}
+                          disabled={!isEdit}
                           checked={selectedHashtags.indexOf(option.title) > -1}
                           onClick={(e) => {
                             const isSelected = selectedHashtags.includes(
@@ -214,7 +218,7 @@ export const ContentFilters = memo(
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      disabled={!autoSubmit}
+                      disabled={!isEdit}
                       label="Hashtags"
                     />
                   )}
@@ -223,7 +227,7 @@ export const ContentFilters = memo(
                   !hashtags.includes(inputValue) &&
                   !isSubstringPresent(inputValue) && (
                     <Button
-                      disabled={!autoSubmit}
+                      disabled={!isEdit}
                       onClick={handleAddHashtag}
                       variant="contained"
                       size={sizeButton}
@@ -234,7 +238,7 @@ export const ContentFilters = memo(
                   )}
               </FormControl>
 
-              <FormControl disabled={!autoSubmit} fullWidth size={sizeField}>
+              <FormControl disabled={!isEdit} fullWidth size={sizeField}>
                 <InputLabel id="demo-multiple-checkbox-label">Kinds</InputLabel>
 
                 <Select
@@ -243,7 +247,7 @@ export const ContentFilters = memo(
                   multiple
                   value={selectedKinds}
                   onChange={handleChange}
-                  input={<OutlinedInput disabled={!autoSubmit} label="Kinds" />}
+                  input={<OutlinedInput disabled={!isEdit} label="Kinds" />}
                   renderValue={(selected) =>
                     selected.map((val) => SUPPORTED_KIND_NAMES[val]).join(", ")
                   }

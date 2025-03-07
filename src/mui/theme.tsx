@@ -102,6 +102,12 @@ declare module "@mui/material/Fab" {
   }
 }
 
+declare module "@mui/material/Switch" {
+  interface SwitchPropsColorOverrides {
+    decorate: true;
+  }
+}
+
 export const InterDisplay = localFont({
   src: [
     {

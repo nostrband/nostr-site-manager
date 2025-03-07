@@ -4,12 +4,11 @@ import {
   StyledAddButton,
   StyledAvatrAuthor,
   StyledButtonCollapse,
-  StyledCard,
   StyledCardDescription,
+  StyledCardFeature,
   StyledCardMedia,
   StyledCardText,
   StyledCardTitle,
-  StyledCardTitleFeature,
   StyledCardVideo,
   StyledCardWrapAuthor,
   StyledComingSoon,
@@ -47,6 +46,7 @@ import DOMPurify from "dompurify";
 import { SUPPORTED_KIND_NAMES_SINGLE } from "@/consts";
 import { PhotoViewer } from "../PhotoViewer";
 import { StyledCardMediaWrap, StyledCardMediaZoom } from "../PostCard/styled";
+import { StyledCardTitleFeature } from "../shared/styled";
 
 export const PostDetailsContent = memo(
   ({
@@ -205,7 +205,7 @@ export const PostDetailsContent = memo(
 
     return (
       <>
-        <StyledCard>
+        <StyledCardFeature>
           {isLoadedImage && feature_image ? (
             <StyledCardMediaWrap>
               <StyledCardMedia
@@ -223,7 +223,7 @@ export const PostDetailsContent = memo(
             <StyledCardVideo
               isDesktop={isDesktop}
               height={heightCardMedia}
-              src={videos[0] + "#t=0.1"}
+              src={`${videos[0]}#t=0.1`}
             />
           ) : null}
 
@@ -285,11 +285,11 @@ export const PostDetailsContent = memo(
             </StyledAvatrAuthor>
             <StyledPostAuthorName>{primary_author?.name}</StyledPostAuthorName>
           </StyledCardWrapAuthor>
-        </StyledCard>
+        </StyledCardFeature>
 
         <Grid container sx={{ paddingTop: "24px" }} spacing={{ xs: "24px" }}>
           <Grid item xs={12} sm={6}>
-            <StyledCard>
+            <StyledCardFeature>
               <StyledCardTitleFeature>Post settings</StyledCardTitleFeature>
               <StyledAddButton
                 fullWidth
@@ -345,10 +345,10 @@ export const PostDetailsContent = memo(
                   </StyledTooltip>
                 </StyledStatusWrap>
               )}
-            </StyledCard>
+            </StyledCardFeature>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <StyledCard>
+            <StyledCardFeature>
               <StyledCardTitleFeature>
                 Information and stats
               </StyledCardTitleFeature>
@@ -356,7 +356,7 @@ export const PostDetailsContent = memo(
                 <InfoIcon color="inherit" />
                 Coming soon
               </StyledComingSoon>
-            </StyledCard>
+            </StyledCardFeature>
           </Grid>
         </Grid>
 

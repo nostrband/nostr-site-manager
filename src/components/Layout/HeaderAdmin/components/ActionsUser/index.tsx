@@ -33,6 +33,7 @@ import { useGetSiteId } from "@/hooks/useGetSiteId";
 import Link from "next/link";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
 import { useRouter } from "next/navigation";
+import { getLinksMenu } from "@/utils";
 
 export const ActionsUser = () => {
   const { isAuth } = useContext(AuthContext);
@@ -51,10 +52,8 @@ export const ActionsUser = () => {
   const userIsAdmin =
     userPubkey && getSite && getSite.adminPubkey === userPubkey;
 
-  const linkToDashboard = `/admin/${siteId}/dashboard`;
-  const linkSwitchTheme = `/design?siteId=${siteId}&themeId=${getSite?.themeId}`;
-  const linkSettings = `/admin/${siteId}/settings`;
-  const linkPostManagement = `/admin/${siteId}/posts`;
+  const { linkToDashboard, linkSwitchTheme, linkSettings, linkPostManagement } =
+    getLinksMenu(siteId, getSite?.themeId);
 
   const { isLoaded } = useImageLoader(getSite ? getSite.icon : "");
 

@@ -4,7 +4,6 @@ import {
   Avatar,
   Box,
   BoxProps,
-  Card,
   CardMedia,
   CardMediaProps,
   Chip,
@@ -14,8 +13,8 @@ import { grey } from "@mui/material/colors";
 import { forwardRef } from "react";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 import { isNumber } from "lodash";
+import { StyledCard } from "../shared/styled";
 
-const POST_CARD_PADDING = 16;
 const CARD_MEDIA_HEIGHT = 363;
 const CARD_MEDIA_HEIGHT_SMALL = 160;
 
@@ -37,16 +36,6 @@ export type LoadingButtonType = ILoadingButton & LoadingButtonProps;
 export type IStyledCardMedia = ICardMedia & CardMediaProps;
 
 export type BoxType = ICardMedia & BoxProps;
-
-export const StyledCard = styled(Card)(({ theme }) => ({
-  width: "100%",
-  height: "100%",
-  display: "flex",
-  flexDirection: "column",
-  boxShadow: theme.shadows[0],
-  gap: POST_CARD_PADDING,
-  padding: POST_CARD_PADDING,
-}));
 
 export const StyledCardNoImage = styled(
   forwardRef<HTMLDivElement, BoxType>(function MainContentName(props, ref) {
@@ -96,7 +85,7 @@ export const StyledCardVideo = styled(
       Object.entries(props).filter((e) => !exclude.has(e[0])),
     );
 
-    return <video controls playsInline ref={ref} {...omitProps} />;
+    return <video preload="metadata" controls playsInline ref={ref} {...omitProps} />;
   }),
 )(({ isDesktop, theme, height }) => ({
   height: isDesktop
@@ -134,14 +123,6 @@ export const StyledTitle = styled(Typography)(() => ({
 export const StyledCardTitle = styled(Box)(({ theme }) => ({
   width: "100%",
   wordWrap: "break-word",
-  fontWeight: "700",
-  fontSize: 20,
-  lineHeight: "26px",
-  color: theme.palette.primary.main,
-}));
-
-export const StyledCardTitleFeature = styled(Box)(({ theme }) => ({
-  width: "100%",
   fontWeight: "700",
   fontSize: 20,
   lineHeight: "26px",
@@ -272,4 +253,8 @@ export const StyledComingSoon = styled(Box)(() => ({
   alignItems: "center",
   justifyContent: "center",
   gap: 4,
+}));
+
+export const StyledCardFeature = styled(StyledCard)(() => ({
+  height: "100%",
 }));

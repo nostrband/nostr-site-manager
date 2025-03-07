@@ -37,7 +37,9 @@ export const DEFAULT_RELAYS = [
 ];
 export const SEARCH_RELAYS = ["wss://relay.nostr.band/"];
 export const SEARCH_RELAYS_SPAM = ["wss://relay.nostr.band/all"];
+export const STATS_RELAYS = ["wss://stats.npubpro.com/"];
 const onAuths: [(type: string) => Promise<void>, boolean][] = [];
+// const onAuths: ((type: string) => Promise<void>)[] = [];
 
 export let ndk: NDK = new NDK({
   explicitRelayUrls: DEFAULT_RELAYS,
@@ -49,6 +51,7 @@ export const userRelays: string[] = [];
 export let userProfile: NostrEvent | undefined = undefined;
 export let userIsDelegated = false;
 export let userIsReadOnly = false;
+export let userNip46 = false;
 export let userToken = "";
 let userTokenPubkey = "";
 const outboxCache = new Map<string, string[]>();
@@ -164,6 +167,7 @@ export async function onAuth(e: any) {
 
     userIsDelegated = e.detail.method === "otp";
     userIsReadOnly = e.detail.method === "readOnly";
+    userNip46 = e.detail.method === "connect";
     if (userIsDelegated) {
       setUserToken(JSON.parse(e.detail.otpData).token, userPubkey);
     } else if (userTokenPubkey !== userPubkey) {
@@ -197,6 +201,7 @@ export async function onAuth(e: any) {
     localStorage.setItem("localUserPubkey", userPubkey);
   } else {
     userPubkey = "";
+    userNip46 = false;
     userRelays.length = 0;
     userProfile = undefined;
     setUserToken("", "");

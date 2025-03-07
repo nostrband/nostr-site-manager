@@ -71,3 +71,17 @@ export const getRecomendAuthors = async (
     console.error("Failed to load profiles:", error);
   }
 };
+
+export const getLinksMenu = (siteId: string, themeId?: string) => {
+  const linkToDashboard = `/admin/${siteId}/dashboard`;
+  const linkSwitchTheme = `/design?siteId=${siteId}&themeId=${themeId}`;
+  const linkSettings = `/admin/${siteId}/settings`;
+  const linkPostManagement = `/admin/${siteId}/posts`;
+
+  return {
+    linkToDashboard,
+    linkSwitchTheme,
+    linkSettings,
+    linkPostManagement,
+  };
+};

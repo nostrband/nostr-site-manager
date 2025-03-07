@@ -3,10 +3,9 @@ import { Box, Button } from "@mui/material";
 import Link from "next/link";
 import { useContext } from "react";
 import { AuthContext } from "@/services/nostr/nostr";
-import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
 import { usePathname } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
-import { ArrowLeftIcon, WebIcon } from "@/components/Icons";
+import { ArrowLeftIcon, LoginIcon, WebIcon } from "@/components/Icons";
 import { StyledHeaderNavigation } from "./styled";
 import { Header } from "@/components/Header";
 
@@ -61,7 +60,7 @@ export const HeaderDiscover = () => {
             onClick={handleLogin}
             color="primary"
             variant="text"
-            startIcon={<LoginTwoToneIcon />}
+            startIcon={<LoginIcon />}
           >
             Login
           </Button>

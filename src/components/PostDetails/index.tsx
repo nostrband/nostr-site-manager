@@ -1,12 +1,13 @@
 "use client";
 import { SearchPost } from "@/services/nostr/content";
-import { StyledTitlePage, StyledWrap } from "./styled";
+import { StyledTitlePage } from "./styled";
 import { memo } from "react";
 import { ChevronLeftIcon } from "@/components/Icons";
 import { Button, Container } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useBack } from "@/hooks/useBackPage";
 import { PostDetailsContent } from "../PostDetailsContent";
+import { StyledWrap } from "@/components/shared/styled";
 
 export const PostDetails = memo(
   ({ post, siteId }: { post: SearchPost; siteId: string }) => {

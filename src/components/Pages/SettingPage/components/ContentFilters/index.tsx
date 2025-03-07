@@ -147,7 +147,11 @@ export const ContentFilters = memo(
           <FormControlLabel
             disabled={!isEdit}
             control={
-              <Switch checked={autoSubmit} onChange={handleChangeAutoSubmit} />
+              <Switch
+                color="decorate"
+                checked={autoSubmit}
+                onChange={handleChangeAutoSubmit}
+              />
             }
             label={autoSubmit ? "Auto-import ON" : "Auto-import OFF"}
           />

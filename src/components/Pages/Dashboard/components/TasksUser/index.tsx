@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   StyledDescription,
   StyledDivider,
+  StyledEmptyTasks,
   StyledTabPanel,
   StyledTabs,
   StyledTitle,
@@ -23,10 +24,10 @@ import { TaskType } from "@/types";
 import { fetchTasks, setDoneTask } from "@/services/nostr/tasks";
 
 interface TasksUserProps {
-  id: string;
+  siteId: string;
 }
 
-export const TasksUser = ({ id }: TasksUserProps) => {
+export const TasksUser = ({ siteId }: TasksUserProps) => {
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isLoading, setLoading] = useState(true);
   const router = useRouter();
@@ -42,6 +43,9 @@ export const TasksUser = ({ id }: TasksUserProps) => {
 
   const isMoreThanLimitTodo = todoTasks.length > 3;
   const isMoreThanLimitCompleted = completedTasks.length > 3;
+
+  const isEmptyTodo = todoTasks.length === 0;
+  const isEmptyCompleted = completedTasks.length === 0;
 
   useEffect(() => {
     if (navigator.userAgent.indexOf("Windows") !== -1) {
@@ -66,12 +70,12 @@ export const TasksUser = ({ id }: TasksUserProps) => {
 
   const handleOpen = (idTask: string, isCompleted: boolean) => {
     if (isCompleted) {
-      const linkSettingsCompleted = `/admin/${id}/settings?idTaskCompleted=${idTask}`;
+      const linkSettingsCompleted = `/admin/${siteId}/settings?idTaskCompleted=${idTask}`;
 
       router.push(linkSettingsCompleted);
     } else {
-      setDoneTask(id, idTask);
-      const linkSettings = `/admin/${id}/settings?idTask=${idTask}`;
+      setDoneTask(siteId, idTask);
+      const linkSettings = `/admin/${siteId}/settings?idTask=${idTask}`;
       router.push(linkSettings);
     }
   };
@@ -80,7 +84,7 @@ export const TasksUser = ({ id }: TasksUserProps) => {
     setLoadingConnectKeys(true);
 
     try {
-      const newSiteId = await migrateToConnectedKey(id);
+      const newSiteId = await migrateToConnectedKey(siteId);
       enqueueSnackbar("Keys connected!", {
         autoHideDuration: 3000,
         variant: "success",
@@ -89,7 +93,7 @@ export const TasksUser = ({ id }: TasksUserProps) => {
           vertical: "bottom",
         },
       });
-      
+
       setTimeout(() => {
         setLoadingConnectKeys(false);
 
@@ -111,8 +115,8 @@ export const TasksUser = ({ id }: TasksUserProps) => {
   };
 
   useEffect(() => {
-    getTasks(id);
-  }, [getTasks, id]);
+    getTasks(siteId);
+  }, [getTasks, siteId]);
 
   return (
     <StyledWrap>
@@ -151,12 +155,19 @@ export const TasksUser = ({ id }: TasksUserProps) => {
               isGutter={isGutter}
               value="todo"
             >
-              {isNeedMigrateKey(id) && (
+              {isNeedMigrateKey(siteId) && (
                 <ItemButton
                   isLoading={isLoadingConnectKeys}
                   onClick={handleConnectKeys}
                 />
               )}
+
+              {isEmptyTodo && (
+                <StyledEmptyTasks variant="body2">
+                  You&apos;ve completed all the tasks
+                </StyledEmptyTasks>
+              )}
+
               {todoTasks.map((el, i) => {
                 return <ItemTask key={i} task={el} onOpen={handleOpen} />;
               })}
@@ -166,6 +177,10 @@ export const TasksUser = ({ id }: TasksUserProps) => {
               isGutter={isGutter}
               value="completed"
             >
+              {isEmptyCompleted && (
+                <StyledEmptyTasks variant="body2">Empty</StyledEmptyTasks>
+              )}
+
               {completedTasks.map((el, i) => {
                 return <ItemTask key={i} task={el} onOpen={handleOpen} />;
               })}

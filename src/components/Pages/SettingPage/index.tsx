@@ -43,10 +43,9 @@ import { ContentFilters } from "./components/ContentFilters";
 import { useBack } from "@/hooks/useBackPage";
 import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
 import { StyledTitlePage } from "@/components/shared/styled";
-import {
-  SITE_TASK_SETTINGS,
-  SiteTaskSettingType,
-} from "@/services/nostr/tasks";
+import { SITE_TASK_SETTINGS } from "@/services/nostr/tasks";
+import { AnalyticsAdmin } from "./components/AnalyticsAdmin";
+import { AnalyticsDev } from "./components/AnalyticsDev";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -94,6 +93,8 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   contentActions: [],
   autoSubmit: false,
   signupStartNjump: false,
+  sendStats: false,
+  sendStatsDev: false,
 };
 
 export const SettingPage = () => {
@@ -139,7 +140,7 @@ export const SettingPage = () => {
 
         try {
           await editSite(values);
-          enqueueSnackbar("Edit data success!", {
+          enqueueSnackbar("Saved the settings and updated your site!", {
             autoHideDuration: 3000,
             variant: "success",
             anchorOrigin: {
@@ -242,6 +243,20 @@ export const SettingPage = () => {
   const handleChangeSignupStartNjump = useCallback(
     (value: boolean) => {
       setFieldValue("signupStartNjump", value);
+    },
+    [setFieldValue],
+  );
+
+  const handleChangeSendStats = useCallback(
+    (value: boolean) => {
+      setFieldValue("sendStats", value);
+    },
+    [setFieldValue],
+  );
+
+  const handleChangeSendStatsDev = useCallback(
+    (value: boolean) => {
+      setFieldValue("sendStatsDev", value);
     },
     [setFieldValue],
   );
@@ -561,6 +576,26 @@ export const SettingPage = () => {
               isLoading={isLoading}
               handleAddLinkNavigation={handleAddLinkNavigation}
               handleRemoveLinkNavigation={handleRemoveLinkNavigation}
+            />
+          </StyledWrapSectionSettings>
+
+          <StyledTitleSection>Analytics</StyledTitleSection>
+          <StyledWrapSectionSettings>
+            <AnalyticsAdmin
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              sendStats={values.sendStats}
+              handleSendStats={handleChangeSendStats}
+              isLoading={isLoading}
+            />
+            <AnalyticsDev
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              sendStatsDev={values.sendStatsDev}
+              handleSendStatsDev={handleChangeSendStatsDev}
+              isLoading={isLoading}
             />
           </StyledWrapSectionSettings>
 

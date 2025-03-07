@@ -66,3 +66,9 @@ export const StyledTabs = styled(Box)(() => ({
   flexDirection: "column",
   gap: 16,
 }));
+
+export const StyledEmptyTasks = styled(Typography)(() => ({
+  fontSize: 14,
+  textAlign: "center",
+  fontWeight: "400",
+}));

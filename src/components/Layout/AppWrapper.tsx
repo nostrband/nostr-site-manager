@@ -4,6 +4,7 @@ import { SnackbarProvider } from "notistack";
 import Script from "next/script";
 import { AuthContext, onAuth, userPubkey } from "@/services/nostr/nostr";
 import { BodyWrapper } from "./MainContent";
+import { Notification } from "../Notification";
 
 let addedHandlers = false;
 export const AppWrapper = ({ children }: { children: ReactNode }) => {
@@ -57,7 +58,17 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
           data-domain="npub.pro"
           src="https://plausible.io/js/script.js"
         ></Script>
-        <SnackbarProvider>{children}</SnackbarProvider>
+        <SnackbarProvider
+          Components={{
+            error: Notification,
+            success: Notification,
+            info: Notification,
+            default: Notification,
+            warning: Notification,
+          }}
+        >
+          {children}
+        </SnackbarProvider>
       </BodyWrapper>
     </AuthContext.Provider>
   );

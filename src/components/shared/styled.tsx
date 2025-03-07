@@ -1,6 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Avatar, Typography, TypographyProps } from "@mui/material";
+import { Avatar, Box, Typography, TypographyProps } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { forwardRef } from "react";
 
@@ -24,4 +24,25 @@ export const PageTitle = styled(
     fontSize: 30,
     lineHeight: "39px",
   },
+}));
+
+export const StyledTitlePage = styled(PageTitle)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  paddingBottom: 24,
+  gap: 8,
+  paddingTop: 40,
+  width: "100%",
+  [theme.breakpoints.down("sm")]: {
+    paddingTop: 16,
+  },
+}));
+
+export const StyledWrapOnboardingChildren = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: "16px",
+  maxWidth: 348,
+  margin: "0 auto",
+  alignItems: "center",
 }));

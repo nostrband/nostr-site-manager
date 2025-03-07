@@ -149,7 +149,7 @@ export const ContentFilters = memo(
             control={
               <Switch checked={autoSubmit} onChange={handleChangeAutoSubmit} />
             }
-            label={autoSubmit ? "Auto-submit ON" : "Auto-submit OFF"}
+            label={autoSubmit ? "Auto-import ON" : "Auto-import OFF"}
           />
 
           {autoSubmit && (

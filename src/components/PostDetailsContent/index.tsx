@@ -369,7 +369,7 @@ export const PostDetailsContent = memo(
         ) : null}
       </>
     );
-  }
+  },
 );
 
 PostDetailsContent.displayName = "PostDetailsContent";

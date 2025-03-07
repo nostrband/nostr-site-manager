@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import _ from "lodash";
 import { Button, Container } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
@@ -30,7 +30,6 @@ import { Logo } from "./components/Logo";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import {
   SearchSettingsFieldWrap,
-  StyledTitle,
   StyledTitleSection,
   StyledWrap,
   StyledWrapSectionSettings,
@@ -43,6 +42,11 @@ import { NostrJson } from "./components/NostrJson";
 import { ContentFilters } from "./components/ContentFilters";
 import { useBack } from "@/hooks/useBackPage";
 import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
+import { StyledTitlePage } from "@/components/shared/styled";
+import {
+  SITE_TASK_SETTINGS,
+  SiteTaskSettingType,
+} from "@/services/nostr/tasks";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -139,7 +143,7 @@ export const SettingPage = () => {
             autoHideDuration: 3000,
             variant: "success",
             anchorOrigin: {
-              horizontal: "right",
+              horizontal: "left",
               vertical: "bottom",
             },
           });
@@ -148,7 +152,7 @@ export const SettingPage = () => {
             autoHideDuration: 3000,
             variant: "error",
             anchorOrigin: {
-              horizontal: "right",
+              horizontal: "left",
               vertical: "bottom",
             },
           });
@@ -325,12 +329,59 @@ export const SettingPage = () => {
       const element = document.getElementById(choiceSetting.anchor);
 
       if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
 
         setChoiceSetting(null);
       }
     }
   }, [choiceSetting]);
+
+  const params = useSearchParams();
+
+  const scrollToTask = useCallback(
+    (idTask: string, isCompleted: boolean) => {
+      const task = SITE_TASK_SETTINGS.find((el) => el.id === idTask);
+
+      if (task) {
+        const element = document.getElementById(task.anchor);
+
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+
+          if (!isCompleted) {
+            enqueueSnackbar("Task completed!", {
+              autoHideDuration: 5000,
+              variant: "success",
+              anchorOrigin: {
+                horizontal: "right",
+                vertical: "top",
+              },
+            });
+          }
+        }
+      }
+    },
+    [enqueueSnackbar],
+  );
+
+  useEffect(() => {
+    const idTask = params.get("idTask");
+    const idTaskCompleted = params.get("idTaskCompleted");
+
+    if (idTask && !isLoadingSetting && !isFetching) {
+      scrollToTask(idTask, false);
+    }
+
+    if (idTaskCompleted && !isLoadingSetting && !isFetching) {
+      scrollToTask(idTaskCompleted, true);
+    }
+  }, [params, isLoadingSetting, isFetching, scrollToTask]);
 
   if (isLoadingSetting || isFetching) {
     return (
@@ -343,7 +394,7 @@ export const SettingPage = () => {
   return (
     <Container maxWidth="lg">
       <StyledWrap>
-        <StyledTitle>
+        <StyledTitlePage>
           <Button
             onClick={handleBack}
             color="primary"
@@ -353,7 +404,7 @@ export const SettingPage = () => {
             <ChevronLeftIcon />
           </Button>
           Settings
-        </StyledTitle>
+        </StyledTitlePage>
 
         <SearchSettingsFieldWrap>
           <SearchSettingsField
@@ -448,7 +499,7 @@ export const SettingPage = () => {
             <PinnedNotes isLoading={isLoading} siteId={values.id} />
           </StyledWrapSectionSettings>
 
-          <StyledTitleSection>Design</StyledTitleSection>
+          <StyledTitleSection>App on homescreen</StyledTitleSection>
 
           <StyledWrapSectionSettings>
             <AppName
@@ -459,6 +510,18 @@ export const SettingPage = () => {
               isLoading={isLoading}
             />
 
+            <Icon
+              icon={values.icon}
+              handleBlur={handleBlur}
+              handleChange={handleChange}
+              submitForm={submitForm}
+              isLoading={isLoading}
+            />
+          </StyledWrapSectionSettings>
+
+          <StyledTitleSection>Design</StyledTitleSection>
+
+          <StyledWrapSectionSettings>
             <DesignBranding
               isLoading={isLoading}
               siteId={values.id}
@@ -475,14 +538,6 @@ export const SettingPage = () => {
 
             <Logo
               logo={values.logo}
-              handleBlur={handleBlur}
-              handleChange={handleChange}
-              submitForm={submitForm}
-              isLoading={isLoading}
-            />
-
-            <Icon
-              icon={values.icon}
               handleBlur={handleBlur}
               handleChange={handleChange}
               submitForm={submitForm}

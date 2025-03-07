@@ -97,7 +97,7 @@ export async function migrateToConnectedKey(siteId: string) {
       "to",
       relays,
     );
-    const newSite = await publishSiteEvent(event, relays);
+    const newSite = await publishSiteEvent(event);
     console.log("published new site event", newSite);
 
     newSiteId = eventId(newSite);

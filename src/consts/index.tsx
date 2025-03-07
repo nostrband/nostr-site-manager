@@ -18,6 +18,14 @@ import {
   WebIcon,
 } from "@/components/Icons";
 
+import {
+  KIND_LONG_NOTE,
+  KIND_NOTE,
+  KIND_OLAS,
+  KIND_VIDEO_HORIZONTAL,
+  KIND_VIDEO_VERTICAL,
+} from "libnostrsite";
+
 import waveDemo from "../../public/images/preview-theme/cd-demo.npub.pro.png";
 import rubyDemo from "../../public/images/preview-theme/croxroadnews-demo.npub.pro.png";
 import tasteDemo from "../../public/images/preview-theme/enki-demo.npub.pro.png";
@@ -47,9 +55,20 @@ import sourceDemo from "../../public/images/preview-theme/source-demo.npub.pro.p
 import mnmlDemo from "../../public/images/preview-theme/mnml-demo.npub.pro.png";
 import vitorsDemo from "../../public/images/preview-theme/vitors-demo.npub.pro.png";
 import microLieblingDemo from "../../public/images/preview-theme/micro-liebling-demo.png";
+import { SelectTypeSite, TypeAuthor } from "@/types";
 
 export const NPUB_PRO_DOMAIN = "npub.pro";
 export const NPUB_PRO_API = "https://api.npubpro.com";
+
+export const OTP_LENGTH = 6;
+
+export const SCREEN = {
+  START: "start",
+  BUILDING: "building",
+  CHOOSE_AUTHOR: "chooseAuthor",
+};
+
+export type TypesScreens = (typeof SCREEN)[keyof typeof SCREEN];
 
 export const SUPPORTED_KIND_NAMES: { [key: number]: string } = {
   1: "Notes",
@@ -102,6 +121,72 @@ export const TESTERS = [
   "b33f4a427387a151c82a5925b3c9fa631b240563a9c8b82f42af18655845fb2f",
 ];
 
+export const LIST_SITE_TYPES: SelectTypeSite[] = [
+  {
+    type: "blog",
+    typename: "Blog",
+    description: "Optimized for long-form articles",
+    kinds: [KIND_LONG_NOTE],
+  },
+  {
+    type: "note",
+    typename: "Microblog",
+    description: "Optimized for short notes, similar to X/Twitter",
+    kinds: [KIND_NOTE],
+  },
+  {
+    type: "photo",
+    typename: "Photoblog",
+    description: "Optimized to display pictures and photographs",
+    kinds: [KIND_OLAS],
+  },
+  {
+    type: "video",
+    typename: "Videoblog",
+    description: "Optimized to display video clips and long-form videos",
+    kinds: [KIND_VIDEO_VERTICAL, KIND_VIDEO_HORIZONTAL],
+  },
+  {
+    type: "podcast",
+    typename: "Podcast",
+    description: "Optimized for audio and video podcasts",
+    kinds: [KIND_NOTE],
+  },
+];
+
+export const RECOMMENDED_AUTHORS: TypeAuthor[] = [
+  {
+    pubkey: "1bd32a386a7be6f688b3dc7c480efc21cd946b43eac14ba4ba7834ac77a23e69",
+    type: "note",
+    typename: "Microblog",
+    kinds: [KIND_NOTE],
+  },
+  {
+    pubkey: "97c70a44366a6535c145b333f973ea86dfdc2d7a99da618c40c64705ad98e322",
+    type: "blog",
+    typename: "Blog",
+    kinds: [KIND_LONG_NOTE],
+  },
+  {
+    pubkey: "7d33ba57d8a6e8869a1f1d5215254597594ac0dbfeb01b690def8c461b82db35",
+    type: "photo",
+    typename: "Photoblog",
+    kinds: [KIND_OLAS],
+  },
+  {
+    pubkey: "47f97d4e0a640c8a963d3fa71d9f0a6aad958afa505fefdedd6d529ef4122ef3",
+    type: "video",
+    typename: "Videoblog",
+    kinds: [KIND_VIDEO_VERTICAL],
+  },
+  {
+    pubkey: "7f573f55d875ce8edc528edf822949fd2ab9f9c65d914a40225663b0a697be07",
+    type: "podcast",
+    typename: "Podcast",
+    kinds: [KIND_NOTE],
+  },
+];
+
 export const HASH_CONFIG = {
   TITLE_DESCRIPTION: "title-description",
   TIMEZONE: "timezone",
@@ -134,7 +219,7 @@ export const HASH_CONFIG = {
 
 export const SETTINGS_CONFIG = {
   websiteAddress: {
-    title: "Website address",
+    title: "Site address",
     anchor: HASH_CONFIG.URL,
     icon: <LinkIcon />,
     group: "General settings",
@@ -162,12 +247,12 @@ export const SETTINGS_CONFIG = {
     description: "",
   },
   content: {
-    title: "Content filters",
+    title: "Auto-import of new posts",
     anchor: HASH_CONFIG.CONTENT,
     icon: <FIleTextIcon />,
     group: "General settings",
     description:
-      "Enable auto-submission to publish events of chosen kinds and hashtags by the site contributors",
+      "Enable auto-import to publish new posts of chosen kinds and hashtags by the site contributors",
   },
   plugins: {
     title: "Plugins",
@@ -175,7 +260,7 @@ export const SETTINGS_CONFIG = {
     icon: <CodeIcon />,
     group: "General settings",
     description:
-      "You can add custom html/css/js code into the header and footer of your website",
+      "You can add custom html/css/js code into the header and footer of your site",
   },
   other: {
     title: "Other settings",
@@ -195,9 +280,16 @@ export const SETTINGS_CONFIG = {
     title: "App name",
     anchor: HASH_CONFIG.APP_NAME,
     icon: <IosSmartphoneIcon />,
-    group: "Design",
+    group: "App on homescreen",
     description:
       "Short name for your site, displayed when users add it to homescreen",
+  },
+  icon: {
+    title: "App Icon",
+    anchor: HASH_CONFIG.ICON,
+    icon: <StarRectangleIcon />,
+    group: "App on homescreen",
+    description: "Icon of the site when users add it to homescreen",
   },
   theme: {
     title: "Theme",
@@ -218,21 +310,14 @@ export const SETTINGS_CONFIG = {
     anchor: HASH_CONFIG.LOGO,
     icon: <StarIcon />,
     group: "Design",
-    description: "Website logo",
-  },
-  icon: {
-    title: "Icon",
-    anchor: HASH_CONFIG.ICON,
-    icon: <StarRectangleIcon />,
-    group: "Design",
-    description: "Website icon",
+    description: "Site logo",
   },
   image: {
     title: "Image",
     anchor: HASH_CONFIG.IMAGE,
     icon: <ImageIcon />,
     group: "Design",
-    description: "Website cover image",
+    description: "Site cover image",
   },
   navigation: {
     title: "Navigation",
@@ -263,6 +348,24 @@ export const SETTINGS_CONFIG = {
     group: "Growth",
     description: "",
     isComingSoon: true,
+  },
+};
+
+export const STEPS_ONBOARDING_CONFIG = {
+  start: {
+    title: "Start",
+    slug: "onboarding",
+    step: 1,
+  },
+  connection: {
+    title: "Connection",
+    slug: "connection",
+    step: 2,
+  },
+  "create-site": {
+    title: "Create site",
+    slug: "create-site",
+    step: 3,
   },
 };
 

@@ -144,19 +144,19 @@ export const StyledCardVideo = styled("video")(() => ({
 }));
 
 export const StyledCardMediaWrap = styled(Box)(() => ({
-  position: 'relative'
+  position: "relative",
 }));
 
 export const StyledCardMediaZoom = styled(Fab)(() => ({
-  position: 'absolute',
+  position: "absolute",
   right: 8,
   bottom: 8,
   zIndex: 2,
-  fontSize: '18px',
-  background: '#fff',
-  height: '34px',
-  width: '34px',
-  minHeight: '34px'
+  fontSize: "18px",
+  background: "#fff",
+  height: "34px",
+  width: "34px",
+  minHeight: "34px",
 }));
 
 export const StyledCardMedia = styled(

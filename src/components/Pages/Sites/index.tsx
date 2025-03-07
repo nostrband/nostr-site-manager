@@ -33,7 +33,7 @@ import { NotFoundIcon, SearchIcon } from "@/components/Icons";
 import { ListSites } from "@/components/ListSites";
 import { HeaderDiscover } from "./components/Header";
 
-export const Sites = () => {
+const Sites = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState<string>("");
   const [isMoreButton, setIsMoreButton] = useState<boolean>(false);
@@ -175,3 +175,5 @@ export const Sites = () => {
     </>
   );
 };
+
+export default Sites;

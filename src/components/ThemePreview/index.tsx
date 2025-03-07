@@ -7,9 +7,10 @@ import Image, { StaticImageData } from "next/image";
 interface IThemePreview {
   preview: StaticImageData;
   handleNavigate: () => void;
+  alt?: string;
 }
 
-export const ThemePreview = ({ preview, handleNavigate }: IThemePreview) => {
+export const ThemePreview = ({ preview, alt = '', handleNavigate }: IThemePreview) => {
   return (
     <StyledWrapPreview>
       <StyledButtonPreview
@@ -22,7 +23,7 @@ export const ThemePreview = ({ preview, handleNavigate }: IThemePreview) => {
       </StyledButtonPreview>
       <Image
         src={preview}
-        alt="Description of image"
+        alt={alt}
         width={500}
         height={500}
       />

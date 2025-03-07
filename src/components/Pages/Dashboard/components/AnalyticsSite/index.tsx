@@ -6,7 +6,6 @@ import {
   LoginIcon,
   UsersIcon,
 } from "@/components/Icons";
-import { StyledCard, StyledCardTitleFeature } from "@/components/shared/styled";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { fetchSiteStats, SiteStats } from "@/services/nostr/stats";
 import { useCallback, useEffect, useState } from "react";
@@ -21,6 +20,7 @@ import {
 import { Button } from "@mui/material";
 import Link from "next/link";
 import { userIsDelegated, userIsReadOnly } from "@/services/nostr/nostr";
+import { CardFeatureContent } from "@/components/shared/CardFeatureContent";
 
 interface AnalyticsSiteProps {
   siteId: string;
@@ -96,8 +96,7 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
   }, [isSendStats, siteId, getStats]);
 
   return (
-    <StyledCard>
-      <StyledCardTitleFeature>Analytics (last week)</StyledCardTitleFeature>
+    <CardFeatureContent title="Analytics (last week)">
       {showStats &&
         (isLoading ? (
           <StyledStatsLoading>
@@ -161,6 +160,6 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
           </Button>
         </>
       )}
-    </StyledCard>
+    </CardFeatureContent>
   );
 };

@@ -16,8 +16,8 @@ export const PageTitle = styled(
   forwardRef<HTMLDivElement, TypographyProps>(
     function TypographyName(props, ref) {
       return <Typography variant="h1" component="div" ref={ref} {...props} />;
-    }
-  )
+    },
+  ),
 )(({ theme }) => ({
   fontWeight: "700",
   fontSize: 24,

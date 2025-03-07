@@ -14,7 +14,7 @@ export const addHttps = (url: string): string => {
 
 export const updateLevelNavigation = (
   level: LevelNavigation,
-  input: InputNavigation
+  input: InputNavigation,
 ) => {
   const navigation = level.map((item) => {
     if (item.id === input.id) {
@@ -32,7 +32,7 @@ export const updateLevelNavigation = (
 
 export const resetLevelNavigation = (
   level: LevelNavigation,
-  input: InputNavigationReset
+  input: InputNavigationReset,
 ) => {
   const navigation = level.map((item) => {
     if (item.id === input.id) {
@@ -51,7 +51,7 @@ export const resetLevelNavigation = (
 
 export const getRecomendAuthors = async (
   authors: TypeAuthor[],
-  callback: (authors: TypeAuthor[]) => void
+  callback: (authors: TypeAuthor[]) => void,
 ) => {
   try {
     const pubkeys = authors.map((u) => u.pubkey);

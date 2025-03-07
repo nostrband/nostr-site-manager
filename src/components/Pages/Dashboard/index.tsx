@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Button, Container, Grid } from "@mui/material";
+import { Box, Button, Container, Grid } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { useContext, useState } from "react";
@@ -22,6 +22,8 @@ import { StyledWrap } from "@/components/shared/styled";
 import { AnalyticsSite } from "./components/AnalyticsSite";
 import { useRouter } from "next/navigation";
 import { getLinksMenu } from "@/utils";
+import { CardFeatureContent } from "@/components/shared/CardFeatureContent";
+import { StyledWrapMenu } from "./styled";
 
 export const Dashboard = () => {
   const { isAuth } = useContext(AuthContext);
@@ -36,7 +38,7 @@ export const Dashboard = () => {
 
   const { linkSwitchTheme, linkSettings, linkPostManagement } = getLinksMenu(
     siteId,
-    getSite?.themeId
+    getSite?.themeId,
   );
 
   const handeOpenConfirm = () => {
@@ -75,21 +77,22 @@ export const Dashboard = () => {
         {getSite && (
           <Grid container spacing={{ xs: "24px" }}>
             <Grid item xs={12} sm={6}>
-              <PreviewDashboardSite
-                settingsLink={linkSettings}
-                logo={getSite.logo}
-                name={getSite.name}
-                title={getSite.title}
-                url={getSite.url}
-                image={getSite.image}
-                adminPubkey={getSite.adminPubkey}
-                userPubkey={isAuth ? userPubkey : undefined}
-                description={getSite.description}
-                accentColor={getSite.accentColor}
-                contributors={getSite.contributors}
-                actions={<TasksUser id={getSite.id} />}
-              />
-
+              <Box>
+                <PreviewDashboardSite
+                  settingsLink={linkSettings}
+                  logo={getSite.logo}
+                  name={getSite.name}
+                  title={getSite.title}
+                  url={getSite.url}
+                  image={getSite.image}
+                  adminPubkey={getSite.adminPubkey}
+                  userPubkey={isAuth ? userPubkey : undefined}
+                  description={getSite.description}
+                  accentColor={getSite.accentColor}
+                  contributors={getSite.contributors}
+                  actions={<TasksUser siteId={getSite.id} />}
+                />
+              </Box>
               <ModalConfirmDeleteSite
                 isOpen={isOpenConfirm}
                 siteId={siteId}
@@ -102,8 +105,8 @@ export const Dashboard = () => {
                 isSendStats={getSite.sendStats}
               />
 
-              <div>
-                <>
+              <StyledWrapMenu>
+                <CardFeatureContent title="Menu">
                   <Button
                     target="_blank"
                     LinkComponent={Link}
@@ -166,8 +169,8 @@ export const Dashboard = () => {
                       </Button>
                     </>
                   )}
-                </>
-              </div>
+                </CardFeatureContent>
+              </StyledWrapMenu>
             </Grid>
           </Grid>
         )}

@@ -28,7 +28,7 @@ export const IconLink = createSvgIcon(
       d="M10.5 2.25C10.5 1.83579 10.8358 1.5 11.25 1.5H15.75C16.1642 1.5 16.5 1.83579 16.5 2.25V6.75C16.5 7.16421 16.1642 7.5 15.75 7.5C15.3358 7.5 15 7.16421 15 6.75V3H11.25C10.8358 3 10.5 2.66421 10.5 2.25Z"
     />
   </svg>,
-  "IconLink"
+  "IconLink",
 );
 
 export const IconPerson = createSvgIcon(
@@ -52,7 +52,7 @@ export const IconPerson = createSvgIcon(
       d="M9.00089 13C7.33815 13 5.73913 13.7585 4.80204 14.9004C4.32645 15.48 3.99211 16.1971 3.96299 16.9919C3.93326 17.8036 4.22625 18.5958 4.83048 19.2871C6.30304 20.9716 8.65416 22 12.0009 22C15.3476 22 17.6987 20.9716 19.1713 19.2871C19.7755 18.5958 20.0685 17.8036 20.0388 16.9919C20.0097 16.1971 19.6753 15.48 19.1997 14.9004C18.2627 13.7585 16.6636 13 15.0009 13H9.00089Z"
     />
   </svg>,
-  "IconPerson"
+  "IconPerson",
 );
 
 export const IconPersonOutlined = createSvgIcon(
@@ -76,7 +76,7 @@ export const IconPersonOutlined = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "IconPersonOutlined"
+  "IconPersonOutlined",
 );
 
 export const BrokenBigIcon = createSvgIcon(
@@ -94,7 +94,7 @@ export const BrokenBigIcon = createSvgIcon(
       d="M65.073 61.1466H4.962C2.2329 61.1466 0 58.899 0 56.1519V5.8481C0 3.10101 2.2329 0.853398 4.962 0.853398L61.1816 0.853394H65.0777C67.796 0.853394 69.9996 3.05699 69.9996 5.77527V56.1519C70.035 58.899 67.8021 61.1466 65.073 61.1466ZM8.15185 5.8481C6.37971 5.8481 4.96199 7.27516 4.96199 9.05898V51.5943L26.5467 24.8993C27.5391 23.6863 29.3467 23.6863 30.3391 24.8993L38.1719 34.6033C39.1289 35.7806 40.901 35.8163 41.8934 34.6747L44.3035 31.9276C45.2605 30.8216 46.9972 30.8216 47.9541 31.9276L65.0376 51.5139L65.0376 9.12935C65.0376 7.31717 63.5685 5.8481 61.7563 5.8481H8.15185Z"
     />
   </svg>,
-  "BrokenBigIcon"
+  "BrokenBigIcon",
 );
 
 export const BrokenIcon = createSvgIcon(
@@ -110,7 +110,7 @@ export const BrokenIcon = createSvgIcon(
       d="M21 19.5V5.5C21 4.4 20.1 3.5 19 3.5H5C3.9 3.5 3 4.4 3 5.5V19.5C3 20.6 3.9 21.5 5 21.5H19C20.1 21.5 21 20.6 21 19.5ZM8.11812 14.491C8.31425 14.2388 8.69331 14.2327 8.89743 14.4785L10.6021 16.531C10.8064 16.7769 11.1858 16.7706 11.3818 16.5181L14.0982 13.0177C14.3005 12.7571 14.6953 12.7604 14.8932 13.0243L19 18.5H5L8.11812 14.491Z"
     />
   </svg>,
-  "BrokenIcon"
+  "BrokenIcon",
 );
 
 export const SearchIcon = createSvgIcon(
@@ -134,7 +134,7 @@ export const SearchIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "SearchIcon"
+  "SearchIcon",
 );
 
 export const NotFoundIcon = createSvgIcon(
@@ -164,7 +164,7 @@ export const NotFoundIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "NotFoundIcon"
+  "NotFoundIcon",
 );
 
 export const ArrowLeftIcon = createSvgIcon(
@@ -182,7 +182,7 @@ export const ArrowLeftIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ArrowLeftIcon"
+  "ArrowLeftIcon",
 );
 
 export const WebIcon = createSvgIcon(
@@ -218,7 +218,7 @@ export const WebIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "WebIcon"
+  "WebIcon",
 );
 
 export const PlusIcon = createSvgIcon(
@@ -242,7 +242,7 @@ export const PlusIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PlusIcon"
+  "PlusIcon",
 );
 
 export const ChevronLeftIcon = createSvgIcon(
@@ -260,7 +260,7 @@ export const ChevronLeftIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ChevronLeftIcon"
+  "ChevronLeftIcon",
 );
 
 export const ArrowRightIcon = createSvgIcon(
@@ -278,7 +278,7 @@ export const ArrowRightIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ArrowRightIcon"
+  "ArrowRightIcon",
 );
 
 export const SettingsIcon = createSvgIcon(
@@ -302,7 +302,7 @@ export const SettingsIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "SettingsIcon"
+  "SettingsIcon",
 );
 
 export const TrashIcon = createSvgIcon(
@@ -332,7 +332,7 @@ export const TrashIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "TrashIcon"
+  "TrashIcon",
 );
 
 export const AddImageIcon = createSvgIcon(
@@ -356,7 +356,7 @@ export const AddImageIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "AddImageIcon"
+  "AddImageIcon",
 );
 
 export const BrushIcon = createSvgIcon(
@@ -374,7 +374,7 @@ export const BrushIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "BrushIcon"
+  "BrushIcon",
 );
 
 export const EditIcon = createSvgIcon(
@@ -404,7 +404,7 @@ export const EditIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "EditIcon"
+  "EditIcon",
 );
 
 export const CheckIcon = createSvgIcon(
@@ -422,7 +422,7 @@ export const CheckIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CheckIcon"
+  "CheckIcon",
 );
 
 export const GrabIcon = createSvgIcon(
@@ -446,7 +446,7 @@ export const GrabIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "GrabIcon"
+  "GrabIcon",
 );
 
 export const PlusCircleIcon = createSvgIcon(
@@ -470,7 +470,7 @@ export const PlusCircleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PlusCircleIcon"
+  "PlusCircleIcon",
 );
 
 export const CodeIcon = createSvgIcon(
@@ -494,7 +494,7 @@ export const CodeIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CodeIcon"
+  "CodeIcon",
 );
 
 export const UserCircleIcon = createSvgIcon(
@@ -524,7 +524,7 @@ export const UserCircleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "UserCircleIcon"
+  "UserCircleIcon",
 );
 
 export const TitleIcon = createSvgIcon(
@@ -542,7 +542,7 @@ export const TitleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "TitleIcon"
+  "TitleIcon",
 );
 
 export const StarIcon = createSvgIcon(
@@ -560,7 +560,7 @@ export const StarIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "StarIcon"
+  "StarIcon",
 );
 
 export const StarRectangleIcon = createSvgIcon(
@@ -584,7 +584,7 @@ export const StarRectangleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "StarRectangleIcon"
+  "StarRectangleIcon",
 );
 
 export const PipetteIcon = createSvgIcon(
@@ -608,7 +608,7 @@ export const PipetteIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PipetteIcon"
+  "PipetteIcon",
 );
 
 export const NavigationIcon = createSvgIcon(
@@ -626,7 +626,7 @@ export const NavigationIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "NavigationIcon"
+  "NavigationIcon",
 );
 
 export const MessageIcon = createSvgIcon(
@@ -662,7 +662,7 @@ export const MessageIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "MessageIcon"
+  "MessageIcon",
 );
 
 export const LinkIcon = createSvgIcon(
@@ -692,7 +692,7 @@ export const LinkIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "LinkIcon"
+  "LinkIcon",
 );
 
 export const IosSmartphoneIcon = createSvgIcon(
@@ -716,7 +716,7 @@ export const IosSmartphoneIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "IosSmartphoneIcon"
+  "IosSmartphoneIcon",
 );
 
 export const HomeIcon = createSvgIcon(
@@ -740,7 +740,7 @@ export const HomeIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "HomeIcon"
+  "HomeIcon",
 );
 
 export const FIleTextIcon = createSvgIcon(
@@ -782,7 +782,7 @@ export const FIleTextIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "FIleTextIcon"
+  "FIleTextIcon",
 );
 
 export const ImageIcon = createSvgIcon(
@@ -812,7 +812,7 @@ export const ImageIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ImageIcon"
+  "ImageIcon",
 );
 
 export const InfoIcon = createSvgIcon(
@@ -842,7 +842,7 @@ export const InfoIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "InfoIcon"
+  "InfoIcon",
 );
 
 export const CrossIcon = createSvgIcon(
@@ -866,7 +866,7 @@ export const CrossIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CrossIcon"
+  "CrossIcon",
 );
 
 export const PinIcon = createSvgIcon(
@@ -882,7 +882,7 @@ export const PinIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PinIcon"
+  "PinIcon",
 );
 
 export const KeyIcon = createSvgIcon(
@@ -906,7 +906,7 @@ export const KeyIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "KeyIcon"
+  "KeyIcon",
 );
 
 export const CopyIcon = createSvgIcon(
@@ -930,7 +930,7 @@ export const CopyIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CopyIcon"
+  "CopyIcon",
 );
 
 export const CheckCircleIcon = createSvgIcon(
@@ -954,7 +954,7 @@ export const CheckCircleIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CheckCircleIcon"
+  "CheckCircleIcon",
 );
 
 export const PinFillIcon = createSvgIcon(
@@ -970,7 +970,7 @@ export const PinFillIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PinFillIcon"
+  "PinFillIcon",
 );
 
 export const JsonCodeIcon = createSvgIcon(
@@ -1006,7 +1006,7 @@ export const JsonCodeIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "JsonCodeIcon"
+  "JsonCodeIcon",
 );
 
 export const CalendarIcon = createSvgIcon(
@@ -1048,7 +1048,7 @@ export const CalendarIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "CalendarIcon"
+  "CalendarIcon",
 );
 
 export const FilterIcon = createSvgIcon(
@@ -1096,7 +1096,43 @@ export const FilterIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "FilterIcon"
+  "FilterIcon",
+);
+
+export const UserAddIcon = createSvgIcon(
+  <svg
+    width="25"
+    height="24"
+    viewBox="0 0 25 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M10.8516 4C9.19471 4 7.85156 5.34315 7.85156 7C7.85156 8.65685 9.19471 10 10.8516 10C12.5084 10 13.8516 8.65685 13.8516 7C13.8516 5.34315 12.5084 4 10.8516 4ZM5.85156 7C5.85156 4.23858 8.09014 2 10.8516 2C13.613 2 15.8516 4.23858 15.8516 7C15.8516 9.76142 13.613 12 10.8516 12C8.09014 12 5.85156 9.76142 5.85156 7Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M4.69578 17.6976C5.59856 16.2198 7.40819 15 10.8506 15C11.9521 15 12.8864 15.1249 13.6773 15.3431L14.3506 13.4568C13.3358 13.1607 12.1718 13 10.8506 13C6.88748 13 4.33833 14.4462 2.98903 16.655C2.15158 18.0259 2.47211 19.4526 3.32828 20.4474C4.1496 21.4018 5.47291 22 6.85064 22H13.6773V20H6.85064C6.01923 20 5.26261 19.629 4.84419 19.1428C4.46062 18.6971 4.3816 18.212 4.69578 17.6976Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M14.5 18C14.5 17.4477 14.9477 17 15.5 17H21.5C22.0523 17 22.5 17.4477 22.5 18C22.5 18.5523 22.0523 19 21.5 19H15.5C14.9477 19 14.5 18.5523 14.5 18Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M18.5 14C19.0523 14 19.5 14.4477 19.5 15L19.5 21C19.5 21.5523 19.0523 22 18.5 22C17.9477 22 17.5 21.5523 17.5 21L17.5 15C17.5 14.4477 17.9477 14 18.5 14Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "UserAddIcon",
 );
 
 export const PlayIcon = createSvgIcon(
@@ -1112,7 +1148,7 @@ export const PlayIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "PlayIcon"
+  "PlayIcon",
 );
 
 export const MaxMinSizeIcon = createSvgIcon(
@@ -1136,7 +1172,7 @@ export const MaxMinSizeIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "MaxMinSizeIcon"
+  "MaxMinSizeIcon",
 );
 
 export const ArrowUpIcon = createSvgIcon(
@@ -1154,7 +1190,7 @@ export const ArrowUpIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "ArrowUpIcon"
+  "ArrowUpIcon",
 );
 
 export const HeartIcon = createSvgIcon(
@@ -1172,7 +1208,7 @@ export const HeartIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "HeartIcon"
+  "HeartIcon",
 );
 
 export const LoginIcon = createSvgIcon(
@@ -1202,7 +1238,7 @@ export const LoginIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "LoginIcon"
+  "LoginIcon",
 );
 
 export const MailCheckIcon = createSvgIcon(
@@ -1232,7 +1268,7 @@ export const MailCheckIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "MailCheckIcon"
+  "MailCheckIcon",
 );
 
 export const BarChartIcon = createSvgIcon(
@@ -1268,7 +1304,7 @@ export const BarChartIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "BarChartIcon"
+  "BarChartIcon",
 );
 
 export const RoundChartIcon = createSvgIcon(
@@ -1292,7 +1328,7 @@ export const RoundChartIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "RoundChartIcon"
+  "RoundChartIcon",
 );
 
 export const BarChartSendIcon = createSvgIcon(
@@ -1340,7 +1376,7 @@ export const BarChartSendIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "BarChartSendIcon"
+  "BarChartSendIcon",
 );
 
 export const UsersIcon = createSvgIcon(
@@ -1376,5 +1412,179 @@ export const UsersIcon = createSvgIcon(
       fill="currentColor"
     />
   </svg>,
-  "UsersIcon"
+  "UsersIcon",
+);
+
+export const UserRectangleIcon = createSvgIcon(
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M2 7C2 4.23858 4.23858 2 7 2H17C19.7614 2 22 4.23858 22 7V17C22 19.7614 19.7614 22 17 22H7C4.23858 22 2 19.7614 2 17V7ZM7 4C5.34315 4 4 5.34315 4 7V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V7C20 5.34315 18.6569 4 17 4H7Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 8C10.8954 8 10 8.89543 10 10C10 11.1046 10.8954 12 12 12C13.1046 12 14 11.1046 14 10C14 8.89543 13.1046 8 12 8ZM8 10C8 7.79086 9.79086 6 12 6C14.2091 6 16 7.79086 16 10C16 12.2091 14.2091 14 12 14C9.79086 14 8 12.2091 8 10Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 17C9.44286 17 7.25694 18.6001 6.39366 20.8572L4.52563 20.1428C5.6752 17.1371 8.58679 15 12 15C15.4132 15 18.3248 17.1371 19.4744 20.1428L17.6064 20.8572C16.7431 18.6001 14.5572 17 12 17Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "UserRectangleIcon",
+);
+
+export const TypographyIcon = createSvgIcon(
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M10.0375 4.35265C10.7245 2.54943 13.2754 2.54945 13.9624 4.35266L19.6145 19.1896C19.8111 19.7057 19.5521 20.2834 19.036 20.4801C18.5199 20.6767 17.9422 20.4177 17.7456 19.9016L15.5013 14.0105H8.49855L6.25434 19.9016C6.05773 20.4177 5.47996 20.6767 4.96385 20.48C4.44775 20.2834 4.18875 19.7057 4.38536 19.1896L10.0375 4.35265ZM9.26046 12.0105H14.7394L12.0934 5.06465C12.0796 5.02832 12.0658 5.01929 12.0601 5.01559C12.0492 5.00847 12.0285 5.00024 11.9999 5.00024C11.9714 5.00024 11.9507 5.00847 11.9397 5.01558C11.934 5.01929 11.9203 5.02832 11.9065 5.06464L9.26046 12.0105Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "TypographyIcon",
+);
+
+export const SyncIcon = createSvgIcon(
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 2C12.5523 2 13 2.44772 13 3L13 6C13 6.55228 12.5523 7 12 7C11.4477 7 11 6.55228 11 6L11 3C11 2.44772 11.4477 2 12 2Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M17 12C17 11.4477 17.4477 11 18 11H21C21.5523 11 22 11.4477 22 12C22 12.5523 21.5523 13 21 13H18C17.4477 13 17 12.5523 17 12Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 22C11.4477 22 11 21.5523 11 21L11 18C11 17.4477 11.4477 17 12 17C12.5523 17 13 17.4477 13 18L13 21C13 21.5523 12.5523 22 12 22Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M2 12C2 11.4477 2.44772 11 3 11L6 11C6.55228 11 7 11.4477 7 12C7 12.5523 6.55228 13 6 13L3 13C2.44772 13 2 12.5523 2 12Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M4.92879 4.92888C5.31931 4.53836 5.95248 4.53836 6.343 4.92888L8.46432 7.0502C8.85484 7.44072 8.85484 8.07389 8.46432 8.46441C8.0738 8.85494 7.44063 8.85494 7.05011 8.46441L4.92879 6.34309C4.53826 5.95257 4.53826 5.3194 4.92879 4.92888Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M19.0709 4.92888C19.4614 5.3194 19.4614 5.95257 19.0709 6.34309L16.9495 8.46441C16.559 8.85494 15.9258 8.85494 15.5353 8.46441C15.1448 8.07389 15.1448 7.44072 15.5353 7.0502L17.6566 4.92888C18.0472 4.53836 18.6803 4.53836 19.0709 4.92888Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M19.0712 19.0711C18.6807 19.4616 18.0475 19.4616 17.657 19.0711L15.5357 16.9498C15.1452 16.5593 15.1452 15.9261 15.5357 15.5356C15.9262 15.1451 16.5594 15.1451 16.9499 15.5356L19.0712 17.6569C19.4617 18.0474 19.4617 18.6806 19.0712 19.0711Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M4.92912 19.071C4.5386 18.6804 4.5386 18.0473 4.92912 17.6568L7.05044 15.5354C7.44097 15.1449 8.07413 15.1449 8.46466 15.5354C8.85518 15.926 8.85518 16.5591 8.46466 16.9496L6.34334 19.071C5.95281 19.4615 5.31965 19.4615 4.92912 19.071Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "SyncIcon",
+);
+
+export const MoreIcon = createSvgIcon(
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 17C13.1046 17 14 17.8954 14 19C14 20.1046 13.1046 21 12 21C10.8954 21 10 20.1046 10 19C10 17.8954 10.8954 17 12 17Z"
+      fill="currentColor"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 3C13.1046 3 14 3.89543 14 5C14 6.10457 13.1046 7 12 7C10.8954 7 10 6.10457 10 5C10 3.89543 10.8954 3 12 3Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "MoreIcon",
+);
+
+export const DashboardIcon = createSvgIcon(
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M2 6C2 3.79086 3.79086 2 6 2H7C9.20914 2 11 3.79086 11 6V7C11 9.20914 9.20914 11 7 11H6C3.79086 11 2 9.20914 2 7V6ZM6 4C4.89543 4 4 4.89543 4 6V7C4 8.10457 4.89543 9 6 9H7C8.10457 9 9 8.10457 9 7V6C9 4.89543 8.10457 4 7 4H6ZM13 6C13 3.79086 14.7909 2 17 2H18C20.2091 2 22 3.79086 22 6V7C22 9.20914 20.2091 11 18 11H17C14.7909 11 13 9.20914 13 7V6ZM17 4C15.8954 4 15 4.89543 15 6V7C15 8.10457 15.8954 9 17 9H18C19.1046 9 20 8.10457 20 7V6C20 4.89543 19.1046 4 18 4H17ZM2 17C2 14.7909 3.79086 13 6 13H7C9.20914 13 11 14.7909 11 17V18C11 20.2091 9.20914 22 7 22H6C3.79086 22 2 20.2091 2 18V17ZM6 15C4.89543 15 4 15.8954 4 17V18C4 19.1046 4.89543 20 6 20H7C8.10457 20 9 19.1046 9 18V17C9 15.8954 8.10457 15 7 15H6ZM13 17C13 14.7909 14.7909 13 17 13H18C20.2091 13 22 14.7909 22 17V18C22 20.2091 20.2091 22 18 22H17C14.7909 22 13 20.2091 13 18V17ZM17 15C15.8954 15 15 15.8954 15 17V18C15 19.1046 15.8954 20 17 20H18C19.1046 20 20 19.1046 20 18V17C20 15.8954 19.1046 15 18 15H17Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "DashboardIcon",
+);
+
+export const CircleIcon = createSvgIcon(
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 17C14.7614 17 17 14.7614 17 12C17 9.23858 14.7614 7 12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17ZM12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19Z"
+      fill="currentColor"
+    />
+  </svg>,
+  "CircleIcon",
 );

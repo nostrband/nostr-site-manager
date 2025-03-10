@@ -41,12 +41,12 @@ const Publishing = () => {
 
   const title =
     state === "done"
-      ? "Your website is ready!"
-      : "Please wait as we prepare your website ...";
+      ? "Your site is ready!"
+      : "Please wait as we prepare your site ...";
   const description =
     state === "done" ? (
       <>
-        You can manage your website settings in your{" "}
+        You can manage your site settings in your{" "}
         <Link href={`/admin/${siteId}`}>dashboard</Link>.
       </>
     ) : (
@@ -137,7 +137,7 @@ const Publishing = () => {
           size="large"
           variant="contained"
         >
-          Open website
+          Open site
         </Button>
       )}
     </StyledWrap>

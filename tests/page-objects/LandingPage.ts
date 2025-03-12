@@ -11,7 +11,7 @@ export class LandingPage {
   constructor(page: Page) {
     this.page = page;
     this.mySitesButton = page.getByText("My sites");
-    this.loginButton = page.getByText("Login");
+    this.loginButton = page.getByRole("button", { name: "Login" });
     this.getStartedButton = page.getByText("Get started");
     this.themesSection = page.locator("#themes-onboarding");
     this.themeElementImage = page.locator('img[alt="London"]');

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { LandingPage } from "./LandingPage";
+import { LandingPage } from "./page-objects/LandingPage";
 
 test.describe("Landing Page Tests without auth user", () => {
   let landingPage: LandingPage;

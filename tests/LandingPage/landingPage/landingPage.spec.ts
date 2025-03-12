@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { LandingPage } from "./LandingPage";
+import { LandingPage } from "./page-objects/LandingPage";
 
 test.describe("Landing Page Tests", () => {
   let landingPage: LandingPage;
@@ -56,6 +56,7 @@ test.describe("Landing Page Tests", () => {
   });
 
   test("Full page", async ({ page }) => {
+    await page.reload();
     await expect(landingPage.mySitesButton).toBeVisible();
     const screenshot = await page.screenshot({ fullPage: true });
     expect(screenshot).toMatchSnapshot("landing-page.png");

@@ -17,6 +17,10 @@ export class LandingPage {
     this.themeElementImage = page.locator('img[alt="London"]');
   }
 
+  async clickLoginButton() {
+    await this.loginButton.click();
+  }
+
   async navigate() {
     await this.page.goto("http://localhost:3000");
   }

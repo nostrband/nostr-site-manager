@@ -14,12 +14,6 @@ export const StyledTitle = styled(PageTitle)(({ theme }) => ({
   },
 }));
 
-export const StyledWrapDashboard = styled(Box)(() => ({
-  maxWidth: "348px",
-  width: "100%",
-  margin: "0 auto",
-}));
-
 export const StyledActions = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",

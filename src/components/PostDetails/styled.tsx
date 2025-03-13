@@ -1,6 +1,5 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box } from "@mui/material";
 import { PageTitle } from "@/components/shared/styled";
 
 export const StyledTitlePage = styled(PageTitle)(({ theme }) => ({
@@ -20,10 +19,4 @@ export const StyledTitlePage = styled(PageTitle)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
     paddingTop: 16,
   },
-}));
-
-export const StyledWrap = styled(Box)(() => ({
-  maxWidth: 720,
-  margin: "0 auto",
-  paddingBottom: "24px",
 }));

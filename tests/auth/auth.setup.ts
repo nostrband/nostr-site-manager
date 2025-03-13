@@ -2,10 +2,6 @@ import { test as setup, expect } from "@playwright/test";
 import { LandingPage } from "../page-objects/LandingPage";
 import path from "path";
 
-// user-01
-// test-user-01@nsec.app
-// 6f3gr72drg28
-
 const authFile = path.join(__dirname, "../../playwright/.auth/user.json");
 
 setup("Register user and save credentials to the storage", async ({ page }) => {

@@ -100,11 +100,6 @@ export const Dashboard = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <AnalyticsSite
-                siteId={getSite.id}
-                isSendStats={getSite.sendStats}
-              />
-
               <StyledWrapMenu>
                 <CardFeatureContent title="Menu">
                   <Button
@@ -171,6 +166,12 @@ export const Dashboard = () => {
                   )}
                 </CardFeatureContent>
               </StyledWrapMenu>
+
+              <AnalyticsSite
+                siteId={getSite.id}
+                isSendStats={getSite.sendStats}
+              />
+
             </Grid>
           </Grid>
         )}

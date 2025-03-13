@@ -178,7 +178,7 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               value="completed"
             >
               {isEmptyCompleted && (
-                <StyledEmptyTasks variant="body2">Empty</StyledEmptyTasks>
+                <StyledEmptyTasks variant="body2">No completed tasks yet</StyledEmptyTasks>
               )}
 
               {completedTasks.map((el, i) => {

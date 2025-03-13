@@ -11,7 +11,9 @@
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test-update": "npx playwright test --update-snapshots"
+    "test-update": "npx playwright test --update-snapshots",
+    "test-setup": "npx playwright test --project=setup",
+    "test-chromium": "npx playwright test --project=chromium"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

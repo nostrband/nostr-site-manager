@@ -3,6 +3,8 @@ import { LandingPage } from "../page-objects/LandingPage";
 
 test.describe("Landing Page Tests without auth user", () => {
   let landingPage: LandingPage;
+  
+  test.use({ storageState: { cookies: [], origins: [] } });
 
   test.beforeEach(async ({ page }) => {
     landingPage = new LandingPage(page);

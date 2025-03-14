@@ -38,7 +38,7 @@ export const LoginEnterCode = ({
 
       try {
         const otpData = await axios.get(
-          `https://api.npubpro.com/authotp?pubkey=${pubkey}&code=${code}`,
+          `https://api.npubpro.com/authotp?pubkey=${pubkey}&code=${code}`
         );
         await loginOTP(pubkey, otpData.data);
         router.push("/onboarding/create-site");
@@ -81,6 +81,7 @@ export const LoginEnterCode = ({
 
   const handleResetCode = async () => {
     try {
+      handleChangeOtp("");
       await axios.get(`https://api.npubpro.com/otp?pubkey=${pubkey}`);
 
       enqueueSnackbar("New code send!", {

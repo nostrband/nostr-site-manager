@@ -51,8 +51,9 @@ export const LoginDM = ({
         setLoading(true);
         const { npub } = values;
 
-        if (yup.string().email().isValidSync(npub)) {
-          try {
+        let pubkey = "";
+        try {
+          if (yup.string().email().isValidSync(npub)) {
             const [name, domain] = npub.split("@");
 
             if (!name || !domain) {
@@ -60,43 +61,29 @@ export const LoginDM = ({
             }
 
             const res = await axios.get(
-              `https://${domain}/.well-known/nostr.json?name=${name}`,
+              `https://${domain}/.well-known/nostr.json?name=${name}`
             );
-
-            showEnterCode(res.data.names[name]);
-          } catch (e) {
-            enqueueSnackbar("Error bad name", {
-              autoHideDuration: 3000,
-              variant: "error",
-              anchorOrigin: {
-                horizontal: "left",
-                vertical: "bottom",
-              },
-            });
-          } finally {
-            setLoading(false);
-          }
-        } else if (String(npub).startsWith("npub")) {
-          try {
+            pubkey = res.data.names[name];
+          } else {
             const decoded = nip19.decode(npub);
-
-            await axios.get(
-              `https://api.npubpro.com/otp?pubkey=${decoded.data}`,
-            );
-
-            showEnterCode(decoded.data as string);
-          } catch (error) {
-            enqueueSnackbar("Error bad name", {
-              autoHideDuration: 3000,
-              variant: "error",
-              anchorOrigin: {
-                horizontal: "left",
-                vertical: "bottom",
-              },
-            });
-          } finally {
-            setLoading(false);
+            if (decoded.type !== "npub") throw new Error("Invalid npub");
+            pubkey = decoded.data as string;
           }
+
+          await axios.get(`https://api.npubpro.com/otp?pubkey=${pubkey}`);
+
+          showEnterCode(pubkey);
+        } catch (e) {
+          enqueueSnackbar("Error bad name", {
+            autoHideDuration: 3000,
+            variant: "error",
+            anchorOrigin: {
+              horizontal: "left",
+              vertical: "bottom",
+            },
+          });
+        } finally {
+          setLoading(false);
         }
       },
     });
@@ -117,7 +104,7 @@ export const LoginDM = ({
 
   const handleAdvanced = () => {
     document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "welcome-login" }),
+      new CustomEvent("nlLaunch", { detail: "welcome-login" })
     );
   };
 

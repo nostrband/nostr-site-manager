@@ -28,10 +28,10 @@ interface IOther extends IBaseSetting {
   postsPerPage: string;
   contentActionMain: string;
   selectedContentActions: string[];
-  signupStartNjump: boolean;
+  signinMode: string;
   handleOptionsMainCallAction: (value: string) => void;
   handleChangeContentActions: (value: string[]) => void;
-  handleSignupStartNjump: (value: boolean) => void;
+  handleOptionsSigninMode: (value: string) => void;
 }
 
 const options: { [name: string]: string } = {
@@ -58,6 +58,12 @@ const mainOptions = [
   "dm",
 ];
 
+const signinOptions: { [name: string]: string } = {
+  default: "Default",
+  email: "Email",
+  nstart: "Start.Njump.Me",
+};
+
 export const Other = memo(
   ({
     postsPerPage,
@@ -68,8 +74,8 @@ export const Other = memo(
     selectedContentActions,
     handleOptionsMainCallAction,
     handleChangeContentActions,
-    signupStartNjump,
-    handleSignupStartNjump,
+    signinMode,
+    handleOptionsSigninMode,
     isLoading,
   }: IOther) => {
     const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
@@ -105,10 +111,10 @@ export const Other = memo(
       handleOptionsMainCallAction(value);
     };
 
-    const handleChangeSignupStartNjump = (
-      event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-      handleSignupStartNjump(event.target.checked);
+    const handleChangeSigninMode = (event: SelectChangeEvent<string>) => {
+      const { value } = event.target;
+
+      handleOptionsSigninMode(value === 'default' ? '' : value);
     };
 
     return (
@@ -189,21 +195,25 @@ export const Other = memo(
             </Select>
           </FormControl>
 
-          <FormControlLabel
-            disabled={!isEdit}
-            control={
-              <Switch
-                color="decorate"
-                checked={signupStartNjump}
-                onChange={handleChangeSignupStartNjump}
-              />
-            }
-            label={
-              signupStartNjump
-                ? "Signup with Start.Njump.me ON"
-                : "Signup with Start.Njump.me OFF"
-            }
-          />
+          <FormControl disabled={!isEdit} fullWidth size={sizeField}>
+            <InputLabel id="signin-mode-label">
+              Sign-in mode
+            </InputLabel>
+            <Select
+              labelId="signin-mode-label"
+              id="signin-mode"
+              value={signinMode || 'default'}
+              label="Sign-in mode"
+              onChange={handleChangeSigninMode}
+            >
+              {Object.entries(signinOptions).map(([key, name]) => (
+                <MenuItem key={key} value={key}>
+                  <ListItemText primary={name} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
         </StyledFormFields>
       </StyledSettingBlock>
     );

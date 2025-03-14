@@ -91,7 +91,7 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   contentActionMain: "",
   contentActions: [],
   autoSubmit: false,
-  signupStartNjump: false,
+  signinMode: '',
   sendStats: false,
   sendStatsDev: false,
 };
@@ -239,9 +239,9 @@ export const SettingPage = () => {
     [setFieldValue],
   );
 
-  const handleChangeSignupStartNjump = useCallback(
-    (value: boolean) => {
-      setFieldValue("signupStartNjump", value);
+  const handleChangeSigninMode = useCallback(
+    (value: string) => {
+      setFieldValue("signinMode", value);
     },
     [setFieldValue],
   );
@@ -458,8 +458,8 @@ export const SettingPage = () => {
               handleChange={handleChange}
               submitForm={submitForm}
               selectedContentActions={values.contentActions}
-              signupStartNjump={values.signupStartNjump}
-              handleSignupStartNjump={handleChangeSignupStartNjump}
+              signinMode={values.signinMode}
+              handleOptionsSigninMode={handleChangeSigninMode}
               isLoading={isLoading}
             />
 

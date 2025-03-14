@@ -82,7 +82,8 @@
         const sub = relay.subscribe([
           {
             kinds: [1995],
-            "#p": [pubkey]
+            "#p": [pubkey],
+            "limit": 5000,
           },
         ], {
           async onevent(event) {

@@ -64,7 +64,7 @@ export type ReturnSettingsSiteDataType = {
   postsPerPage: string;
   contentActionMain: string;
   contentActions: string[];
-  signupStartNjump: boolean;
+  signinMode: string;
 
   sendStats: boolean;
   sendStatsDev: boolean;

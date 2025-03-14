@@ -73,7 +73,7 @@ const MOCK_DATA_OBJ: ReturnSettingsSiteDataType = {
   postsPerPage: "",
   contentActionMain: "",
   contentActions: [""],
-  signupStartNjump: false,
+  signinMode: '',
   sendStats: false,
   sendStatsDev: false,
 };

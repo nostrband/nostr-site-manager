@@ -23,6 +23,7 @@ import { validationSchemaLoginDM } from "@/validations/rules";
 import * as yup from "yup";
 import { nip19 } from "nostr-tools";
 import axios from "axios";
+import { addOnAuth } from "@/services/nostr/nostr";
 
 interface LoginDMValues {
   npub: string;
@@ -102,10 +103,16 @@ export const LoginDM = ({
     router.back();
   };
 
-  const handleAdvanced = () => {
+  const handleAdvanced = async () => {
     document.dispatchEvent(
       new CustomEvent("nlLaunch", { detail: "welcome-login" })
     );
+    await new Promise<void>((ok) => {
+      addOnAuth(async (type: string) => {
+        if (type !== "logout") ok();
+      });
+    });
+    router.push("/onboarding/create-site");
   };
 
   const isError = touched.npub && Boolean(errors.npub);

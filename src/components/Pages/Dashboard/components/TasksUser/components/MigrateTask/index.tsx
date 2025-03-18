@@ -53,12 +53,13 @@ export const MigrateTask = ({ siteId }: { siteId: string }) => {
       />
 
       <Dialog open={isLoadingConnectKeys}>
-        <DialogTitle>Please wait for 30 seconds...</DialogTitle>
-        <DialogContent>
+        <DialogTitle>
+          {" "}
           <SpinerWrap>
             <SpinerCircularProgress />
           </SpinerWrap>
-        </DialogContent>
+        </DialogTitle>
+        <DialogContent>Please wait for 30 seconds...</DialogContent>
       </Dialog>
     </>
   );

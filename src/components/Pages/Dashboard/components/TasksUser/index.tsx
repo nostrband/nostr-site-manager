@@ -14,14 +14,10 @@ import { Tab } from "@mui/material";
 import { CheckCircleIcon, FIleTextIcon } from "@/components/Icons";
 import { ItemTask } from "./components/ItemTask";
 import { useRouter } from "next/navigation";
-import { useSnackbar } from "notistack";
-import {
-  isNeedMigrateKey,
-  migrateToConnectedKey,
-} from "@/services/nostr/migrate";
-import { ItemButton } from "./components/ItemButton";
+import { isNeedMigrateKey } from "@/services/nostr/migrate";
 import { TaskType } from "@/types";
 import { fetchTasks, setDoneTask } from "@/services/nostr/tasks";
+import { MigrateTask } from "./components/MigrateTask";
 
 interface TasksUserProps {
   siteId: string;
@@ -31,9 +27,6 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isLoading, setLoading] = useState(true);
   const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
-
-  const [isLoadingConnectKeys, setLoadingConnectKeys] = useState(false);
 
   const todoTasks = tasks.filter((el) => !el.isCompleted);
   const completedTasks = tasks.filter((el) => el.isCompleted);
@@ -55,7 +48,7 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
 
   const handleChange = (
     _: React.SyntheticEvent,
-    newValue: "todo" | "completed",
+    newValue: "todo" | "completed"
   ) => {
     setValue(newValue);
   };
@@ -77,40 +70,6 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
       setDoneTask(siteId, idTask);
       const linkSettings = `/admin/${siteId}/settings?idTask=${idTask}`;
       router.push(linkSettings);
-    }
-  };
-
-  const handleConnectKeys = async () => {
-    setLoadingConnectKeys(true);
-
-    try {
-      const newSiteId = await migrateToConnectedKey(siteId);
-      enqueueSnackbar("Keys connected!", {
-        autoHideDuration: 3000,
-        variant: "success",
-        anchorOrigin: {
-          horizontal: "right",
-          vertical: "bottom",
-        },
-      });
-
-      setTimeout(() => {
-        setLoadingConnectKeys(false);
-
-        router.push(`/admin/${newSiteId}`);
-      }, 500);
-    } catch (e: any) {
-      setLoadingConnectKeys(false);
-
-      console.log("error", e);
-      enqueueSnackbar("Error: " + e.toString(), {
-        autoHideDuration: 3000,
-        variant: "error",
-        anchorOrigin: {
-          horizontal: "right",
-          vertical: "bottom",
-        },
-      });
     }
   };
 
@@ -155,12 +114,7 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               isGutter={isGutter}
               value="todo"
             >
-              {isNeedMigrateKey(siteId) && (
-                <ItemButton
-                  isLoading={isLoadingConnectKeys}
-                  onClick={handleConnectKeys}
-                />
-              )}
+              {isNeedMigrateKey(siteId) && <MigrateTask siteId={siteId} />}
 
               {isEmptyTodo && (
                 <StyledEmptyTasks variant="body2">
@@ -178,7 +132,9 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               value="completed"
             >
               {isEmptyCompleted && (
-                <StyledEmptyTasks variant="body2">No completed tasks yet</StyledEmptyTasks>
+                <StyledEmptyTasks variant="body2">
+                  No completed tasks yet
+                </StyledEmptyTasks>
               )}
 
               {completedTasks.map((el, i) => {

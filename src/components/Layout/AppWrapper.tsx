@@ -7,7 +7,7 @@ import { BodyWrapper } from "./MainContent";
 import { Notification } from "../Notification";
 
 let addedHandlers = false;
-export const AppWrapper = ({ children }: { children: ReactNode }) => {
+const AppWrapper = ({ children }: { children: ReactNode }) => {
   const [authed, setAuthed] = useState({
     isAuth: !!userPubkey,
     isLoading: false,
@@ -73,3 +73,5 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+
+export default AppWrapper;

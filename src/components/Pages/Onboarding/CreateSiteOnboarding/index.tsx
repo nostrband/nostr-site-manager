@@ -38,7 +38,7 @@ const CreateSiteOnboarding = () => {
   const createSiteHandler = async (
     author: string,
     type: SiteType,
-    kinds: number[]
+    kinds: number[],
   ) => {
     if (!author) author = userPubkey;
 

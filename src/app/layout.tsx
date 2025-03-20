@@ -1,7 +1,11 @@
 import { ReactNode } from "react";
 import { ThemeWrapper } from "@/mui/ThemeWrapper";
-import { AppWrapper } from "@/components/Layout/AppWrapper";
 import Providers from "@/utils/tanstack/providers.client";
+import dynamic from "next/dynamic";
+
+const AppWrapper = dynamic(() => import("../components/Layout/AppWrapper"), {
+  ssr: false,
+});
 
 export const metadata = {
   title: "Npub.pro",

@@ -23,17 +23,6 @@ import { prefetchThemes } from "@/services/nostr/themes";
 import { ExpandMoreTwoTone as ExpandMoreTwoToneIcon } from "@mui/icons-material";
 import { ModalHashtagsKinds } from "@/components/ModalHashtagsKinds";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 export const PreviewNavigation = ({
   onContentSettings,
   onUseTheme,
@@ -200,7 +189,9 @@ export const PreviewNavigation = ({
         const meta = JSON.parse(profile.content);
         username = meta.display_name || meta.name || username;
         avatar = meta.picture || "";
-      } catch {}
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 
@@ -227,9 +218,7 @@ export const PreviewNavigation = ({
   };
 
   const kindsNames = kindsSelected.map((value) => {
-    // @ts-ignore
     if (kinds[value]) {
-      // @ts-ignore
       return kinds[value];
     }
 

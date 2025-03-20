@@ -108,7 +108,7 @@ export const StyledIconImage = styled(Avatar)(({ theme }) => ({
   },
 }));
 
-export const SearchSettingsFieldWrap = styled(Box)(({ theme }) => ({
+export const SearchSettingsFieldWrap = styled(Box)(() => ({
   paddingBottom: "24px",
 }));
 

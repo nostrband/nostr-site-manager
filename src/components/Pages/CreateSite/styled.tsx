@@ -1,14 +1,7 @@
 "use client";
 import { styled } from "@mui/material/styles";
 import { StyledWrapOnboardingChildren } from "@/components/shared/styled";
-import {
-  Avatar,
-  Box,
-  Button,
-  ButtonProps,
-  FormControl,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Button, ButtonProps, Typography } from "@mui/material";
 import { forwardRef } from "react";
 
 interface ICollapseButton {

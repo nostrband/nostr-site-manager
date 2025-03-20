@@ -50,7 +50,7 @@ export const StyledAppBar = styled(
   },
 }));
 
-export const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+export const StyledToolbar = styled(Toolbar)(() => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",

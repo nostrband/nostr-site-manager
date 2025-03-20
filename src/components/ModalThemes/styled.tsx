@@ -1,11 +1,5 @@
 import { styled } from "@mui/material/styles";
-import {
-  Typography,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Box,
-} from "@mui/material";
+import { Typography, Dialog, DialogContent, Box } from "@mui/material";
 
 export const StyledTitle = styled(Typography)(() => ({
   fontWeight: "bold",

@@ -49,7 +49,9 @@ export const ModalAuthor = ({
   if (author) {
     try {
       meta = JSON.parse(author.content);
-    } catch {}
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const fetchData = async (query: string) => {
@@ -74,7 +76,7 @@ export const ModalAuthor = ({
         .filter((p) => !!p);
       console.log("options", options);
       setLoading(false);
-      // @ts-ignore
+
       setOptions(options);
     } catch (error) {
       setLoading(false);

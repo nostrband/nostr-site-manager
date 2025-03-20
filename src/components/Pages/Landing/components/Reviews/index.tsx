@@ -3,9 +3,6 @@ import {
   StyledWrap,
 } from "@/components/Pages/Landing/components/Benefits/styled";
 import { Container, Grid } from "@mui/material";
-import { SocialBenefit } from "@/components/Pages/Landing/components/SocialBenefit";
-import { SeoBenefit } from "@/components/Pages/Landing/components/SeoBenefit";
-import { ConversionBenefit } from "@/components/Pages/Landing/components/ConversionBenefit";
 import Script from "next/script";
 
 export const Reviews = () => {

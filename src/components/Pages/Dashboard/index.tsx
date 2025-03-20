@@ -171,7 +171,6 @@ export const Dashboard = () => {
                 siteId={getSite.id}
                 isSendStats={getSite.sendStats}
               />
-
             </Grid>
           </Grid>
         )}

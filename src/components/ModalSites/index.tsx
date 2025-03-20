@@ -105,7 +105,7 @@ export const ModalSites = ({
             title={<b>{getSite?.title || getSite?.name}</b>}
             subheader={<Box>{getSite?.url}</Box>}
           />
-          {Boolean(getSite?.image) ? (
+          {getSite?.image ? (
             <CardMedia
               component="img"
               height="250"

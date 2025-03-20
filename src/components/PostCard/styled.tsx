@@ -306,7 +306,7 @@ export const StyledAddButton = styled(
       return <LoadingButton ref={ref} {...omitProps} />;
     },
   ),
-)(({ isSending, isWaiting, isAdded, theme }) => ({
+)(({ isSending, isWaiting, isAdded }) => ({
   width: "88px",
   height: "32px",
   lineHeight: "32px",

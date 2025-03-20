@@ -68,7 +68,9 @@ export const WebsiteAddress = memo(
       try {
         const u = new URL(url);
         oldDomain = u.hostname;
-      } catch {}
+      } catch (e) {
+        console.error(e);
+      }
 
       if (newDomain === oldDomain || !newDomain.endsWith("." + NPUB_PRO_DOMAIN))
         return;

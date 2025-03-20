@@ -28,7 +28,7 @@ export const StyledGroupDomain = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const StyledWrapDomainDark = styled(Box)(({ theme }) => ({
+export const StyledWrapDomainDark = styled(Box)(() => ({
   maxWidth: "100%",
   display: "flex",
   alignItems: "center",

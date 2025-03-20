@@ -1,5 +1,5 @@
 "use client";
-import { Alert, Container, Grid } from "@mui/material";
+import { Alert, Container } from "@mui/material";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { Head } from "./components/Head";
 import { Filter, FilterRef } from "./components/Filter";

@@ -10,7 +10,11 @@ interface IThemePreview {
   alt?: string;
 }
 
-export const ThemePreview = ({ preview, alt = '', handleNavigate }: IThemePreview) => {
+export const ThemePreview = ({
+  preview,
+  alt = "",
+  handleNavigate,
+}: IThemePreview) => {
   return (
     <StyledWrapPreview>
       <StyledButtonPreview
@@ -21,12 +25,7 @@ export const ThemePreview = ({ preview, alt = '', handleNavigate }: IThemePrevie
       >
         Preview
       </StyledButtonPreview>
-      <Image
-        src={preview}
-        alt={alt}
-        width={500}
-        height={500}
-      />
+      <Image src={preview} alt={alt} width={500} height={500} />
     </StyledWrapPreview>
   );
 };

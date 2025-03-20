@@ -23,9 +23,7 @@ import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { enqueueSnackbar } from "notistack";
 import {
-  fetchCertDomain,
   fetchCertDomainStatus,
-  fetchAttachDomain,
   fetchAttachDomainStatus,
 } from "@/services/nostr/api";
 import { DomainInfo, parseDomain } from "@/utils/web/domain-suffixes";

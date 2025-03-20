@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import { CustomDomainFormView } from "../../../CustomDomainFormView";
 import { useState } from "react";
 import { StyledDomain, StyledItemDomain } from "./styled";

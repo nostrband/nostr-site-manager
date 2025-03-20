@@ -1,6 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 export const StyledWrapper = styled(Box)(({ theme }) => ({
   display: "flex",

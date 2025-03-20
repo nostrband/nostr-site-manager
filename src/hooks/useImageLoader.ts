@@ -10,7 +10,7 @@ function useImageLoader(src: string | null) {
   if (src?.startsWith(PLAY_FEATURE_BUTTON_PREFIX)) src = null;
 
   useEffect(() => {
-    if (!Boolean(src) || src === null) {
+    if (!src || src === null) {
       setIsLoaded(false);
       setHasError(true);
     } else {

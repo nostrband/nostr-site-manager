@@ -118,7 +118,9 @@ export const GhostImport = () => {
       try {
         const meta = JSON.parse(userProfile.content);
         username = meta.display_name || meta.name || username;
-      } catch {}
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 

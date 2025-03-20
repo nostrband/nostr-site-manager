@@ -13,8 +13,6 @@ import { grey } from "@mui/material/colors";
 import { forwardRef } from "react";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 import { isNumber } from "lodash";
-import { StyledCard } from "../shared/styled";
-import { CardFeatureContent } from "../shared/CardFeatureContent";
 
 const CARD_MEDIA_HEIGHT = 363;
 const CARD_MEDIA_HEIGHT_SMALL = 160;

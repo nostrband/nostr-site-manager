@@ -41,9 +41,7 @@ export const ModalThemes = ({
 
   const filteredData = useMemo(
     () =>
-      Boolean(tag)
-        ? THEMES_PREVIEW.filter((item) => item.tag === tag)
-        : THEMES_PREVIEW,
+      tag ? THEMES_PREVIEW.filter((item) => item.tag === tag) : THEMES_PREVIEW,
     [tag],
   );
 

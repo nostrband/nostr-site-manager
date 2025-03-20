@@ -7,7 +7,7 @@ import {
   StyledSettingBlock,
   StyledTitleBlock,
 } from "../../styled";
-import { Typography, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
@@ -104,7 +104,7 @@ export const CustomDomains = memo(
           )}
 
           <StyledFormFields>
-            {Boolean(listDomains.length)
+            {listDomains.length
               ? listDomains.map((el, i) => (
                   <ItemDomain
                     disabled={!isEdit}

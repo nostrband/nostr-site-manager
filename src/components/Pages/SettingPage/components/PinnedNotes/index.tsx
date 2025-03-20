@@ -155,7 +155,7 @@ export const PinnedNotes = memo(
     };
 
     useEffect(() => {
-      if (Boolean(siteId)) {
+      if (siteId) {
         setLoading(true);
 
         fetchPins(siteId)

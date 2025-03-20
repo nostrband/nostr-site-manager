@@ -107,7 +107,9 @@ export const ActionsUser = () => {
   if (author) {
     try {
       meta = JSON.parse(author.content);
-    } catch {}
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const npub = nip19.npubEncode(userPubkey).substring(0, 8) + "...";

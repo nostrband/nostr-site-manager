@@ -138,7 +138,7 @@ export const ModalHashtagsKinds = ({
           freeSolo
           value={hashtagsSelected}
           inputValue={inputValue}
-          onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
+          onInputChange={(_, newInputValue) => setInputValue(newInputValue)}
           onChange={(_, value) => {
             const newHashtag = (s: string) => (s.startsWith("#") ? s : `#${s}`);
 
@@ -155,7 +155,6 @@ export const ModalHashtagsKinds = ({
             typeof option === "string" ? option : option.title
           }
           renderOption={(props, option) => {
-            // @ts-ignore
             const { key, ...optionProps } = props;
             return (
               <ListItem {...optionProps} key={key}>

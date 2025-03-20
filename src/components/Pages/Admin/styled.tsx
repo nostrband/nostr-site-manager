@@ -35,7 +35,7 @@ export const StyledButtonAddWrap = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const StyledWrapPage = styled(Box)(({ theme }) => ({
+export const StyledWrapPage = styled(Box)(() => ({
   paddingBottom: 85,
   position: "relative",
 }));

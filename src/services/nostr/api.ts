@@ -263,7 +263,6 @@ function convertSites(sites: Site[]): ReturnSettingsSiteDataType[] {
     name: s.name,
     title: s.title || "",
     description: s.description || "",
-    // @ts-ignore
     url: tv(s.event, "r") || "",
     icon: s.icon || "",
     logo: s.logo || "",
@@ -314,7 +313,7 @@ async function fetchSiteThemes() {
   const events = await fetchEvents(
     ndk,
     {
-      // @ts-ignore
+      // @ts-expect-error err
       kinds: [KIND_PACKAGE],
       ids: sites
         .map((s) => s.extensions?.[0].event_id || "")
@@ -353,48 +352,54 @@ export async function fetchSites() {
   if (sitesPromise) await sitesPromise;
 
   if (!sites.length) {
-    sitesPromise = new Promise<void>(async (ok) => {
-      const relays = [SITE_RELAY, ...userRelays];
-      const events = await fetchEvents(
-        ndk,
-        [
-          // owned
-          {
-            // @ts-ignore
-            kinds: [KIND_SITE],
-            authors: [userPubkey],
-          },
-          // delegated
-          {
-            authors: [SERVER_PUBKEY],
-            // @ts-ignore
-            kinds: [KIND_SITE],
-            "#u": [userPubkey],
-          },
-          // contributor
-          {
-            // @ts-ignore
-            kinds: [KIND_SITE],
-            "#p": [userPubkey],
-          },
-        ],
-        relays,
-        5000,
-      );
-      console.log("site events", events);
+    sitesPromise = new Promise<void>((ok, reject) => {
+      (async () => {
+        try {
+          const relays = [SITE_RELAY, ...userRelays];
+          const events = await fetchEvents(
+            ndk,
+            [
+              // owned
+              {
+                // @ts-expect-error err
+                kinds: [KIND_SITE],
+                authors: [userPubkey],
+              },
+              // delegated
+              {
+                authors: [SERVER_PUBKEY],
+                // @ts-expect-error err
+                kinds: [KIND_SITE],
+                "#u": [userPubkey],
+              },
+              // contributor
+              {
+                // @ts-expect-error err
+                kinds: [KIND_SITE],
+                "#p": [userPubkey],
+              },
+            ],
+            relays,
+            5000,
+          );
+          console.log("site events", events);
 
-      // sort by timestamp desc
-      const array = [...events.values()].sort(
-        (a, b) => b.created_at! - a.created_at!,
-      );
+          // sort by timestamp desc
+          const array = [...events.values()].sort(
+            (a, b) => b.created_at! - a.created_at!,
+          );
 
-      await filterDeleted(array, relays);
+          await filterDeleted(array, relays);
 
-      sites.push(...array.map((e) => parseSite(e.rawEvent())));
+          sites.push(...array.map((e) => parseSite(e.rawEvent())));
 
-      await fetchSiteThemes();
+          await fetchSiteThemes();
 
-      ok();
+          ok();
+        } catch (error) {
+          reject(error);
+        }
+      })();
     });
 
     await sitesPromise;
@@ -508,7 +513,9 @@ export async function searchSites(
         s.adminName =
           meta.display_name || meta.name || npub.substring(0, 10) + "...";
         s.adminAvatar = meta.picture || "";
-      } catch {}
+      } catch (e) {
+        console.error(e);
+      }
     }
   });
 
@@ -658,7 +665,10 @@ export const fetchPins = async (siteId: string) => {
   return posts;
 };
 
-export const savePins = async (siteId: string, ids: string[]) => {
+export const savePins = async (
+  siteId: string,
+  ids: string[],
+): Promise<never[] | boolean> => {
   if (userIsDelegated) throw new Error("Can't edit pins in delegated mode");
 
   const site = sites.find((s) => s.id === siteId);
@@ -709,4 +719,6 @@ export const savePins = async (siteId: string, ids: string[]) => {
     [...r].map((r) => r.url),
   );
   if (!r.size) throw new Error("Failed to publish to relays");
+
+  return true;
 };

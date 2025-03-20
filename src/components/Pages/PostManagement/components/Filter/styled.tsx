@@ -7,8 +7,6 @@ import {
   DialogContent,
   FormControl,
   InputLabel,
-  Popper,
-  Select,
   Typography,
 } from "@mui/material";
 import { forwardRef } from "react";

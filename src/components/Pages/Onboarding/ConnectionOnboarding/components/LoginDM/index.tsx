@@ -9,7 +9,6 @@ import { enqueueSnackbar } from "notistack";
 import useResponsive from "@/hooks/useResponsive";
 import { useState } from "react";
 import {
-  Box,
   Button,
   CircularProgress,
   FormControl,
@@ -62,7 +61,7 @@ export const LoginDM = ({
             }
 
             const res = await axios.get(
-              `https://${domain}/.well-known/nostr.json?name=${name}`
+              `https://${domain}/.well-known/nostr.json?name=${name}`,
             );
             pubkey = res.data.names[name];
           } else {
@@ -105,7 +104,7 @@ export const LoginDM = ({
 
   const handleAdvanced = async () => {
     document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "welcome-login" })
+      new CustomEvent("nlLaunch", { detail: "welcome-login" }),
     );
     await new Promise<void>((ok) => {
       addOnAuth(async (type: string) => {

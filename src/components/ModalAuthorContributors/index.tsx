@@ -89,7 +89,7 @@ export const ModalAuthorContributors = ({
         .filter((p) => !!p);
       console.log("options", options);
       setLoading(false);
-      // @ts-ignore
+
       setOptions(options);
     } catch (error) {
       setLoading(false);

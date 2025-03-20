@@ -50,7 +50,7 @@ export const ModalConfirmDeleteSite = ({
   } = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchemaConfirmDelete,
-    onSubmit: async (values) => {
+    onSubmit: async () => {
       setIsLoading(true);
       try {
         await deleteSite(siteId);

@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { migrateToConnectedKey } from "@/services/nostr/migrate";
 import { ItemButton } from "../ItemButton";

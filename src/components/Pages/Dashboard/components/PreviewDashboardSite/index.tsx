@@ -109,7 +109,7 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
       ) : (
         <StyledCardAddImage
           LinkComponent={Link}
-          // @ts-expect-error
+          // @ts-expect-error err
           href={`${settingsLink}#image`}
         >
           <AddImageIcon fontSize="inherit" />

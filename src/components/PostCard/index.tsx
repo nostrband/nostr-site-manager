@@ -24,14 +24,7 @@ import {
   StyledTags,
   StyledTypePost,
 } from "./styled";
-import {
-  memo,
-  MouseEvent,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { memo, MouseEvent, useEffect, useRef, useState } from "react";
 import useImageLoader from "@/hooks/useImageLoader";
 import { format, parseISO } from "date-fns";
 import {

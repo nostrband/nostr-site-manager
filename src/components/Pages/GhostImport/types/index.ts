@@ -57,7 +57,7 @@ export type DBReturnType = {
     tags: Tag[];
     posts_tags: PostTag[];
   };
-  meta: {};
+  meta: Record<string, never>;
 };
 
 export type JSONDataReturnType = {

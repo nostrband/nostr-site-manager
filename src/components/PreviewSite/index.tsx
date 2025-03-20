@@ -29,7 +29,6 @@ import {
   IconLink,
   IconPerson,
 } from "@/components/Icons";
-import { nip19 } from "nostr-tools";
 import useContributors from "@/hooks/useContributors";
 import { parseProfileEvent } from "@/services/nostr/nostr";
 
@@ -106,7 +105,7 @@ export const PreviewSite = memo(function PreviewSite({
           {isLink ? (
             <StyledCardActionArea
               LinkComponent={isLink ? CustomLinkComponent : undefined}
-              // @ts-expect-error
+              // @ts-expect-error err
               href={isLink ? link : undefined}
             >
               {children}

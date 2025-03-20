@@ -48,7 +48,7 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
 
   const handleChange = (
     _: React.SyntheticEvent,
-    newValue: "todo" | "completed"
+    newValue: "todo" | "completed",
   ) => {
     setValue(newValue);
   };

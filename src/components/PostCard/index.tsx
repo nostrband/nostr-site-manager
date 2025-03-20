@@ -293,7 +293,7 @@ export const PostCard = memo(
                 </StyledCardVideoWrap>
               ) : null}
 
-              <StyledDate variant="body2">
+              <StyledDate component="div" variant="body2">
                 <span>{datePost}</span>
                 <span>{timePost}</span>
 
@@ -308,16 +308,18 @@ export const PostCard = memo(
 
               <StyledCardText>
                 {isTitle && <StyledCardTitle>{title}</StyledCardTitle>}
-                <StyledCardDescription variant="body2">
+                <StyledCardDescription component="div" variant="body2">
                   {event.content}
                 </StyledCardDescription>
               </StyledCardText>
 
-              <StyledTags>
-                {tags.map((tag, idx) => (
-                  <Chip label={tag.name} key={idx} size="medium" />
-                ))}
-              </StyledTags>
+              {Boolean(tags.length) && (
+                <StyledTags>
+                  {tags.map((tag, idx) => (
+                    <Chip label={tag.name} key={idx} size="medium" />
+                  ))}
+                </StyledTags>
+              )}
 
               <StyledCardWrapAuthor>
                 <StyledAvatrAuthor

@@ -228,7 +228,7 @@ export const PostDetailsContent = memo(
             />
           ) : null}
 
-          <StyledDate variant="body2">
+          <StyledDate component="div" variant="body2">
             <span>{datePost}</span>
             <span>{timePost}</span>
 
@@ -243,7 +243,7 @@ export const PostDetailsContent = memo(
 
           <StyledCardText>
             <StyledCardTitle>{title}</StyledCardTitle>
-            <StyledCardDescription variant="body2">
+            <StyledCardDescription component="div" variant="body2">
               {isCollapseText ? (
                 <>
                   <Collapse in={isShowMore} collapsedSize={heightCollapseArea}>
@@ -268,11 +268,13 @@ export const PostDetailsContent = memo(
             </StyledCardDescription>
           </StyledCardText>
 
-          <StyledTags>
-            {tags.map((tag, idx) => (
-              <Chip label={tag.name} key={idx} size="medium" />
-            ))}
-          </StyledTags>
+          {Boolean(tags.length) && (
+            <StyledTags>
+              {tags.map((tag, idx) => (
+                <Chip label={tag.name} key={idx} size="medium" />
+              ))}
+            </StyledTags>
+          )}
 
           <StyledCardWrapAuthor>
             <StyledAvatrAuthor

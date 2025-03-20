@@ -17,7 +17,7 @@ import Link from "next/link";
 import { ListSites } from "@/components/ListSites";
 import { PlusIcon } from "@/components/Icons";
 
-export const AdminPage = () => {
+const AdminPage = () => {
   const pathAdmin = useFirstPathElement();
   const { data, isLoading, isFetching } = useListSites();
   const { isAuth } = useContext(AuthContext);
@@ -76,3 +76,5 @@ export const AdminPage = () => {
     </Suspense>
   );
 };
+
+export default AdminPage;

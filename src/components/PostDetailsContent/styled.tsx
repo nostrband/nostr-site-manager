@@ -8,6 +8,7 @@ import {
   CardMediaProps,
   Chip,
   Typography,
+  TypographyProps,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { forwardRef } from "react";
@@ -37,7 +38,7 @@ export type IStyledCardMedia = ICardMedia & CardMediaProps;
 export type BoxType = ICardMedia & BoxProps;
 
 export const StyledCardNoImage = styled(
-  forwardRef<HTMLDivElement, BoxType>(function MainContentName(props, ref) {
+  forwardRef<HTMLDivElement, BoxType>(function CardNoImageName(props, ref) {
     const exclude = new Set(["isDesktop"]);
     const omitProps = Object.fromEntries(
       Object.entries(props).filter((e) => !exclude.has(e[0])),
@@ -58,8 +59,8 @@ export const StyledCardNoImage = styled(
 
 export const StyledCardMedia = styled(
   forwardRef<HTMLImageElement, IStyledCardMedia>(
-    function MainContentName(props, ref) {
-      const exclude = new Set(["isDesktop, height"]);
+    function CardMediaName(props, ref) {
+      const exclude = new Set(["isDesktop", "height"]);
       const omitProps = Object.fromEntries(
         Object.entries(props).filter((e) => !exclude.has(e[0])),
       );
@@ -78,8 +79,8 @@ export const StyledCardMedia = styled(
 }));
 
 export const StyledCardVideo = styled(
-  forwardRef<HTMLVideoElement, ICardMedia>(function VideoPlayer(props, ref) {
-    const exclude = new Set(["isDesktop, height"]);
+  forwardRef<HTMLVideoElement, ICardMedia>(function CardVideoName(props, ref) {
+    const exclude = new Set(["isDesktop", "height"]);
     const omitProps = Object.fromEntries(
       Object.entries(props).filter((e) => !exclude.has(e[0])),
     );
@@ -97,7 +98,7 @@ export const StyledCardVideo = styled(
   borderRadius: theme.shape.borderRadius,
 }));
 
-export const StyledDate = styled(Typography)(() => ({
+export const StyledDate = styled(Typography)<TypographyProps>(() => ({
   display: "flex",
   textTransform: "uppercase",
   fontSize: "12px",
@@ -130,24 +131,26 @@ export const StyledCardTitle = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-export const StyledCardDescription = styled(Typography)(({ theme }) => ({
-  width: "100%",
-  fontWeight: "500",
-  fontSize: 16,
-  lineHeight: "25px",
-  wordWrap: "break-word",
-  position: "relative",
-  p: {
-    margin: 0,
-  },
-  img: {
+export const StyledCardDescription = styled(Typography)<TypographyProps>(
+  ({ theme }) => ({
     width: "100%",
-  },
-  [theme.breakpoints.down("sm")]: {
-    fontSize: 14,
-    lineHeight: "22px",
-  },
-}));
+    fontWeight: "500",
+    fontSize: 16,
+    lineHeight: "25px",
+    wordWrap: "break-word",
+    position: "relative",
+    p: {
+      margin: 0,
+    },
+    img: {
+      width: "100%",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+      lineHeight: "22px",
+    },
+  }),
+);
 
 export const StyledButtonCollapse = styled(Box)(() => ({
   position: "absolute",
@@ -226,7 +229,7 @@ export const StyledStatusWrap = styled(Box)(() => ({
 
 export const StyledAddButton = styled(
   forwardRef<HTMLButtonElement, LoadingButtonType>(
-    function MainContentName(props, ref) {
+    function AddButtonName(props, ref) {
       const exclude = new Set(["isSending", "isWaiting", "isAdded"]);
       const omitProps = Object.fromEntries(
         Object.entries(props).filter((e) => !exclude.has(e[0])),

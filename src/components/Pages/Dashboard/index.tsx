@@ -25,7 +25,7 @@ import { getLinksMenu } from "@/utils";
 import { CardFeatureContent } from "@/components/shared/CardFeatureContent";
 import { StyledWrapMenu } from "./styled";
 
-export const Dashboard = () => {
+const Dashboard = () => {
   const { isAuth } = useContext(AuthContext);
   const [isOpenConfirm, setOpenConfirm] = useState(false);
   const { data, isLoading, isFetching } = useListSites();
@@ -178,3 +178,5 @@ export const Dashboard = () => {
     </Container>
   );
 };
+
+export default Dashboard;

@@ -12,6 +12,7 @@ import {
   Link,
   LinkProps,
   Typography,
+  TypographyProps,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { forwardRef } from "react";
@@ -66,7 +67,7 @@ export const StyledCardHead = styled(Box)(() => ({
 }));
 
 export const StyledCardNoImage = styled(
-  forwardRef<HTMLDivElement, BoxType>(function MainContentName(props, ref) {
+  forwardRef<HTMLDivElement, BoxType>(function CardNoImageName(props, ref) {
     const exclude = new Set(["isDesktop"]);
     const omitProps = Object.fromEntries(
       Object.entries(props).filter((e) => !exclude.has(e[0])),
@@ -87,7 +88,7 @@ export const StyledCardNoImage = styled(
 }));
 
 export const StyledCardVideoWrap = styled(
-  forwardRef<HTMLVideoElement, BoxType>(function MainContentName(props, ref) {
+  forwardRef<HTMLVideoElement, BoxType>(function CardVideoWrapName(props, ref) {
     const exclude = new Set(["isDesktop"]);
     const omitProps = Object.fromEntries(
       Object.entries(props).filter((e) => !exclude.has(e[0])),
@@ -161,8 +162,8 @@ export const StyledCardMediaZoom = styled(Fab)(() => ({
 
 export const StyledCardMedia = styled(
   forwardRef<HTMLImageElement, IStyledCardMedia>(
-    function MainContentName(props, ref) {
-      const exclude = new Set(["isDesktop, height"]);
+    function CardMediaName(props, ref) {
+      const exclude = new Set(["isDesktop", "height"]);
       const omitProps = Object.fromEntries(
         Object.entries(props).filter((e) => !exclude.has(e[0])),
       );
@@ -180,7 +181,7 @@ export const StyledCardMedia = styled(
   borderRadius: theme.shape.borderRadius,
 }));
 
-export const StyledDate = styled(Typography)(() => ({
+export const StyledDate = styled(Typography)<TypographyProps>(() => ({
   display: "flex",
   textTransform: "uppercase",
   fontSize: "12px",
@@ -218,22 +219,24 @@ export const StyledCardTitle = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-export const StyledCardDescription = styled(Typography)(({ theme }) => ({
-  width: "100%",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  display: "-webkit-box",
-  WebkitLineClamp: 3,
-  WebkitBoxOrient: "vertical",
-  wordWrap: "break-word",
-  fontWeight: "500",
-  fontSize: 16,
-  lineHeight: "25px",
-  [theme.breakpoints.down("sm")]: {
-    fontSize: 14,
-    lineHeight: "22px",
-  },
-}));
+export const StyledCardDescription = styled(Typography)<TypographyProps>(
+  ({ theme }) => ({
+    width: "100%",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "-webkit-box",
+    WebkitLineClamp: 3,
+    WebkitBoxOrient: "vertical",
+    wordWrap: "break-word",
+    fontWeight: "500",
+    fontSize: 16,
+    lineHeight: "25px",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+      lineHeight: "22px",
+    },
+  }),
+);
 
 export const StyledCardText = styled(Box)(() => ({
   display: "flex",
@@ -275,7 +278,7 @@ export const StyledPostAuthorName = styled(Box)(() => ({
 }));
 
 export const StyledLink = styled(
-  forwardRef<HTMLLinkElement, LinkProps>(function MainContentName(props, ref) {
+  forwardRef<HTMLLinkElement, LinkProps>(function LinkName(props, ref) {
     return <Link component="nav" ref={ref} {...props} />;
   }),
 )(() => ({
@@ -297,7 +300,7 @@ export const StyledStatus = styled(Typography)(({ theme }) => ({
 
 export const StyledAddButton = styled(
   forwardRef<HTMLButtonElement, LoadingButtonType>(
-    function MainContentName(props, ref) {
+    function AddButtonName(props, ref) {
       const exclude = new Set(["isSending", "isWaiting", "isAdded"]);
       const omitProps = Object.fromEntries(
         Object.entries(props).filter((e) => !exclude.has(e[0])),

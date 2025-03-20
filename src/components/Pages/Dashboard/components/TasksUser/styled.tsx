@@ -38,7 +38,7 @@ export const StyledDescription = styled(Typography)(() => ({
 export const StyledTabPanel = styled(
   forwardRef<HTMLElement, TabPanelType>(
     function StyledTabPanelName(props, ref) {
-      const exclude = new Set(["isGutter, isMoreThanLimit"]);
+      const exclude = new Set(["isGutter", "isMoreThanLimit"]);
 
       const omitProps = Object.fromEntries(
         Object.entries(props).filter((e) => !exclude.has(e[0])),

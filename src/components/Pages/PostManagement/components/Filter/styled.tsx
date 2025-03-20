@@ -40,7 +40,7 @@ export const StyledTitleFilter = styled(Typography)(({ theme }) => ({
 
 export const StyledCollapseButtonFilter = styled(
   forwardRef<HTMLButtonElement, IICollapseButtonFilter>(
-    function MainContentName(props, ref) {
+    function CollapseButtonFilterName(props, ref) {
       const exclude = new Set(["isOpenMoreFilter"]);
       const omitProps = Object.fromEntries(
         Object.entries(props).filter((e) => !exclude.has(e[0])),

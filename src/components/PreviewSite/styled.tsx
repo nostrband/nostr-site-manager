@@ -32,7 +32,7 @@ export const CARD_MEDIA_HEIGHT = 160;
 const AUTHORS_CONTENT_SPACING = CARD_PADDING;
 
 export const StyledCard = styled(
-  forwardRef<HTMLDivElement, IStyledCard>(function StyledCardName(props, ref) {
+  forwardRef<HTMLDivElement, IStyledCard>(function CardName(props, ref) {
     const exclude = new Set(["isLink"]);
     const omitProps = Object.fromEntries(
       Object.entries(props).filter((e) => !exclude.has(e[0])),
@@ -80,7 +80,7 @@ export const StyledCardNoImage = styled(Box)(({ theme }) => ({
 
 export const StyledCardMedia = styled(
   forwardRef<HTMLImageElement, IStyledCardMedia>(
-    function StyledCardMediaName(props, ref) {
+    function CardMediaName(props, ref) {
       return <CardMedia ref={ref} {...props} />;
     },
   ),

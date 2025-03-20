@@ -24,7 +24,7 @@ export const StyledWrapStartScreen = styled(StyledWrapOnboardingChildren)(
 
 export const StyledSelectButton = styled(
   forwardRef<HTMLButtonElement, IICollapseButtonFilter>(
-    function MainContentName(props, ref) {
+    function SelectButtonName(props, ref) {
       const exclude = new Set(["isOpen"]);
       const omitProps = Object.fromEntries(
         Object.entries(props).filter((e) => !exclude.has(e[0])),

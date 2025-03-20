@@ -17,7 +17,7 @@ import { NotFoundIcon } from "@/components/Icons";
 import { PostCard } from "@/components/PostCard";
 import { LoadingButton } from "@mui/lab";
 
-export const AddPost = () => {
+const AddPost = () => {
   const { siteId } = useGetSiteId();
   const [isLoadingPosts, setloadingPosts] = useState(true);
   const [isLoadingMore, setLoadingMore] = useState(false);
@@ -122,3 +122,5 @@ export const AddPost = () => {
     </Container>
   );
 };
+
+export default AddPost;

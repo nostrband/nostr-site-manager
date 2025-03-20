@@ -20,7 +20,7 @@ import { nip19 } from "nostr-tools";
 import { NDKEvent, NDKNip07Signer, NDKRelaySet } from "@nostr-dev-kit/ndk";
 import Link from "next/link";
 
-export const GhostImport = () => {
+const GhostImport = () => {
   const { isAuth } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -201,3 +201,5 @@ export const GhostImport = () => {
     </Box>
   );
 };
+
+export default GhostImport;

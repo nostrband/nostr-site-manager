@@ -32,7 +32,7 @@ export const StyledFormControl = styled(Box)(() => ({
 }));
 
 export const StyledTextField = styled(
-  forwardRef<HTMLDivElement, ITextField>(function MainContentName(props, ref) {
+  forwardRef<HTMLDivElement, ITextField>(function TextFieldName(props, ref) {
     const exclude = new Set(["isFocus"]);
 
     const omitProps = Object.fromEntries(

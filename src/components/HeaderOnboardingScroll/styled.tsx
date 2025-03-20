@@ -29,16 +29,14 @@ export const StyledLogo = styled(Box)(() => ({
 }));
 
 export const StyledAppBar = styled(
-  forwardRef<HTMLAnchorElement, IStyledAppBar>(
-    function MainContentName(props, ref) {
-      const exclude = new Set(["isHide"]);
-      const omitProps = Object.fromEntries(
-        Object.entries(props).filter((e) => !exclude.has(e[0])),
-      );
+  forwardRef<HTMLAnchorElement, IStyledAppBar>(function AppBarName(props, ref) {
+    const exclude = new Set(["isHide"]);
+    const omitProps = Object.fromEntries(
+      Object.entries(props).filter((e) => !exclude.has(e[0])),
+    );
 
-      return <AppBar component="nav" ref={ref} {...omitProps} />;
-    },
-  ),
+    return <AppBar component="nav" ref={ref} {...omitProps} />;
+  }),
 )(({ isHide, theme }) => ({
   width: "100%",
   left: 0,

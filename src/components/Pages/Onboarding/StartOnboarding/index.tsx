@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "@/services/nostr/nostr";
 import { useContext, useEffect } from "react";
 
-export const StartOnboarding = () => {
+const StartOnboarding = () => {
   const router = useRouter();
   const { isAuth, isLoading } = useContext(AuthContext);
 
@@ -55,3 +55,5 @@ export const StartOnboarding = () => {
     </>
   );
 };
+
+export default StartOnboarding;

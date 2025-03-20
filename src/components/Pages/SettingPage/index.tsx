@@ -97,7 +97,7 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   sendStatsDev: false,
 };
 
-export const SettingPage = () => {
+const SettingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [initialData, setInitialData] = useState(initialSettingValue);
   const [choiceSetting, setChoiceSetting] = useState<Setting | null>(null);
@@ -626,3 +626,5 @@ export const SettingPage = () => {
     </Container>
   );
 };
+
+export default SettingPage;

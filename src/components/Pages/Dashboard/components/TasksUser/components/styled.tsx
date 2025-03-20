@@ -26,7 +26,7 @@ export const StyledWrap = styled(Box)(({ theme }) => ({
 }));
 
 export const StyledIcon = styled(
-  forwardRef<HTMLAnchorElement, IIcon>(function StyledWrapName(props, ref) {
+  forwardRef<HTMLAnchorElement, IIcon>(function IconName(props, ref) {
     const exclude = new Set(["isCompleted"]);
     const omitProps = Object.fromEntries(
       Object.entries(props).filter((e) => !exclude.has(e[0])),

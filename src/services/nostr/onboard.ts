@@ -57,7 +57,7 @@ export async function setAuth(event: any) {
   // to make sure we receive the event
   const promise = new Promise<void>((ok) => {
     addOnAuth(async (type: string) => {
-      if (type === "signup") ok();
+      if (type !== "logout") ok();
     });
   });
 

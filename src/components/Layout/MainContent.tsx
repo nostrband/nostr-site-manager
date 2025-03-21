@@ -11,7 +11,7 @@ export const BodyWrapper = styled("body")(({ theme }) => ({
   height: "100%",
   lineHeight: "initial",
   color: "initial",
-  background: theme.palette.customBackground.light,
+  background: theme.palette.background.default,
 }));
 
 export const StyledWrapCenter = styled(Box)(() => ({

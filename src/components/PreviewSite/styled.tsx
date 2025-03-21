@@ -127,7 +127,7 @@ export const StyledCardHeaderWrap = styled(Box)(() => ({
   alignItems: "center",
 }));
 
-export const StyledCardTitle = styled(Box)(({ theme }) => ({
+export const StyledCardTitle = styled(Typography)(() => ({
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -139,7 +139,6 @@ export const StyledCardTitle = styled(Box)(({ theme }) => ({
   fontSize: 16,
   lineHeight: "18px",
   height: "18px",
-  color: theme.palette.primary.main,
 }));
 
 export const StyledCardSubHeader = styled(Box)(() => ({

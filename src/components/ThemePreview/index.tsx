@@ -19,7 +19,6 @@ export const ThemePreview = ({
     <StyledWrapPreview>
       <StyledButtonPreview
         onClick={handleNavigate}
-        color="decorate"
         variant="contained"
         size="large"
       >

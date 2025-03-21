@@ -164,7 +164,6 @@ export const ModalEditNavigation = ({
         <Button
           variant="contained"
           fullWidth
-          color="decorate"
           size="large"
           endIcon={<CheckIcon fontSize="inherit" />}
           onClick={submitForm}

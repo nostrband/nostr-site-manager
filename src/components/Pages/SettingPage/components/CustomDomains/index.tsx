@@ -120,7 +120,6 @@ export const CustomDomains = memo(
         <Button
           variant="contained"
           disabled={!isEdit}
-          color="decorate"
           size="large"
           fullWidth
           onClick={handleOpenCustomDomain}

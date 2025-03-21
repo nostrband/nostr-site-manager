@@ -31,7 +31,6 @@ export const ItemDomain = ({ domain, siteId, disabled }: ItemDomainProps) => {
           disabled={disabled}
           variant="text"
           size="small"
-          color="primary"
           endIcon={<MaxMinSizeIcon color="inherit" fontSize="inherit" />}
         >
           Show DNS

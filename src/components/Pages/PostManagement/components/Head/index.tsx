@@ -56,8 +56,8 @@ export const Head = ({ linkToAddPost }: { linkToAddPost: string }) => {
     <>
       <StyledTitlePage>
         <Button
+          color="secondary"
           onClick={handleBack}
-          color="primary"
           variant="text"
           sx={{ minWidth: "auto" }}
         >
@@ -71,7 +71,6 @@ export const Head = ({ linkToAddPost }: { linkToAddPost: string }) => {
               href={linkToAddPost}
               size="large"
               fullWidth
-              color="decorate"
               variant="contained"
               endIcon={<PlusIcon fontSize="inherit" />}
             >

@@ -121,12 +121,7 @@ export const ModalAuthor = ({
       <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
           Author
-          <Fab
-            onClick={handleCancel}
-            size="small"
-            color="primary"
-            aria-label="close"
-          >
+          <Fab onClick={handleCancel} size="small" aria-label="close">
             <CloseIcon />
           </Fab>
         </StyledTitle>

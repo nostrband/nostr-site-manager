@@ -9,7 +9,7 @@ export const StyledWrapDomain = styled(Box)(({ theme }) => ({
   gap: 16,
   borderRadius: "50px",
   padding: "12px 16px",
-  background: theme.palette.decorate.main,
+  background: theme.palette.primary.main,
   color: "#fff",
 }));
 

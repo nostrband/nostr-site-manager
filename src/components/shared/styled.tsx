@@ -43,12 +43,11 @@ export const StyledCard = styled(Card)(({ theme }) => ({
   padding: POST_CARD_PADDING,
 }));
 
-export const StyledCardTitleFeature = styled(Box)(({ theme }) => ({
+export const StyledCardTitleFeature = styled(Typography)(() => ({
   width: "100%",
   fontWeight: "700",
   fontSize: 20,
   lineHeight: "26px",
-  color: theme.palette.primary.main,
 }));
 
 export const StyledTitlePage = styled(PageTitle)(({ theme }) => ({

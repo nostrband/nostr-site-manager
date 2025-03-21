@@ -236,7 +236,7 @@ export const PinnedNotes = memo(
             <Button
               size="medium"
               variant="outlined"
-              color="decorate"
+
               onClick={handleConnectKeys}
               fullWidth
             >
@@ -321,7 +321,6 @@ export const PinnedNotes = memo(
                           <IconButton
                             edge="end"
                             aria-label="delete"
-                            color="decorate"
                             size="small"
                           >
                             {isAlreadyPinned ? (

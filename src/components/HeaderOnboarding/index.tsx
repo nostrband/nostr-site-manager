@@ -8,17 +8,12 @@ import { Box, Button } from "@mui/material";
 import Link from "next/link";
 import { useContext } from "react";
 import { AuthContext } from "@/services/nostr/nostr";
-import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
-import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
-import PersonTwoToneIcon from "@mui/icons-material/PersonTwoTone";
-import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
+import { ArrowLeftIcon, LoginIcon, WebIcon } from "@/components/Icons";
 import { usePathname } from "next/navigation";
-import useResponsive from "@/hooks/useResponsive";
 
 export const HeaderOnboarding = () => {
   const { isAuth } = useContext(AuthContext);
   const pathname = usePathname();
-  const isDesktop = useResponsive("up", "sm");
 
   const isBack = pathname !== "/";
 
@@ -34,9 +29,9 @@ export const HeaderOnboarding = () => {
             <Button
               LinkComponent={Link}
               href="/"
-              color="primary"
               variant="text"
-              startIcon={<ArrowBackTwoToneIcon />}
+              color="secondary"
+              startIcon={<ArrowLeftIcon />}
             >
               Back
             </Button>
@@ -46,28 +41,22 @@ export const HeaderOnboarding = () => {
           <Button
             LinkComponent={Link}
             href="/sites"
-            color="primary"
             variant="text"
-            startIcon={<LanguageTwoToneIcon />}
+            color="secondary"
+            startIcon={<WebIcon />}
           >
             Discover
           </Button>
           {isAuth ? (
-            <Button
-              LinkComponent={Link}
-              href="/admin"
-              color="decorate"
-              variant="contained"
-              startIcon={isDesktop ? <PersonTwoToneIcon /> : undefined}
-            >
+            <Button LinkComponent={Link} href="/admin" variant="contained">
               My sites
             </Button>
           ) : (
             <Button
               onClick={handleLogin}
-              color="primary"
               variant="text"
-              startIcon={<LoginTwoToneIcon />}
+              color="secondary"
+              startIcon={<LoginIcon />}
             >
               Login
             </Button>

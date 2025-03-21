@@ -120,7 +120,7 @@ export const StyledCardVideoWrap = styled(
 }));
 
 export const StyledCardVideoPlayButton = styled(Box)(({ theme }) => ({
-  background: theme.palette.decorate.main,
+  background: theme.palette.primary.main,
   borderRadius: "50%",
   height: 56,
   width: 56,
@@ -205,7 +205,7 @@ export const StyledTitle = styled(Typography)(() => ({
   width: "100%",
 }));
 
-export const StyledCardTitle = styled(Box)(({ theme }) => ({
+export const StyledCardTitle = styled(Typography)(() => ({
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -216,7 +216,6 @@ export const StyledCardTitle = styled(Box)(({ theme }) => ({
   fontWeight: "700",
   fontSize: 20,
   lineHeight: "26px",
-  color: theme.palette.primary.main,
 }));
 
 export const StyledCardDescription = styled(Typography)<TypographyProps>(
@@ -264,7 +263,7 @@ export const StyledAvatrAuthor = styled(Avatar)(() => ({
   height: 32,
 }));
 
-export const StyledPostAuthorName = styled(Box)(() => ({
+export const StyledPostAuthorName = styled(Typography)(() => ({
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",

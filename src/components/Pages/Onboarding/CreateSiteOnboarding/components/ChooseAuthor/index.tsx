@@ -77,7 +77,6 @@ export const ChooseAuthor = ({ createSite }: ChooseAuthorProps) => {
 
             <Button
               onClick={() => handleCreateSite(authorData.pubkey)}
-              color="decorate"
               size="large"
               variant="contained"
               fullWidth

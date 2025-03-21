@@ -95,12 +95,7 @@ export const ModalHashtagsKinds = ({
       <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
           Hashtags & Kinds
-          <Fab
-            onClick={handleClose}
-            size="small"
-            color="primary"
-            aria-label="close"
-          >
+          <Fab onClick={handleClose} size="small" aria-label="close">
             <CloseIcon />
           </Fab>
         </StyledTitle>

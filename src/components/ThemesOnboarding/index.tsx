@@ -41,7 +41,7 @@ export const ThemesOnboarding = () => {
   };
 
   const getColor = (tag: TYPES_THEMES_TAG) =>
-    activeTag === tag ? "decorate" : "lightInfo";
+    activeTag === tag ? "primary" : "secondary";
 
   const handleMoreTheme = () => {
     setShowAllThemes((prev) => !prev);
@@ -151,11 +151,7 @@ export const ThemesOnboarding = () => {
 
           <StyledMoreButton>
             {!showAllThemes && (
-              <StyledButton
-                color="decorate"
-                variant="contained"
-                onClick={handleMoreTheme}
-              >
+              <StyledButton variant="contained" onClick={handleMoreTheme}>
                 More Themes
               </StyledButton>
             )}

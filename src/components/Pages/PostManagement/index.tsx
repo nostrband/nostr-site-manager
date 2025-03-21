@@ -107,7 +107,6 @@ const PostManagement = () => {
                 disabled={isLoadingMore}
                 loading={isLoadingMore}
                 variant="outlined"
-                color="decorate"
                 fullWidth
                 size="large"
                 onClick={handleLoadMore}

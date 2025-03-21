@@ -411,8 +411,8 @@ const SettingPage = () => {
       <StyledWrap>
         <StyledTitlePage>
           <Button
+            color="secondary"
             onClick={handleBack}
-            color="primary"
             variant="text"
             sx={{ minWidth: "auto" }}
           >

@@ -28,6 +28,6 @@ export const StyledDescription = styled(Typography)(({ theme }) => ({
   textAlign: "center",
   a: {
     textDecoration: "none",
-    color: theme.palette.decorate.main,
+    color: theme.palette.primary.main,
   },
 }));

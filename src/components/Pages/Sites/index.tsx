@@ -122,12 +122,11 @@ const Sites = () => {
             label="Search sites"
             onChange={handleChangeWithDebounce}
             value={value}
-            color="success"
             startIcon={<SearchIcon />}
             endAdornment={
               isFetchSites ? (
                 <InputAdornment position="end">
-                  <CircularProgress size={20} />
+                  <CircularProgress color="secondary" size={20} />
                 </InputAdornment>
               ) : null
             }
@@ -157,7 +156,6 @@ const Sites = () => {
               onClick={loadMore}
               loading={!data || isFetchSites}
               variant="contained"
-              color="decorate"
               fullWidth
               size="large"
             >

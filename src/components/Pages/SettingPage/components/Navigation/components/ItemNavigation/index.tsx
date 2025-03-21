@@ -72,7 +72,6 @@ export const ItemNavigation = ({
         <StyledButtonAction
           disabled={!isEdit}
           size="small"
-          color="primary"
           variant="text"
           onClick={handleOpen}
         >
@@ -82,7 +81,6 @@ export const ItemNavigation = ({
         <StyledButtonAction
           disabled={!isEdit}
           size="small"
-          color="primary"
           variant="text"
           onClick={() =>
             handleRemoveLinkNavigation({

@@ -579,16 +579,11 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
           }}
         >
           <StyledTitleFilter>
-            <StyledCloseFilterButton
-              onClick={handleClose}
-              color="primary"
-              variant="text"
-            >
+            <StyledCloseFilterButton onClick={handleClose} variant="text">
               <ChevronLeftIcon />
             </StyledCloseFilterButton>
             Filter
             <StyledCollapseButtonFilter
-              color="decorate"
               isOpenMoreFilter={isOpenMoreFilter}
               variant="text"
               endIcon={
@@ -726,7 +721,6 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
                   loading={isLoadingFilter}
                   variant="contained"
                   fullWidth
-                  color="decorate"
                   size="large"
                   endIcon={
                     !isDesktop ? <CheckIcon fontSize="inherit" /> : undefined
@@ -763,7 +757,6 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
               onClick={handleClickOpen}
               size="large"
               fullWidth
-              color="decorate"
               variant="outlined"
               startIcon={<FilterIcon fontSize="inherit" />}
             >
@@ -775,7 +768,6 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
               href={linkToAddPost}
               size="large"
               fullWidth
-              color="decorate"
               variant="contained"
               endIcon={<PlusIcon fontSize="inherit" />}
             >

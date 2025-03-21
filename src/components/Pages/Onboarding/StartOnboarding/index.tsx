@@ -36,7 +36,6 @@ const StartOnboarding = () => {
           href="/onboarding/connection?method=signup"
           fullWidth
           size="large"
-          color="decorate"
           variant="outlined"
         >
           No
@@ -46,7 +45,6 @@ const StartOnboarding = () => {
           href="/onboarding/connection?method=login"
           fullWidth
           size="large"
-          color="decorate"
           variant="contained"
         >
           Yes

@@ -84,7 +84,6 @@ export const SignUp = () => {
         fullWidth
         disabled={isLoading ? false : !values.username.length}
         size="large"
-        color="decorate"
         variant="contained"
         endIcon={<UserAddIcon />}
         startIcon={startIconCreate}
@@ -95,7 +94,6 @@ export const SignUp = () => {
 
       <Button
         size="small"
-        color="decorate"
         variant="text"
         startIcon={<ChevronLeftIcon />}
         onClick={handleBack}

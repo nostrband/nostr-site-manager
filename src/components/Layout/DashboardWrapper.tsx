@@ -71,7 +71,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
       ) : (
         <StyledWrapCenter>
           <Box sx={{ margin: "auto", textAlign: "center" }}>
-            <Button variant="contained" color="decorate" onClick={login}>
+            <Button variant="contained" onClick={login}>
               Login
             </Button>
             <Typography sx={{ marginTop: "15px" }}>

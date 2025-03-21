@@ -43,12 +43,11 @@ export const StyledSelectButton = styled(
   },
 }));
 
-export const StyledSelectButtonText = styled(Typography)(({ theme }) => ({
+export const StyledSelectButtonText = styled(Typography)(() => ({
   fontSize: 16,
   lineHeight: "20px",
   fontWeight: "bold",
   marginBottom: 2,
-  color: theme.palette.primary.main,
 }));
 
 export const StyledSelectButtonSubText = styled(Typography)(() => ({

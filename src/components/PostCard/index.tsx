@@ -94,7 +94,7 @@ export const PostCard = memo(
 
     const isVideos = Boolean(videos.length);
 
-    const isTitle = event.kind !== 1;
+    const isTitle = event.kind !== 1 && Boolean(title);
 
     const [progress, setProgress] = useState<number>(0);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
@@ -243,7 +243,6 @@ export const PostCard = memo(
                   loading={isSending}
                   disabled={isSending}
                   variant="outlined"
-                  color="decorate"
                   onClick={handleClick}
                   size="small"
                   startIcon={
@@ -306,12 +305,16 @@ export const PostCard = memo(
                 )}
               </StyledDate>
 
-              <StyledCardText>
-                {isTitle && <StyledCardTitle>{title}</StyledCardTitle>}
-                <StyledCardDescription component="div" variant="body2">
-                  {event.content}
-                </StyledCardDescription>
-              </StyledCardText>
+              {(isTitle || Boolean(event.content)) && (
+                <StyledCardText>
+                  {isTitle && <StyledCardTitle>{title}</StyledCardTitle>}
+                  {Boolean(event.content) && (
+                    <StyledCardDescription component="div" variant="body2">
+                      {event.content}
+                    </StyledCardDescription>
+                  )}
+                </StyledCardText>
+              )}
 
               {Boolean(tags.length) && (
                 <StyledTags>

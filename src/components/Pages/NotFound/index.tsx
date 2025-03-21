@@ -15,13 +15,7 @@ export const NotFoundPage = () => {
       <StyledDescriptionPage variant="body2">
         Click the button to return to the main page
       </StyledDescriptionPage>
-      <Button
-        LinkComponent={Link}
-        href="/"
-        size="large"
-        color="decorate"
-        variant="contained"
-      >
+      <Button LinkComponent={Link} href="/" size="large" variant="contained">
         Go to home
       </Button>
     </StyledWrapPage>

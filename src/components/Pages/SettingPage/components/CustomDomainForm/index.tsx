@@ -355,7 +355,6 @@ export const CustomDomainForm = ({
 
               <LoadingButton
                 fullWidth
-                color="decorate"
                 variant="contained"
                 size="large"
                 endIcon={<ArrowRightIcon fontSize="inherit" />}
@@ -411,7 +410,6 @@ export const CustomDomainForm = ({
                 <>
                   <LoadingButton
                     fullWidth
-                    color="decorate"
                     variant="contained"
                     size="large"
                     loading={isLoading}
@@ -442,7 +440,6 @@ export const CustomDomainForm = ({
               {stepForm === "edit-dns-success" && (
                 <LoadingButton
                   fullWidth
-                  color="decorate"
                   variant="contained"
                   size="large"
                   loading={isLoading}
@@ -457,7 +454,6 @@ export const CustomDomainForm = ({
               {stepForm === "edit-dns-error" && (
                 <LoadingButton
                   fullWidth
-                  color="primary"
                   variant="contained"
                   size="medium"
                   loading={isLoading}
@@ -591,7 +587,6 @@ export const CustomDomainForm = ({
                 {stepForm === "choose-options-error" ? (
                   <LoadingButton
                     fullWidth
-                    color="primary"
                     variant="contained"
                     size="medium"
                     loading={isLoading}
@@ -604,7 +599,6 @@ export const CustomDomainForm = ({
                   <>
                     <LoadingButton
                       fullWidth
-                      color="decorate"
                       variant="contained"
                       size="large"
                       loading={isLoading}
@@ -639,7 +633,6 @@ export const CustomDomainForm = ({
               <FormControl fullWidth size="medium">
                 <LoadingButton
                   fullWidth
-                  color="decorate"
                   variant="contained"
                   size="large"
                   onClick={handleUpdateWebSiteAddress}

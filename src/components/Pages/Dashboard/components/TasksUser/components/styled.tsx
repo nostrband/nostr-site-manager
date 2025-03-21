@@ -36,7 +36,7 @@ export const StyledIcon = styled(
   }),
 )(({ isCompleted = false, theme }) => ({
   display: "flex",
-  color: isCompleted ? theme.palette.success.main : theme.palette.decorate.main,
+  color: isCompleted ? theme.palette.success.main : theme.palette.primary.main,
 }));
 
 export const StyledText = styled(Typography)(() => ({

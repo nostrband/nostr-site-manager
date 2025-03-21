@@ -27,7 +27,7 @@ export const HeaderDiscover = () => {
           <Button
             LinkComponent={Link}
             href="/"
-            color="primary"
+            color="secondary"
             variant="text"
             sx={{ minWidth: "auto" }}
             startIcon={isDesktop ? <ArrowLeftIcon /> : undefined}
@@ -40,25 +40,20 @@ export const HeaderDiscover = () => {
         <Button
           LinkComponent={Link}
           href="/sites"
-          color="primary"
           variant="text"
+          color="secondary"
           startIcon={<WebIcon />}
         >
           Discover
         </Button>
         {isAuth ? (
-          <Button
-            LinkComponent={Link}
-            href="/admin"
-            color="decorate"
-            variant="contained"
-          >
+          <Button LinkComponent={Link} href="/admin" variant="contained">
             My sites
           </Button>
         ) : (
           <Button
+            color="secondary"
             onClick={handleLogin}
-            color="primary"
             variant="text"
             startIcon={<LoginIcon />}
           >

@@ -231,7 +231,6 @@ export const PreviewNavigation = ({
     <>
       <StyledWrapper ref={componentRef}>
         <StyledIconButton
-          color="primary"
           size="large"
           onClick={handlePrev}
           sx={{ order: { xs: 1 }, marginRight: "auto" }}
@@ -255,7 +254,6 @@ export const PreviewNavigation = ({
                 width: { xs: `${isAuth ? "208px" : "100%"}`, sm: "208px" },
                 justifyContent: "space-between",
               }}
-              color="primary"
               variant="outlined"
               onClick={handleOpenModalHashtagsKinds}
               endIcon={<ExpandMoreTwoToneIcon />}
@@ -268,7 +266,6 @@ export const PreviewNavigation = ({
           sx={{ order: { xs: 1 } }}
           size="large"
           variant="contained"
-          color="decorate"
           onClick={() => {
             if (isAuth) {
               onUseTheme();
@@ -294,7 +291,6 @@ export const PreviewNavigation = ({
         )}
         <StyledIconButton
           onClick={handleNext}
-          color="primary"
           size="large"
           sx={{ order: { xs: 1 }, marginLeft: "auto" }}
         >

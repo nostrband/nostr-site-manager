@@ -42,17 +42,17 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={authed}>
-        <SnackbarProvider
-          Components={{
-            error: Notification,
-            success: Notification,
-            info: Notification,
-            default: Notification,
-            warning: Notification,
-          }}
-        >
-          {children}
-        </SnackbarProvider>
+      <SnackbarProvider
+        Components={{
+          error: Notification,
+          success: Notification,
+          info: Notification,
+          default: Notification,
+          warning: Notification,
+        }}
+      >
+        {children}
+      </SnackbarProvider>
     </AuthContext.Provider>
   );
 };

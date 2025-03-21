@@ -70,7 +70,6 @@ export const ListSitesDropdown = ({
         endIcon={<ExpandMoreTwoToneIcon />}
         fullWidth
         variant="contained"
-        color="buttonSidebarBackground"
         sx={{ textTransform: "none" }}
       >
         {siteTitle}

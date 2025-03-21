@@ -65,8 +65,8 @@ const Dashboard = () => {
           <Button
             LinkComponent={Link}
             href="/admin"
-            color="primary"
             variant="text"
+            color="secondary"
             sx={{ minWidth: "auto" }}
           >
             <ChevronLeftIcon />
@@ -107,7 +107,6 @@ const Dashboard = () => {
                     LinkComponent={Link}
                     size="large"
                     variant="contained"
-                    color="decorate"
                     href={getSite.url}
                     fullWidth
                     endIcon={<ArrowRightIcon />}
@@ -119,7 +118,6 @@ const Dashboard = () => {
                     LinkComponent={Link}
                     size="large"
                     variant="outlined"
-                    color="decorate"
                     href={linkPostManagement}
                     fullWidth
                     endIcon={<FIleTextIcon />}
@@ -133,7 +131,6 @@ const Dashboard = () => {
                         LinkComponent={Link}
                         size="large"
                         variant="outlined"
-                        color="decorate"
                         href={linkSwitchTheme}
                         fullWidth
                         endIcon={<BrushIcon />}
@@ -144,7 +141,6 @@ const Dashboard = () => {
                         LinkComponent={Link}
                         size="large"
                         variant="outlined"
-                        color="decorate"
                         href={linkSettings}
                         fullWidth
                         endIcon={<SettingsIcon />}

@@ -265,7 +265,6 @@ export const CustomDomainFormView = ({
 
               <LoadingButton
                 fullWidth
-                color="decorate"
                 variant="contained"
                 size="large"
                 loading={isLoading}

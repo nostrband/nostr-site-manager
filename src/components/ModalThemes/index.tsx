@@ -109,7 +109,6 @@ export const ModalThemes = ({
             IconComponent={ExpandMoreTwoToneIcon}
             value={tag}
             size="small"
-            color="primary"
             sx={{ svg: { color: "#292C34" } }}
             input={<OutlinedInput />}
             renderValue={(selected: string) => {
@@ -131,12 +130,7 @@ export const ModalThemes = ({
           </Select>
         </Box>
 
-        <Fab
-          onClick={handleCancel}
-          size="small"
-          color="primary"
-          aria-label="close"
-        >
+        <Fab onClick={handleCancel} size="small" aria-label="close">
           <CloseIcon />
         </Fab>
       </StyledDialogTitle>

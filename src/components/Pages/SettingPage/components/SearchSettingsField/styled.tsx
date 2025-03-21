@@ -47,7 +47,7 @@ export const StyledTextField = styled(
   },
   ".MuiFormLabel-root": {
     paddingLeft: isFocus ? "36px" : "0",
-    color: !isFocus ? theme.palette.decorate.main : "inherit",
+    color: !isFocus ? theme.palette.primary.main : "inherit",
   },
 }));
 
@@ -72,7 +72,7 @@ export const CustomPopper = styled(Popper)({
 });
 
 export const StyledHighlightWrap = styled("span")(({ theme }) => ({
-  color: theme.palette.decorate.main,
+  color: theme.palette.primary.main,
 }));
 
 export const StyledListItemWrap = styled(Box)(() => ({
@@ -84,7 +84,7 @@ export const StyledListItemWrap = styled(Box)(() => ({
 
 export const StyledListItemIcon = styled(Box)(({ theme }) => ({
   display: "flex",
-  color: theme.palette.decorate.main,
+  color: theme.palette.primary.main,
 }));
 
 export const StyledListItemTitle = styled(Typography)(() => ({

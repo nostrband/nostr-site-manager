@@ -7,9 +7,9 @@ export const StyledAppBar = styled(
   forwardRef<HTMLAnchorElement, AppBarProps>(function AppBarName(props, ref) {
     return <AppBar component="nav" ref={ref} {...props} />;
   }),
-)(() => ({
+)(({ theme }) => ({
   width: "100%",
-  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.05)",
+  boxShadow: theme.shadows[5],
   zIndex: 1299,
 }));
 

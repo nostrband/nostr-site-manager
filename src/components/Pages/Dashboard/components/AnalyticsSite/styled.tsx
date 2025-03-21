@@ -24,7 +24,7 @@ export const StyledStatsSubTitle = styled(Typography)(() => ({
 }));
 
 export const StyledItemStatIcon = styled(Box)(({ theme }) => ({
-  color: theme.palette.decorate.main,
+  color: theme.palette.primary.main,
   display: "flex",
 }));
 

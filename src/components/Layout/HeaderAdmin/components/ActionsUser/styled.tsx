@@ -34,7 +34,7 @@ export const StyledBadgeWrap = styled(Box)(() => ({
 }));
 
 export const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
-  color: theme.palette.decorate.main,
+  color: theme.palette.primary.main,
 }));
 
 export const StyledListItemIconDelete = styled(ListItemIcon)(({ theme }) => ({

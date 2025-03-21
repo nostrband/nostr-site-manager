@@ -345,8 +345,8 @@ const Design = () => {
       </StyledPreviewTestSite>
 
       <StyledButtonOpenSetting
+        color="primary"
         onClick={handleOpenSettings}
-        color="decorate"
         aria-label="open"
       >
         <TuneIcon />
@@ -360,12 +360,7 @@ const Design = () => {
         <StyledWrapper>
           <StyledTitle variant="h5">
             Settings
-            <Fab
-              onClick={handleCloseSettings}
-              size="small"
-              color="primary"
-              aria-label="close"
-            >
+            <Fab onClick={handleCloseSettings} size="small" aria-label="close">
               <CloseIcon />
             </Fab>
           </StyledTitle>
@@ -500,10 +495,10 @@ const Design = () => {
                 />
                 <Button
                   onClick={handleSwitchTheme}
-                  variant="contained"
+                  variant="outlined"
                   fullWidth
                   size="medium"
-                  color="darkInfo"
+                  color="secondary"
                 >
                   Switch theme
                 </Button>
@@ -545,7 +540,7 @@ const Design = () => {
               {hashtags.map((hashtag) => (
                 <MenuItem key={hashtag} value={hashtag}>
                   <Checkbox
-                    color="decorate"
+        
                     checked={values.hashtags.indexOf(hashtag) > -1}
                   />
                   <ListItemText primary={hashtag} />
@@ -573,7 +568,7 @@ const Design = () => {
               {kinds.map((kind) => (
                 <MenuItem key={kind} value={kind}>
                   <Checkbox
-                    color="decorate"
+       
                     checked={values.kinds.indexOf(kind) > -1}
                   />
                   <ListItemText primary={kind} />
@@ -731,10 +726,10 @@ const Design = () => {
         <StyledBottomActions>
           <Button
             onClick={handleCloseSettings}
-            variant="contained"
+            variant="outlined"
             fullWidth
             size="medium"
-            color="darkInfo"
+            color="secondary"
           >
             Preview
           </Button>
@@ -743,7 +738,6 @@ const Design = () => {
             variant="contained"
             fullWidth
             size="medium"
-            color="decorate"
             disabled={isLoading}
           >
             Publish

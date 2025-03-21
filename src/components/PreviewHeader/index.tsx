@@ -27,7 +27,6 @@ export const PreviewHeader = ({
       <StyledWrapper>
         <Button
           sx={{ span: { paddingLeft: "4px" } }}
-          color="primary"
           variant="outlined"
           onClick={handleOpen}
           endIcon={<ExpandMoreTwoToneIcon />}

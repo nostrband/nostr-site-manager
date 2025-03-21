@@ -77,12 +77,7 @@ export const ModalSites = ({
       <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
           You already have {sites.length} site{sites.length > 1 ? "s" : ""}
-          <Fab
-            onClick={handleClose}
-            size="small"
-            color="primary"
-            aria-label="close"
-          >
+          <Fab onClick={handleClose} size="small" aria-label="close">
             <CloseIcon />
           </Fab>
         </StyledTitle>
@@ -130,11 +125,11 @@ export const ModalSites = ({
           justifyContent: "space-between",
         }}
       >
-        <StyledIconButton color="primary" size="small" onClick={onPrevSite}>
+        <StyledIconButton size="small" onClick={onPrevSite}>
           <ArrowBackIcon />
         </StyledIconButton>
 
-        <StyledIconButton onClick={onNextSite} color="primary" size="small">
+        <StyledIconButton onClick={onNextSite} size="small">
           <ArrowForwardIcon />
         </StyledIconButton>
       </Box>
@@ -144,7 +139,6 @@ export const ModalSites = ({
       >
         <Button
           onClick={handleNavigateEdit}
-          color="primary"
           variant="contained"
           size="small"
           fullWidth
@@ -153,7 +147,6 @@ export const ModalSites = ({
         </Button>
         <Button
           onClick={handleNavigatePreview}
-          color="decorate"
           variant="contained"
           size="small"
           fullWidth

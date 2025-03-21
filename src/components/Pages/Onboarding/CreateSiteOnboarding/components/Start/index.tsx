@@ -47,7 +47,6 @@ export const Start = ({ createSite }: StartProps) => {
           href="/admin"
           fullWidth
           size="large"
-          color="decorate"
           variant="outlined"
         >
           Skip
@@ -56,7 +55,6 @@ export const Start = ({ createSite }: StartProps) => {
           onClick={handleBuilding}
           fullWidth
           size="large"
-          color="decorate"
           variant="contained"
         >
           Create a site

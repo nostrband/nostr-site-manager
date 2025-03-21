@@ -125,7 +125,6 @@ export const LoginEnterCode = ({
         fullWidth
         disabled={isLoading ? false : values.code.length !== OTP_LENGTH}
         size="large"
-        color="decorate"
         variant="contained"
         endIcon={<ArrowRightIcon />}
         startIcon={startIconLogin}
@@ -137,7 +136,6 @@ export const LoginEnterCode = ({
       <StyledActions>
         <Button
           size="small"
-          color="decorate"
           variant="text"
           startIcon={<ChevronLeftIcon />}
           onClick={handleBack}
@@ -148,7 +146,6 @@ export const LoginEnterCode = ({
           disabled={isLoading}
           onClick={handleResetCode}
           size="small"
-          color="decorate"
           variant="text"
         >
           Resend the code

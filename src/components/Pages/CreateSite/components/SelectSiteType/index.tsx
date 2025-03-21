@@ -60,7 +60,7 @@ export const SelectSiteType = ({
             <Chip
               icon={<CheckCircleIcon fontSize="inherit" />}
               size="small"
-              color="primary"
+              color="secondary"
               label={`Recomended: ${recomendType.typename}`}
             />
           </StyledWrapChip>

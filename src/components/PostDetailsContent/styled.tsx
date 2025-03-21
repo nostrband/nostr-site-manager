@@ -122,13 +122,12 @@ export const StyledTitle = styled(Typography)(() => ({
   width: "100%",
 }));
 
-export const StyledCardTitle = styled(Box)(({ theme }) => ({
+export const StyledCardTitle = styled(Typography)(() => ({
   width: "100%",
   wordWrap: "break-word",
   fontWeight: "700",
   fontSize: 20,
   lineHeight: "26px",
-  color: theme.palette.primary.main,
 }));
 
 export const StyledCardDescription = styled(Typography)<TypographyProps>(
@@ -192,7 +191,7 @@ export const StyledAvatrAuthor = styled(Avatar)(() => ({
   height: 32,
 }));
 
-export const StyledPostAuthorName = styled(Box)(() => ({
+export const StyledPostAuthorName = styled(Typography)(() => ({
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",

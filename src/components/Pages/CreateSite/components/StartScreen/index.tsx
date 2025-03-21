@@ -86,7 +86,7 @@ export const StartScreen = ({ createSite }: StartScreenProps) => {
       <StyledTitleStartPage>
         <Button
           onClick={handleBack}
-          color="primary"
+          color="secondary"
           variant="text"
           sx={{ minWidth: "auto" }}
         >
@@ -110,7 +110,6 @@ export const StartScreen = ({ createSite }: StartScreenProps) => {
           />
           <Button
             onClick={handleCreateSite}
-            color="decorate"
             size="large"
             variant="contained"
             fullWidth

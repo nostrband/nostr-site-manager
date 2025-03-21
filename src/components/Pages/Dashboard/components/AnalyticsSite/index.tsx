@@ -117,7 +117,6 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
             ))}
 
             {/* <Button
-              color="decorate"
               variant="outlined"
               fullWidth
               size="large"
@@ -148,7 +147,6 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
             site visitors.
           </StyledStatsSubTitle>
           <Button
-            color="decorate"
             LinkComponent={Link}
             href={linkOpenSettings}
             variant="text"

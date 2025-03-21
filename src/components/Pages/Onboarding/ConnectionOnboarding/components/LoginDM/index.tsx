@@ -152,7 +152,6 @@ export const LoginDM = ({
         fullWidth
         disabled={isLoading ? false : !values.npub.length}
         size="large"
-        color="decorate"
         variant="contained"
         endIcon={<ArrowRightIcon />}
         startIcon={startIconCreate}
@@ -164,7 +163,6 @@ export const LoginDM = ({
       <StyledActions>
         <Button
           size="small"
-          color="decorate"
           variant="text"
           startIcon={<ChevronLeftIcon />}
           onClick={handleBack}
@@ -173,7 +171,6 @@ export const LoginDM = ({
         </Button>
         <Button
           size="small"
-          color="decorate"
           variant="text"
           startIcon={<KeyIcon />}
           onClick={handleAdvanced}

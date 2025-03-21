@@ -121,7 +121,6 @@ export const ModalConfirmDeleteSite = ({
 
           <StyledActionButton>
             <LoadingButton
-              color="decorate"
               variant="outlined"
               fullWidth
               size="large"
@@ -132,7 +131,6 @@ export const ModalConfirmDeleteSite = ({
             </LoadingButton>
 
             <LoadingButton
-              color="decorate"
               variant="contained"
               type="submit"
               fullWidth

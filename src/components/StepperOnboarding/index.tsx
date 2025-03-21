@@ -43,11 +43,7 @@ export const StepperOnboarding = () => {
               </StepLabel>
             </Step>
 
-            <StepperProgress
-              color="decorate"
-              variant="determinate"
-              value={progressPercentage}
-            />
+            <StepperProgress variant="determinate" value={progressPercentage} />
           </>
         )}
       </StepperWrap>

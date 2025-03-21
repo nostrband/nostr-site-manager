@@ -56,7 +56,6 @@ const AdminPage = () => {
                 <StyledButtonAdd
                   LinkComponent={Link}
                   href="/admin/create-site"
-                  color="decorate"
                   variant="contained"
                   size="large"
                   fullWidth

@@ -10,20 +10,19 @@ import {
   OutlinedInput,
   Box,
 } from "@mui/material";
-
-import CloseIcon from "@mui/icons-material/Close";
 import {
   StyledTitle,
   StyledDialog,
   StyledDialogContent,
   StyledDialogTitle,
+  StyledEndIcon,
 } from "@/components/ModalThemes/styled";
 import React, { useMemo } from "react";
 import { THEMES_PREVIEW, TYPES_THEMES_TAG } from "@/consts";
 import ListItemButton from "@mui/material/ListItemButton";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ExpandMoreTwoTone as ExpandMoreTwoToneIcon } from "@mui/icons-material";
 import MenuItem from "@mui/material/MenuItem";
+import { CrossIcon } from "../Icons";
 
 export const ModalThemes = ({
   isOpen,
@@ -106,7 +105,7 @@ export const ModalThemes = ({
           <StyledTitle variant="body1">Choose theme</StyledTitle>
           <Select
             displayEmpty
-            IconComponent={ExpandMoreTwoToneIcon}
+            IconComponent={StyledEndIcon}
             value={tag}
             size="small"
             sx={{ svg: { color: "#292C34" } }}
@@ -131,7 +130,7 @@ export const ModalThemes = ({
         </Box>
 
         <Fab onClick={handleCancel} size="small" aria-label="close">
-          <CloseIcon />
+          <CrossIcon />
         </Fab>
       </StyledDialogTitle>
       <StyledDialogContent>

@@ -10,7 +10,6 @@ import {
   OutlinedInput,
   TextField,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   StyledTitle,
   StyledDialog,
@@ -21,6 +20,7 @@ import ListItemText from "@mui/material/ListItemText";
 import React, { useEffect, useState } from "react";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import { CrossIcon } from "../Icons";
 
 export const ModalHashtagsKinds = ({
   isOpen,
@@ -96,7 +96,7 @@ export const ModalHashtagsKinds = ({
         <StyledTitle variant="body1">
           Hashtags & Kinds
           <Fab onClick={handleClose} size="small" aria-label="close">
-            <CloseIcon />
+            <CrossIcon />
           </Fab>
         </StyledTitle>
       </DialogTitle>

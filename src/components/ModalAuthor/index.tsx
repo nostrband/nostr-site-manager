@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { CrossIcon } from "../Icons";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import {
   StyledAuthor,
@@ -122,7 +122,7 @@ export const ModalAuthor = ({
         <StyledTitle variant="body1">
           Author
           <Fab onClick={handleCancel} size="small" aria-label="close">
-            <CloseIcon />
+            <CrossIcon />
           </Fab>
         </StyledTitle>
       </DialogTitle>

@@ -2,8 +2,6 @@
 import * as React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import ExpandMoreTwoToneIcon from "@mui/icons-material/ExpandMoreTwoTone";
-import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 import { useRouter, usePathname } from "next/navigation";
 import { useListSites } from "@/hooks/useListSites";
 import {
@@ -55,7 +53,7 @@ export const ListSitesDropdown = ({
     <StyledWarpperActions>
       {!isHome && (
         <IconButton onClick={handleClickBackToHome} aria-label="back to home">
-          <HomeTwoToneIcon />
+          {/* <HomeTwoToneIcon /> */}
         </IconButton>
       )}
 
@@ -67,7 +65,7 @@ export const ListSitesDropdown = ({
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        endIcon={<ExpandMoreTwoToneIcon />}
+        // endIcon={<ExpandMoreTwoToneIcon />}
         fullWidth
         variant="contained"
         sx={{ textTransform: "none" }}

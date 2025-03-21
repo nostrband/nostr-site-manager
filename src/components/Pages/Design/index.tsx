@@ -1,7 +1,5 @@
 "use client";
-import CloseIcon from "@mui/icons-material/Close";
 import { useSearchParams, redirect, useRouter } from "next/navigation";
-import TuneIcon from "@mui/icons-material/Tune";
 import { Fab, Drawer, Button, Box, Tab } from "@mui/material";
 import React, {
   useCallback,
@@ -22,9 +20,7 @@ import {
   StyledImgPreview,
   StyledBannerPreview,
 } from "@/components/Pages/Design/styled";
-import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import { useFormik } from "formik";
-// import { validationSchemaMakePrivateSite } from "@/validations/rules";
 import { MuiColorInput } from "mui-color-input";
 import { AuthContext } from "@/services/nostr/nostr";
 import {
@@ -43,6 +39,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { CustomConfigType } from "./types";
 import { generateFormFields } from "./utils";
 import { Mutex } from "@/services/nostr/utils";
+import { BrokenIcon, CrossIcon, SettingsIcon } from "@/components/Icons";
 
 interface DesignValues {
   name: string;
@@ -349,7 +346,7 @@ const Design = () => {
         onClick={handleOpenSettings}
         aria-label="open"
       >
-        <TuneIcon />
+        <SettingsIcon />
       </StyledButtonOpenSetting>
 
       <Drawer
@@ -361,7 +358,7 @@ const Design = () => {
           <StyledTitle variant="h5">
             Settings
             <Fab onClick={handleCloseSettings} size="small" aria-label="close">
-              <CloseIcon />
+              <CrossIcon />
             </Fab>
           </StyledTitle>
 
@@ -464,7 +461,7 @@ const Design = () => {
                           paddingTop: "30px",
                         }}
                       >
-                        <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
+                        <BrokenIcon sx={{ margin: "auto" }} />
                       </Box>
                     )}
                   </StyledBannerPreview>

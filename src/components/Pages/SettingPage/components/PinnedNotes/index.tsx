@@ -40,7 +40,6 @@ import { reorder } from "./helpers";
 import { ListPinnedNote } from "./components/ListPinnedNote";
 import { fetchPins, savePins } from "@/services/nostr/api";
 import { Post } from "libnostrsite";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { StyledItemWrapDiv } from "./components/PinnedNote/styled";
 import { userIsDelegated } from "@/services/nostr/nostr";
 import { enqueueSnackbar } from "notistack";
@@ -285,9 +284,7 @@ export const PinnedNotes = memo(
               freeSolo
               disablePortal
               size={sizeField}
-              clearIcon={
-                <CloseOutlinedIcon onClick={() => setInputValue("")} />
-              }
+              clearIcon={<CrossIcon onClick={() => setInputValue("")} />}
               loading={isLoading}
               loadingText={"Searching..."}
               options={options}

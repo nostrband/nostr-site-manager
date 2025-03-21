@@ -1,6 +1,5 @@
 "use client";
 import { Box, Button, Card, CardMedia, DialogTitle, Fab } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import React, { useState } from "react";
 import {
   StyledTitle,
@@ -11,12 +10,10 @@ import { TYPES_THEMES_TAG } from "@/consts";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { StyledCardHeader } from "@/components/PreviewSite/styled";
 import { StyledCardNoImage } from "@/components/PreviewSite/styled";
-import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import { StyledIconButton } from "@/components/PreviewNavigation/styled";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/navigation";
 import { StyledAvatarSite } from "@/components/shared/styled";
+import { ArrowLeftIcon, ArrowRightIcon, BrokenIcon, CrossIcon } from "../Icons";
 
 export const ModalSites = ({
   isOpen,
@@ -78,7 +75,7 @@ export const ModalSites = ({
         <StyledTitle variant="body1">
           You already have {sites.length} site{sites.length > 1 ? "s" : ""}
           <Fab onClick={handleClose} size="small" aria-label="close">
-            <CloseIcon />
+            <CrossIcon />
           </Fab>
         </StyledTitle>
       </DialogTitle>
@@ -110,7 +107,7 @@ export const ModalSites = ({
             />
           ) : (
             <StyledCardNoImage sx={{ marginTop: "16px" }}>
-              <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
+              <BrokenIcon sx={{ margin: "auto" }} />
             </StyledCardNoImage>
           )}
         </Card>
@@ -126,11 +123,11 @@ export const ModalSites = ({
         }}
       >
         <StyledIconButton size="small" onClick={onPrevSite}>
-          <ArrowBackIcon />
+          <ArrowLeftIcon />
         </StyledIconButton>
 
         <StyledIconButton onClick={onNextSite} size="small">
-          <ArrowForwardIcon />
+          <ArrowRightIcon />
         </StyledIconButton>
       </Box>
 

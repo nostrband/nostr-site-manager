@@ -1,6 +1,4 @@
 import { Avatar, Box, Button } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import React, {
   useCallback,
   useContext,
@@ -10,6 +8,7 @@ import React, {
 } from "react";
 import {
   StyledButtonHashtagKind,
+  StyledEndIcon,
   StyledIconButton,
   StyledWrapper,
 } from "@/components/PreviewNavigation/styled";
@@ -20,8 +19,8 @@ import { ModalAuthor } from "@/components/ModalAuthor";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
 import { prefetchThemes } from "@/services/nostr/themes";
-import { ExpandMoreTwoTone as ExpandMoreTwoToneIcon } from "@mui/icons-material";
 import { ModalHashtagsKinds } from "@/components/ModalHashtagsKinds";
+import { ArrowLeftIcon, ArrowRightIcon } from "../Icons";
 
 export const PreviewNavigation = ({
   onContentSettings,
@@ -235,7 +234,7 @@ export const PreviewNavigation = ({
           onClick={handlePrev}
           sx={{ order: { xs: 1 }, marginRight: "auto" }}
         >
-          <ArrowBackIcon />
+          <ArrowLeftIcon />
         </StyledIconButton>
 
         {!noContentSettings && isAuth && (
@@ -256,7 +255,7 @@ export const PreviewNavigation = ({
               }}
               variant="outlined"
               onClick={handleOpenModalHashtagsKinds}
-              endIcon={<ExpandMoreTwoToneIcon />}
+              endIcon={<StyledEndIcon />}
             >
               <span>{selectedData.length ? selectedData : "All notes"}</span>
             </StyledButtonHashtagKind>
@@ -294,7 +293,7 @@ export const PreviewNavigation = ({
           size="large"
           sx={{ order: { xs: 1 }, marginLeft: "auto" }}
         >
-          <ArrowForwardIcon />
+          <ArrowRightIcon />
         </StyledIconButton>
       </StyledWrapper>
 

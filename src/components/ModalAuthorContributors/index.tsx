@@ -7,7 +7,6 @@ import {
   ListItem,
   TextField,
 } from "@mui/material";
-import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import {
   StyledAuthor,
@@ -188,11 +187,7 @@ export const ModalAuthorContributors = ({
             })}
           </StyledAuthorGroup>
         ) : (
-          <Alert
-            sx={{ marginBottom: "15px" }}
-            icon={<Inventory2OutlinedIcon fontSize="inherit" />}
-            severity="info"
-          >
+          <Alert sx={{ marginBottom: "15px" }} severity="info">
             Add another author for contributers
           </Alert>
         )}

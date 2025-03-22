@@ -1,12 +1,10 @@
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { useCallback, useEffect, useState } from "react";
 import {
-  StyledDescription,
+  StyledTypography,
   StyledDivider,
-  StyledEmptyTasks,
   StyledTabPanel,
   StyledTabs,
-  StyledTitle,
   StyledWrap,
 } from "./styled";
 import { TabContext, TabList } from "@mui/lab";
@@ -80,10 +78,10 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
   return (
     <StyledWrap>
       <StyledDivider />
-      <StyledTitle>Let&apos;s Improve It!</StyledTitle>
-      <StyledDescription variant="body2">
+      <StyledTypography variant="h5">Let&apos;s Improve It!</StyledTypography>
+      <StyledTypography variant="body4">
         One step at a time, slow but steady.
-      </StyledDescription>
+      </StyledTypography>
       {isLoading ? (
         <SpinerWrap>
           <SpinerCircularProgress />
@@ -117,9 +115,9 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               {isNeedMigrateKey(siteId) && <MigrateTask siteId={siteId} />}
 
               {isEmptyTodo && (
-                <StyledEmptyTasks variant="body2">
+                <StyledTypography variant="body4">
                   You&apos;ve completed all the tasks
-                </StyledEmptyTasks>
+                </StyledTypography>
               )}
 
               {todoTasks.map((el, i) => {
@@ -132,9 +130,9 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               value="completed"
             >
               {isEmptyCompleted && (
-                <StyledEmptyTasks variant="body2">
+                <StyledTypography variant="body4">
                   No completed tasks yet
-                </StyledEmptyTasks>
+                </StyledTypography>
               )}
 
               {completedTasks.map((el, i) => {

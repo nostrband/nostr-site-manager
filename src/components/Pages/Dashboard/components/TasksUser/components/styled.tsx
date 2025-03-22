@@ -1,6 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, BoxProps, Typography } from "@mui/material";
+import { Box, BoxProps } from "@mui/material";
 import { forwardRef } from "react";
 import { grey } from "@mui/material/colors";
 
@@ -37,12 +37,6 @@ export const StyledIcon = styled(
 )(({ isCompleted = false, theme }) => ({
   display: "flex",
   color: isCompleted ? theme.palette.success.main : theme.palette.primary.main,
-}));
-
-export const StyledText = styled(Typography)(() => ({
-  fontWeight: "600",
-  lineHeight: "20px",
-  fontSize: 14,
 }));
 
 export const StyledIconChevron = styled(Box)(() => ({

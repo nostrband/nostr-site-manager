@@ -1,11 +1,7 @@
 import { CheckIcon, ChevronLeftIcon, CircleIcon } from "@/components/Icons";
-import {
-  StyledIcon,
-  StyledIconChevron,
-  StyledText,
-  StyledWrap,
-} from "../styled";
+import { StyledIcon, StyledIconChevron, StyledWrap } from "../styled";
 import { TaskType } from "@/types";
+import { Typography } from "@mui/material";
 
 interface ItemTaskProps {
   task: TaskType;
@@ -24,7 +20,7 @@ export const ItemTask = ({ task, onOpen }: ItemTaskProps) => {
         {isCompleted ? <CheckIcon /> : <CircleIcon />}
       </StyledIcon>
 
-      <StyledText>{task.text}</StyledText>
+      <Typography variant="subtitle4">{task.text}</Typography>
 
       <StyledIconChevron>
         <ChevronLeftIcon />

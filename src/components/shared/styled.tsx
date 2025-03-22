@@ -15,16 +15,12 @@ export const StyledAvatarSite = styled(Avatar)(({ theme }) => ({
 export const PageTitle = styled(
   forwardRef<HTMLDivElement, TypographyProps>(
     function TypographyName(props, ref) {
-      return <Typography variant="h1" component="div" ref={ref} {...props} />;
+      return <Typography variant="h3" component="div" ref={ref} {...props} />;
     },
   ),
 )(({ theme }) => ({
-  fontWeight: "700",
-  fontSize: 24,
-  lineHeight: "31px",
-  [theme.breakpoints.up("sm")]: {
-    fontSize: 30,
-    lineHeight: "39px",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: 24,
   },
 }));
 
@@ -41,13 +37,6 @@ export const StyledCard = styled(Card)(({ theme }) => ({
   boxShadow: theme.shadows[0],
   gap: POST_CARD_PADDING,
   padding: POST_CARD_PADDING,
-}));
-
-export const StyledCardTitleFeature = styled(Typography)(() => ({
-  width: "100%",
-  fontWeight: "700",
-  fontSize: 20,
-  lineHeight: "26px",
 }));
 
 export const StyledTitlePage = styled(PageTitle)(({ theme }) => ({

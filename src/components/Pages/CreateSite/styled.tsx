@@ -1,6 +1,9 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { StyledWrapOnboardingChildren } from "@/components/shared/styled";
+import {
+  StyledWrapOnboardingChildren,
+  StyledTitlePage,
+} from "@/components/shared/styled";
 import { Avatar, Box, Button, ButtonProps, Typography } from "@mui/material";
 import { forwardRef } from "react";
 
@@ -44,16 +47,10 @@ export const StyledSelectButton = styled(
 }));
 
 export const StyledSelectButtonText = styled(Typography)(() => ({
-  fontSize: 16,
-  lineHeight: "20px",
-  fontWeight: "bold",
   marginBottom: 2,
 }));
 
 export const StyledSelectButtonSubText = styled(Typography)(() => ({
-  fontSize: 14,
-  lineHeight: "20px",
-  fontWeight: "400",
   textWrap: "wrap",
 }));
 
@@ -75,4 +72,23 @@ export const StyledWrapAuthor = styled(Box)(() => ({
 
 export const StyledFormControl = styled(Box)(() => ({
   padding: "8px 16px",
+}));
+
+export const StyledTitleStartPage = styled(StyledTitlePage)(() => ({
+  paddingBottom: 0,
+}));
+
+export const StyledWrapBlock = styled(Box)(({ theme }) => ({
+  paddingBottom: 0,
+  borderRadius: theme.shape.borderRadius,
+  background: "#fff",
+  padding: 16,
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  gap: 16,
+}));
+
+export const StyledWrapChip = styled(Box)(() => ({
+  padding: "0px 8px",
 }));

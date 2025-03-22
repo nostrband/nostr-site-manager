@@ -63,8 +63,8 @@ export const SignUp = () => {
 
   return (
     <>
-      <StyledTitlePage>Create Nostr profile</StyledTitlePage>
-      <StyledDescriptionPage variant="body2">
+      <StyledTitlePage variant="h3">Create Nostr profile</StyledTitlePage>
+      <StyledDescriptionPage variant="body3">
         Choose any username, you can always change it later.
       </StyledDescriptionPage>
 

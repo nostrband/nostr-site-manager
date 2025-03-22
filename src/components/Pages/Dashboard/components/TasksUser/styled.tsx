@@ -22,16 +22,7 @@ export const StyledDivider = styled(Divider)(() => ({
   margin: "8px 0",
 }));
 
-export const StyledTitle = styled(Typography)(() => ({
-  fontSize: 20,
-  lineHeight: "26px",
-  textAlign: "center",
-  fontWeight: "700",
-}));
-
-export const StyledDescription = styled(Typography)(() => ({
-  fontSize: 14,
-  lineHeight: "22px",
+export const StyledTypography = styled(Typography)(() => ({
   textAlign: "center",
 }));
 
@@ -65,10 +56,4 @@ export const StyledTabs = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",
   gap: 16,
-}));
-
-export const StyledEmptyTasks = styled(Typography)(() => ({
-  fontSize: 14,
-  textAlign: "center",
-  fontWeight: "400",
 }));

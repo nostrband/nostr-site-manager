@@ -5,7 +5,6 @@ import {
   TextFieldProps,
   TextField,
   Popper,
-  Typography,
   ListSubheader,
 } from "@mui/material";
 import { forwardRef } from "react";
@@ -85,16 +84,6 @@ export const StyledListItemWrap = styled(Box)(() => ({
 export const StyledListItemIcon = styled(Box)(({ theme }) => ({
   display: "flex",
   color: theme.palette.primary.main,
-}));
-
-export const StyledListItemTitle = styled(Typography)(() => ({
-  fontSize: "16px",
-  lineHeight: "24px",
-}));
-
-export const StyledListItemDescription = styled(Typography)(() => ({
-  fontSize: "14px",
-  lineHeight: "20px",
 }));
 
 export const StyledDivider = styled(Box)(() => ({

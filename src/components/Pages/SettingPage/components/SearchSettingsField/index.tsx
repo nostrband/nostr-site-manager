@@ -4,14 +4,13 @@ import {
   ListItem,
   Divider,
   Box,
+  Typography,
 } from "@mui/material";
 import {
   CustomPopper,
   StyledDivider,
   StyledFormControl,
-  StyledListItemDescription,
   StyledListItemIcon,
-  StyledListItemTitle,
   StyledListItemWrap,
   StyledListSubheader,
   StyledStartIcon,
@@ -110,17 +109,16 @@ export const SearchSettingsField: FC<SearchSettingsFieldProps> = ({
               <StyledListItemWrap>
                 <StyledListItemIcon>{option.icon}</StyledListItemIcon>
                 <Box>
-                  <StyledListItemTitle
+                  <Typography
+                    variant="body1"
                     sx={{
                       color: option.isComingSoon ? "rgba(0, 0, 0, 0.38)" : "",
                     }}
                   >
                     {title}
-                  </StyledListItemTitle>
+                  </Typography>
                   {Boolean(value.length) && (
-                    <StyledListItemDescription variant="body2">
-                      {description}
-                    </StyledListItemDescription>
+                    <Typography variant="body5">{description}</Typography>
                   )}
                 </Box>
               </StyledListItemWrap>

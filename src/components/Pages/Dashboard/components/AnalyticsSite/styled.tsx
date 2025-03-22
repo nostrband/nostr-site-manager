@@ -13,24 +13,11 @@ export const StyledItemStat = styled(Box)(() => ({
   gap: 8,
 }));
 
-export const StyledItemStatTitle = styled(Typography)(() => ({
-  fontSize: 16,
-  lineHeight: "25px",
-}));
-
-export const StyledStatsSubTitle = styled(Typography)(() => ({
-  fontSize: 14,
-  lineHeight: "22px",
-}));
-
 export const StyledItemStatIcon = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.main,
   display: "flex",
 }));
 
 export const StyledItemStatValue = styled(Typography)(() => ({
-  fontSize: 16,
-  lineHeight: "20px",
-  fontWeight: "700",
   marginLeft: "auto",
 }));

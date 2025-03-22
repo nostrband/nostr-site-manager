@@ -131,7 +131,7 @@ export const ActionsUser = () => {
               </StyledBadgeAvatar>
             )}
 
-            <StyledBadgeTitle variant="body2">
+            <StyledBadgeTitle variant="subtitle2">
               {getSite?.title}
             </StyledBadgeTitle>
 

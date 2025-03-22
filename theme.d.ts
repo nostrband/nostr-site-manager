@@ -6,6 +6,7 @@ declare module "@mui/material/styles" {
     body4: React.CSSProperties;
     body5: React.CSSProperties;
     h7: React.CSSProperties;
+    subtitle4?: React.CSSProperties;
   }
 
   interface TypographyVariantsOptions {
@@ -13,6 +14,7 @@ declare module "@mui/material/styles" {
     body4?: React.CSSProperties;
     body5?: React.CSSProperties;
     h7?: React.CSSProperties;
+    subtitle4?: React.CSSProperties;
   }
 }
 
@@ -22,6 +24,7 @@ declare module "@mui/material/Typography" {
     body4: true;
     body5: true;
     h7: true;
+    subtitle4: true;
   }
 }
 

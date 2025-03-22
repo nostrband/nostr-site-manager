@@ -108,8 +108,8 @@ export const LoginEnterCode = ({
 
   return (
     <>
-      <StyledTitlePage>Enter your code</StyledTitlePage>
-      <StyledDescriptionPage variant="body2">
+      <StyledTitlePage variant="h3">Enter your code</StyledTitlePage>
+      <StyledDescriptionPage variant="body3">
         Please enter the 6-digit code we sent you as a direct message.
       </StyledDescriptionPage>
 

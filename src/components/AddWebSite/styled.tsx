@@ -34,7 +34,6 @@ export const StyledPreviews = styled(Box)(({ theme }) => ({
 
 export const StyledTitle = styled(Typography)(({ theme }) => ({
   fontSize: 48,
-  color: theme.palette.primary.main,
   textAlign: "center",
   fontWeight: "bold",
   fontFamily: InterDisplay.style.fontFamily,

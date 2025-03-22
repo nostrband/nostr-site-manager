@@ -118,8 +118,8 @@ export const LoginDM = ({
 
   return (
     <>
-      <StyledTitlePage>Log in</StyledTitlePage>
-      <StyledDescriptionPage variant="body2">
+      <StyledTitlePage variant="h3">Log in</StyledTitlePage>
+      <StyledDescriptionPage variant="body3">
         Enter your user name or npub. You will receive a direct message with a
         code.
       </StyledDescriptionPage>

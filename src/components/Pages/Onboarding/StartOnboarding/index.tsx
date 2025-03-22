@@ -22,8 +22,8 @@ const StartOnboarding = () => {
 
   return (
     <>
-      <StyledTitlePage>Are you on Nostr?</StyledTitlePage>
-      <StyledDescriptionPage variant="body2">
+      <StyledTitlePage variant="h3">Are you on Nostr?</StyledTitlePage>
+      <StyledDescriptionPage variant="body3">
         Do you have an account on the{" "}
         <Link href={"https://nostr.org/"} target="_blank">
           Nostr network

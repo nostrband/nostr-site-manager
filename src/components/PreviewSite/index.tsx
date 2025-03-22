@@ -135,8 +135,10 @@ export const PreviewSite = memo(function PreviewSite({
                 </StyledAvatarSite>
               )
             }
-            title={<StyledCardTitle>{title}</StyledCardTitle>}
-            subheader={<StyledCardSubHeader>{url}</StyledCardSubHeader>}
+            title={<StyledCardTitle variant="h6">{title}</StyledCardTitle>}
+            subheader={
+              <StyledCardSubHeader variant="body5">{url}</StyledCardSubHeader>
+            }
           />
           {isLinkToOpenSite && (
             <IconButton
@@ -164,7 +166,7 @@ export const PreviewSite = memo(function PreviewSite({
         <StyledWrapFooter sx={{ background: `${accentColor}` }}>
           <StyledCardContent>
             <StyledCardDescription
-              variant="body2"
+              variant="body5"
               color={getContrastingTextColor(accentColor)}
             >
               {description}
@@ -181,8 +183,10 @@ export const PreviewSite = memo(function PreviewSite({
                 color: getContrastingTextColor(accentColor),
               }}
             >
-              <StyledCardAuthorName>{mainName}</StyledCardAuthorName>
-              <StyledCardAuthorStatus>
+              <StyledCardAuthorName variant="h7">
+                {mainName}
+              </StyledCardAuthorName>
+              <StyledCardAuthorStatus variant="body4">
                 {mainContributorPubkey === adminPubkey
                   ? "Admin"
                   : "Contributor"}

@@ -24,17 +24,15 @@ export const StyledWrapFilter = styled(Box)(({ theme }) => ({
 }));
 
 export const StyledTitleFilter = styled(Typography)(({ theme }) => ({
-  fontSize: 24,
-  fontWeight: "700",
-  lineHeight: "31px",
   display: "flex",
   alignItems: "center",
   gap: 8,
   marginBottom: 16,
   [theme.breakpoints.up("sm")]: {
-    fontSize: 16,
-    lineHeight: "20px",
     justifyContent: "space-between",
+  },
+  [theme.breakpoints.down("sm")]: {
+    fontSize: 24,
   },
 }));
 

@@ -6,6 +6,7 @@ import {
   Button,
   ListItem,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import {
@@ -14,7 +15,6 @@ import {
   StyledDialog,
   StyledDialogContent,
   StyledAuthorWrap,
-  StyledAuthorName,
   StyledDialogTitle,
   StyledAuthorGroup,
 } from "@/components/ModalAuthorContributors/styled";
@@ -137,7 +137,7 @@ export const ModalAuthorContributors = ({
       aria-describedby="alert-dialog-description"
     >
       <StyledDialogTitle component="div" id="alert-dialog-title">
-        <StyledTitle variant="body1">
+        <StyledTitle variant="h5">
           Contributors
           <Button
             onClick={handleCancel}
@@ -170,7 +170,7 @@ export const ModalAuthorContributors = ({
                       src={imgContributor}
                       sx={{ width: 40, height: 40 }}
                     />
-                    <StyledAuthorName>{nameContributor}</StyledAuthorName>
+                    <Typography variant="h7">{nameContributor}</Typography>
                   </StyledAuthor>
 
                   <Button

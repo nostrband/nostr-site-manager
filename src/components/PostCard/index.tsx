@@ -292,7 +292,7 @@ export const PostCard = memo(
                 </StyledCardVideoWrap>
               ) : null}
 
-              <StyledDate component="div" variant="body2">
+              <StyledDate component="div" variant="body5">
                 <span>{datePost}</span>
                 <span>{timePost}</span>
 
@@ -307,9 +307,11 @@ export const PostCard = memo(
 
               {(isTitle || Boolean(event.content)) && (
                 <StyledCardText>
-                  {isTitle && <StyledCardTitle>{title}</StyledCardTitle>}
+                  {isTitle && (
+                    <StyledCardTitle variant="h5">{title}</StyledCardTitle>
+                  )}
                   {Boolean(event.content) && (
-                    <StyledCardDescription component="div" variant="body2">
+                    <StyledCardDescription component="div" variant="body3">
                       {event.content}
                     </StyledCardDescription>
                   )}
@@ -334,7 +336,7 @@ export const PostCard = memo(
                 >
                   <IconPerson fontSize="inherit" />
                 </StyledAvatrAuthor>
-                <StyledPostAuthorName>
+                <StyledPostAuthorName variant="body1">
                   {primary_author?.name}
                 </StyledPostAuthorName>
               </StyledCardWrapAuthor>

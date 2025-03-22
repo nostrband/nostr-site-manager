@@ -184,8 +184,6 @@ export const StyledCardMedia = styled(
 export const StyledDate = styled(Typography)<TypographyProps>(() => ({
   display: "flex",
   textTransform: "uppercase",
-  fontSize: "12px",
-  lineHeight: "24px",
   width: "100%",
   gap: 8,
 }));
@@ -196,15 +194,6 @@ export const StyledTypePost = styled(Chip)(() => ({
   marginLeft: "auto",
 }));
 
-export const StyledTitle = styled(Typography)(() => ({
-  display: "flex",
-  justifyContent: "space-between",
-  textTransform: "uppercase",
-  fontSize: "12px",
-  lineHeight: "24px",
-  width: "100%",
-}));
-
 export const StyledCardTitle = styled(Typography)(() => ({
   width: "100%",
   overflow: "hidden",
@@ -213,9 +202,6 @@ export const StyledCardTitle = styled(Typography)(() => ({
   WebkitLineClamp: 2,
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  fontWeight: "700",
-  fontSize: 20,
-  lineHeight: "26px",
 }));
 
 export const StyledCardDescription = styled(Typography)<TypographyProps>(
@@ -227,9 +213,6 @@ export const StyledCardDescription = styled(Typography)<TypographyProps>(
     WebkitLineClamp: 3,
     WebkitBoxOrient: "vertical",
     wordWrap: "break-word",
-    fontWeight: "500",
-    fontSize: 16,
-    lineHeight: "25px",
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
       lineHeight: "22px",
@@ -271,9 +254,6 @@ export const StyledPostAuthorName = styled(Typography)(() => ({
   WebkitLineClamp: 1,
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  fontSize: "16px",
-  lineHeight: "24px",
-  fontWeight: "500",
 }));
 
 export const StyledLink = styled(

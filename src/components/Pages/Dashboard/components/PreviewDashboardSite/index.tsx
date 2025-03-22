@@ -99,8 +99,10 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
               </StyledAvatarSite>
             )
           }
-          title={<StyledCardTitle>{title}</StyledCardTitle>}
-          subheader={<StyledCardSubHeader>{url}</StyledCardSubHeader>}
+          title={<StyledCardTitle variant="h6">{title}</StyledCardTitle>}
+          subheader={
+            <StyledCardSubHeader variant="body5">{url}</StyledCardSubHeader>
+          }
         />
       </StyledCardHeaderWrap>
 
@@ -114,7 +116,9 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
         >
           <AddImageIcon fontSize="inherit" />
 
-          <StyledTextAddImage>Add a site cover image</StyledTextAddImage>
+          <StyledTextAddImage variant="body4">
+            Add a site cover image
+          </StyledTextAddImage>
         </StyledCardAddImage>
       )}
 
@@ -122,7 +126,7 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
         {Boolean(description) && (
           <StyledCardContent>
             <StyledCardDescription
-              variant="body2"
+              variant="body5"
               color={getContrastingTextColor(accentColor)}
             >
               {description}
@@ -140,8 +144,8 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
               color: getContrastingTextColor(accentColor),
             }}
           >
-            <StyledCardAuthorName>{mainName}</StyledCardAuthorName>
-            <StyledCardAuthorStatus>
+            <StyledCardAuthorName variant="h7">{mainName}</StyledCardAuthorName>
+            <StyledCardAuthorStatus variant="body4">
               {mainContributorPubkey === adminPubkey ? "Admin" : "Contributor"}
               {isSeveralAuthor && (
                 <StyledAvatarGroup max={3}>

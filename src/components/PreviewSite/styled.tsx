@@ -135,13 +135,10 @@ export const StyledCardTitle = styled(Typography)(() => ({
   WebkitLineClamp: 1,
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  fontWeight: "700",
-  fontSize: 16,
-  lineHeight: "18px",
   height: "18px",
 }));
 
-export const StyledCardSubHeader = styled(Box)(() => ({
+export const StyledCardSubHeader = styled(Typography)(() => ({
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -149,8 +146,6 @@ export const StyledCardSubHeader = styled(Box)(() => ({
   WebkitLineClamp: 1,
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  fontSize: 12,
-  lineHeight: "19px",
   height: "18px",
 }));
 
@@ -162,8 +157,6 @@ export const StyledCardDescription = styled(Typography)(() => ({
   WebkitLineClamp: "2",
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  fontSize: 12,
-  lineHeight: "19px",
 }));
 
 export const StyledCardContent = styled(CardContent)(() => ({
@@ -178,7 +171,7 @@ export const StyledCardWrapAuthors = styled(Box)(() => ({
   padding: CARD_PADDING,
 }));
 
-export const StyledCardAuthorName = styled(Box)(() => ({
+export const StyledCardAuthorName = styled(Typography)(() => ({
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -186,20 +179,15 @@ export const StyledCardAuthorName = styled(Box)(() => ({
   WebkitLineClamp: 1,
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  fontweight: "700",
-  fontSize: "14px",
-  lineHeight: "18px",
-  fontWeight: "700",
+  color: "inherit",
 }));
 
-export const StyledCardAuthorStatus = styled(Box)(() => ({
-  fontSize: "14px",
-  lineHeight: "22px",
-  fontWeight: "400",
+export const StyledCardAuthorStatus = styled(Typography)(() => ({
   paddingTop: "3px",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
+  color: "inherit",
 }));
 
 export const StyledAvatarGroup = styled(AvatarGroup)(() => ({

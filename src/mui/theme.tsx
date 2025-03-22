@@ -97,18 +97,69 @@ const theme = createTheme({
   ] as typeof shadows,
   typography: {
     fontFamily: InterVariable.style.fontFamily,
-    allVariants: {
+    h3: {
+      fontSize: 30,
+      fontWeight: "bold",
+      lineHeight: "130%",
+    },
+    h5: {
+      fontSize: 20,
+      lineHeight: "130%",
+      fontWeight: "bold",
+    },
+    h6: {
+      fontSize: 16,
+      lineHeight: "130%",
+      fontWeight: "bold",
+    },
+    h7: {
+      color: "#000",
+      fontWeight: "bold",
+      fontSize: 14,
+      lineHeight: "130%",
+      fontFamily: InterVariable.style.fontFamily,
+    },
+    subtitle2: {
+      color: "rgba(0, 0, 0, 0.6)",
+      fontSize: 14,
+      fontWeight: "500",
+      lineHeight: "157%",
+    },
+    subtitle4: {
+      color: "#000",
+      fontSize: 14,
+      fontWeight: "600",
+      lineHeight: "130%",
+    },
+    body1: {
+      fontSize: 16,
+      lineHeight: "150%",
+      fontWeight: "400",
       color: "#000",
     },
     body2: {
       color: "rgba(0, 0, 0, 0.6)",
     },
-    h7: {
+    body3: {
+      color: "rgba(0, 0, 0, 0.6)",
+      fontSize: 16,
+      fontWeight: "400",
+      lineHeight: "160%",
+    },
+    body4: {
+      color: "rgba(0, 0, 0, 0.6)",
+      fontSize: 14,
+      fontWeight: "400",
+      lineHeight: "160%",
+    },
+    body5: {
+      fontSize: 12,
+      fontWeight: "400",
+      lineHeight: "160%",
+      color: "rgba(0, 0, 0, 0.6)",
+    },
+    allVariants: {
       color: "#000",
-      fontWeight: "bold",
-      fontSize: "14px",
-      lineHeight: "130%",
-      fontFamily: InterVariable.style.fontFamily,
     },
   },
   shape: {

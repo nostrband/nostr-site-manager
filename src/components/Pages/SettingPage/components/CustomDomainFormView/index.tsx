@@ -11,14 +11,7 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import {
-  StyledDialog,
-  StyledDialogContent,
-  StyledDialogSubDescription,
-  StyledDialogSubTitle,
-  StyledDialogTitle,
-  StyledTitle,
-} from "./styled";
+import { StyledDialog, StyledDialogContent, StyledDialogTitle } from "./styled";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { enqueueSnackbar } from "notistack";
@@ -181,7 +174,7 @@ export const CustomDomainFormView = ({
     i: number,
   ) => (
     <Fragment key={i}>
-      <StyledDialogSubTitle>DNS record #{i + 1}</StyledDialogSubTitle>
+      <Typography variant="h5">DNS record #{i + 1}</Typography>
 
       <ReadOnlyInput label="Type" value={dns.type} />
 
@@ -207,7 +200,7 @@ export const CustomDomainFormView = ({
     >
       <Box ref={contentRef}>
         <StyledDialogTitle>
-          <StyledTitle variant="body1">Custom domain</StyledTitle>
+          <Typography variant="h5">Custom domain</Typography>
 
           <Button
             onClick={onClose}
@@ -283,11 +276,11 @@ export const CustomDomainFormView = ({
             <>
               {domainInfo!.isApex && (
                 <>
-                  <StyledDialogSubTitle>Main address</StyledDialogSubTitle>
-                  <StyledDialogSubDescription variant="body2">
+                  <Typography variant="h5">Main address</Typography>
+                  <Typography variant="body5">
                     Main site address will be used as canonical, and the
                     alternative name will be redirected to the main address.
-                  </StyledDialogSubDescription>
+                  </Typography>
 
                   <Box>
                     <FormControl sx={{ paddingLeft: "0px" }} disabled>
@@ -303,24 +296,21 @@ export const CustomDomainFormView = ({
                           control={<Radio />}
                           label={`www.${domain}`}
                         />
-                        <StyledDialogSubDescription
+                        <Typography
                           sx={{ mb: "16px", marginTop: "8px" }}
-                          variant="body2"
+                          variant="body5"
                         >
                           Supported by all DNS providers
-                        </StyledDialogSubDescription>
+                        </Typography>
                         <FormControlLabel
                           disabled
                           value={domain}
                           control={<Radio />}
                           label={domain}
                         />
-                        <StyledDialogSubDescription
-                          sx={{ marginTop: "8px" }}
-                          variant="body2"
-                        >
+                        <Typography sx={{ marginTop: "8px" }} variant="body5">
                           Supported by limited number of DNS providers
-                        </StyledDialogSubDescription>
+                        </Typography>
                       </RadioGroup>
                     </FormControl>
                   </Box>

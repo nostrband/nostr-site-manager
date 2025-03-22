@@ -104,16 +104,20 @@ export const CustomDomains = memo(
           )}
 
           <StyledFormFields>
-            {listDomains.length
-              ? listDomains.map((el, i) => (
-                  <ItemDomain
-                    disabled={!isEdit}
-                    siteId={siteId}
-                    key={i}
-                    domain={el}
-                  />
-                ))
-              : SETTINGS_CONFIG.customDomains.description}
+            {listDomains.length ? (
+              listDomains.map((el, i) => (
+                <ItemDomain
+                  disabled={!isEdit}
+                  siteId={siteId}
+                  key={i}
+                  domain={el}
+                />
+              ))
+            ) : (
+              <StyledDescriptionBlock>
+                {SETTINGS_CONFIG.customDomains.description}
+              </StyledDescriptionBlock>
+            )}
           </StyledFormFields>
         </StyledHeadSettingBlock>
 

@@ -12,12 +12,10 @@ import { useCallback, useEffect, useState } from "react";
 import {
   StyledItemStat,
   StyledItemStatIcon,
-  StyledItemStatTitle,
   StyledItemStatValue,
   StyledStatsLoading,
-  StyledStatsSubTitle,
 } from "./styled";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import Link from "next/link";
 import { userIsDelegated, userIsReadOnly } from "@/services/nostr/nostr";
 import { CardFeatureContent } from "@/components/shared/CardFeatureContent";
@@ -109,10 +107,10 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
             {stats.map((el, i) => (
               <StyledItemStat key={i}>
                 <StyledItemStatIcon>{el.icon}</StyledItemStatIcon>
-                <StyledItemStatTitle variant="body2">
-                  {el.title}
-                </StyledItemStatTitle>
-                <StyledItemStatValue>{el.value}</StyledItemStatValue>
+                <Typography variant="body3">{el.title}</Typography>
+                <StyledItemStatValue variant="h6">
+                  {el.value}
+                </StyledItemStatValue>
               </StyledItemStat>
             ))}
 
@@ -128,24 +126,24 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
         ))}
       {isSendStats && userIsReadOnly && (
         <>
-          <StyledStatsSubTitle variant="body2">
+          <Typography variant="body4">
             Analytics not available in read-only mode.
-          </StyledStatsSubTitle>
+          </Typography>
         </>
       )}
       {isSendStats && userIsDelegated && (
         <>
-          <StyledStatsSubTitle variant="body2">
+          <Typography variant="body4">
             Connect keys to view encrypted analytics.
-          </StyledStatsSubTitle>
+          </Typography>
         </>
       )}
       {!isSendStats && (
         <>
-          <StyledStatsSubTitle variant="body2">
+          <Typography variant="body4">
             Please enable Analytics to receive encrypted statistics about your
             site visitors.
-          </StyledStatsSubTitle>
+          </Typography>
           <Button
             LinkComponent={Link}
             href={linkOpenSettings}

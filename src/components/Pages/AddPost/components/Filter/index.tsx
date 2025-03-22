@@ -591,8 +591,12 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
             submitForm();
           }}
         >
-          <StyledTitleFilter>
-            <StyledCloseFilterButton onClick={handleClose} variant="text">
+          <StyledTitleFilter variant="h6">
+            <StyledCloseFilterButton
+              color="secondary"
+              onClick={handleClose}
+              variant="text"
+            >
               <ChevronLeftIcon />
             </StyledCloseFilterButton>
             Search

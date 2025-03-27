@@ -2,7 +2,9 @@ import {
   BarChartIcon,
   BarChartSendIcon,
   BrushIcon,
+  CheckCircleIcon,
   CodeIcon,
+  CrossCircleIcon,
   FIleTextIcon,
   HomeIcon,
   ImageIcon,
@@ -17,6 +19,7 @@ import {
   StarRectangleIcon,
   TitleIcon,
   UserCircleIcon,
+  WarningCircleIcon,
   WebIcon,
 } from "@/components/Icons";
 
@@ -58,6 +61,9 @@ import mnmlDemo from "../../public/images/preview-theme/mnml-demo.npub.pro.png";
 import vitorsDemo from "../../public/images/preview-theme/vitors-demo.npub.pro.png";
 import microLieblingDemo from "../../public/images/preview-theme/micro-liebling-demo.png";
 import { SelectTypeSite, TypeAuthor } from "@/types";
+import { ReactNode } from "react";
+
+export const PRIMARY_COLOR = "#FF3ED9";
 
 export const NPUB_PRO_DOMAIN = "npub.pro";
 export const NPUB_PRO_API = "https://api.npubpro.com";
@@ -386,6 +392,41 @@ export const STEPS_ONBOARDING_CONFIG = {
     title: "Create site",
     slug: "create-site",
     step: 3,
+  },
+};
+
+export enum SUBSCRIPTION_PLAN {
+  PAID = "PAID",
+  UNPAID = "UNPAID",
+  PAST_DUE = "PAST_DUE",
+}
+
+type PaletteColorKeys = "primary" | "warning" | "error";
+
+export const SUBSCRIPTION_PLAN_COLOR: Record<
+  SUBSCRIPTION_PLAN,
+  PaletteColorKeys
+> = {
+  [SUBSCRIPTION_PLAN.PAID]: "primary",
+  [SUBSCRIPTION_PLAN.UNPAID]: "warning",
+  [SUBSCRIPTION_PLAN.PAST_DUE]: "error",
+};
+
+export const SUBSCRIPTION_PLAN_STATUS: Record<
+  SUBSCRIPTION_PLAN,
+  { title: string; icon: ReactNode }
+> = {
+  [SUBSCRIPTION_PLAN.PAID]: {
+    title: "Paid",
+    icon: <CheckCircleIcon color="inherit" fontSize="inherit" />,
+  },
+  [SUBSCRIPTION_PLAN.UNPAID]: {
+    title: "Unpaid",
+    icon: <WarningCircleIcon color="inherit" fontSize="inherit" />,
+  },
+  [SUBSCRIPTION_PLAN.PAST_DUE]: {
+    title: "Past due",
+    icon: <CrossCircleIcon color="inherit" fontSize="inherit" />,
   },
 };
 

@@ -6,9 +6,11 @@ import {
   StyledTabPanel,
   StyledTabs,
   StyledWrap,
+  StyledAlertExpiringPlan,
+  StyledAlertExpiringPlanIcon,
 } from "./styled";
 import { TabContext, TabList } from "@mui/lab";
-import { Tab } from "@mui/material";
+import { IconButton, Tab } from "@mui/material";
 import { CheckCircleIcon, FIleTextIcon } from "@/components/Icons";
 import { ItemTask } from "./components/ItemTask";
 import { useRouter } from "next/navigation";
@@ -112,6 +114,17 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               isGutter={isGutter}
               value="todo"
             >
+              <StyledAlertExpiringPlan
+                severity="warning"
+                action={
+                  <IconButton color="inherit" size="small">
+                    <StyledAlertExpiringPlanIcon />
+                  </IconButton>
+                }
+              >
+                Your plan is expiring
+              </StyledAlertExpiringPlan>
+
               {isNeedMigrateKey(siteId) && <MigrateTask siteId={siteId} />}
 
               {isEmptyTodo && (
@@ -121,7 +134,14 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               )}
 
               {todoTasks.map((el, i) => {
-                return <ItemTask key={i} task={el} onOpen={handleOpen} />;
+                return (
+                  <ItemTask
+                    key={i}
+                    subscriptionPlan={el.paymentPlan}
+                    task={el}
+                    onOpen={handleOpen}
+                  />
+                );
               })}
             </StyledTabPanel>
             <StyledTabPanel
@@ -130,13 +150,20 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               value="completed"
             >
               {isEmptyCompleted && (
-                <StyledTypography variant="body4">
+                <StyledTypography component="div" variant="body4">
                   No completed tasks yet
                 </StyledTypography>
               )}
 
               {completedTasks.map((el, i) => {
-                return <ItemTask key={i} task={el} onOpen={handleOpen} />;
+                return (
+                  <ItemTask
+                    subscriptionPlan={el.paymentPlan}
+                    key={i}
+                    task={el}
+                    onOpen={handleOpen}
+                  />
+                );
               })}
             </StyledTabPanel>
           </TabContext>

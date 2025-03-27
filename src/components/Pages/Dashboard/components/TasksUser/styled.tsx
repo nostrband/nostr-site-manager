@@ -1,8 +1,15 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Divider, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Divider,
+  Typography,
+  TypographyProps,
+} from "@mui/material";
 import { TabPanel, TabPanelProps } from "@mui/lab";
 import { forwardRef } from "react";
+import { ArrowUpIcon } from "@/components/Icons";
 
 interface ITabPanel {
   isGutter: boolean;
@@ -22,7 +29,7 @@ export const StyledDivider = styled(Divider)(() => ({
   margin: "8px 0",
 }));
 
-export const StyledTypography = styled(Typography)(() => ({
+export const StyledTypography = styled(Typography)<TypographyProps>(() => ({
   textAlign: "center",
 }));
 
@@ -56,4 +63,14 @@ export const StyledTabs = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",
   gap: 16,
+}));
+
+export const StyledAlertExpiringPlan = styled(Alert)(() => ({
+  cursor: "pointer",
+}));
+
+export const StyledAlertExpiringPlanIcon = styled(ArrowUpIcon)(() => ({
+  transform: "rotate(90deg)",
+  color: "inherit",
+  fontSize: "inherit",
 }));

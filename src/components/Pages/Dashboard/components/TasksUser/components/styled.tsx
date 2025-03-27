@@ -42,6 +42,12 @@ export const StyledIcon = styled(
 export const StyledIconChevron = styled(Box)(() => ({
   transform: "rotate(180deg)",
   display: "flex",
-  marginLeft: "auto",
   color: "#696F7D",
+}));
+
+export const StyledActions = styled(Box)(() => ({
+  marginLeft: "auto",
+  display: "flex",
+  gap: 8,
+  alignItems: "center",
 }));

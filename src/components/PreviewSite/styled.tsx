@@ -138,6 +138,11 @@ export const StyledCardTitle = styled(Typography)(() => ({
   height: "18px",
 }));
 
+export const StyledCardTitleWrap = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "start",
+}));
+
 export const StyledCardSubHeader = styled(Typography)(() => ({
   width: "100%",
   overflow: "hidden",

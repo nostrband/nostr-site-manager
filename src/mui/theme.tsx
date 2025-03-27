@@ -1,8 +1,9 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
-import { grey, red } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
 import localFont from "next/font/local";
 import shadows from "@mui/material/styles/shadows";
+import { PRIMARY_COLOR } from "@/consts";
 
 export const InterDisplay = localFont({
   src: [
@@ -50,23 +51,23 @@ const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#FF3ED9",
+      main: PRIMARY_COLOR,
     },
     secondary: {
       main: "#000",
     },
+    warning: {
+      main: "#EF6C00",
+    },
     error: {
-      main: red.A400,
+      main: "#FF4B4E",
+    },
+    success: {
+      main: "#2E7D32",
     },
     background: {
       default: grey[100],
     },
-    // decorate: {
-    //   light: "#fff",
-    //   main: "#FF3ED9",
-    //   dark: "#c62fa9",
-    //   contrastText: "#fff",
-    // },
   },
   shadows: [
     "none",
@@ -102,6 +103,11 @@ const theme = createTheme({
       fontWeight: "bold",
       lineHeight: "130%",
     },
+    h4: {
+      fontSize: 24,
+      lineHeight: "130%",
+      fontWeight: "bold",
+    },
     h5: {
       fontSize: 20,
       lineHeight: "130%",
@@ -124,6 +130,11 @@ const theme = createTheme({
       fontSize: 14,
       fontWeight: "500",
       lineHeight: "157%",
+    },
+    subtitle3: {
+      fontSize: 16,
+      fontWeight: "600",
+      lineHeight: "140%",
     },
     subtitle4: {
       color: "#000",

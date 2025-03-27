@@ -1,4 +1,4 @@
-import { Box, Button, Grid } from "@mui/material";
+import { Alert, Box, Button, Grid } from "@mui/material";
 import { PendingInvoicesItem } from "../PendingInvoicesItem";
 import { TotalAmountDescription } from "@/components/shared/TotalAmountDescription";
 import { TotalAmount } from "@/components/shared/TotalAmount";
@@ -8,6 +8,11 @@ export const PendingInvoices = () => {
   return (
     <>
       <Grid container spacing={{ xs: "24px" }} columns={{ xs: 12, sm: 12 }}>
+        <Grid item xs={12}>
+          <Alert severity="warning">
+            Your subscription expires in 5 days, please pay up
+          </Alert>
+        </Grid>
         <Grid item xs={12} sm={6} md={6}>
           <Box>
             <Grid

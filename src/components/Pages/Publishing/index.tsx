@@ -41,12 +41,12 @@ const Publishing = () => {
 
   const title =
     state === "done"
-      ? "Your website is ready!"
-      : "Please wait as we prepare your website ...";
+      ? "Your site is ready!"
+      : "Please wait as we prepare your site ...";
   const description =
     state === "done" ? (
       <>
-        You can manage your website settings in your{" "}
+        You can manage your site settings in your{" "}
         <Link href={`/admin/${siteId}`}>dashboard</Link>.
       </>
     ) : (
@@ -114,7 +114,6 @@ const Publishing = () => {
           <Button
             variant="contained"
             fullWidth
-            color="primary"
             sx={{ marginTop: "10px" }}
             onClick={tryAgain}
           >
@@ -128,16 +127,11 @@ const Publishing = () => {
   return (
     <StyledWrap>
       <SpinnerPublishing isLoading={state !== "done"} />
-      <StyledTitle variant="h4">{title}</StyledTitle>
-      <StyledDescription variant="body1">{description}</StyledDescription>
+      <StyledTitle variant="h5">{title}</StyledTitle>
+      <StyledDescription variant="body4">{description}</StyledDescription>
       {state === "done" && (
-        <Button
-          onClick={handleClick}
-          color="decorate"
-          size="large"
-          variant="contained"
-        >
-          Open website
+        <Button onClick={handleClick} size="large" variant="contained">
+          Open site
         </Button>
       )}
     </StyledWrap>

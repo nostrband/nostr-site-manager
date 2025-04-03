@@ -13,11 +13,11 @@ import {
   StyledAlertTitle,
   StyledButtonInfo,
   StyledFilterActions,
-  StyledTitle,
 } from "./styled";
 import { useBack } from "@/hooks/useBackPage";
 import Link from "next/link";
 import useResponsive from "@/hooks/useResponsive";
+import { StyledTitlePage } from "@/components/shared/styled";
 
 export const Head = ({ linkToAddPost }: { linkToAddPost: string }) => {
   const flagAlert = "isOpenAlertInfoPost";
@@ -54,10 +54,10 @@ export const Head = ({ linkToAddPost }: { linkToAddPost: string }) => {
 
   return (
     <>
-      <StyledTitle>
+      <StyledTitlePage>
         <Button
+          color="secondary"
           onClick={handleBack}
-          color="primary"
           variant="text"
           sx={{ minWidth: "auto" }}
         >
@@ -71,7 +71,6 @@ export const Head = ({ linkToAddPost }: { linkToAddPost: string }) => {
               href={linkToAddPost}
               size="large"
               fullWidth
-              color="decorate"
               variant="contained"
               endIcon={<PlusIcon fontSize="inherit" />}
             >
@@ -87,7 +86,7 @@ export const Head = ({ linkToAddPost }: { linkToAddPost: string }) => {
             <InfoIcon fontSize="inherit" />
           </StyledButtonInfo>
         </StyledFilterActions>
-      </StyledTitle>
+      </StyledTitlePage>
 
       <Collapse in={isOpenAlertInfo}>
         <StyledAlert

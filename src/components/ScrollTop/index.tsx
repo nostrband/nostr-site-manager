@@ -43,7 +43,7 @@ export const ScrollTop = (props: Props) => {
           right: positionButton[1],
         }}
       >
-        <Fab size="medium" color="decorate" aria-label="scroll back to top">
+        <Fab color="primary" size="medium" aria-label="scroll back to top">
           <ArrowUpIcon />
         </Fab>
       </Box>

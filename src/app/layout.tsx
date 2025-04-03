@@ -1,7 +1,12 @@
 import { ReactNode } from "react";
 import { ThemeWrapper } from "@/mui/ThemeWrapper";
-import { AppWrapper } from "@/components/Layout/AppWrapper";
 import Providers from "@/utils/tanstack/providers.client";
+import dynamic from "next/dynamic";
+import { BodyWrapper } from "@/components/Layout/MainContent";
+
+const AppWrapper = dynamic(() => import("../components/Layout/AppWrapper"), {
+  ssr: false,
+});
 
 export const metadata = {
   title: "Npub.pro",
@@ -20,7 +25,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <ThemeWrapper>
         <Providers>
-          <AppWrapper>{children}</AppWrapper>
+          <BodyWrapper>
+            <AppWrapper>{children}</AppWrapper>
+          </BodyWrapper>
         </Providers>
       </ThemeWrapper>
     </html>

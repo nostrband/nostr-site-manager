@@ -4,14 +4,12 @@ import { styled } from "@mui/material/styles";
 import { AppBar, AppBarProps, Toolbar } from "@mui/material";
 
 export const StyledAppBar = styled(
-  forwardRef<HTMLAnchorElement, AppBarProps>(
-    function MainContentName(props, ref) {
-      return <AppBar component="nav" ref={ref} {...props} />;
-    },
-  ),
-)(() => ({
+  forwardRef<HTMLAnchorElement, AppBarProps>(function AppBarName(props, ref) {
+    return <AppBar component="nav" ref={ref} {...props} />;
+  }),
+)(({ theme }) => ({
   width: "100%",
-  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.05)",
+  boxShadow: theme.shadows[5],
   zIndex: 1299,
 }));
 
@@ -23,6 +21,7 @@ export const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   minHeight: "50px",
   height: "50px",
   left: 0,
+  gap: 8,
   [theme.breakpoints.up("sm")]: {
     minHeight: "50px",
     height: "50px",

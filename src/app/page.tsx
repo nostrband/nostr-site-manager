@@ -1,6 +1,15 @@
 "use client";
-import { Onboarding } from "@/components/Pages/Onboarding";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
 
-export default function OnboardingPage() {
-  return <Onboarding />;
+const Landing = dynamic(() => import("../components/Pages/Landing"), {
+  ssr: false,
+});
+
+export default function LandingPage() {
+  return (
+    <Suspense>
+      <Landing />
+    </Suspense>
+  );
 }

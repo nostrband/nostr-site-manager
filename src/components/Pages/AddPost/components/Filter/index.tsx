@@ -591,17 +591,16 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
             submitForm();
           }}
         >
-          <StyledTitleFilter>
+          <StyledTitleFilter variant="h6">
             <StyledCloseFilterButton
+              color="secondary"
               onClick={handleClose}
-              color="primary"
               variant="text"
             >
               <ChevronLeftIcon />
             </StyledCloseFilterButton>
             Search
             <StyledCollapseButtonFilter
-              color="decorate"
               isOpenMoreFilter={isOpenMoreFilter}
               variant="text"
               endIcon={
@@ -740,7 +739,6 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
                   loading={isLoadingFilter}
                   variant="contained"
                   fullWidth
-                  color="decorate"
                   size="large"
                   endIcon={
                     !isDesktop ? <SearchIcon fontSize="inherit" /> : undefined
@@ -777,7 +775,6 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
               onClick={handleClickOpen}
               size="large"
               fullWidth
-              color="decorate"
               variant="outlined"
               endIcon={<SearchIcon fontSize="inherit" />}
             >

@@ -1,5 +1,5 @@
 import { createHeadlessEditor } from "@lexical/headless";
-import { ClientPost, DBReturnType, Post, Tag } from "../types";
+import { ClientPost, DBReturnType, Tag } from "../types";
 import { TRANSFORMERS, $convertToMarkdownString } from "@lexical/markdown";
 import { LineBreakNode, ParagraphNode, TextNode } from "lexical";
 import { LinkNode } from "@lexical/link";

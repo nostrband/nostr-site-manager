@@ -1,5 +1,5 @@
 "use client";
-import { Alert, Container, Grid } from "@mui/material";
+import { Alert, Container } from "@mui/material";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { Head } from "./components/Head";
 import { Filter, FilterRef } from "./components/Filter";
@@ -17,7 +17,7 @@ import { NotFoundIcon } from "@/components/Icons";
 import { PostCard } from "@/components/PostCard";
 import { LoadingButton } from "@mui/lab";
 
-export const AddPost = () => {
+const AddPost = () => {
   const { siteId } = useGetSiteId();
   const [isLoadingPosts, setloadingPosts] = useState(true);
   const [isLoadingMore, setLoadingMore] = useState(false);
@@ -108,7 +108,6 @@ export const AddPost = () => {
                 disabled={isLoadingMore}
                 loading={isLoadingMore}
                 variant="outlined"
-                color="decorate"
                 fullWidth
                 size="large"
                 onClick={handleLoadMore}
@@ -122,3 +121,5 @@ export const AddPost = () => {
     </Container>
   );
 };
+
+export default AddPost;

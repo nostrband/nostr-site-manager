@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { BrushIcon } from "@/components/Icons";
 import { StyledText } from "./styled";
 import { SaveButton } from "../SaveButton";
+import { Typography } from "@mui/material";
 
 interface DesignBrandingProps {
   siteId: string;
@@ -41,8 +42,13 @@ export const DesignBranding = memo(
           </StyledTitleBlock>
         </StyledHeadSettingBlock>
 
-        <StyledText variant="body2">
-          Current theme: <b>{themeName}</b>
+        <StyledText>
+          <Typography component="div" variant="body2">
+            Current theme:
+          </Typography>
+          <Typography component="div" variant="h7">
+            {themeName}
+          </Typography>
         </StyledText>
       </StyledSettingBlock>
     );

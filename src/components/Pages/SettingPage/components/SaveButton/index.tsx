@@ -41,7 +41,6 @@ export const SaveButton = ({
       {userIsReadOnly ? (
         <StyledActions>
           <LoadingButton
-            color="decorate"
             variant="text"
             size="medium"
             disabled
@@ -89,7 +88,6 @@ export const SaveButton = ({
         </StyledActions>
       ) : (
         <LoadingButton
-          color="decorate"
           variant="text"
           size="medium"
           loading={isLoading}

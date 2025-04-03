@@ -1,6 +1,6 @@
 "use client";
-import { Onboarding } from "@/components/Pages/Onboarding";
+import { redirect } from "next/navigation";
 
 export default function OnboardingPage() {
-  return <Onboarding />;
+  return redirect(`/onboarding/start`);
 }

@@ -22,8 +22,5 @@ export const StyledCardAddImage = styled(CardActionArea)(({ theme }) => ({
 }));
 
 export const StyledTextAddImage = styled(Typography)(() => ({
-  fontSize: 14,
-  lineHeight: "22px",
-  fontWeight: "400",
   color: grey[500],
 }));

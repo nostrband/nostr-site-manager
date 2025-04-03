@@ -26,22 +26,17 @@ export const StyledHeadSettingBlock = styled(Box)(() => ({
   marginBottom: 16,
 }));
 
-export const StyledTitleBlock = styled(Typography)(() => ({
-  fontSize: 16,
-  fontWeight: "700",
-  lineHeight: "20px",
+export const StyledTitleBlock = styled((props: TypographyProps) => {
+  return <Typography variant="h6" {...props} />;
+})({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-}));
+});
 
 export const StyledDescriptionBlock = styled((props: TypographyProps) => {
-  return <Typography variant="body2" {...props} />;
-})({
-  fontSize: 12,
-  fontWeight: "400",
-  lineHeight: "19px",
-});
+  return <Typography variant="body5" {...props} />;
+})();
 
 export const StyledSettingBlock = styled(Box)(({ theme }) => ({
   padding: 16,
@@ -56,24 +51,10 @@ export const StyledFormFields = styled(Box)(() => ({
   gap: 16,
 }));
 
-export const StyledComingSoonProfile = styled(Box)(() => ({
-  fontWeight: "600",
-  fontSize: 14,
+export const StyledComingSoonProfile = styled(Typography)(() => ({
   color: grey[400],
   height: 38,
-  lineHeight: "38px",
   textAlign: "center",
-}));
-
-export const StyledTitle = styled(PageTitle)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  paddingBottom: 24,
-  gap: 8,
-  paddingTop: 40,
-  [theme.breakpoints.down("sm")]: {
-    paddingTop: 16,
-  },
 }));
 
 export const StyledTitleSection = styled(PageTitle)(({ theme }) => ({
@@ -119,7 +100,7 @@ export const StyledIconImage = styled(Avatar)(({ theme }) => ({
   },
 }));
 
-export const SearchSettingsFieldWrap = styled(Box)(({ theme }) => ({
+export const SearchSettingsFieldWrap = styled(Box)(() => ({
   paddingBottom: "24px",
 }));
 

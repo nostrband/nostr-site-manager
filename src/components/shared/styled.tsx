@@ -15,16 +15,12 @@ export const StyledAvatarSite = styled(Avatar)(({ theme }) => ({
 export const PageTitle = styled(
   forwardRef<HTMLDivElement, TypographyProps>(
     function TypographyName(props, ref) {
-      return <Typography variant="h1" component="div" ref={ref} {...props} />;
+      return <Typography variant="h3" component="div" ref={ref} {...props} />;
     },
   ),
 )(({ theme }) => ({
-  fontWeight: "700",
-  fontSize: 24,
-  lineHeight: "31px",
-  [theme.breakpoints.up("sm")]: {
-    fontSize: 30,
-    lineHeight: "39px",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: 24,
   },
 }));
 
@@ -43,10 +39,23 @@ export const StyledCard = styled(Card)(({ theme }) => ({
   padding: POST_CARD_PADDING,
 }));
 
-export const StyledCardTitleFeature = styled(Box)(({ theme }) => ({
+export const StyledTitlePage = styled(PageTitle)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  paddingBottom: 24,
+  gap: 8,
+  paddingTop: 40,
   width: "100%",
-  fontWeight: "700",
-  fontSize: 20,
-  lineHeight: "26px",
-  color: theme.palette.primary.main,
+  [theme.breakpoints.down("sm")]: {
+    paddingTop: 16,
+  },
+}));
+
+export const StyledWrapOnboardingChildren = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: "16px",
+  maxWidth: 348,
+  margin: "0 auto",
+  alignItems: "center",
 }));

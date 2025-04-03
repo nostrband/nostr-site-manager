@@ -37,7 +37,7 @@ export async function migrateToConnectedKey(siteId: string) {
               method: string;
               pubkey: string;
             }
-          // @ts-ignore
+          // @ts-expect-error err
           | undefined = e.detail;
         if (!info || info.type !== "login") return;
         console.log("key migration, login pubkey", info.pubkey);
@@ -97,7 +97,7 @@ export async function migrateToConnectedKey(siteId: string) {
       "to",
       relays,
     );
-    const newSite = await publishSiteEvent(event, relays);
+    const newSite = await publishSiteEvent(event);
     console.log("published new site event", newSite);
 
     newSiteId = eventId(newSite);

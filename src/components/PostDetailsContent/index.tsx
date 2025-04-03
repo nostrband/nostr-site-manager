@@ -46,7 +46,8 @@ import DOMPurify from "dompurify";
 import { SUPPORTED_KIND_NAMES_SINGLE } from "@/consts";
 import { PhotoViewer } from "../PhotoViewer";
 import { StyledCardMediaWrap, StyledCardMediaZoom } from "../PostCard/styled";
-import { StyledCardTitleFeature } from "../shared/styled";
+import { StyledCard } from "../shared/styled";
+import { CardFeatureContent } from "../shared/CardFeatureContent";
 
 export const PostDetailsContent = memo(
   ({
@@ -107,6 +108,8 @@ export const PostDetailsContent = memo(
     const isAdded = Boolean(submitterPubkey);
 
     const isVideos = Boolean(videos.length);
+
+    const isTitle = event.kind !== 1 && Boolean(title);
 
     const [progress, setProgress] = useState<number>(0);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
@@ -205,7 +208,7 @@ export const PostDetailsContent = memo(
 
     return (
       <>
-        <StyledCardFeature>
+        <StyledCard>
           {isLoadedImage && feature_image ? (
             <StyledCardMediaWrap>
               <StyledCardMedia
@@ -227,7 +230,7 @@ export const PostDetailsContent = memo(
             />
           ) : null}
 
-          <StyledDate variant="body2">
+          <StyledDate component="div" variant="body2">
             <span>{datePost}</span>
             <span>{timePost}</span>
 
@@ -241,8 +244,8 @@ export const PostDetailsContent = memo(
           </StyledDate>
 
           <StyledCardText>
-            <StyledCardTitle>{title}</StyledCardTitle>
-            <StyledCardDescription variant="body2">
+            {isTitle && <StyledCardTitle>{title}</StyledCardTitle>}
+            <StyledCardDescription component="div" variant="body2">
               {isCollapseText ? (
                 <>
                   <Collapse in={isShowMore} collapsedSize={heightCollapseArea}>
@@ -251,11 +254,7 @@ export const PostDetailsContent = memo(
 
                   {!isShowMore && (
                     <StyledButtonCollapse>
-                      <Button
-                        color="decorate"
-                        variant="contained"
-                        onClick={handleShowMore}
-                      >
+                      <Button variant="contained" onClick={handleShowMore}>
                         Show more
                       </Button>
                     </StyledButtonCollapse>
@@ -267,11 +266,13 @@ export const PostDetailsContent = memo(
             </StyledCardDescription>
           </StyledCardText>
 
-          <StyledTags>
-            {tags.map((tag, idx) => (
-              <Chip label={tag.name} key={idx} size="medium" />
-            ))}
-          </StyledTags>
+          {Boolean(tags.length) && (
+            <StyledTags>
+              {tags.map((tag, idx) => (
+                <Chip label={tag.name} key={idx} size="medium" />
+              ))}
+            </StyledTags>
+          )}
 
           <StyledCardWrapAuthor>
             <StyledAvatrAuthor
@@ -285,77 +286,76 @@ export const PostDetailsContent = memo(
             </StyledAvatrAuthor>
             <StyledPostAuthorName>{primary_author?.name}</StyledPostAuthorName>
           </StyledCardWrapAuthor>
-        </StyledCardFeature>
+        </StyledCard>
 
         <Grid container sx={{ paddingTop: "24px" }} spacing={{ xs: "24px" }}>
           <Grid item xs={12} sm={6}>
             <StyledCardFeature>
-              <StyledCardTitleFeature>Post settings</StyledCardTitleFeature>
-              <StyledAddButton
-                fullWidth
-                isSending={isSending}
-                isWaiting={isWaiting}
-                isAdded={isAdded}
-                loading={isSending}
-                disabled={isSending}
-                variant="outlined"
-                color="decorate"
-                onClick={handleClick}
-                size="large"
-                startIcon={
-                  isSending ? undefined : isWaiting ? (
-                    <CircularProgress
-                      color="inherit"
-                      size={20}
-                      variant="determinate"
-                      value={progress}
-                    />
-                  ) : isAdded ? (
-                    <Avatar
-                      src={submitterProfile?.profile?.picture}
-                      sx={{
-                        border: "1px solid #fff",
-                        height: "20px",
-                        width: "20px",
-                        fontSize: "12px !important",
-                      }}
-                    >
-                      <IconPerson fontSize="inherit" />
-                    </Avatar>
-                  ) : (
-                    <PlusIcon color="inherit" fontSize="inherit" />
-                  )
-                }
-              >
-                {isWaiting ? "Cancel" : isAdded ? "Added" : "Add"}
-              </StyledAddButton>
+              <CardFeatureContent title="Post settings">
+                <StyledAddButton
+                  fullWidth
+                  isSending={isSending}
+                  isWaiting={isWaiting}
+                  isAdded={isAdded}
+                  loading={isSending}
+                  disabled={isSending}
+                  variant="outlined"
+                  onClick={handleClick}
+                  size="large"
+                  startIcon={
+                    isSending ? undefined : isWaiting ? (
+                      <CircularProgress
+                        color="inherit"
+                        size={20}
+                        variant="determinate"
+                        value={progress}
+                      />
+                    ) : isAdded ? (
+                      <Avatar
+                        src={submitterProfile?.profile?.picture}
+                        sx={{
+                          border: "1px solid #fff",
+                          height: "20px",
+                          width: "20px",
+                          fontSize: "12px !important",
+                        }}
+                      >
+                        <IconPerson fontSize="inherit" />
+                      </Avatar>
+                    ) : (
+                      <PlusIcon color="inherit" fontSize="inherit" />
+                    )
+                  }
+                >
+                  {isWaiting ? "Cancel" : isAdded ? "Added" : "Add"}
+                </StyledAddButton>
 
-              {autoSubmitted && (
-                <StyledStatusWrap>
-                  <StyledStatusState variant="body2">State</StyledStatusState>
-                  <StyledTooltip
-                    placement="bottom"
-                    title="This post is auto-submitted according to your Settings"
-                    arrow
-                  >
-                    <StyledStatus>
-                      <CheckCircleIcon color="inherit" />
-                      Auto-submitted
-                    </StyledStatus>
-                  </StyledTooltip>
-                </StyledStatusWrap>
-              )}
+                {autoSubmitted && (
+                  <StyledStatusWrap>
+                    <StyledStatusState variant="body2">State</StyledStatusState>
+                    <StyledTooltip
+                      placement="bottom"
+                      title="This post is auto-submitted according to your Settings"
+                      arrow
+                    >
+                      <StyledStatus>
+                        <CheckCircleIcon color="inherit" />
+                        Auto-submitted
+                      </StyledStatus>
+                    </StyledTooltip>
+                  </StyledStatusWrap>
+                )}
+              </CardFeatureContent>
             </StyledCardFeature>
           </Grid>
           <Grid item xs={12} sm={6}>
             <StyledCardFeature>
-              <StyledCardTitleFeature>
-                Information and stats
-              </StyledCardTitleFeature>
-              <StyledComingSoon>
-                <InfoIcon color="inherit" />
-                Coming soon
-              </StyledComingSoon>
+              <CardFeatureContent title="Information and stats">
+                <StyledComingSoon>
+                  <InfoIcon color="inherit" />
+                  Coming soon
+                </StyledComingSoon>
+              </CardFeatureContent>
             </StyledCardFeature>
           </Grid>
         </Grid>

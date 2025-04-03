@@ -1,7 +1,6 @@
 import { SiteAddr, fetchEvents, parseAddr } from "libnostrsite";
 import { STATS_RELAYS, addOnAuth, ndk, userNip46, userPubkey } from "./nostr";
-import { NDKEvent, NDKNip07Signer, NDKUser } from "@nostr-dev-kit/ndk";
-import { nip19 } from "nostr-tools";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
 
 const KIND_STATS = 1995;
 
@@ -66,13 +65,13 @@ async function loadEvents() {
   const newEvents = await fetchEvents(
     ndk,
     {
-      // @ts-ignore
+      // @ts-expect-error err
       kinds: [KIND_STATS],
       "#p": [userPubkey],
       since,
     },
     STATS_RELAYS,
-    5000
+    5000,
   );
   console.log("stats loaded events since", since, newEvents);
 
@@ -90,8 +89,8 @@ async function loadEvents() {
         const content = JSON.parse(
           // NOTE: talk directly to nostr-login bcs
           // NDKNip07Signer only supports single-threaded access
-          // @ts-ignore
-          await window.nostr.nip04.decrypt(event.pubkey, event.content)
+          // @ts-expect-error err
+          await window.nostr.nip04.decrypt(event.pubkey, event.content),
         );
         // console.log("stats event", content, event);
 
@@ -140,7 +139,7 @@ export async function fetchSiteStats(id: string) {
   const addr = parseAddr(id);
   const siteEvents = events.filter(
     (e) =>
-      e.addr.identifier === addr.identifier && e.addr.pubkey === addr.pubkey
+      e.addr.identifier === addr.identifier && e.addr.pubkey === addr.pubkey,
   );
 
   const pubkeys = new Set<string>();
@@ -150,14 +149,14 @@ export async function fetchSiteStats(id: string) {
 
   const uid = (e: StatsEvent) => {
     return e.content.user || e.content.vid;
-  }
+  };
 
-  let visitMap = new Map<string, number> ();
+  const visitMap = new Map<string, number>();
   let visits = 0;
   for (const e of siteEvents) {
     if (e.content.type !== "pageview") continue;
     const lastTm = visitMap.get(uid(e)) || 0;
-    if ((e.event.created_at! - lastTm) > 3600) visits++;
+    if (e.event.created_at! - lastTm > 3600) visits++;
     visitMap.set(uid(e), e.event.created_at!);
   }
 
@@ -175,17 +174,15 @@ export async function fetchSiteStats(id: string) {
         //     e.content.payload.data?.authType !== "logout"
         // ).length,
         signups: siteEvents.filter(
-          (e) =>
-            e.content.type === "auth" &&
-            e.content.data?.type === "signup"
+          (e) => e.content.type === "auth" && e.content.data?.type === "signup",
         ).length,
         reactions: siteEvents.filter(
           (e) =>
             e.content.type === "event" &&
-            e.content.data?.action === "event-published"
+            e.content.data?.action === "event-published",
         ).length,
         npubs: new Set(
-          siteEvents.filter((e) => e.content.user).map((e) => e.content.user)
+          siteEvents.filter((e) => e.content.user).map((e) => e.content.user),
         ).size,
       },
       // users: {

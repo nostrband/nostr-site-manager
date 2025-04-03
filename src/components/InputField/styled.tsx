@@ -27,7 +27,7 @@ export const StyledFormControl = styled(FormControl)(() => ({
 
 export const StyledInputLabel = styled(
   forwardRef<HTMLLabelElement, IStyledInputLabel>(
-    function MainContentName(props, ref) {
+    function InputLabelName(props, ref) {
       const exclude = new Set(["isFocus", "isStartIcon", "isValue"]);
 
       const omitProps = Object.fromEntries(

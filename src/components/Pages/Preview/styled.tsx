@@ -2,17 +2,13 @@
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 
-export const StyledPreviewTestSite = styled(Box)(({ theme }) => ({
+export const StyledPreviewTestSite = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   width: "100%",
   height: "100%",
-  // paddingBottom: "74px",
   paddingTop: "64px",
-  // [theme.breakpoints.down("sm")]: {
-  //   paddingBottom: "127px",
-  // },
   position: "relative",
   overflow: "hidden",
   boxShadow: "0px 28px 40.1px 0px #00000026",
@@ -24,7 +20,6 @@ export const StyledPreviewTestSiteNotAuth = styled(Box)(() => ({
   justifyContent: "center",
   width: "100%",
   height: "100%",
-  // paddingBottom: "74px",
   paddingTop: "64px",
   position: "relative",
   overflow: "hidden",

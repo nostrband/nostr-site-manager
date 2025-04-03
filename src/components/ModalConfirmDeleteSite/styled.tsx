@@ -7,21 +7,17 @@ import {
   FormControl,
   DialogTitle,
   DialogTitleProps,
+  TypographyProps,
 } from "@mui/material";
 
 export const StyledTitle = styled(Typography)(() => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  fontWeight: "bold",
-  fontSize: "20px",
-  lineHeight: "26px",
 }));
 
-export const StyledText = styled(Typography)(() => ({
+export const StyledText = styled(Typography)<TypographyProps>(() => ({
   marginBottom: 16,
-  fontSize: 14,
-  lineHeight: "22px",
 }));
 
 export const StyledActionButton = styled(Box)(() => ({

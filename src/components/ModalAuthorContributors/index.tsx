@@ -6,8 +6,8 @@ import {
   Button,
   ListItem,
   TextField,
+  Typography,
 } from "@mui/material";
-import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import {
   StyledAuthor,
@@ -15,7 +15,6 @@ import {
   StyledDialog,
   StyledDialogContent,
   StyledAuthorWrap,
-  StyledAuthorName,
   StyledDialogTitle,
   StyledAuthorGroup,
 } from "@/components/ModalAuthorContributors/styled";
@@ -89,7 +88,7 @@ export const ModalAuthorContributors = ({
         .filter((p) => !!p);
       console.log("options", options);
       setLoading(false);
-      // @ts-ignore
+
       setOptions(options);
     } catch (error) {
       setLoading(false);
@@ -138,7 +137,7 @@ export const ModalAuthorContributors = ({
       aria-describedby="alert-dialog-description"
     >
       <StyledDialogTitle component="div" id="alert-dialog-title">
-        <StyledTitle variant="body1">
+        <StyledTitle variant="h5">
           Contributors
           <Button
             onClick={handleCancel}
@@ -171,7 +170,7 @@ export const ModalAuthorContributors = ({
                       src={imgContributor}
                       sx={{ width: 40, height: 40 }}
                     />
-                    <StyledAuthorName>{nameContributor}</StyledAuthorName>
+                    <Typography variant="h7">{nameContributor}</Typography>
                   </StyledAuthor>
 
                   <Button
@@ -188,11 +187,7 @@ export const ModalAuthorContributors = ({
             })}
           </StyledAuthorGroup>
         ) : (
-          <Alert
-            sx={{ marginBottom: "15px" }}
-            icon={<Inventory2OutlinedIcon fontSize="inherit" />}
-            severity="info"
-          >
+          <Alert sx={{ marginBottom: "15px" }} severity="info">
             Add another author for contributers
           </Alert>
         )}

@@ -28,7 +28,7 @@ export const AddWebSite = () => {
   };
 
   const getColor = (tag: TYPES_THEMES_TAG) =>
-    activeTag === tag ? "decorate" : "lightInfo";
+    activeTag === tag ? "primary" : "secondary";
 
   const handleNavigate = (id: string) => {
     router.push(

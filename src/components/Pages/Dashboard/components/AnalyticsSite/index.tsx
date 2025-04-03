@@ -6,21 +6,19 @@ import {
   LoginIcon,
   UsersIcon,
 } from "@/components/Icons";
-import { StyledCard, StyledCardTitleFeature } from "@/components/shared/styled";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { fetchSiteStats, SiteStats } from "@/services/nostr/stats";
 import { useCallback, useEffect, useState } from "react";
 import {
   StyledItemStat,
   StyledItemStatIcon,
-  StyledItemStatTitle,
   StyledItemStatValue,
   StyledStatsLoading,
-  StyledStatsSubTitle,
 } from "./styled";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import Link from "next/link";
 import { userIsDelegated, userIsReadOnly } from "@/services/nostr/nostr";
+import { CardFeatureContent } from "@/components/shared/CardFeatureContent";
 
 interface AnalyticsSiteProps {
   siteId: string;
@@ -96,8 +94,7 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
   }, [isSendStats, siteId, getStats]);
 
   return (
-    <StyledCard>
-      <StyledCardTitleFeature>Analytics (last week)</StyledCardTitleFeature>
+    <CardFeatureContent title="Analytics (last week)">
       {showStats &&
         (isLoading ? (
           <StyledStatsLoading>
@@ -110,15 +107,14 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
             {stats.map((el, i) => (
               <StyledItemStat key={i}>
                 <StyledItemStatIcon>{el.icon}</StyledItemStatIcon>
-                <StyledItemStatTitle variant="body2">
-                  {el.title}
-                </StyledItemStatTitle>
-                <StyledItemStatValue>{el.value}</StyledItemStatValue>
+                <Typography variant="body3">{el.title}</Typography>
+                <StyledItemStatValue variant="h6">
+                  {el.value}
+                </StyledItemStatValue>
               </StyledItemStat>
             ))}
 
             {/* <Button
-              color="decorate"
               variant="outlined"
               fullWidth
               size="large"
@@ -130,26 +126,25 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
         ))}
       {isSendStats && userIsReadOnly && (
         <>
-          <StyledStatsSubTitle variant="body2">
+          <Typography variant="body4">
             Analytics not available in read-only mode.
-          </StyledStatsSubTitle>
+          </Typography>
         </>
       )}
       {isSendStats && userIsDelegated && (
         <>
-          <StyledStatsSubTitle variant="body2">
+          <Typography variant="body4">
             Connect keys to view encrypted analytics.
-          </StyledStatsSubTitle>
+          </Typography>
         </>
       )}
       {!isSendStats && (
         <>
-          <StyledStatsSubTitle variant="body2">
+          <Typography variant="body4">
             Please enable Analytics to receive encrypted statistics about your
             site visitors.
-          </StyledStatsSubTitle>
+          </Typography>
           <Button
-            color="decorate"
             LinkComponent={Link}
             href={linkOpenSettings}
             variant="text"
@@ -161,6 +156,6 @@ export const AnalyticsSite = ({ siteId, isSendStats }: AnalyticsSiteProps) => {
           </Button>
         </>
       )}
-    </StyledCard>
+    </CardFeatureContent>
   );
 };

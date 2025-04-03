@@ -1,7 +1,7 @@
 "use client";
 import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { MainWrapper, StyledWrapCenter } from "@/components/Layout/MainContent";
-import { HeaderLayout } from "@/components/Layout/HeaderLayout";
+import { HeaderAdmin } from "@/components/Layout/HeaderAdmin";
 import { useRouter, usePathname, redirect } from "next/navigation";
 import { useListSites } from "@/hooks/useListSites";
 import { useFirstPathElement } from "@/hooks/useFirstPathElement";
@@ -21,15 +21,19 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const { isAuth, isLoading } = useContext(AuthContext);
 
   const isPathAdmin = pathname === "/admin";
-  const isPathAdminAdd = pathname === "/admin/add";
+  const isPathAdminAdd = ["/admin/add", "/admin/create-site"].includes(
+    pathname,
+  );
 
   const getValidParamsId = useCallback(
-    (list: ReturnSitesDataType[], id: string | string[], url: string) => {
+    (list: ReturnSitesDataType[], id: string | string[]) => {
       const isId = list.find((el) => el.id === id);
 
       if (isPathAdminAdd) {
         return;
       }
+
+      console.log({ isId });
 
       if (!isId) {
         router.push(pathAdmin);
@@ -50,9 +54,9 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (data) {
-      getValidParamsId(data, siteId, pathname);
+      getValidParamsId(data, siteId);
     }
-  }, [data, getValidParamsId, siteId, pathname]);
+  }, [data, getValidParamsId, siteId, pathname, isAuth]);
 
   const login = async () => {
     await window.nostr!.getPublicKey();
@@ -61,17 +65,17 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
 
   return (
     <MainWrapper>
-      <HeaderLayout />
+      <HeaderAdmin linkToHome="/admin" />
       {isLogin ? (
         children
       ) : (
         <StyledWrapCenter>
           <Box sx={{ margin: "auto", textAlign: "center" }}>
-            <Button variant="contained" color="decorate" onClick={login}>
+            <Button variant="contained" onClick={login}>
               Login
             </Button>
             <Typography sx={{ marginTop: "15px" }}>
-              Please log in to manager your websites.
+              Please log in to manager your sites.
             </Typography>
           </Box>
         </StyledWrapCenter>

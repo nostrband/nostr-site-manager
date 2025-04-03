@@ -140,7 +140,6 @@ export const Navigation = memo(
             sx={{ marginTop: "16px" }}
             variant="contained"
             fullWidth
-            color="decorate"
             size="large"
             endIcon={<PlusCircleIcon fontSize="inherit" />}
             onClick={() => handleAddLinkNavigation("primary")}

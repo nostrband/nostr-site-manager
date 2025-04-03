@@ -29,7 +29,6 @@ import {
   IconLink,
   IconPerson,
 } from "@/components/Icons";
-import { nip19 } from "nostr-tools";
 import useContributors from "@/hooks/useContributors";
 import { parseProfileEvent } from "@/services/nostr/nostr";
 
@@ -106,7 +105,7 @@ export const PreviewSite = memo(function PreviewSite({
           {isLink ? (
             <StyledCardActionArea
               LinkComponent={isLink ? CustomLinkComponent : undefined}
-              // @ts-expect-error
+              // @ts-expect-error err
               href={isLink ? link : undefined}
             >
               {children}
@@ -136,16 +135,17 @@ export const PreviewSite = memo(function PreviewSite({
                 </StyledAvatarSite>
               )
             }
-            title={<StyledCardTitle>{title}</StyledCardTitle>}
-            subheader={<StyledCardSubHeader>{url}</StyledCardSubHeader>}
+            title={<StyledCardTitle variant="h6">{title}</StyledCardTitle>}
+            subheader={
+              <StyledCardSubHeader variant="body5">{url}</StyledCardSubHeader>
+            }
           />
           {isLinkToOpenSite && (
             <IconButton
               aria-label={`open site ${name}`}
               size="small"
               onClick={(e) => {
-                e.stopPropagation();
-
+                e.preventDefault();
                 window.open(url);
               }}
               sx={{ color: "#696F7D" }}
@@ -166,7 +166,7 @@ export const PreviewSite = memo(function PreviewSite({
         <StyledWrapFooter sx={{ background: `${accentColor}` }}>
           <StyledCardContent>
             <StyledCardDescription
-              variant="body2"
+              variant="body5"
               color={getContrastingTextColor(accentColor)}
             >
               {description}
@@ -183,8 +183,10 @@ export const PreviewSite = memo(function PreviewSite({
                 color: getContrastingTextColor(accentColor),
               }}
             >
-              <StyledCardAuthorName>{mainName}</StyledCardAuthorName>
-              <StyledCardAuthorStatus>
+              <StyledCardAuthorName variant="h7">
+                {mainName}
+              </StyledCardAuthorName>
+              <StyledCardAuthorStatus variant="body4">
                 {mainContributorPubkey === adminPubkey
                   ? "Admin"
                   : "Contributor"}

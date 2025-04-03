@@ -1,8 +1,6 @@
 import { ElementTransformer } from "@lexical/markdown";
 import {
   $applyNodeReplacement,
-  $isElementNode,
-  DecoratorNode,
   ElementNode,
   LexicalNode,
   NodeKey,
@@ -53,16 +51,16 @@ export function $isMarkdownNode(
   return node instanceof MarkdownNode;
 }
 
-const replaceWithBlock = (
-  createNode: (match: Array<string>) => ElementNode | DecoratorNode<unknown>,
-): ElementTransformer["replace"] => {
-  return (parentNode, children, match) => {
-    const node = createNode(match);
-    if ($isElementNode(node)) node.append(...children);
-    parentNode.replace(node);
-    if ($isElementNode(node)) node.select(0, 0);
-  };
-};
+// const replaceWithBlock = (
+//   createNode: (match: Array<string>) => ElementNode | DecoratorNode<unknown>,
+// ): ElementTransformer["replace"] => {
+//   return (parentNode, children, match) => {
+//     const node = createNode(match);
+//     if ($isElementNode(node)) node.append(...children);
+//     parentNode.replace(node);
+//     if ($isElementNode(node)) node.select(0, 0);
+//   };
+// };
 
 export const MARKDOWN_TRANSFORMER: ElementTransformer = {
   dependencies: [MarkdownNode],

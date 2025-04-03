@@ -1,4 +1,4 @@
-import { Event, nip19 } from "nostr-tools";
+import { nip19 } from "nostr-tools";
 import { fetchProfiles, getSiteSettings, parser } from "./api";
 import {
   DEFAULT_RELAYS,
@@ -37,10 +37,11 @@ import {
   NDKFilter,
   NDKNip07Signer,
   NDKRelaySet,
+  NostrEvent,
 } from "@nostr-dev-kit/ndk";
 import { marked } from "marked";
 import { SERVER_PUBKEY } from "./consts";
-import { countItems, shuffleArray } from "./utils";
+import { countItems, eventIdToTag, shuffleArray } from "./utils";
 
 export type SearchPost = Post & {
   submitterPubkey: string;
@@ -185,7 +186,7 @@ export const searchPosts = async (
         limit,
       };
       if (tag) {
-        // @ts-ignore
+        // @ts-expect-error err
         f[tagKey] = [tag.value];
       }
       if (since) {
@@ -203,9 +204,9 @@ export const searchPosts = async (
     } else {
       // append tag and kind
       if (tag) {
-        // @ts-ignore
+        // @ts-expect-error err
         if (!f[tagKey].includes(tag.value)) {
-          // @ts-ignore
+          // @ts-expect-error err
           f[tagKey].push(tag.value);
         }
       }
@@ -435,9 +436,10 @@ async function postProcess(posts: SearchPost[]) {
   // add hashtags
   for (const post of posts) {
     // FIXME wtf? move to libnostrsite
-    // @ts-ignore
+
     const hashtags = parser.parseHashtags(post.event);
-    // @ts-ignore
+
+    // @ts-expect-error err
     post.tags = hashtags.map((t) => ({
       id: t.toLocaleLowerCase(),
       name: t,
@@ -530,7 +532,7 @@ export async function fetchPost(site: Site, id: string) {
   const s_tag = `${KIND_SITE}:${addr.pubkey}:${addr.identifier}`;
 
   const filter: NDKFilter = {
-    // @ts-ignore
+    // @ts-expect-error err
     kinds: [KIND_SITE_SUBMIT],
     authors: [...site.contributor_pubkeys, site.admin_pubkey],
     "#s": [s_tag],
@@ -566,7 +568,7 @@ export async function fetchSubmits(site: Site) {
   const s_tag = `${KIND_SITE}:${addr.pubkey}:${addr.identifier}`;
 
   const filter: NDKFilter = {
-    // @ts-ignore
+    // @ts-expect-error err
     kinds: [KIND_SITE_SUBMIT],
     authors: [...new Set([...site.contributor_pubkeys, site.event.pubkey])],
     "#s": [s_tag],
@@ -626,18 +628,6 @@ export async function fetchSubmits(site: Site) {
   return posts;
 }
 
-function eventIdToTag(id: string) {
-  const { type, data } = nip19.decode(id);
-  switch (type) {
-    case "note":
-      return data;
-    case "naddr":
-      return `${data.kind}:${data.pubkey}:${data.identifier}`;
-    default:
-      throw new Error("Invalid related id " + id);
-  }
-}
-
 async function getSubmitEvent(pubkey: string, id: string) {
   const relays = await getOutboxRelays(pubkey);
   relays.push(...SEARCH_RELAYS);
@@ -665,6 +655,25 @@ async function getSubmitEvent(pubkey: string, id: string) {
     event,
     relay: event?.relay?.url || SEARCH_RELAYS[0],
   };
+}
+
+export async function signSubmitEvent(event: NostrEvent) {
+  let nevent: NDKEvent | undefined;
+  if (userIsDelegated) {
+    // mark current user as author
+    event.tags.push(["u", userPubkey]);
+    const reply = await fetchWithSession(`/sign`, event);
+    if (reply.status !== 200) throw new Error("Failed to sign submit event");
+    const r = await reply.json();
+    console.log(Date.now(), "signed submit event", r);
+    nevent = new NDKEvent(ndk, r.event);
+  } else {
+    nevent = new NDKEvent(ndk, event);
+    await nevent.sign(new NDKNip07Signer());
+  }
+  console.log("submit post event", nevent);
+
+  return nevent;
 }
 
 export async function submitPost(
@@ -745,20 +754,7 @@ export async function submitPost(
   else event.tags.push(["e", eventIdTag, relayHint!]);
 
   // sign it
-  let nevent: NDKEvent | undefined;
-  if (userIsDelegated) {
-    // mark current user as author
-    event.tags.push(["u", userPubkey]);
-    const reply = await fetchWithSession(`/sign`, event);
-    if (reply.status !== 200) throw new Error("Failed to sign submit event");
-    const r = await reply.json();
-    console.log(Date.now(), "signed submit event", r);
-    nevent = new NDKEvent(ndk, r.event);
-  } else {
-    nevent = new NDKEvent(ndk, event);
-    await nevent.sign(new NDKNip07Signer());
-  }
-  console.log("submit post event", nevent);
+  const nevent = await signSubmitEvent(event);
 
   // publish
   const r = await nevent.publish(

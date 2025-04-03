@@ -17,7 +17,7 @@ import Link from "next/link";
 import { ListSites } from "@/components/ListSites";
 import { PlusIcon } from "@/components/Icons";
 
-export const AdminPage = () => {
+const AdminPage = () => {
   const pathAdmin = useFirstPathElement();
   const { data, isLoading, isFetching } = useListSites();
   const { isAuth } = useContext(AuthContext);
@@ -41,7 +41,7 @@ export const AdminPage = () => {
           {data?.length ? (
             <StyledWrapPage>
               <Container maxWidth="lg">
-                <StyledTitle>Your websites</StyledTitle>
+                <StyledTitle>Your sites</StyledTitle>
 
                 <ListSites
                   data={data}
@@ -55,13 +55,12 @@ export const AdminPage = () => {
               <StyledButtonAddWrap>
                 <StyledButtonAdd
                   LinkComponent={Link}
-                  href="/admin/add"
-                  color="decorate"
+                  href="/admin/create-site"
                   variant="contained"
                   size="large"
                   fullWidth
                 >
-                  Create new website
+                  Create new site
                   <PlusIcon />
                 </StyledButtonAdd>
               </StyledButtonAddWrap>
@@ -76,3 +75,5 @@ export const AdminPage = () => {
     </Suspense>
   );
 };
+
+export default AdminPage;

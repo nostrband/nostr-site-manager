@@ -1,6 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Button, Typography, TypographyProps } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 export const StyledItemNavigation = styled(Box)({
   display: "flex",
@@ -33,7 +33,6 @@ export const StyledInfoNavigation = styled(Box)({
 });
 
 export const StyledTitleNavigation = styled(Typography)({
-  fontSize: 16,
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -41,13 +40,9 @@ export const StyledTitleNavigation = styled(Typography)({
   WebkitLineClamp: "1",
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  lineHeight: "24px",
 });
 
-export const StyledLinkNavigation = styled((props: TypographyProps) => {
-  return <Typography variant="body2" {...props} />;
-})({
-  fontSize: 14,
+export const StyledLinkNavigation = styled(Typography)({
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -55,5 +50,4 @@ export const StyledLinkNavigation = styled((props: TypographyProps) => {
   WebkitLineClamp: "1",
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  lineHeight: "20px",
 });

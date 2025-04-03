@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { Typography, Box, Dialog, DialogContent } from "@mui/material";
+import { Typography, Dialog, DialogContent } from "@mui/material";
 
 export const StyledTitle = styled(Typography)(() => ({
   display: "flex",

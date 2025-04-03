@@ -36,10 +36,12 @@ export const DEFAULT_RELAYS = [
   SITE_RELAY,
 ];
 export const SEARCH_RELAYS = ["wss://relay.nostr.band/"];
+export const SEARCH_RELAYS_SPAM = ["wss://relay.nostr.band/all"];
 export const STATS_RELAYS = ["wss://stats.npubpro.com/"];
-const onAuths: ((type: string) => Promise<void>)[] = [];
+const onAuths: [(type: string) => Promise<void>, boolean][] = [];
+// const onAuths: ((type: string) => Promise<void>)[] = [];
 
-export let ndk: NDK = new NDK({
+export const ndk: NDK = new NDK({
   explicitRelayUrls: DEFAULT_RELAYS,
 });
 ndk.connect();
@@ -60,7 +62,9 @@ const KIND_DELETE = 5;
 function getLocal(name: string) {
   try {
     return JSON.parse(localStorage.getItem(name) || "");
-  } catch {}
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 try {
@@ -70,8 +74,11 @@ try {
   if (lastAuth) {
     console.log("last auth", lastAuth);
     onAuth({ detail: lastAuth });
+    // setTimeout(() => onAuth({ detail: lastAuth }), 0);
   }
-} catch {}
+} catch (e) {
+  console.error(e);
+}
 
 export function srm(e: NDKEvent | NostrEvent, name: string, name1?: string) {
   if (!name1) e.tags = e.tags.filter((t) => t.length < 2 || t[0] !== name);
@@ -122,7 +129,11 @@ export function stag(e: NDKEvent | NostrEvent, tag: string[]) {
 }
 
 export function addOnAuth(cb: (type: string) => Promise<void>) {
-  onAuths.push(cb);
+  onAuths.push([cb, false]);
+}
+
+export function addOnAuthOnce(cb: (type: string) => Promise<void>) {
+  onAuths.push([cb, true]);
 }
 
 function setUserToken(token: string, pubkey: string) {
@@ -132,7 +143,9 @@ function setUserToken(token: string, pubkey: string) {
   try {
     window.localStorage.setItem("token", token);
     window.localStorage.setItem("tokenPubkey", pubkey);
-  } catch {}
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 export async function getOutboxRelays(pubkey: string) {
@@ -169,6 +182,7 @@ export async function onAuth(e: any) {
 
     const fetch = async () => {
       const outboxRelays = await getOutboxRelays(userPubkey);
+      userRelays.length = 0;
       userRelays.push(...outboxRelays);
       console.log("pubkey relays", userRelays);
       userProfile = (await fetchProfile(ndk, userPubkey))?.rawEvent();
@@ -181,6 +195,8 @@ export async function onAuth(e: any) {
 
     const cachedRelays = getLocal("localUserRelays");
     const cachedProfile = getLocal("localUserProfile");
+    if (cachedRelays) userRelays.push(...cachedRelays);
+    if (cachedProfile) userProfile = cachedProfile;
 
     // start updating
     const promise = fetch();
@@ -200,7 +216,16 @@ export async function onAuth(e: any) {
     localStorage.removeItem("localUserProfile");
   }
 
-  for (const cb of onAuths) await cb(e.detail.type);
+  // all cbs (once and repeated)
+  const cbs = onAuths.map((c) => c[0]);
+
+  // keep repeated only
+  const rept = onAuths.filter((c) => !c[1]);
+  onAuths.length = 0;
+  onAuths.push(...rept);
+
+  // call all cbs
+  for (const cb of cbs) await cb(e.detail.type);
 
   return authed;
 }
@@ -341,8 +366,10 @@ export async function fetchWithSession(
 
 export async function publishSiteEvent(
   site: NDKEvent,
-  relays: string[],
+  relays?: string[],
 ): Promise<NostrEvent> {
+  relays = relays || [SITE_RELAY, ...userRelays];
+
   // if we're signed in with OTP
   // or if we're editing delegated site
   if (userIsDelegated || (site.pubkey === SERVER_PUBKEY && tv(site, "u"))) {
@@ -485,19 +512,24 @@ export async function filterDeleted(events: NDKEvent[], relays: string[]) {
   }
 }
 
-export function parseProfileEvent(pubkey: string, e?: NDKEvent) {
+export function parseProfileEvent(pubkey: string, e?: NDKEvent | NostrEvent) {
   const npub = nip19.npubEncode(pubkey).substring(0, 8) + "...";
   let name = npub;
   let img = undefined;
+  let about = undefined;
   if (e) {
     try {
       const meta = JSON.parse(e.content);
       name = meta.display_name || meta.name || npub;
       img = meta.picture;
-    } catch {}
+      about = meta.about;
+    } catch (e) {
+      console.error(e);
+    }
   }
   return {
     name,
     img,
+    about,
   };
 }

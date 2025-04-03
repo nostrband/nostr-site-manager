@@ -1,6 +1,4 @@
 import { Avatar, Box, Button } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import React, {
   useCallback,
   useContext,
@@ -10,6 +8,7 @@ import React, {
 } from "react";
 import {
   StyledButtonHashtagKind,
+  StyledEndIcon,
   StyledIconButton,
   StyledWrapper,
 } from "@/components/PreviewNavigation/styled";
@@ -20,19 +19,8 @@ import { ModalAuthor } from "@/components/ModalAuthor";
 import { NDKEvent } from "@nostr-dev-kit/ndk";
 import { fetchProfiles } from "@/services/nostr/api";
 import { prefetchThemes } from "@/services/nostr/themes";
-import { ExpandMoreTwoTone as ExpandMoreTwoToneIcon } from "@mui/icons-material";
 import { ModalHashtagsKinds } from "@/components/ModalHashtagsKinds";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+import { ArrowLeftIcon, ArrowRightIcon } from "../Icons";
 
 export const PreviewNavigation = ({
   onContentSettings,
@@ -200,7 +188,9 @@ export const PreviewNavigation = ({
         const meta = JSON.parse(profile.content);
         username = meta.display_name || meta.name || username;
         avatar = meta.picture || "";
-      } catch {}
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 
@@ -227,9 +217,7 @@ export const PreviewNavigation = ({
   };
 
   const kindsNames = kindsSelected.map((value) => {
-    // @ts-ignore
     if (kinds[value]) {
-      // @ts-ignore
       return kinds[value];
     }
 
@@ -242,12 +230,11 @@ export const PreviewNavigation = ({
     <>
       <StyledWrapper ref={componentRef}>
         <StyledIconButton
-          color="primary"
           size="large"
           onClick={handlePrev}
           sx={{ order: { xs: 1 }, marginRight: "auto" }}
         >
-          <ArrowBackIcon />
+          <ArrowLeftIcon />
         </StyledIconButton>
 
         {!noContentSettings && isAuth && (
@@ -266,10 +253,9 @@ export const PreviewNavigation = ({
                 width: { xs: `${isAuth ? "208px" : "100%"}`, sm: "208px" },
                 justifyContent: "space-between",
               }}
-              color="primary"
               variant="outlined"
               onClick={handleOpenModalHashtagsKinds}
-              endIcon={<ExpandMoreTwoToneIcon />}
+              endIcon={<StyledEndIcon />}
             >
               <span>{selectedData.length ? selectedData : "All notes"}</span>
             </StyledButtonHashtagKind>
@@ -279,7 +265,6 @@ export const PreviewNavigation = ({
           sx={{ order: { xs: 1 } }}
           size="large"
           variant="contained"
-          color="decorate"
           onClick={() => {
             if (isAuth) {
               onUseTheme();
@@ -305,11 +290,10 @@ export const PreviewNavigation = ({
         )}
         <StyledIconButton
           onClick={handleNext}
-          color="primary"
           size="large"
           sx={{ order: { xs: 1 }, marginLeft: "auto" }}
         >
-          <ArrowForwardIcon />
+          <ArrowRightIcon />
         </StyledIconButton>
       </StyledWrapper>
 

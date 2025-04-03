@@ -7,7 +7,7 @@ import {
   StyledSettingBlock,
   StyledTitleBlock,
 } from "../../styled";
-import { Typography, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
@@ -104,23 +104,26 @@ export const CustomDomains = memo(
           )}
 
           <StyledFormFields>
-            {Boolean(listDomains.length)
-              ? listDomains.map((el, i) => (
-                  <ItemDomain
-                    disabled={!isEdit}
-                    siteId={siteId}
-                    key={i}
-                    domain={el}
-                  />
-                ))
-              : SETTINGS_CONFIG.customDomains.description}
+            {listDomains.length ? (
+              listDomains.map((el, i) => (
+                <ItemDomain
+                  disabled={!isEdit}
+                  siteId={siteId}
+                  key={i}
+                  domain={el}
+                />
+              ))
+            ) : (
+              <StyledDescriptionBlock>
+                {SETTINGS_CONFIG.customDomains.description}
+              </StyledDescriptionBlock>
+            )}
           </StyledFormFields>
         </StyledHeadSettingBlock>
 
         <Button
           variant="contained"
           disabled={!isEdit}
-          color="decorate"
           size="large"
           fullWidth
           onClick={handleOpenCustomDomain}

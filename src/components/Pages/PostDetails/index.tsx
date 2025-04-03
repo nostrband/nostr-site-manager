@@ -7,7 +7,7 @@ import { PostDetails } from "@/components/PostDetails";
 import { SpinerCircularProgress } from "@/components/Spiner";
 import { SpinerWrapSites } from "../PostManagement/styled";
 
-export const PostDetailsPage = memo(() => {
+const PostDetailsPage = memo(() => {
   const params = useParams();
   const [post, setPost] = useState<SearchPost | undefined>(undefined);
 
@@ -41,3 +41,5 @@ export const PostDetailsPage = memo(() => {
 });
 
 PostDetailsPage.displayName = "PostDetailsPage";
+
+export default PostDetailsPage;

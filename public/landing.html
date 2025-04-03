@@ -3,9 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-
     <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content="Framer 47ebf4a" />
+    <meta name="generator" content="Framer ee31e22" />
     <title>Npub.pro</title>
     <meta
       name="description"
@@ -13,7 +12,7 @@
     />
     <meta
       name="framer-search-index"
-      content="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/searchIndex-j0rQcbWqwYHS.json"
+      content="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/searchIndex-kBF8Mn_wgxOI.json"
     />
     <link
       href="https://framerusercontent.com/images/e7piYZEYcHrFvzi9YjkwJsei4.png"
@@ -48,10 +47,6 @@
       content="https://flowing-truly-284104.framer.app/"
     />
     <style data-framer-breakpoint-css>
-      .framer-18ulng4 {
-        display: none !important;
-      }
-
       @media (min-width: 1920px) {
         .hidden-72rtr7 {
           display: none !important;
@@ -1090,6 +1085,32 @@
         font-variation-settings: var(--framer-font-variation-axes, normal);
         text-wrap: var(--framer-text-wrap-override, var(--framer-text-wrap));
       }
+      @supports not (color: color(display-p3 1 1 1)) {
+        p.framer-text,
+        div.framer-text,
+        h1.framer-text,
+        h2.framer-text,
+        h3.framer-text,
+        h4.framer-text,
+        h5.framer-text,
+        h6.framer-text,
+        li.framer-text,
+        ol.framer-text,
+        ul.framer-text,
+        span.framer-text:not([data-text-fill]) {
+          color: var(
+            --framer-blockquote-text-color-rgb,
+            var(
+              --framer-blockquote-text-color,
+              var(--framer-text-color-rgb, var(--framer-text-color, #000))
+            )
+          );
+          -webkit-text-stroke-color: var(
+            --framer-text-stroke-color-rgb,
+            var(--framer-text-stroke-color, initial)
+          );
+        }
+      }
       .framer-fit-text .framer-text {
         white-space: nowrap;
         white-space-collapse: preserve;
@@ -1234,6 +1255,24 @@
           var(--framer-line-height, 1.2em)
         );
       }
+      @supports not (color: color(display-p3 1 1 1)) {
+        code.framer-text,
+        code.framer-text span.framer-text:not([data-text-fill]) {
+          color: var(
+            --framer-blockquote-text-color-rgb,
+            var(
+              --framer-blockquote-text-color,
+              var(
+                --framer-code-text-color-rgb,
+                var(
+                  --framer-code-text-color,
+                  var(--framer-text-color-rgb, var(--framer-text-color, #000))
+                )
+              )
+            )
+          );
+        }
+      }
       blockquote.framer-text {
         margin-block-start: initial;
         margin-block-end: initial;
@@ -1282,6 +1321,27 @@
         );
         cursor: var(--framer-custom-cursors, pointer);
       }
+      @supports not (color: color(display-p3 1 1 1)) {
+        a.framer-text,
+        a.framer-text span.framer-text:not([data-text-fill]),
+        span.framer-text[data-nested-link],
+        span.framer-text[data-nested-link]
+          span.framer-text:not([data-text-fill]) {
+          color: var(
+            --framer-blockquote-text-color-rgb,
+            var(
+              --framer-blockquote-text-color,
+              var(
+                --framer-link-text-color-rgb,
+                var(
+                  --framer-link-text-color,
+                  var(--framer-text-color-rgb, var(--framer-text-color, #000))
+                )
+              )
+            )
+          );
+        }
+      }
       code.framer-text a.framer-text,
       code.framer-text a.framer-text span.framer-text:not([data-text-fill]),
       code.framer-text span.framer-text[data-nested-link],
@@ -1311,6 +1371,37 @@
           var(--framer-blockquote-font-size, var(--framer-font-size, 16px)) *
             var(--framer-font-size-scale, 1)
         );
+      }
+      @supports not (color: color(display-p3 1 1 1)) {
+        code.framer-text a.framer-text,
+        code.framer-text a.framer-text span.framer-text:not([data-text-fill]),
+        code.framer-text span.framer-text[data-nested-link],
+        code.framer-text
+          span.framer-text[data-nested-link]
+          span.framer-text:not([data-text-fill]) {
+          color: var(
+            --framer-blockquote-text-color-rgb,
+            var(
+              --framer-blockquote-text-color,
+              var(
+                --framer-link-text-color-rgb,
+                var(
+                  --framer-link-text-color,
+                  var(
+                    --framer-code-text-color-rgb,
+                    var(
+                      --framer-code-text-color,
+                      var(
+                        --framer-text-color-rgb,
+                        var(--framer-text-color, #000)
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          );
+        }
       }
       a.framer-text:hover,
       a.framer-text:hover span.framer-text:not([data-text-fill]),
@@ -1376,6 +1467,36 @@
           )
         );
       }
+      @supports not (color: color(display-p3 1 1 1)) {
+        a.framer-text:hover,
+        a.framer-text:hover span.framer-text:not([data-text-fill]),
+        span.framer-text[data-nested-link]:hover,
+        span.framer-text[data-nested-link]:hover
+          span.framer-text:not([data-text-fill]) {
+          color: var(
+            --framer-link-hover-text-color-rgb,
+            var(
+              --framer-link-hover-text-color,
+              var(
+                --framer-blockquote-text-color-rgb,
+                var(
+                  --framer-blockquote-text-color,
+                  var(
+                    --framer-link-text-color-rgb,
+                    var(
+                      --framer-link-text-color,
+                      var(
+                        --framer-text-color-rgb,
+                        var(--framer-text-color, #000)
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          );
+        }
+      }
       code.framer-text a.framer-text:hover,
       code.framer-text
         a.framer-text:hover
@@ -1418,6 +1539,39 @@
             ) *
             var(--framer-font-size-scale, 1)
         );
+      }
+      @supports not (color: color(display-p3 1 1 1)) {
+        code.framer-text a.framer-text:hover,
+        code.framer-text
+          a.framer-text:hover
+          span.framer-text:not([data-text-fill]),
+        code.framer-text span.framer-text[data-nested-link]:hover,
+        code.framer-text
+          span.framer-text[data-nested-link]:hover
+          span.framer-text:not([data-text-fill]) {
+          color: var(
+            --framer-link-hover-text-color-rgb,
+            var(
+              --framer-link-hover-text-color,
+              var(
+                --framer-blockquote-text-color-rgb,
+                var(
+                  --framer-blockquote-text-color,
+                  var(
+                    --framer-link-text-color-rgb,
+                    var(
+                      --framer-link-text-color,
+                      var(
+                        --framer-text-color-rgb,
+                        var(--framer-text-color, #000)
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          );
+        }
       }
       a.framer-text[data-framer-page-link-current],
       a.framer-text[data-framer-page-link-current]
@@ -1463,6 +1617,28 @@
           )
         );
       }
+      @supports not (color: color(display-p3 1 1 1)) {
+        a.framer-text[data-framer-page-link-current],
+        a.framer-text[data-framer-page-link-current]
+          span.framer-text:not([data-text-fill]),
+        span.framer-text[data-framer-page-link-current],
+        span.framer-text[data-framer-page-link-current]
+          span.framer-text:not([data-text-fill]) {
+          color: var(
+            --framer-link-current-text-color-rgb,
+            var(
+              --framer-link-current-text-color,
+              var(
+                --framer-link-text-color-rgb,
+                var(
+                  --framer-link-text-color,
+                  var(--framer-text-color-rgb, var(--framer-text-color, #000))
+                )
+              )
+            )
+          );
+        }
+      }
       code.framer-text a.framer-text[data-framer-page-link-current],
       code.framer-text
         a.framer-text[data-framer-page-link-current]
@@ -1497,6 +1673,39 @@
             ) *
             var(--framer-font-size-scale, 1)
         );
+      }
+      @supports not (color: color(display-p3 1 1 1)) {
+        code.framer-text a.framer-text[data-framer-page-link-current],
+        code.framer-text
+          a.framer-text[data-framer-page-link-current]
+          span.framer-text:not([data-text-fill]),
+        code.framer-text span.framer-text[data-framer-page-link-current],
+        code.framer-text
+          span.framer-text[data-framer-page-link-current]
+          span.framer-text:not([data-text-fill]) {
+          color: var(
+            --framer-link-current-text-color-rgb,
+            var(
+              --framer-link-current-text-color,
+              var(
+                --framer-link-text-color-rgb,
+                var(
+                  --framer-link-text-color,
+                  var(
+                    --framer-code-text-color-rgb,
+                    var(
+                      --framer-code-text-color,
+                      var(
+                        --framer-text-color-rgb,
+                        var(--framer-text-color, #000)
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          );
+        }
       }
       a.framer-text[data-framer-page-link-current]:hover,
       a.framer-text[data-framer-page-link-current]:hover
@@ -1566,6 +1775,43 @@
           )
         );
       }
+      @supports not (color: color(display-p3 1 1 1)) {
+        a.framer-text[data-framer-page-link-current]:hover,
+        a.framer-text[data-framer-page-link-current]:hover
+          span.framer-text:not([data-text-fill]),
+        span.framer-text[data-framer-page-link-current]:hover,
+        span.framer-text[data-framer-page-link-current]:hover
+          span.framer-text:not([data-text-fill]) {
+          color: var(
+            --framer-link-hover-text-color-rgb,
+            var(
+              --framer-link-hover-text-color,
+              var(
+                --framer-link-current-text-color-rgb,
+                var(
+                  --framer-link-current-text-color,
+                  var(
+                    --framer-link-text-color-rgb,
+                    var(
+                      --framer-link-text-color,
+                      var(
+                        --framer-code-text-color-rgb,
+                        var(
+                          --framer-code-text-color,
+                          var(
+                            --framer-text-color-rgb,
+                            var(--framer-text-color, #000)
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          );
+        }
+      }
       code.framer-text a.framer-text[data-framer-page-link-current]:hover,
       code.framer-text
         a.framer-text[data-framer-page-link-current]:hover
@@ -1606,6 +1852,45 @@
             ) *
             var(--framer-font-size-scale, 1)
         );
+      }
+      @supports not (color: color(display-p3 1 1 1)) {
+        code.framer-text a.framer-text[data-framer-page-link-current]:hover,
+        code.framer-text
+          a.framer-text[data-framer-page-link-current]:hover
+          span.framer-text:not([data-text-fill]),
+        code.framer-text span.framer-text[data-framer-page-link-current]:hover,
+        code.framer-text
+          span.framer-text[data-framer-page-link-current]:hover
+          span.framer-text:not([data-text-fill]) {
+          color: var(
+            --framer-link-hover-text-color-rgb,
+            var(
+              --framer-link-hover-text-color,
+              var(
+                --framer-link-current-text-color-rgb,
+                var(
+                  --framer-link-current-text-color,
+                  var(
+                    --framer-link-text-color-rgb,
+                    var(
+                      --framer-link-text-color,
+                      var(
+                        --framer-code-text-color-rgb,
+                        var(
+                          --framer-code-text-color,
+                          var(
+                            --framer-text-color-rgb,
+                            var(--framer-text-color, #000)
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          );
+        }
       }
       .framer-image.framer-text {
         display: block;
@@ -2138,27 +2423,28 @@
       async
       src="https://events.framer.com/script?v=1"
       data-fid="146d5a6f767d627c0dbf3084ce13eee3e84544d5249a00542e75671a6b2970da"
+      data-no-nt
     ></script> -->
 
     <div id="main"></div>
 
-    <!-- <script data-framer-appear-animation="no-preference"></script>
-    <link
+    <script data-framer-appear-animation="no-preference"></script>
+    <!-- <link
       rel="modulepreload"
       fetchpriority="low"
-      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-E337BDDY.mjs"
+      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-7YWQEZ7S.mjs"
     /><link
       rel="modulepreload"
       fetchpriority="low"
-      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-JR5VT52U.mjs"
+      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-FIZTVOUW.mjs"
     /><link
       rel="modulepreload"
       fetchpriority="low"
-      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-RIUMFBNJ.mjs"
+      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-A3IIQ6X3.mjs"
     /><link
       rel="modulepreload"
       fetchpriority="low"
-      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/pijwJgladi-THkxkJGC-qYXNYCNSWuUxrgzTvqRMqkU.LOJS5SNN.mjs"
+      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/LvBz1NsfxQypDVb2Bzu8saKOY-lZbFA1a6E4Y04TZ6o.DSWNTNVA.mjs"
     /><link
       rel="modulepreload"
       fetchpriority="low"
@@ -2166,18 +2452,18 @@
     /><link
       rel="modulepreload"
       fetchpriority="low"
-      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-A3WCFVV4.mjs"
+      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-6UFAMFN3.mjs"
     /><link
       rel="modulepreload"
       fetchpriority="low"
-      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/script_main.FS7OJZXH.mjs"
+      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/script_main.NJMCGQPB.mjs"
     /> -->
     <script
       type="module"
       async
       data-framer-bundle="main"
       fetchpriority="low"
-      src="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/script_main.FS7OJZXH.mjs"
+      src="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/script_main.NJMCGQPB.mjs"
     ></script>
 
     <script>
@@ -2187,6 +2473,35 @@
         if (
           button &&
           button.textContent.trim().toLowerCase().includes("get started")
+        ) {
+          window.parent.postMessage(
+            { type: "BUTTON_CLICKED", payload: "Button was clicked!" },
+            "*"
+          );
+        }
+      });
+
+      document.getElementById("main").addEventListener("click", (e) => {
+        const button = e.target.closest("button");
+
+        if (
+          button &&
+          button.textContent.trim().toLowerCase().includes("try for free")
+        ) {
+          window.parent.postMessage(
+            { type: "BUTTON_CLICKED", payload: "Button was clicked!" },
+            "*"
+          );
+        }
+      });
+
+      
+      document.getElementById("main").addEventListener("click", (e) => {
+        const button = e.target.closest("button");
+
+        if (
+          button &&
+          button.textContent.trim().toLowerCase().includes("try now for free")
         ) {
           window.parent.postMessage(
             { type: "BUTTON_CLICKED", payload: "Button was clicked!" },

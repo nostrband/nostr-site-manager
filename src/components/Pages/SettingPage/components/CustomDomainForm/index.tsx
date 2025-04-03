@@ -644,7 +644,7 @@ export const CustomDomainForm = ({
                   size="large"
                   onClick={handleUpdateWebSiteAddress}
                 >
-                  Update website address
+                  Update site address
                 </LoadingButton>
               </FormControl>
             </>

@@ -1,3 +1,4 @@
+import { nip19 } from "nostr-tools";
 import * as yup from "yup";
 
 export const validationSchemaConfirmDelete = yup.object({
@@ -32,4 +33,35 @@ export const validationSchemaMakePrivateSite = yup.object().shape({
         return !(this.parent.isPrivate === true && value === undefined);
       },
     ),
+});
+
+export const validationSchemaLoginDM = yup.object({
+  npub: yup
+    .string()
+    .test(
+      "is-npub-or-email",
+      "Please enter a valid email or npub key",
+      (value) => {
+        if (!value) return false;
+
+        const strValue = String(value || "");
+
+        if (yup.string().email().isValidSync(strValue)) {
+          return true;
+        }
+
+        if (value.startsWith("npub")) {
+          try {
+            nip19.decode(value);
+
+            return true;
+          } catch (e) {
+            return false;
+          }
+        }
+
+        return false;
+      },
+    )
+    .required("Required field"),
 });

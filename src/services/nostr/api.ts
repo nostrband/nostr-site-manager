@@ -168,12 +168,12 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   for (const k of [...new Set(data.kinds_homepage)])
     e.tags.push(["kind", k + "", "", "homepage"]);
 
-  const relays = [...userRelays, SITE_RELAY];
+  // const relays = [...userRelays, SITE_RELAY];
   const naddr = nip19.naddrEncode({
     identifier: tv(e, "d") || "",
     pubkey: e.pubkey,
     kind: e.kind!,
-    relays,
+    // relays, not needed!
   });
 
   // ensure new domain is reserved
@@ -190,7 +190,7 @@ export async function editSite(data: ReturnSettingsSiteDataType) {
   console.log("Signing", e);
 
   // publish new site event
-  await publishSiteEvent(new NDKEvent(ndk, e), relays);
+  await publishSiteEvent(new NDKEvent(ndk, e));
 
   // redeploy if domain changed, also release the old domain
   // if (oldDomain && oldDomain !== domain)

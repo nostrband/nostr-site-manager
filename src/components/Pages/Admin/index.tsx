@@ -41,7 +41,7 @@ export const AdminPage = () => {
           {data?.length ? (
             <StyledWrapPage>
               <Container maxWidth="lg">
-                <StyledTitle>Your websites</StyledTitle>
+                <StyledTitle>Your sites</StyledTitle>
 
                 <ListSites
                   data={data}
@@ -55,13 +55,13 @@ export const AdminPage = () => {
               <StyledButtonAddWrap>
                 <StyledButtonAdd
                   LinkComponent={Link}
-                  href="/admin/add"
+                  href="/admin/create-site"
                   color="decorate"
                   variant="contained"
                   size="large"
                   fullWidth
                 >
-                  Create new website
+                  Create new site
                   <PlusIcon />
                 </StyledButtonAdd>
               </StyledButtonAddWrap>

@@ -1,15 +1,21 @@
 "use client";
 import {
-  StyledHeaderContainer,
   StyledHeaderNavigation,
   StyledHeaderOnboarding,
+  StyledLogo,
 } from "@/components/HeaderOnboarding/styled";
 import { Box, Button } from "@mui/material";
 import Link from "next/link";
 import { useContext } from "react";
 import { AuthContext } from "@/services/nostr/nostr";
-import { ArrowLeftIcon, LoginIcon, WebIcon } from "@/components/Icons";
+import {
+  ArrowLeftIcon,
+  LoginIcon,
+  WebIcon,
+  IconPerson,
+} from "@/components/Icons";
 import { usePathname } from "next/navigation";
+import { Logo } from "../Logo";
 
 export const HeaderOnboarding = () => {
   const { isAuth } = useContext(AuthContext);
@@ -23,46 +29,54 @@ export const HeaderOnboarding = () => {
 
   return (
     <StyledHeaderOnboarding>
-      <StyledHeaderContainer maxWidth="lg">
-        <Box>
-          {isBack && (
-            <Button
-              LinkComponent={Link}
-              href="/"
-              variant="text"
-              color="secondary"
-              startIcon={<ArrowLeftIcon />}
-            >
-              Back
-            </Button>
-          )}
-        </Box>
-        <StyledHeaderNavigation>
+      <Box>
+        {isBack ? (
           <Button
             LinkComponent={Link}
-            href="/sites"
+            href="/"
+            color="primary"
             variant="text"
-            color="secondary"
-            startIcon={<WebIcon />}
+            startIcon={<ArrowLeftIcon />}
           >
-            Discover
+            Back
           </Button>
-          {isAuth ? (
-            <Button LinkComponent={Link} href="/admin" variant="contained">
-              My sites
-            </Button>
-          ) : (
-            <Button
-              onClick={handleLogin}
-              variant="text"
-              color="secondary"
-              startIcon={<LoginIcon />}
-            >
-              Login
-            </Button>
-          )}
-        </StyledHeaderNavigation>
-      </StyledHeaderContainer>
+        ) : (
+          <StyledLogo>
+            <Logo />
+          </StyledLogo>
+        )}
+      </Box>
+
+      <StyledHeaderNavigation>
+        <Button
+          LinkComponent={Link}
+          href="/sites"
+          color="secondary"
+          variant="text"
+          startIcon={<WebIcon />}
+        >
+          Discover
+        </Button>
+        {isAuth ? (
+          <Button
+            LinkComponent={Link}
+            href="/admin"
+            variant="contained"
+            startIcon={<IconPerson />}
+          >
+            My sites
+          </Button>
+        ) : (
+          <Button
+            onClick={handleLogin}
+            variant="contained"
+            size="large"
+            startIcon={<LoginIcon />}
+          >
+            Login
+          </Button>
+        )}
+      </StyledHeaderNavigation>
     </StyledHeaderOnboarding>
   );
 };

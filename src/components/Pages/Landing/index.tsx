@@ -1,55 +1,36 @@
 "use client";
 import { HeaderOnboarding } from "@/components/HeaderOnboarding";
-import { HeadIntroOnboarding } from "@/components/HeadIntroOnboarding";
-import { ThemesOnboarding } from "@/components/ThemesOnboarding";
-import { Benefits } from "@/components/Pages/Landing/components/Benefits";
-import { FAQ } from "@/components/Pages/Landing/components/FAQ";
-import { Pricing } from "@/components/Pages/Landing/components/Pricing";
-import { Footer } from "@/components/Pages/Landing/components/Footer";
-import { Reviews } from "./components/Reviews";
-import { HeaderOnboardingScroll } from "@/components/HeaderOnboardingScroll";
-import { useEffect, useRef, useState } from "react";
+import { StyledIframe } from "./styled";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+
+
+type IframeMessage = {
+  type: string;
+  payload?: string;
+};
 
 const Landing = () => {
-  const headerRef = useRef(null);
-  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
-
+    const router = useRouter();
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsHeaderVisible(entry.isIntersecting);
-      },
-      {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0,
-      },
-    );
+    const handleMessage = (event: MessageEvent<IframeMessage>) => {
+      if (event.data.type === "BUTTON_CLICKED") {
+        router.push('/onboarding');
+      }
+    };
 
-    if (headerRef.current) {
-      observer.observe(headerRef.current);
-    }
+    window.addEventListener("message", handleMessage);
 
     return () => {
-      if (headerRef.current) {
-        observer.unobserve(headerRef.current);
-      }
+      window.removeEventListener("message", handleMessage);
     };
   }, []);
 
   return (
     <>
-      <HeaderOnboardingScroll isHeaderVisible={isHeaderVisible} />
-      <div ref={headerRef}>
-        <HeaderOnboarding />
-      </div>
-      <HeadIntroOnboarding />
-      <Benefits />
-      <ThemesOnboarding />
-      <Reviews />
-      <FAQ />
-      <Pricing />
-      <Footer />
+      <HeaderOnboarding />
+      <StyledIframe src="/landing.html" sandbox="allow-scripts" />
     </>
   );
 };

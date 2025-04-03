@@ -1,8 +1,8 @@
 "use client";
 import {
-  StyledHeaderContainer,
   StyledHeaderNavigation,
   StyledHeaderOnboarding,
+  StyledLogo,
 } from "@/components/HeaderOnboarding/styled";
 import { Box, Button } from "@mui/material";
 import Link from "next/link";
@@ -14,6 +14,7 @@ import PersonTwoToneIcon from "@mui/icons-material/PersonTwoTone";
 import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
 import { usePathname } from "next/navigation";
 import useResponsive from "@/hooks/useResponsive";
+import { Logo } from "../Logo";
 
 export const HeaderOnboarding = () => {
   const { isAuth } = useContext(AuthContext);
@@ -28,52 +29,56 @@ export const HeaderOnboarding = () => {
 
   return (
     <StyledHeaderOnboarding>
-      <StyledHeaderContainer maxWidth="lg">
-        <Box>
-          {isBack && (
-            <Button
-              LinkComponent={Link}
-              href="/"
-              color="primary"
-              variant="text"
-              startIcon={<ArrowBackTwoToneIcon />}
-            >
-              Back
-            </Button>
-          )}
-        </Box>
-        <StyledHeaderNavigation>
+      <Box>
+        {isBack ? (
           <Button
             LinkComponent={Link}
-            href="/sites"
+            href="/"
             color="primary"
             variant="text"
-            startIcon={<LanguageTwoToneIcon />}
+            startIcon={<ArrowBackTwoToneIcon />}
           >
-            Discover
+            Back
           </Button>
-          {isAuth ? (
-            <Button
-              LinkComponent={Link}
-              href="/admin"
-              color="decorate"
-              variant="contained"
-              startIcon={isDesktop ? <PersonTwoToneIcon /> : undefined}
-            >
-              My sites
-            </Button>
-          ) : (
-            <Button
-              onClick={handleLogin}
-              color="primary"
-              variant="text"
-              startIcon={<LoginTwoToneIcon />}
-            >
-              Login
-            </Button>
-          )}
-        </StyledHeaderNavigation>
-      </StyledHeaderContainer>
+        ) : (
+          <StyledLogo>
+            <Logo />
+          </StyledLogo>
+        )}
+      </Box>
+
+      <StyledHeaderNavigation>
+        <Button
+          LinkComponent={Link}
+          href="/sites"
+          color="primary"
+          variant="text"
+          startIcon={<LanguageTwoToneIcon />}
+        >
+          Discover
+        </Button>
+        {isAuth ? (
+          <Button
+            LinkComponent={Link}
+            href="/admin"
+            color="decorate"
+            variant="contained"
+            startIcon={isDesktop ? <PersonTwoToneIcon /> : undefined}
+          >
+            My sites
+          </Button>
+        ) : (
+          <Button
+            onClick={handleLogin}
+            color="decorate"
+            variant="contained"
+            size="large"
+            startIcon={<LoginTwoToneIcon />}
+          >
+            Login
+          </Button>
+        )}
+      </StyledHeaderNavigation>
     </StyledHeaderOnboarding>
   );
 };

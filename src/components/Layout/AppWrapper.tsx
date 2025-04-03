@@ -3,6 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { SnackbarProvider } from "notistack";
 import { AuthContext, onAuth, userPubkey } from "@/services/nostr/nostr";
 import { Notification } from "../Notification";
+import Script from "next/script";
 
 let addedHandlers = false;
 const AppWrapper = ({ children }: { children: ReactNode }) => {
@@ -42,17 +43,30 @@ const AppWrapper = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={authed}>
-      <SnackbarProvider
-        Components={{
-          error: Notification,
-          success: Notification,
-          info: Notification,
-          default: Notification,
-          warning: Notification,
-        }}
-      >
-        {children}
-      </SnackbarProvider>
+        <Script
+          data-perms="sign_event:30512,sign_event:512,sign_event:30513,sign_event:30514,sign_event:27235,sign_event:5,sign_event:30516,sign_event:30517,sign_event:30518"
+          data-no-banner="true"
+          data-otp-request-url="https://api.npubpro.com/otp"
+          data-otp-reply-url="https://api.npubpro.com/authotp"
+          src="https://cdn.jsdelivr.net/npm/nostr-login@latest/dist/unpkg.min.js"
+          // src="/nostr-login.js"
+        />
+        <Script
+          defer
+          data-domain="npub.pro"
+          src="https://plausible.io/js/script.js"
+        ></Script>
+        <SnackbarProvider
+          Components={{
+            error: Notification,
+            success: Notification,
+            info: Notification,
+            default: Notification,
+            warning: Notification,
+          }}
+        >
+          {children}
+        </SnackbarProvider>
     </AuthContext.Provider>
   );
 };

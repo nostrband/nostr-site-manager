@@ -8,18 +8,18 @@ import { Box, Button } from "@mui/material";
 import Link from "next/link";
 import { useContext } from "react";
 import { AuthContext } from "@/services/nostr/nostr";
-import LanguageTwoToneIcon from "@mui/icons-material/LanguageTwoTone";
-import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
-import PersonTwoToneIcon from "@mui/icons-material/PersonTwoTone";
-import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
+import {
+  ArrowLeftIcon,
+  LoginIcon,
+  WebIcon,
+  IconPerson,
+} from "@/components/Icons";
 import { usePathname } from "next/navigation";
-import useResponsive from "@/hooks/useResponsive";
 import { Logo } from "../Logo";
 
 export const HeaderOnboarding = () => {
   const { isAuth } = useContext(AuthContext);
   const pathname = usePathname();
-  const isDesktop = useResponsive("up", "sm");
 
   const isBack = pathname !== "/";
 
@@ -36,7 +36,7 @@ export const HeaderOnboarding = () => {
             href="/"
             color="primary"
             variant="text"
-            startIcon={<ArrowBackTwoToneIcon />}
+            startIcon={<ArrowLeftIcon />}
           >
             Back
           </Button>
@@ -51,9 +51,9 @@ export const HeaderOnboarding = () => {
         <Button
           LinkComponent={Link}
           href="/sites"
-          color="primary"
+          color="secondary"
           variant="text"
-          startIcon={<LanguageTwoToneIcon />}
+          startIcon={<WebIcon />}
         >
           Discover
         </Button>
@@ -61,19 +61,17 @@ export const HeaderOnboarding = () => {
           <Button
             LinkComponent={Link}
             href="/admin"
-            color="decorate"
             variant="contained"
-            startIcon={isDesktop ? <PersonTwoToneIcon /> : undefined}
+            startIcon={<IconPerson />}
           >
             My sites
           </Button>
         ) : (
           <Button
             onClick={handleLogin}
-            color="decorate"
             variant="contained"
             size="large"
-            startIcon={<LoginTwoToneIcon />}
+            startIcon={<LoginIcon />}
           >
             Login
           </Button>

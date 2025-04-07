@@ -1,8 +1,15 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Divider, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Divider,
+  Typography,
+  TypographyProps,
+} from "@mui/material";
 import { TabPanel, TabPanelProps } from "@mui/lab";
 import { forwardRef } from "react";
+import { ArrowUpIcon } from "@/components/Icons";
 
 interface ITabPanel {
   isGutter: boolean;
@@ -22,23 +29,14 @@ export const StyledDivider = styled(Divider)(() => ({
   margin: "8px 0",
 }));
 
-export const StyledTitle = styled(Typography)(() => ({
-  fontSize: 20,
-  lineHeight: "26px",
-  textAlign: "center",
-  fontWeight: "700",
-}));
-
-export const StyledDescription = styled(Typography)(() => ({
-  fontSize: 14,
-  lineHeight: "22px",
+export const StyledTypography = styled(Typography)<TypographyProps>(() => ({
   textAlign: "center",
 }));
 
 export const StyledTabPanel = styled(
   forwardRef<HTMLElement, TabPanelType>(
     function StyledTabPanelName(props, ref) {
-      const exclude = new Set(["isGutter, isMoreThanLimit"]);
+      const exclude = new Set(["isGutter", "isMoreThanLimit"]);
 
       const omitProps = Object.fromEntries(
         Object.entries(props).filter((e) => !exclude.has(e[0])),
@@ -67,8 +65,12 @@ export const StyledTabs = styled(Box)(() => ({
   gap: 16,
 }));
 
-export const StyledEmptyTasks = styled(Typography)(() => ({
-  fontSize: 14,
-  textAlign: "center",
-  fontWeight: "400",
+export const StyledAlertExpiringPlan = styled(Alert)(() => ({
+  cursor: "pointer",
+}));
+
+export const StyledAlertExpiringPlanIcon = styled(ArrowUpIcon)(() => ({
+  transform: "rotate(90deg)",
+  color: "inherit",
+  fontSize: "inherit",
 }));

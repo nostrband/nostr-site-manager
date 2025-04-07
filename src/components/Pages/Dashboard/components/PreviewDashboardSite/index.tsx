@@ -15,6 +15,7 @@ import {
   StyledCardAuthorName,
   StyledAvatarGroup,
   StyledCardAuthorStatus,
+  StyledCardTitleWrap,
 } from "@/components/PreviewSite/styled";
 import { StyledAvatarSite } from "@/components/shared/styled";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
@@ -25,11 +26,14 @@ import { StyledCardAddImage, StyledTextAddImage } from "./styled";
 import useContributors from "@/hooks/useContributors";
 import Link from "next/link";
 import { parseProfileEvent } from "@/services/nostr/nostr";
+import { SUBSCRIPTION_PLAN } from "@/consts";
+import { SubscriptionPlanBadge } from "@/components/shared/SubscriptionPlanBadge";
 
 type PreviewDashboardSiteType = {
   actions?: ReactNode;
   settingsLink?: string;
   userPubkey?: string;
+  subscriptionPlan: SUBSCRIPTION_PLAN;
 };
 
 export type PreviewDashboardSitePropsType = PreviewDashboardSiteType &
@@ -59,6 +63,7 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
   description,
   actions,
   settingsLink,
+  subscriptionPlan,
 }: PreviewDashboardSitePropsType) {
   // put them all into the same bucket
   pubkeysContributors = useMemo(
@@ -99,8 +104,15 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
               </StyledAvatarSite>
             )
           }
-          title={<StyledCardTitle>{title}</StyledCardTitle>}
-          subheader={<StyledCardSubHeader>{url}</StyledCardSubHeader>}
+          title={
+            <StyledCardTitleWrap>
+              <StyledCardTitle variant="h6">{title}</StyledCardTitle>
+              <SubscriptionPlanBadge subscriptionPlan={subscriptionPlan} />
+            </StyledCardTitleWrap>
+          }
+          subheader={
+            <StyledCardSubHeader variant="body5">{url}</StyledCardSubHeader>
+          }
         />
       </StyledCardHeaderWrap>
 
@@ -109,12 +121,14 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
       ) : (
         <StyledCardAddImage
           LinkComponent={Link}
-          // @ts-expect-error
+          // @ts-expect-error err
           href={`${settingsLink}#image`}
         >
           <AddImageIcon fontSize="inherit" />
 
-          <StyledTextAddImage>Add a site cover image</StyledTextAddImage>
+          <StyledTextAddImage variant="body4">
+            Add a site cover image
+          </StyledTextAddImage>
         </StyledCardAddImage>
       )}
 
@@ -122,7 +136,7 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
         {Boolean(description) && (
           <StyledCardContent>
             <StyledCardDescription
-              variant="body2"
+              variant="body5"
               color={getContrastingTextColor(accentColor)}
             >
               {description}
@@ -140,8 +154,8 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
               color: getContrastingTextColor(accentColor),
             }}
           >
-            <StyledCardAuthorName>{mainName}</StyledCardAuthorName>
-            <StyledCardAuthorStatus>
+            <StyledCardAuthorName variant="h7">{mainName}</StyledCardAuthorName>
+            <StyledCardAuthorStatus variant="body4">
               {mainContributorPubkey === adminPubkey ? "Admin" : "Contributor"}
               {isSeveralAuthor && (
                 <StyledAvatarGroup max={3}>

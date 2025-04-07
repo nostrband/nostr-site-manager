@@ -7,8 +7,6 @@ import {
   DialogContent,
   FormControl,
   InputLabel,
-  Popper,
-  Select,
   Typography,
 } from "@mui/material";
 import { forwardRef } from "react";
@@ -26,23 +24,21 @@ export const StyledWrapFilter = styled(Box)(({ theme }) => ({
 }));
 
 export const StyledTitleFilter = styled(Typography)(({ theme }) => ({
-  fontSize: 24,
-  fontWeight: "700",
-  lineHeight: "31px",
   display: "flex",
   alignItems: "center",
   gap: 8,
   marginBottom: 16,
   [theme.breakpoints.up("sm")]: {
-    fontSize: 16,
-    lineHeight: "20px",
     justifyContent: "space-between",
+  },
+  [theme.breakpoints.down("sm")]: {
+    fontSize: 24,
   },
 }));
 
 export const StyledCollapseButtonFilter = styled(
   forwardRef<HTMLButtonElement, IICollapseButtonFilter>(
-    function MainContentName(props, ref) {
+    function CollapseButtonFilterName(props, ref) {
       const exclude = new Set(["isOpenMoreFilter"]);
       const omitProps = Object.fromEntries(
         Object.entries(props).filter((e) => !exclude.has(e[0])),

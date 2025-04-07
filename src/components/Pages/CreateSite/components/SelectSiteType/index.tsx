@@ -6,12 +6,9 @@ import {
   StyledSelectButton,
   StyledSelectButtonSubText,
   StyledSelectButtonText,
-} from "../../styled";
-import {
-  StyledTitle,
   StyledWrapBlock,
   StyledWrapChip,
-} from "../StartScreen/styled";
+} from "../../styled";
 import { LIST_SITE_TYPES } from "@/consts";
 import { SelectTypeSite } from "@/types";
 
@@ -48,7 +45,7 @@ export const SelectSiteType = ({
   return (
     <>
       <StyledWrapBlock ref={buttonRef} id="basic-button">
-        <StyledTitle>Site Type</StyledTitle>
+        <Typography variant="h5">Site Type</Typography>
 
         <Typography typography={"body2"}>
           Pre-populate the site design theme and features to suit the chosen
@@ -60,7 +57,7 @@ export const SelectSiteType = ({
             <Chip
               icon={<CheckCircleIcon fontSize="inherit" />}
               size="small"
-              color="primary"
+              color="secondary"
               label={`Recomended: ${recomendType.typename}`}
             />
           </StyledWrapChip>
@@ -74,8 +71,10 @@ export const SelectSiteType = ({
           color="secondary"
         >
           <Box>
-            <StyledSelectButtonText>{typeSite.typename}</StyledSelectButtonText>
-            <StyledSelectButtonSubText variant="body2">
+            <StyledSelectButtonText variant="h6">
+              {typeSite.typename}
+            </StyledSelectButtonText>
+            <StyledSelectButtonSubText variant="body4">
               {typeSite.description}
             </StyledSelectButtonSubText>
           </Box>
@@ -106,8 +105,10 @@ export const SelectSiteType = ({
           {LIST_SITE_TYPES.map((el, i) => (
             <MenuItem key={i} onClick={() => handleSelectType(el)}>
               <StyledMenuItemContent>
-                <StyledSelectButtonText>{el.typename}</StyledSelectButtonText>
-                <StyledSelectButtonSubText variant="body2">
+                <StyledSelectButtonText variant="h6">
+                  {el.typename}
+                </StyledSelectButtonText>
+                <StyledSelectButtonSubText variant="body4">
                   {el.description}
                 </StyledSelectButtonSubText>
               </StyledMenuItemContent>

@@ -35,7 +35,7 @@ export const StyledBenefitImgFooter = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const StyledBenefitImgTitle = styled(Typography)(({ theme }) => ({
+export const StyledBenefitImgTitle = styled(Typography)(() => ({
   color: "#fff",
   fontSize: "18px",
   fontFamily: InterDisplay.style.fontFamily,
@@ -44,7 +44,7 @@ export const StyledBenefitImgTitle = styled(Typography)(({ theme }) => ({
   marginBottom: 4,
 }));
 
-export const StyledBenefitImgSubTitle = styled(Typography)(({ theme }) => ({
+export const StyledBenefitImgSubTitle = styled(Typography)(() => ({
   color: "#fff",
   fontSize: "14px",
   fontWeight: "600",

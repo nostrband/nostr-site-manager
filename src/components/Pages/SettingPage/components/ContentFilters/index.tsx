@@ -147,11 +147,7 @@ export const ContentFilters = memo(
           <FormControlLabel
             disabled={!isEdit}
             control={
-              <Switch
-                color="decorate"
-                checked={autoSubmit}
-                onChange={handleChangeAutoSubmit}
-              />
+              <Switch checked={autoSubmit} onChange={handleChangeAutoSubmit} />
             }
             label={autoSubmit ? "Auto-import ON" : "Auto-import OFF"}
           />
@@ -189,7 +185,6 @@ export const ContentFilters = memo(
                     typeof option === "string" ? option : option.title
                   }
                   renderOption={(props, option) => {
-                    // @ts-ignore
                     const { key, ...optionProps } = props;
                     return (
                       <ListItem {...optionProps} key={key}>

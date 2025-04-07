@@ -32,7 +32,7 @@ import useImageLoader from "@/hooks/useImageLoader";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import Link from "next/link";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getLinksMenu } from "@/utils";
 
 export const ActionsUser = () => {
@@ -40,8 +40,20 @@ export const ActionsUser = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [isOpenMenuSite, setOpenSite] = useState(false);
   const router = useRouter();
+  const path = usePathname();
   const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
   const [isOpenConfirm, setOpenConfirm] = useState(false);
+
+  const slugs = [
+    "billing-details",
+    "my-subscription",
+    "renew-subscription",
+    "subscription",
+  ];
+
+  const isBilling = slugs.some((str) =>
+    path.toLowerCase().includes(str.toLowerCase()),
+  );
 
   const badgeRef = useRef<HTMLElement>(null);
 
@@ -107,7 +119,9 @@ export const ActionsUser = () => {
   if (author) {
     try {
       meta = JSON.parse(author.content);
-    } catch {}
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const npub = nip19.npubEncode(userPubkey).substring(0, 8) + "...";
@@ -116,7 +130,7 @@ export const ActionsUser = () => {
 
   return (
     <>
-      {Boolean(siteId && getSite) && (
+      {Boolean(siteId && getSite && !isBilling) && (
         <Link href={linkToDashboard}>
           <StyledBadgeWrap ref={badgeRef}>
             {isLoaded ? (
@@ -129,7 +143,7 @@ export const ActionsUser = () => {
               </StyledBadgeAvatar>
             )}
 
-            <StyledBadgeTitle variant="body2">
+            <StyledBadgeTitle variant="subtitle2">
               {getSite?.title}
             </StyledBadgeTitle>
 

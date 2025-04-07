@@ -41,7 +41,7 @@ export const STATS_RELAYS = ["wss://stats.npubpro.com/"];
 const onAuths: [(type: string) => Promise<void>, boolean][] = [];
 // const onAuths: ((type: string) => Promise<void>)[] = [];
 
-export let ndk: NDK = new NDK({
+export const ndk: NDK = new NDK({
   explicitRelayUrls: DEFAULT_RELAYS,
 });
 ndk.connect();
@@ -62,7 +62,9 @@ const KIND_DELETE = 5;
 function getLocal(name: string) {
   try {
     return JSON.parse(localStorage.getItem(name) || "");
-  } catch {}
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 try {
@@ -74,7 +76,9 @@ try {
     onAuth({ detail: lastAuth });
     // setTimeout(() => onAuth({ detail: lastAuth }), 0);
   }
-} catch {}
+} catch (e) {
+  console.error(e);
+}
 
 export function srm(e: NDKEvent | NostrEvent, name: string, name1?: string) {
   if (!name1) e.tags = e.tags.filter((t) => t.length < 2 || t[0] !== name);
@@ -139,7 +143,9 @@ function setUserToken(token: string, pubkey: string) {
   try {
     window.localStorage.setItem("token", token);
     window.localStorage.setItem("tokenPubkey", pubkey);
-  } catch {}
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 export async function getOutboxRelays(pubkey: string) {
@@ -517,7 +523,9 @@ export function parseProfileEvent(pubkey: string, e?: NDKEvent | NostrEvent) {
       name = meta.display_name || meta.name || npub;
       img = meta.picture;
       about = meta.about;
-    } catch {}
+    } catch (e) {
+      console.error(e);
+    }
   }
   return {
     name,

@@ -99,17 +99,11 @@ export const AuthorFilter = ({
     }
   }, [contributors]);
 
-  const handleInputChange = (
-    _: React.ChangeEvent<{}>,
-    newInputValue: string,
-  ) => {
+  const handleInputChange = (_: unknown, newInputValue: string) => {
     setAuthorsInputValue(newInputValue);
   };
 
-  const handleChange = (
-    _: React.ChangeEvent<{}>,
-    value: (OptionAuthorType | string)[],
-  ) => {
+  const handleChange = (_: unknown, value: (OptionAuthorType | string)[]) => {
     const newValues = value as OptionAuthorType[];
 
     function removeDuplicatesById<T extends { id: string }>(array: T[]): T[] {
@@ -248,7 +242,7 @@ export const AuthorFilter = ({
               (selected) => selected.title === option.title,
             );
 
-            if (!Boolean(option.inputValue)) {
+            if (!option.inputValue) {
               if (isSelected) {
                 const newSelectedAuthors = selectedAuthors.filter(
                   (el) => el.title !== option.title,
@@ -263,7 +257,7 @@ export const AuthorFilter = ({
             }
           }}
         >
-          {!Boolean(option.inputValue) && (
+          {!option.inputValue && (
             <Checkbox
               checked={selectedAuthors.some(
                 (selected) => selected.title === option.title,

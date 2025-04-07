@@ -9,7 +9,7 @@ export const BuildingScreen = () => {
   return (
     <>
       <StyledTitlePage>Preparing your site</StyledTitlePage>
-      <StyledDescriptionPage variant="body2">
+      <StyledDescriptionPage variant="body3">
         It takes 10-20 seconds, please wait
       </StyledDescriptionPage>
       <StyledAlert severity="info">

@@ -1,4 +1,4 @@
-import { Event, nip19 } from "nostr-tools";
+import { nip19 } from "nostr-tools";
 import { fetchProfiles, getSiteSettings, parser } from "./api";
 import {
   DEFAULT_RELAYS,
@@ -186,7 +186,7 @@ export const searchPosts = async (
         limit,
       };
       if (tag) {
-        // @ts-ignore
+        // @ts-expect-error err
         f[tagKey] = [tag.value];
       }
       if (since) {
@@ -204,9 +204,9 @@ export const searchPosts = async (
     } else {
       // append tag and kind
       if (tag) {
-        // @ts-ignore
+        // @ts-expect-error err
         if (!f[tagKey].includes(tag.value)) {
-          // @ts-ignore
+          // @ts-expect-error err
           f[tagKey].push(tag.value);
         }
       }
@@ -436,9 +436,10 @@ async function postProcess(posts: SearchPost[]) {
   // add hashtags
   for (const post of posts) {
     // FIXME wtf? move to libnostrsite
-    // @ts-ignore
+
     const hashtags = parser.parseHashtags(post.event);
-    // @ts-ignore
+
+    // @ts-expect-error err
     post.tags = hashtags.map((t) => ({
       id: t.toLocaleLowerCase(),
       name: t,
@@ -531,7 +532,7 @@ export async function fetchPost(site: Site, id: string) {
   const s_tag = `${KIND_SITE}:${addr.pubkey}:${addr.identifier}`;
 
   const filter: NDKFilter = {
-    // @ts-ignore
+    // @ts-expect-error err
     kinds: [KIND_SITE_SUBMIT],
     authors: [...site.contributor_pubkeys, site.admin_pubkey],
     "#s": [s_tag],
@@ -567,7 +568,7 @@ export async function fetchSubmits(site: Site) {
   const s_tag = `${KIND_SITE}:${addr.pubkey}:${addr.identifier}`;
 
   const filter: NDKFilter = {
-    // @ts-ignore
+    // @ts-expect-error err
     kinds: [KIND_SITE_SUBMIT],
     authors: [...new Set([...site.contributor_pubkeys, site.event.pubkey])],
     "#s": [s_tag],

@@ -2,7 +2,9 @@ import {
   BarChartIcon,
   BarChartSendIcon,
   BrushIcon,
+  CheckCircleIcon,
   CodeIcon,
+  CrossCircleIcon,
   FIleTextIcon,
   HomeIcon,
   ImageIcon,
@@ -17,6 +19,7 @@ import {
   StarRectangleIcon,
   TitleIcon,
   UserCircleIcon,
+  WarningCircleIcon,
   WebIcon,
 } from "@/components/Icons";
 
@@ -58,6 +61,9 @@ import mnmlDemo from "../../public/images/preview-theme/mnml-demo.npub.pro.png";
 import vitorsDemo from "../../public/images/preview-theme/vitors-demo.npub.pro.png";
 import microLieblingDemo from "../../public/images/preview-theme/micro-liebling-demo.png";
 import { SelectTypeSite, TypeAuthor } from "@/types";
+import { ReactNode } from "react";
+
+export const PRIMARY_COLOR = "#FF3ED9";
 
 export const NPUB_PRO_DOMAIN = "npub.pro";
 export const NPUB_PRO_API = "https://api.npubpro.com";
@@ -386,6 +392,41 @@ export const STEPS_ONBOARDING_CONFIG = {
     title: "Create site",
     slug: "create-site",
     step: 3,
+  },
+};
+
+export enum SUBSCRIPTION_PLAN {
+  PAID = "PAID",
+  UNPAID = "UNPAID",
+  PAST_DUE = "PAST_DUE",
+}
+
+type PaletteColorKeys = "primary" | "warning" | "error";
+
+export const SUBSCRIPTION_PLAN_COLOR: Record<
+  SUBSCRIPTION_PLAN,
+  PaletteColorKeys
+> = {
+  [SUBSCRIPTION_PLAN.PAID]: "primary",
+  [SUBSCRIPTION_PLAN.UNPAID]: "warning",
+  [SUBSCRIPTION_PLAN.PAST_DUE]: "error",
+};
+
+export const SUBSCRIPTION_PLAN_STATUS: Record<
+  SUBSCRIPTION_PLAN,
+  { title: string; icon: ReactNode }
+> = {
+  [SUBSCRIPTION_PLAN.PAID]: {
+    title: "Paid",
+    icon: <CheckCircleIcon color="inherit" fontSize="inherit" />,
+  },
+  [SUBSCRIPTION_PLAN.UNPAID]: {
+    title: "Unpaid",
+    icon: <WarningCircleIcon color="inherit" fontSize="inherit" />,
+  },
+  [SUBSCRIPTION_PLAN.PAST_DUE]: {
+    title: "Past due",
+    icon: <CrossCircleIcon color="inherit" fontSize="inherit" />,
   },
 };
 
@@ -869,5 +910,119 @@ export const THEMES_PREVIEW = [
     name: "Micro-liebling",
     url: "https://intuitive-guy-demo.npub.pro/",
     preview: microLieblingDemo,
+  },
+];
+
+// Landing page
+
+export const FAQ_DATA = [
+  {
+    question: "How does it work?",
+    answer: (
+      <>
+        Sites are Nostr events, the themes are open-source
+        <a href="https://ghost.org" target="_blank" rel="noopener noreferrer">
+          Ghost
+        </a>
+        themes published on relays and Blossom servers. Npub.pro does not host
+        your data, it only hosts the code to convert Nostr events to web pages.
+        The proposed NIP-512 is here.
+      </>
+    ),
+  },
+  {
+    question: "Can I self-host?",
+    answer: (
+      <>
+        Yes, absolutely! The easiest way to do that is using the free Github
+        Pages hosting,
+        <a
+          href="https://blog.npub.pro/post/how-to-self-host-on-github"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          read more here
+        </a>
+        . A more advanced solution would be to run a docker container that does
+        server-side rendering for your site to improve SEO and link sharing
+        experience, it&apos;s coming soon.
+      </>
+    ),
+  },
+  {
+    question: "How do I publish my site?",
+    answer: (
+      <>
+        You can use any Nostr client to publish, just make sure your post
+        matches the filter you&apos;ve set up for your site (kind and hashtags).
+        For long-form posts you can use
+        <a href="https://habla.news" target="_blank" rel="noopener noreferrer">
+          Habla
+        </a>
+        or
+        <a
+          href="https://highlighter.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Highlighter
+        </a>
+        or
+        <a
+          href="https://yakihonne.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Yakihonne
+        </a>
+        , for micro-blog -
+        <a href="https://damus.io/" target="_blank" rel="noopener noreferrer">
+          Damus
+        </a>
+        ,
+        <a
+          href="https://amethyst.social/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Amethyst
+        </a>
+        ,
+        <a href="https://primal.net" target="_blank" rel="noopener noreferrer">
+          Primal
+        </a>
+        or almost any other Nostr app.
+      </>
+    ),
+  },
+  {
+    question: "Is it censorship resistant?",
+    answer: (
+      <>
+        The npub.pro site engine follows the outbox model, which means that if
+        some relay blocks your events and you change your relay list, your site
+        will fetch events from your new relays. We are making sure that your
+        Nostr site is as robust as your Nostr profile.
+      </>
+    ),
+  },
+  {
+    question: "Is npub.pro site free?",
+    answer: (
+      <>
+        We will host your site for free on <em>your-name</em>.npub.pro address.
+        If you want to attach a custom domain and get other benefits, you can
+        switch to a <a href="#pro">Pro plan</a>. You can also self-host a Nostr
+        site &mdash; all the data is on relays, the engine is
+        <a
+          href="https://github.com/nostrband/nostrsite/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          open-source
+        </a>
+        , and there is no &quot;migration&quot; &mdash; it just works, anywhere.
+      </>
+    ),
   },
 ];

@@ -6,12 +6,7 @@ import {
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import {
-  StyledDialog,
-  StyledDialogContent,
-  StyledDialogTitle,
-  StyledTitle,
-} from "./styled";
+import { StyledDialog, StyledDialogContent, StyledDialogTitle } from "./styled";
 import useResponsive from "@/hooks/useResponsive";
 import { CheckIcon, CrossIcon } from "@/components/Icons";
 import { useFormik } from "formik";
@@ -91,7 +86,7 @@ export const ModalEditNavigation = ({
       aria-describedby="alert-dialog-description"
     >
       <StyledDialogTitle>
-        <StyledTitle variant="body1">Add title & link</StyledTitle>
+        <Typography variant="h5">Add title & link</Typography>
 
         <Button
           onClick={handleCancel}
@@ -164,7 +159,6 @@ export const ModalEditNavigation = ({
         <Button
           variant="contained"
           fullWidth
-          color="decorate"
           size="large"
           endIcon={<CheckIcon fontSize="inherit" />}
           onClick={submitForm}

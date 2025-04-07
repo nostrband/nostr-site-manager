@@ -1,16 +1,13 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import {
   StyledDescriptionPage,
   StyledTitlePage,
   StyledWrapAuthors,
   StyledAuthor,
   StyledChevronRightIcon,
-  StyledAuthorName,
-  StyledAuthorRole,
   StyledAuthorAvatar,
   StyledAuthorText,
   StyledDivider,
-  StyledAuthorDescription,
   StyledAuthorChoose,
   StyledChevronLeftIcon,
 } from "../../../styled";
@@ -47,8 +44,10 @@ export const ChooseAuthor = ({ createSite }: ChooseAuthorProps) => {
 
   return (
     <>
-      <StyledTitlePage>Oops! You don’t have any posts yet.</StyledTitlePage>
-      <StyledDescriptionPage variant="body2">
+      <StyledTitlePage variant="h3">
+        Oops! You don’t have any posts yet.
+      </StyledTitlePage>
+      <StyledDescriptionPage variant="body3">
         Let&apos;s make a sample site with someone else&apos;s content. Choose
         an author below:
       </StyledDescriptionPage>
@@ -60,24 +59,19 @@ export const ChooseAuthor = ({ createSite }: ChooseAuthorProps) => {
               <StyledChevronLeftIcon onClick={handleCloseAuthor} />
               <StyledAuthorAvatar src={authorData.img} />
               <Box>
-                <StyledAuthorName>{authorData.name}</StyledAuthorName>
-                <StyledAuthorRole variant="body2">
-                  {authorData.typename}
-                </StyledAuthorRole>
+                <Typography variant="h6">{authorData.name}</Typography>
+                <Typography variant="body4">{authorData.typename}</Typography>
               </Box>
             </StyledAuthorChoose>
-            <StyledAuthorDescription variant="body2">
-              {authorData.about}
-            </StyledAuthorDescription>
+            <Typography variant="body4">{authorData.about}</Typography>
             <StyledDivider />
-            <StyledAuthorText>
+            <StyledAuthorText variant="h6">
               You can create a sample {authorData.typename} using content by{" "}
               {authorData.name}
             </StyledAuthorText>
 
             <Button
               onClick={() => handleCreateSite(authorData.pubkey)}
-              color="decorate"
               size="large"
               variant="contained"
               fullWidth
@@ -90,10 +84,8 @@ export const ChooseAuthor = ({ createSite }: ChooseAuthorProps) => {
             <StyledAuthor onClick={() => handleChooseAuthor(el)} key={i}>
               <StyledAuthorAvatar src={el.img} />
               <Box>
-                <StyledAuthorName>{el.name}</StyledAuthorName>
-                <StyledAuthorRole variant="body2">
-                  {el.typename}
-                </StyledAuthorRole>
+                <Typography variant="h6">{el.name}</Typography>
+                <Typography variant="body4">{el.typename}</Typography>
               </Box>
               <StyledChevronRightIcon />
             </StyledAuthor>

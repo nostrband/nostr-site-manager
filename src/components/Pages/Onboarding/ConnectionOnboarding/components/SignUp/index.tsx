@@ -63,8 +63,8 @@ export const SignUp = () => {
 
   return (
     <>
-      <StyledTitlePage>Create Nostr profile</StyledTitlePage>
-      <StyledDescriptionPage variant="body2">
+      <StyledTitlePage variant="h3">Create Nostr profile</StyledTitlePage>
+      <StyledDescriptionPage variant="body3">
         Choose any username, you can always change it later.
       </StyledDescriptionPage>
 
@@ -84,7 +84,6 @@ export const SignUp = () => {
         fullWidth
         disabled={isLoading ? false : !values.username.length}
         size="large"
-        color="decorate"
         variant="contained"
         endIcon={<UserAddIcon />}
         startIcon={startIconCreate}
@@ -95,7 +94,6 @@ export const SignUp = () => {
 
       <Button
         size="small"
-        color="decorate"
         variant="text"
         startIcon={<ChevronLeftIcon />}
         onClick={handleBack}

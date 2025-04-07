@@ -26,7 +26,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   );
 
   const getValidParamsId = useCallback(
-    (list: ReturnSitesDataType[], id: string | string[], url: string) => {
+    (list: ReturnSitesDataType[], id: string | string[]) => {
       const isId = list.find((el) => el.id === id);
 
       if (isPathAdminAdd) {
@@ -54,7 +54,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (data) {
-      getValidParamsId(data, siteId, pathname);
+      getValidParamsId(data, siteId);
     }
   }, [data, getValidParamsId, siteId, pathname, isAuth]);
 
@@ -71,7 +71,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
       ) : (
         <StyledWrapCenter>
           <Box sx={{ margin: "auto", textAlign: "center" }}>
-            <Button variant="contained" color="decorate" onClick={login}>
+            <Button variant="contained" onClick={login}>
               Login
             </Button>
             <Typography sx={{ marginTop: "15px" }}>

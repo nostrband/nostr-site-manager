@@ -1,7 +1,6 @@
 import { ChevronLeftIcon } from "@/components/Icons";
 import { useBack } from "@/hooks/useBackPage";
 import { Button } from "@mui/material";
-import { StyledTitleStartPage } from "./styled";
 import { useEffect, useState } from "react";
 import { SelectSiteType } from "../SelectSiteType";
 import { LIST_SITE_TYPES } from "@/consts";
@@ -11,6 +10,7 @@ import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { parseProfileEvent, userPubkey } from "@/services/nostr/nostr";
 import { fetchProfiles } from "@/services/nostr/api";
 import { detectContentType, SiteType } from "@/services/nostr/onboard";
+import { StyledTitleStartPage } from "../../styled";
 
 interface StartScreenProps {
   createSite: (
@@ -86,7 +86,7 @@ export const StartScreen = ({ createSite }: StartScreenProps) => {
       <StyledTitleStartPage>
         <Button
           onClick={handleBack}
-          color="primary"
+          color="secondary"
           variant="text"
           sx={{ minWidth: "auto" }}
         >
@@ -110,7 +110,6 @@ export const StartScreen = ({ createSite }: StartScreenProps) => {
           />
           <Button
             onClick={handleCreateSite}
-            color="decorate"
             size="large"
             variant="contained"
             fullWidth

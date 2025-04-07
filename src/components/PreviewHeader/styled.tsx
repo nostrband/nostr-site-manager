@@ -1,6 +1,7 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import { ChevronLeftIcon } from "../Icons";
 
 export const StyledWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -22,4 +23,8 @@ export const StyledWrapper = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
     padding: "12px 16px",
   },
+}));
+
+export const StyledEndIcon = styled(ChevronLeftIcon)(() => ({
+  transform: "rotate(-90deg)",
 }));

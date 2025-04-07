@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { CrossIcon } from "../Icons";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import {
   StyledAuthor,
@@ -49,7 +49,9 @@ export const ModalAuthor = ({
   if (author) {
     try {
       meta = JSON.parse(author.content);
-    } catch {}
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const fetchData = async (query: string) => {
@@ -74,7 +76,7 @@ export const ModalAuthor = ({
         .filter((p) => !!p);
       console.log("options", options);
       setLoading(false);
-      // @ts-ignore
+
       setOptions(options);
     } catch (error) {
       setLoading(false);
@@ -119,13 +121,8 @@ export const ModalAuthor = ({
       <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
           Author
-          <Fab
-            onClick={handleCancel}
-            size="small"
-            color="primary"
-            aria-label="close"
-          >
-            <CloseIcon />
+          <Fab onClick={handleCancel} size="small" aria-label="close">
+            <CrossIcon />
           </Fab>
         </StyledTitle>
       </DialogTitle>

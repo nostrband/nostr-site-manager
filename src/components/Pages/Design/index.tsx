@@ -1,7 +1,5 @@
 "use client";
-import CloseIcon from "@mui/icons-material/Close";
 import { useSearchParams, redirect, useRouter } from "next/navigation";
-import TuneIcon from "@mui/icons-material/Tune";
 import { Fab, Drawer, Button, Box, Tab } from "@mui/material";
 import React, {
   useCallback,
@@ -22,9 +20,7 @@ import {
   StyledImgPreview,
   StyledBannerPreview,
 } from "@/components/Pages/Design/styled";
-import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import { useFormik } from "formik";
-// import { validationSchemaMakePrivateSite } from "@/validations/rules";
 import { MuiColorInput } from "mui-color-input";
 import { AuthContext } from "@/services/nostr/nostr";
 import {
@@ -43,6 +39,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { CustomConfigType } from "./types";
 import { generateFormFields } from "./utils";
 import { Mutex } from "@/services/nostr/utils";
+import { BrokenIcon, CrossIcon, SettingsIcon } from "@/components/Icons";
 
 interface DesignValues {
   name: string;
@@ -345,11 +342,11 @@ const Design = () => {
       </StyledPreviewTestSite>
 
       <StyledButtonOpenSetting
+        color="primary"
         onClick={handleOpenSettings}
-        color="decorate"
         aria-label="open"
       >
-        <TuneIcon />
+        <SettingsIcon />
       </StyledButtonOpenSetting>
 
       <Drawer
@@ -360,13 +357,8 @@ const Design = () => {
         <StyledWrapper>
           <StyledTitle variant="h5">
             Settings
-            <Fab
-              onClick={handleCloseSettings}
-              size="small"
-              color="primary"
-              aria-label="close"
-            >
-              <CloseIcon />
+            <Fab onClick={handleCloseSettings} size="small" aria-label="close">
+              <CrossIcon />
             </Fab>
           </StyledTitle>
 
@@ -469,7 +461,7 @@ const Design = () => {
                           paddingTop: "30px",
                         }}
                       >
-                        <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
+                        <BrokenIcon sx={{ margin: "auto" }} />
                       </Box>
                     )}
                   </StyledBannerPreview>
@@ -500,10 +492,10 @@ const Design = () => {
                 />
                 <Button
                   onClick={handleSwitchTheme}
-                  variant="contained"
+                  variant="outlined"
                   fullWidth
                   size="medium"
-                  color="darkInfo"
+                  color="secondary"
                 >
                   Switch theme
                 </Button>
@@ -545,7 +537,7 @@ const Design = () => {
               {hashtags.map((hashtag) => (
                 <MenuItem key={hashtag} value={hashtag}>
                   <Checkbox
-                    color="decorate"
+        
                     checked={values.hashtags.indexOf(hashtag) > -1}
                   />
                   <ListItemText primary={hashtag} />
@@ -573,7 +565,7 @@ const Design = () => {
               {kinds.map((kind) => (
                 <MenuItem key={kind} value={kind}>
                   <Checkbox
-                    color="decorate"
+       
                     checked={values.kinds.indexOf(kind) > -1}
                   />
                   <ListItemText primary={kind} />
@@ -731,10 +723,10 @@ const Design = () => {
         <StyledBottomActions>
           <Button
             onClick={handleCloseSettings}
-            variant="contained"
+            variant="outlined"
             fullWidth
             size="medium"
-            color="darkInfo"
+            color="secondary"
           >
             Preview
           </Button>
@@ -743,7 +735,6 @@ const Design = () => {
             variant="contained"
             fullWidth
             size="medium"
-            color="decorate"
             disabled={isLoading}
           >
             Publish

@@ -1,18 +1,15 @@
-import {
-  StyledTitle,
-  StyledWrap,
-} from "@/components/Pages/Landing/components/Benefits/styled";
 import { Container, Grid } from "@mui/material";
-import { SocialBenefit } from "@/components/Pages/Landing/components/SocialBenefit";
-import { SeoBenefit } from "@/components/Pages/Landing/components/SeoBenefit";
-import { ConversionBenefit } from "@/components/Pages/Landing/components/ConversionBenefit";
 import Script from "next/script";
+import {
+  StyledTitleSectionLanding,
+  StyledWrapSectionLanding,
+} from "../shared/styled";
 
 export const Reviews = () => {
   return (
-    <StyledWrap>
+    <StyledWrapSectionLanding>
       <Container maxWidth="lg">
-        <StyledTitle>Community Opinion</StyledTitle>
+        <StyledTitleSectionLanding>Community Opinion</StyledTitleSectionLanding>
 
         <Grid
           container
@@ -61,6 +58,6 @@ export const Reviews = () => {
           </Grid>
         </Grid>
       </Container>
-    </StyledWrap>
+    </StyledWrapSectionLanding>
   );
 };

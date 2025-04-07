@@ -1,16 +1,16 @@
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { useCallback, useEffect, useState } from "react";
 import {
-  StyledDescription,
+  StyledTypography,
   StyledDivider,
-  StyledEmptyTasks,
   StyledTabPanel,
   StyledTabs,
-  StyledTitle,
   StyledWrap,
+  StyledAlertExpiringPlan,
+  StyledAlertExpiringPlanIcon,
 } from "./styled";
 import { TabContext, TabList } from "@mui/lab";
-import { Tab } from "@mui/material";
+import { IconButton, Tab } from "@mui/material";
 import { CheckCircleIcon, FIleTextIcon } from "@/components/Icons";
 import { ItemTask } from "./components/ItemTask";
 import { useRouter } from "next/navigation";
@@ -48,7 +48,7 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
 
   const handleChange = (
     _: React.SyntheticEvent,
-    newValue: "todo" | "completed"
+    newValue: "todo" | "completed",
   ) => {
     setValue(newValue);
   };
@@ -80,10 +80,10 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
   return (
     <StyledWrap>
       <StyledDivider />
-      <StyledTitle>Let&apos;s Improve It!</StyledTitle>
-      <StyledDescription variant="body2">
+      <StyledTypography variant="h5">Let&apos;s Improve It!</StyledTypography>
+      <StyledTypography variant="body4">
         One step at a time, slow but steady.
-      </StyledDescription>
+      </StyledTypography>
       {isLoading ? (
         <SpinerWrap>
           <SpinerCircularProgress />
@@ -114,16 +114,34 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               isGutter={isGutter}
               value="todo"
             >
+              <StyledAlertExpiringPlan
+                severity="warning"
+                action={
+                  <IconButton color="inherit" size="small">
+                    <StyledAlertExpiringPlanIcon />
+                  </IconButton>
+                }
+              >
+                Your plan is expiring
+              </StyledAlertExpiringPlan>
+
               {isNeedMigrateKey(siteId) && <MigrateTask siteId={siteId} />}
 
               {isEmptyTodo && (
-                <StyledEmptyTasks variant="body2">
+                <StyledTypography variant="body4">
                   You&apos;ve completed all the tasks
-                </StyledEmptyTasks>
+                </StyledTypography>
               )}
 
               {todoTasks.map((el, i) => {
-                return <ItemTask key={i} task={el} onOpen={handleOpen} />;
+                return (
+                  <ItemTask
+                    key={i}
+                    subscriptionPlan={el.paymentPlan}
+                    task={el}
+                    onOpen={handleOpen}
+                  />
+                );
               })}
             </StyledTabPanel>
             <StyledTabPanel
@@ -132,13 +150,20 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               value="completed"
             >
               {isEmptyCompleted && (
-                <StyledEmptyTasks variant="body2">
+                <StyledTypography component="div" variant="body4">
                   No completed tasks yet
-                </StyledEmptyTasks>
+                </StyledTypography>
               )}
 
               {completedTasks.map((el, i) => {
-                return <ItemTask key={i} task={el} onOpen={handleOpen} />;
+                return (
+                  <ItemTask
+                    subscriptionPlan={el.paymentPlan}
+                    key={i}
+                    task={el}
+                    onOpen={handleOpen}
+                  />
+                );
               })}
             </StyledTabPanel>
           </TabContext>

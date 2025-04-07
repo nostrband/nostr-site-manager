@@ -62,9 +62,9 @@ export const ItemNavigation = ({
         {isEdit && <GrabIcon color="inherit" />}
 
         <Box sx={{ paddingLeft: "16px" }}>
-          <StyledTitleNavigation>{title}</StyledTitleNavigation>
+          <StyledTitleNavigation variant="body1">{title}</StyledTitleNavigation>
 
-          <StyledLinkNavigation>{link}</StyledLinkNavigation>
+          <StyledLinkNavigation variant="body4">{link}</StyledLinkNavigation>
         </Box>
       </StyledInfoNavigation>
 
@@ -72,7 +72,6 @@ export const ItemNavigation = ({
         <StyledButtonAction
           disabled={!isEdit}
           size="small"
-          color="primary"
           variant="text"
           onClick={handleOpen}
         >
@@ -82,7 +81,6 @@ export const ItemNavigation = ({
         <StyledButtonAction
           disabled={!isEdit}
           size="small"
-          color="primary"
           variant="text"
           onClick={() =>
             handleRemoveLinkNavigation({

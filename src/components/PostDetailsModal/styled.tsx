@@ -20,7 +20,7 @@ export const StyledTitlePage = styled(PageTitle)(() => ({
 
 export const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   padding: "16px",
-  background: theme.palette.customBackground.light,
+  background: theme.palette.background.default,
 }));
 
 export const StyledDialog = styled(Dialog)(() => ({

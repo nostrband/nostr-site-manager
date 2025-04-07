@@ -35,10 +35,10 @@ export const Start = ({ createSite }: StartProps) => {
 
   return (
     <>
-      <StyledTitlePage>
+      <StyledTitlePage variant="h3">
         Hello{username ? ` ${username}` : ""}, Let&apos;s Make a Sample Site!
       </StyledTitlePage>
-      <StyledDescriptionPage variant="body2">
+      <StyledDescriptionPage variant="body3">
         Create a draft site quickly, and then gradually improve it later.
       </StyledDescriptionPage>
       <StyledActions>
@@ -47,7 +47,6 @@ export const Start = ({ createSite }: StartProps) => {
           href="/admin"
           fullWidth
           size="large"
-          color="decorate"
           variant="outlined"
         >
           Skip
@@ -56,7 +55,6 @@ export const Start = ({ createSite }: StartProps) => {
           onClick={handleBuilding}
           fullWidth
           size="large"
-          color="decorate"
           variant="contained"
         >
           Create a site

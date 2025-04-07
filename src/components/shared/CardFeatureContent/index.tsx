@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import { StyledCard, StyledCardTitleFeature } from "../styled";
+import { StyledCard } from "../styled";
+import { Typography } from "@mui/material";
 
 interface CardFeatureContentProps {
   title: string;
@@ -12,7 +13,7 @@ export const CardFeatureContent = ({
 }: CardFeatureContentProps) => {
   return (
     <StyledCard>
-      <StyledCardTitleFeature>{title}</StyledCardTitleFeature>
+      <Typography variant="h5">{title}</Typography>
       {children}
     </StyledCard>
   );

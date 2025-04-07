@@ -1,7 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Alert, Avatar, Box, Divider, Typography } from "@mui/material";
-import { ChevronLeftIcon } from "@/components/Icons";
+import { Box, Typography } from "@mui/material";
 
 export const StyledTitlePage = styled(Typography)(({ theme }) => ({
   fontSize: "30px",

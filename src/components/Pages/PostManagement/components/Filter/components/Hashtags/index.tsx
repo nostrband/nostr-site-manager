@@ -54,9 +54,9 @@ export const HashtagsFilter = ({
       size={size}
       value={selectedHashtags}
       inputValue={hashtagsInputValue}
-      // @ts-ignore
+      // @ts-expect-error err
       filterOptions={(options, params) => {
-        // @ts-ignore
+        // @ts-expect-error err
         const filtered = filter(options, params);
         const { inputValue } = params;
         const isExisting = options.some(
@@ -79,8 +79,8 @@ export const HashtagsFilter = ({
         const newValues = value.map((v) =>
           typeof v === "string"
             ? newHashtag(v)
-            : // @ts-ignore
-              newHashtag(Boolean(v.inputValue) ? v.inputValue : v.title),
+            : // @ts-expect-error err
+              newHashtag(v.inputValue ? v.inputValue : v.title),
         );
 
         const uniqueValues = [...new Set(newValues)];
@@ -97,8 +97,8 @@ export const HashtagsFilter = ({
         return (
           <ListItem {...optionProps} key={key}>
             {
-              // @ts-ignore
-              !Boolean(option.inputValue) && (
+              // @ts-expect-error err
+              !option.inputValue && (
                 <Checkbox
                   checked={selectedHashtags.indexOf(option.title) > -1}
                   onClick={(e) => {

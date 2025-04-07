@@ -24,7 +24,6 @@ export const HeaderOnboardingScroll = ({
           <Button
             size="large"
             variant="contained"
-            color="decorate"
             LinkComponent={Link}
             href="/onboarding"
           >

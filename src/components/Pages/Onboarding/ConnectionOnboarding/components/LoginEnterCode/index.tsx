@@ -38,7 +38,7 @@ export const LoginEnterCode = ({
 
       try {
         const otpData = await axios.get(
-          `https://api.npubpro.com/authotp?pubkey=${pubkey}&code=${code}`
+          `https://api.npubpro.com/authotp?pubkey=${pubkey}&code=${code}`,
         );
         await loginOTP(pubkey, otpData.data);
         router.push("/onboarding/create-site");
@@ -108,8 +108,8 @@ export const LoginEnterCode = ({
 
   return (
     <>
-      <StyledTitlePage>Enter your code</StyledTitlePage>
-      <StyledDescriptionPage variant="body2">
+      <StyledTitlePage variant="h3">Enter your code</StyledTitlePage>
+      <StyledDescriptionPage variant="body3">
         Please enter the 6-digit code we sent you as a direct message.
       </StyledDescriptionPage>
 
@@ -125,7 +125,6 @@ export const LoginEnterCode = ({
         fullWidth
         disabled={isLoading ? false : values.code.length !== OTP_LENGTH}
         size="large"
-        color="decorate"
         variant="contained"
         endIcon={<ArrowRightIcon />}
         startIcon={startIconLogin}
@@ -137,7 +136,6 @@ export const LoginEnterCode = ({
       <StyledActions>
         <Button
           size="small"
-          color="decorate"
           variant="text"
           startIcon={<ChevronLeftIcon />}
           onClick={handleBack}
@@ -148,7 +146,6 @@ export const LoginEnterCode = ({
           disabled={isLoading}
           onClick={handleResetCode}
           size="small"
-          color="decorate"
           variant="text"
         >
           Resend the code

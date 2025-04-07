@@ -4,10 +4,7 @@ import { Avatar, Box, Divider, Typography } from "@mui/material";
 import { ChevronLeftIcon } from "@/components/Icons";
 
 export const StyledTitlePage = styled(Typography)(({ theme }) => ({
-  fontSize: "30px",
-  lineHeight: "39px",
   textAlign: "center",
-  fontWeight: "700",
   [theme.breakpoints.down("sm")]: {
     fontSize: "24px",
     lineHeight: "31px",
@@ -15,10 +12,7 @@ export const StyledTitlePage = styled(Typography)(({ theme }) => ({
 }));
 
 export const StyledDescriptionPage = styled(Typography)(({ theme }) => ({
-  fontSize: "16px",
-  lineHeight: "26px",
   textAlign: "center",
-  fontWeight: "400",
   [theme.breakpoints.down("sm")]: {
     fontSize: "14px",
     lineHeight: "22px",
@@ -84,34 +78,14 @@ export const StyledChevronLeftIcon = styled(ChevronLeftIcon)(() => ({
   cursor: "pointer",
 }));
 
-export const StyledAuthorName = styled(Typography)(() => ({
-  fontSize: "16px",
-  lineHeight: "20px",
-  fontWeight: "700",
-}));
-
-export const StyledAuthorRole = styled(Typography)(() => ({
-  fontSize: "14px",
-  lineHeight: "20px",
-}));
-
 export const StyledAuthorAvatar = styled(Avatar)(() => ({
   height: "40px",
   width: "40px",
 }));
 
 export const StyledAuthorText = styled(Typography)(() => ({
-  fontSize: "16px",
-  lineHeight: "20px",
   marginBottom: "16px",
   textAlign: "center",
-  fontWeight: "700",
-}));
-
-export const StyledAuthorDescription = styled(Typography)(() => ({
-  fontSize: "14px",
-  lineHeight: "22px",
-  fontWeight: "400",
 }));
 
 export const StyledDivider = styled(Divider)(() => ({

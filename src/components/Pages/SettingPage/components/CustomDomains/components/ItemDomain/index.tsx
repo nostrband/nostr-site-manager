@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import { CustomDomainFormView } from "../../../CustomDomainFormView";
 import { useState } from "react";
 import { StyledDomain, StyledItemDomain } from "./styled";
@@ -31,7 +31,6 @@ export const ItemDomain = ({ domain, siteId, disabled }: ItemDomainProps) => {
           disabled={disabled}
           variant="text"
           size="small"
-          color="primary"
           endIcon={<MaxMinSizeIcon color="inherit" fontSize="inherit" />}
         >
           Show DNS

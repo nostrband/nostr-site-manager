@@ -32,7 +32,7 @@ export const CARD_MEDIA_HEIGHT = 160;
 const AUTHORS_CONTENT_SPACING = CARD_PADDING;
 
 export const StyledCard = styled(
-  forwardRef<HTMLDivElement, IStyledCard>(function StyledCardName(props, ref) {
+  forwardRef<HTMLDivElement, IStyledCard>(function CardName(props, ref) {
     const exclude = new Set(["isLink"]);
     const omitProps = Object.fromEntries(
       Object.entries(props).filter((e) => !exclude.has(e[0])),
@@ -80,7 +80,7 @@ export const StyledCardNoImage = styled(Box)(({ theme }) => ({
 
 export const StyledCardMedia = styled(
   forwardRef<HTMLImageElement, IStyledCardMedia>(
-    function StyledCardMediaName(props, ref) {
+    function CardMediaName(props, ref) {
       return <CardMedia ref={ref} {...props} />;
     },
   ),
@@ -127,7 +127,7 @@ export const StyledCardHeaderWrap = styled(Box)(() => ({
   alignItems: "center",
 }));
 
-export const StyledCardTitle = styled(Box)(({ theme }) => ({
+export const StyledCardTitle = styled(Typography)(() => ({
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -135,14 +135,15 @@ export const StyledCardTitle = styled(Box)(({ theme }) => ({
   WebkitLineClamp: 1,
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  fontWeight: "700",
-  fontSize: 16,
-  lineHeight: "18px",
   height: "18px",
-  color: theme.palette.primary.main,
 }));
 
-export const StyledCardSubHeader = styled(Box)(() => ({
+export const StyledCardTitleWrap = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "start",
+}));
+
+export const StyledCardSubHeader = styled(Typography)(() => ({
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -150,8 +151,6 @@ export const StyledCardSubHeader = styled(Box)(() => ({
   WebkitLineClamp: 1,
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  fontSize: 12,
-  lineHeight: "19px",
   height: "18px",
 }));
 
@@ -163,8 +162,6 @@ export const StyledCardDescription = styled(Typography)(() => ({
   WebkitLineClamp: "2",
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  fontSize: 12,
-  lineHeight: "19px",
 }));
 
 export const StyledCardContent = styled(CardContent)(() => ({
@@ -179,7 +176,7 @@ export const StyledCardWrapAuthors = styled(Box)(() => ({
   padding: CARD_PADDING,
 }));
 
-export const StyledCardAuthorName = styled(Box)(() => ({
+export const StyledCardAuthorName = styled(Typography)(() => ({
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -187,20 +184,15 @@ export const StyledCardAuthorName = styled(Box)(() => ({
   WebkitLineClamp: 1,
   WebkitBoxOrient: "vertical",
   wordWrap: "break-word",
-  fontweight: "700",
-  fontSize: "14px",
-  lineHeight: "18px",
-  fontWeight: "700",
+  color: "inherit",
 }));
 
-export const StyledCardAuthorStatus = styled(Box)(() => ({
-  fontSize: "14px",
-  lineHeight: "22px",
-  fontWeight: "400",
+export const StyledCardAuthorStatus = styled(Typography)(() => ({
   paddingTop: "3px",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
+  color: "inherit",
 }));
 
 export const StyledAvatarGroup = styled(AvatarGroup)(() => ({

@@ -1,13 +1,12 @@
 "use client";
 import { ReactNode, useEffect, useState } from "react";
 import { SnackbarProvider } from "notistack";
-import Script from "next/script";
 import { AuthContext, onAuth, userPubkey } from "@/services/nostr/nostr";
-import { BodyWrapper } from "./MainContent";
 import { Notification } from "../Notification";
+import Script from "next/script";
 
 let addedHandlers = false;
-export const AppWrapper = ({ children }: { children: ReactNode }) => {
+const AppWrapper = ({ children }: { children: ReactNode }) => {
   const [authed, setAuthed] = useState({
     isAuth: !!userPubkey,
     isLoading: false,
@@ -44,7 +43,6 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={authed}>
-      <BodyWrapper>
         <Script
           data-perms="sign_event:30512,sign_event:512,sign_event:30513,sign_event:30514,sign_event:27235,sign_event:5,sign_event:30516,sign_event:30517,sign_event:30518"
           data-no-banner="true"
@@ -69,7 +67,8 @@ export const AppWrapper = ({ children }: { children: ReactNode }) => {
         >
           {children}
         </SnackbarProvider>
-      </BodyWrapper>
     </AuthContext.Provider>
   );
 };
+
+export default AppWrapper;

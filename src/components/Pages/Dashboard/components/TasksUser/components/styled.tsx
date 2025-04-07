@@ -1,6 +1,6 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, BoxProps, Typography } from "@mui/material";
+import { Box, BoxProps } from "@mui/material";
 import { forwardRef } from "react";
 import { grey } from "@mui/material/colors";
 
@@ -26,7 +26,7 @@ export const StyledWrap = styled(Box)(({ theme }) => ({
 }));
 
 export const StyledIcon = styled(
-  forwardRef<HTMLAnchorElement, IIcon>(function StyledWrapName(props, ref) {
+  forwardRef<HTMLAnchorElement, IIcon>(function IconName(props, ref) {
     const exclude = new Set(["isCompleted"]);
     const omitProps = Object.fromEntries(
       Object.entries(props).filter((e) => !exclude.has(e[0])),
@@ -36,18 +36,18 @@ export const StyledIcon = styled(
   }),
 )(({ isCompleted = false, theme }) => ({
   display: "flex",
-  color: isCompleted ? theme.palette.success.main : theme.palette.decorate.main,
-}));
-
-export const StyledText = styled(Typography)(() => ({
-  fontWeight: "600",
-  lineHeight: "20px",
-  fontSize: 14,
+  color: isCompleted ? theme.palette.success.main : theme.palette.primary.main,
 }));
 
 export const StyledIconChevron = styled(Box)(() => ({
   transform: "rotate(180deg)",
   display: "flex",
-  marginLeft: "auto",
   color: "#696F7D",
+}));
+
+export const StyledActions = styled(Box)(() => ({
+  marginLeft: "auto",
+  display: "flex",
+  gap: 8,
+  alignItems: "center",
 }));

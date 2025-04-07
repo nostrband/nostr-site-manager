@@ -15,7 +15,9 @@ export const Recommendation = () => {
         </StyledTitleBlock>
       </StyledHeadSettingBlock>
 
-      <StyledComingSoonProfile>Coming soon</StyledComingSoonProfile>
+      <StyledComingSoonProfile variant="subtitle4">
+        Coming soon
+      </StyledComingSoonProfile>
     </StyledSettingBlock>
   );
 };

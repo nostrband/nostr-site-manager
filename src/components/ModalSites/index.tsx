@@ -1,6 +1,5 @@
 "use client";
 import { Box, Button, Card, CardMedia, DialogTitle, Fab } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import React, { useState } from "react";
 import {
   StyledTitle,
@@ -11,12 +10,10 @@ import { TYPES_THEMES_TAG } from "@/consts";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 import { StyledCardHeader } from "@/components/PreviewSite/styled";
 import { StyledCardNoImage } from "@/components/PreviewSite/styled";
-import InsertPhotoTwoToneIcon from "@mui/icons-material/InsertPhotoTwoTone";
 import { StyledIconButton } from "@/components/PreviewNavigation/styled";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/navigation";
 import { StyledAvatarSite } from "@/components/shared/styled";
+import { ArrowLeftIcon, ArrowRightIcon, BrokenIcon, CrossIcon } from "../Icons";
 
 export const ModalSites = ({
   isOpen,
@@ -77,13 +74,8 @@ export const ModalSites = ({
       <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
           You already have {sites.length} site{sites.length > 1 ? "s" : ""}
-          <Fab
-            onClick={handleClose}
-            size="small"
-            color="primary"
-            aria-label="close"
-          >
-            <CloseIcon />
+          <Fab onClick={handleClose} size="small" aria-label="close">
+            <CrossIcon />
           </Fab>
         </StyledTitle>
       </DialogTitle>
@@ -105,7 +97,7 @@ export const ModalSites = ({
             title={<b>{getSite?.title || getSite?.name}</b>}
             subheader={<Box>{getSite?.url}</Box>}
           />
-          {Boolean(getSite?.image) ? (
+          {getSite?.image ? (
             <CardMedia
               component="img"
               height="250"
@@ -115,7 +107,7 @@ export const ModalSites = ({
             />
           ) : (
             <StyledCardNoImage sx={{ marginTop: "16px" }}>
-              <InsertPhotoTwoToneIcon sx={{ margin: "auto" }} />
+              <BrokenIcon sx={{ margin: "auto" }} />
             </StyledCardNoImage>
           )}
         </Card>
@@ -130,12 +122,12 @@ export const ModalSites = ({
           justifyContent: "space-between",
         }}
       >
-        <StyledIconButton color="primary" size="small" onClick={onPrevSite}>
-          <ArrowBackIcon />
+        <StyledIconButton size="small" onClick={onPrevSite}>
+          <ArrowLeftIcon />
         </StyledIconButton>
 
-        <StyledIconButton onClick={onNextSite} color="primary" size="small">
-          <ArrowForwardIcon />
+        <StyledIconButton onClick={onNextSite} size="small">
+          <ArrowRightIcon />
         </StyledIconButton>
       </Box>
 
@@ -144,7 +136,6 @@ export const ModalSites = ({
       >
         <Button
           onClick={handleNavigateEdit}
-          color="primary"
           variant="contained"
           size="small"
           fullWidth
@@ -153,7 +144,6 @@ export const ModalSites = ({
         </Button>
         <Button
           onClick={handleNavigatePreview}
-          color="decorate"
           variant="contained"
           size="small"
           fullWidth

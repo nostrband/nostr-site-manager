@@ -50,7 +50,7 @@ export const ModalConfirmDeleteSite = ({
   } = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchemaConfirmDelete,
-    onSubmit: async (values) => {
+    onSubmit: async () => {
       setIsLoading(true);
       try {
         await deleteSite(siteId);
@@ -84,7 +84,7 @@ export const ModalConfirmDeleteSite = ({
       aria-describedby="alert-dialog-description"
     >
       <StyledDialogTitle component="div" id="alert-dialog-title">
-        <StyledTitle variant="body1">
+        <StyledTitle variant="h5">
           Confirm for delete
           <Button
             onClick={handleCancel}
@@ -97,7 +97,7 @@ export const ModalConfirmDeleteSite = ({
         </StyledTitle>
       </StyledDialogTitle>
       <StyledDialogContent>
-        <StyledText variant="body2">
+        <StyledText component="div" variant="body4">
           {/* eslint-disable-next-line react/no-unescaped-entities */}
           Please type "delete" to delete this site
         </StyledText>
@@ -121,7 +121,6 @@ export const ModalConfirmDeleteSite = ({
 
           <StyledActionButton>
             <LoadingButton
-              color="decorate"
               variant="outlined"
               fullWidth
               size="large"
@@ -132,7 +131,6 @@ export const ModalConfirmDeleteSite = ({
             </LoadingButton>
 
             <LoadingButton
-              color="decorate"
               variant="contained"
               type="submit"
               fullWidth

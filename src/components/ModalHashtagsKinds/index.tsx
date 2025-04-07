@@ -10,7 +10,6 @@ import {
   OutlinedInput,
   TextField,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   StyledTitle,
   StyledDialog,
@@ -21,6 +20,7 @@ import ListItemText from "@mui/material/ListItemText";
 import React, { useEffect, useState } from "react";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import { CrossIcon } from "../Icons";
 
 export const ModalHashtagsKinds = ({
   isOpen,
@@ -95,13 +95,8 @@ export const ModalHashtagsKinds = ({
       <DialogTitle component="div" id="alert-dialog-title">
         <StyledTitle variant="body1">
           Hashtags & Kinds
-          <Fab
-            onClick={handleClose}
-            size="small"
-            color="primary"
-            aria-label="close"
-          >
-            <CloseIcon />
+          <Fab onClick={handleClose} size="small" aria-label="close">
+            <CrossIcon />
           </Fab>
         </StyledTitle>
       </DialogTitle>
@@ -138,7 +133,7 @@ export const ModalHashtagsKinds = ({
           freeSolo
           value={hashtagsSelected}
           inputValue={inputValue}
-          onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
+          onInputChange={(_, newInputValue) => setInputValue(newInputValue)}
           onChange={(_, value) => {
             const newHashtag = (s: string) => (s.startsWith("#") ? s : `#${s}`);
 
@@ -155,7 +150,6 @@ export const ModalHashtagsKinds = ({
             typeof option === "string" ? option : option.title
           }
           renderOption={(props, option) => {
-            // @ts-ignore
             const { key, ...optionProps } = props;
             return (
               <ListItem {...optionProps} key={key}>

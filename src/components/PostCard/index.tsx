@@ -24,14 +24,7 @@ import {
   StyledTags,
   StyledTypePost,
 } from "./styled";
-import {
-  memo,
-  MouseEvent,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { memo, MouseEvent, useEffect, useRef, useState } from "react";
 import useImageLoader from "@/hooks/useImageLoader";
 import { format, parseISO } from "date-fns";
 import {
@@ -101,7 +94,7 @@ export const PostCard = memo(
 
     const isVideos = Boolean(videos.length);
 
-    const isTitle = event.kind !== 1;
+    const isTitle = event.kind !== 1 && Boolean(title);
 
     const [progress, setProgress] = useState<number>(0);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
@@ -250,7 +243,6 @@ export const PostCard = memo(
                   loading={isSending}
                   disabled={isSending}
                   variant="outlined"
-                  color="decorate"
                   onClick={handleClick}
                   size="small"
                   startIcon={
@@ -300,7 +292,7 @@ export const PostCard = memo(
                 </StyledCardVideoWrap>
               ) : null}
 
-              <StyledDate variant="body2">
+              <StyledDate component="div" variant="body5">
                 <span>{datePost}</span>
                 <span>{timePost}</span>
 
@@ -313,18 +305,26 @@ export const PostCard = memo(
                 )}
               </StyledDate>
 
-              <StyledCardText>
-                {isTitle && <StyledCardTitle>{title}</StyledCardTitle>}
-                <StyledCardDescription variant="body2">
-                  {event.content}
-                </StyledCardDescription>
-              </StyledCardText>
+              {(isTitle || Boolean(event.content)) && (
+                <StyledCardText>
+                  {isTitle && (
+                    <StyledCardTitle variant="h5">{title}</StyledCardTitle>
+                  )}
+                  {Boolean(event.content) && (
+                    <StyledCardDescription component="div" variant="body3">
+                      {event.content}
+                    </StyledCardDescription>
+                  )}
+                </StyledCardText>
+              )}
 
-              <StyledTags>
-                {tags.map((tag, idx) => (
-                  <Chip label={tag.name} key={idx} size="medium" />
-                ))}
-              </StyledTags>
+              {Boolean(tags.length) && (
+                <StyledTags>
+                  {tags.map((tag, idx) => (
+                    <Chip label={tag.name} key={idx} size="medium" />
+                  ))}
+                </StyledTags>
+              )}
 
               <StyledCardWrapAuthor>
                 <StyledAvatrAuthor
@@ -336,7 +336,7 @@ export const PostCard = memo(
                 >
                   <IconPerson fontSize="inherit" />
                 </StyledAvatrAuthor>
-                <StyledPostAuthorName>
+                <StyledPostAuthorName variant="body1">
                   {primary_author?.name}
                 </StyledPostAuthorName>
               </StyledCardWrapAuthor>

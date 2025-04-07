@@ -128,7 +128,7 @@ async function ensureSiteTheme(site: NDKEvent) {
   const pkg = await fetchEvent(
     ndk,
     {
-      // @ts-ignore
+      // @ts-expect-error err
       kinds: [KIND_PACKAGE],
       ids: [eid],
     },
@@ -158,7 +158,7 @@ async function ensureSiteTheme(site: NDKEvent) {
   const theme = await fetchEvent(
     ndk,
     {
-      // @ts-ignore
+      // @ts-expect-error err
       kinds: [KIND_THEME],
       authors: [themeAddr.pubkey],
       "#d": [themeAddr.identifier],
@@ -577,7 +577,9 @@ export async function renderPreview(
               renderPreview(iframe, url.pathname);
             });
           }
-        } catch {}
+        } catch (e) {
+          console.error(e);
+        }
       }
     };
   });
@@ -635,7 +637,7 @@ async function fetchSite() {
   const event = await fetchEvent(
     ndk,
     {
-      // @ts-ignore
+      // @ts-expect-error err
       kinds: [KIND_SITE],
       authors: [addr.pubkey],
       "#d": [addr.identifier],

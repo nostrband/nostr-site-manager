@@ -108,13 +108,13 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
         <StyledCardMedia component="img" image={image} alt={name} />
       ) : (
         <StyledCardAddImage
-          LinkComponent={(props) => <Link {...props} />}
+          LinkComponent={Link}
           // @ts-expect-error
           href={`${settingsLink}#image`}
         >
           <AddImageIcon fontSize="inherit" />
 
-          <StyledTextAddImage>Add a website cover image</StyledTextAddImage>
+          <StyledTextAddImage>Add a site cover image</StyledTextAddImage>
         </StyledCardAddImage>
       )}
 

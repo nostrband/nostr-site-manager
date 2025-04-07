@@ -7,6 +7,7 @@ import {
 } from "@/components/HeadIntroOnboarding/styled";
 import { Button } from "@mui/material";
 import { Logo } from "@/components/Logo";
+import Link from "next/link";
 
 export const HeadIntroOnboarding = () => {
   return (
@@ -29,7 +30,8 @@ export const HeadIntroOnboarding = () => {
         size="large"
         variant="contained"
         color="decorate"
-        href="#themes-onboarding"
+        LinkComponent={Link}
+        href="/onboarding"
       >
         <b>Try now &rarr;</b>
       </Button>

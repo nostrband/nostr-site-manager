@@ -14,6 +14,7 @@ import { forwardRef } from "react";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 import { isNumber } from "lodash";
 import { StyledCard } from "../shared/styled";
+import { CardFeatureContent } from "../shared/CardFeatureContent";
 
 const CARD_MEDIA_HEIGHT = 363;
 const CARD_MEDIA_HEIGHT_SMALL = 160;
@@ -85,7 +86,9 @@ export const StyledCardVideo = styled(
       Object.entries(props).filter((e) => !exclude.has(e[0])),
     );
 
-    return <video preload="metadata" controls playsInline ref={ref} {...omitProps} />;
+    return (
+      <video preload="metadata" controls playsInline ref={ref} {...omitProps} />
+    );
   }),
 )(({ isDesktop, theme, height }) => ({
   height: isDesktop
@@ -255,6 +258,9 @@ export const StyledComingSoon = styled(Box)(() => ({
   gap: 4,
 }));
 
-export const StyledCardFeature = styled(StyledCard)(() => ({
+export const StyledCardFeature = styled(Box)(() => ({
   height: "100%",
+  "& > div": {
+    height: "100%",
+  },
 }));

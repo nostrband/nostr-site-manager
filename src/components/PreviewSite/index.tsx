@@ -144,8 +144,7 @@ export const PreviewSite = memo(function PreviewSite({
               aria-label={`open site ${name}`}
               size="small"
               onClick={(e) => {
-                e.stopPropagation();
-
+                e.preventDefault();
                 window.open(url);
               }}
               sx={{ color: "#696F7D" }}

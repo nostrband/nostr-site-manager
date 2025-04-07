@@ -37,10 +37,11 @@ import {
   NDKFilter,
   NDKNip07Signer,
   NDKRelaySet,
+  NostrEvent,
 } from "@nostr-dev-kit/ndk";
 import { marked } from "marked";
 import { SERVER_PUBKEY } from "./consts";
-import { countItems, shuffleArray } from "./utils";
+import { countItems, eventIdToTag, shuffleArray } from "./utils";
 
 export type SearchPost = Post & {
   submitterPubkey: string;
@@ -626,18 +627,6 @@ export async function fetchSubmits(site: Site) {
   return posts;
 }
 
-function eventIdToTag(id: string) {
-  const { type, data } = nip19.decode(id);
-  switch (type) {
-    case "note":
-      return data;
-    case "naddr":
-      return `${data.kind}:${data.pubkey}:${data.identifier}`;
-    default:
-      throw new Error("Invalid related id " + id);
-  }
-}
-
 async function getSubmitEvent(pubkey: string, id: string) {
   const relays = await getOutboxRelays(pubkey);
   relays.push(...SEARCH_RELAYS);
@@ -665,6 +654,25 @@ async function getSubmitEvent(pubkey: string, id: string) {
     event,
     relay: event?.relay?.url || SEARCH_RELAYS[0],
   };
+}
+
+export async function signSubmitEvent(event: NostrEvent) {
+  let nevent: NDKEvent | undefined;
+  if (userIsDelegated) {
+    // mark current user as author
+    event.tags.push(["u", userPubkey]);
+    const reply = await fetchWithSession(`/sign`, event);
+    if (reply.status !== 200) throw new Error("Failed to sign submit event");
+    const r = await reply.json();
+    console.log(Date.now(), "signed submit event", r);
+    nevent = new NDKEvent(ndk, r.event);
+  } else {
+    nevent = new NDKEvent(ndk, event);
+    await nevent.sign(new NDKNip07Signer());
+  }
+  console.log("submit post event", nevent);
+
+  return nevent;
 }
 
 export async function submitPost(
@@ -745,20 +753,7 @@ export async function submitPost(
   else event.tags.push(["e", eventIdTag, relayHint!]);
 
   // sign it
-  let nevent: NDKEvent | undefined;
-  if (userIsDelegated) {
-    // mark current user as author
-    event.tags.push(["u", userPubkey]);
-    const reply = await fetchWithSession(`/sign`, event);
-    if (reply.status !== 200) throw new Error("Failed to sign submit event");
-    const r = await reply.json();
-    console.log(Date.now(), "signed submit event", r);
-    nevent = new NDKEvent(ndk, r.event);
-  } else {
-    nevent = new NDKEvent(ndk, event);
-    await nevent.sign(new NDKNip07Signer());
-  }
-  console.log("submit post event", nevent);
+  const nevent = await signSubmitEvent(event);
 
   // publish
   const r = await nevent.publish(

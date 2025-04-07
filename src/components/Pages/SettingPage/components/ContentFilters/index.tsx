@@ -153,7 +153,7 @@ export const ContentFilters = memo(
                 onChange={handleChangeAutoSubmit}
               />
             }
-            label={autoSubmit ? "Auto-submit ON" : "Auto-submit OFF"}
+            label={autoSubmit ? "Auto-import ON" : "Auto-import OFF"}
           />
 
           {autoSubmit && (

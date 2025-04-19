@@ -1,7 +1,7 @@
 "use client";
 import { styled } from "@mui/material/styles";
 import { StyledWrap } from "@/components/shared/styled";
-import { Box, Typography } from "@mui/material";
+import { Box, CardActionArea, Typography } from "@mui/material";
 import { forwardRef } from "react";
 import { IStyledFeatureSubscription } from "@/components/shared/StatusSubscription/styled";
 
@@ -43,4 +43,15 @@ export const StyledSubscriptionHead = styled(Box)(() => ({
   gap: 8,
   justifyContent: "space-between",
   alignItems: "center",
+}));
+
+export const StyledCardActionArea = styled(CardActionArea)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  textDecoration: "none",
+
+  "&:hover": {
+    ".MuiCardActionArea-focusHighlight": {
+      opacity: 0,
+    },
+  },
 }));

@@ -177,6 +177,18 @@ export const ActionsUser = () => {
           <MenuItem onClick={handleSwitchAccount}>
             <ListItemText>Switch account</ListItemText>
           </MenuItem>
+
+          <MenuItem
+            onClick={handleCloseUserMenu}
+            href="/admin/my-subscription"
+            component={Link}
+          >
+            <ListItemText>My subscriptions</ListItemText>
+          </MenuItem>
+
+          <MenuItem onClick={handleCloseUserMenu} href="/90" component={Link}>
+            <ListItemText>Billing</ListItemText>
+          </MenuItem>
           <MenuItem onClick={logout}>
             <ListItemText>Logout</ListItemText>
           </MenuItem>
@@ -190,7 +202,7 @@ export const ActionsUser = () => {
       />
 
       <Menu
-        sx={{ mt: "34px" }}
+        sx={{ mt: "45px" }}
         anchorEl={badgeRef.current}
         anchorOrigin={{
           vertical: "top",

@@ -1,12 +1,6 @@
-import { BrokenIcon, CheckIcon, CrossIcon } from "@/components/Icons";
-import {
-  StyledCardHeader,
-  StyledCardSubHeader,
-  StyledCardTitle,
-} from "@/components/PreviewSite/styled";
-import { StyledAvatarSite, StyledCard } from "@/components/shared/styled";
-import useImageLoader from "@/hooks/useImageLoader";
-import { Button, LinearProgress, Typography } from "@mui/material";
+import { CheckIcon, CrossIcon } from "@/components/Icons";
+import { StyledCard } from "@/components/shared/styled";
+import { Button, Divider, LinearProgress, Typography } from "@mui/material";
 import {
   StyledFeatureSubscription,
   StyledProgress,
@@ -14,32 +8,36 @@ import {
 } from "../../../styled";
 import { SUBSCRIPTION_PLAN, SUBSCRIPTION_PLAN_COLOR } from "@/consts";
 import { StatusSubscription } from "@/components/shared/StatusSubscription";
+import { SubscriptionStatus } from "@/utils";
+import { TotalAmountDescription } from "@/components/shared/TotalAmountDescription";
+import { TotalAmount } from "@/components/shared/TotalAmount";
+import {
+  SiteBaseInfoPreview,
+  SiteBaseInfoPreviewProps,
+} from "@/components/shared/SiteBaseInfoPreview";
 
-interface IRenewSubscriptionItem {
-  siteInfo: {
-    logo: string;
-    name: string;
-    title: string;
-    url: string;
+interface IRenewSubscriptionItem extends SiteBaseInfoPreviewProps {
+  subscriptionPlan: SubscriptionStatus;
+
+  prices: {
+    usd: number;
+    sats: number;
   };
-
-  subscriptionPlan: SUBSCRIPTION_PLAN;
 }
 
 export const RenewSubscriptionItem = ({
   siteInfo,
   subscriptionPlan,
+  prices,
 }: IRenewSubscriptionItem) => {
-  const { logo, name, title, url } = siteInfo;
+  const { usd, sats } = prices;
 
-  const { isLoaded: isLoadedLogo } = useImageLoader(logo);
+  const isPaid = subscriptionPlan.status === SUBSCRIPTION_PLAN.PAID;
 
-  const isPaid = subscriptionPlan === SUBSCRIPTION_PLAN.PAID;
-
-  const colorIndicate = SUBSCRIPTION_PLAN_COLOR[subscriptionPlan];
+  const colorIndicate = SUBSCRIPTION_PLAN_COLOR[subscriptionPlan.status];
 
   const icon =
-    subscriptionPlan === SUBSCRIPTION_PLAN.PAST_DUE ? (
+    subscriptionPlan.status === SUBSCRIPTION_PLAN.PAST_DUE ? (
       <CrossIcon color={colorIndicate} />
     ) : (
       <CheckIcon color={colorIndicate} />
@@ -55,38 +53,22 @@ export const RenewSubscriptionItem = ({
           website
         </Typography>
 
-        <StatusSubscription subscriptionPlan={subscriptionPlan} />
+        <StatusSubscription subscriptionPlan={subscriptionPlan.status} />
       </StyledSubscriptionHead>
 
-      <StyledCardHeader
-        avatar={
-          isLoadedLogo ? (
-            <StyledAvatarSite variant="square" src={logo}>
-              {name}
-            </StyledAvatarSite>
-          ) : (
-            <StyledAvatarSite variant="square">
-              <BrokenIcon fontSize="inherit" />
-            </StyledAvatarSite>
-          )
-        }
-        title={<StyledCardTitle variant="h6">{title}</StyledCardTitle>}
-        subheader={
-          <StyledCardSubHeader variant="body5">{url}</StyledCardSubHeader>
-        }
-      />
+      <SiteBaseInfoPreview siteInfo={siteInfo} />
 
       <StyledProgress>
         <Typography color="secondary" variant="body4">
-          You have 25 days of{" "}
+          You have {subscriptionPlan.daysRemaining} days of{" "}
           <Typography component="span" variant="body2">
-            30
+            {subscriptionPlan.totalPeriodDays}
           </Typography>
         </Typography>
         <LinearProgress
           color={colorIndicate}
           variant="determinate"
-          value={35}
+          value={subscriptionPlan.progressPercent}
         />
       </StyledProgress>
 
@@ -102,10 +84,17 @@ export const RenewSubscriptionItem = ({
       <StyledFeatureSubscription icon={icon}>
         Premium customer support
       </StyledFeatureSubscription>
+
       {!isPaid && (
-        <Button fullWidth size="large" variant="contained">
-          Pay Now $60
-        </Button>
+        <>
+          <Divider />
+          <TotalAmountDescription description="total amount">
+            <TotalAmount usd={usd} sats={sats} />
+          </TotalAmountDescription>
+          <Button fullWidth size="large" variant="contained">
+            Pay Now
+          </Button>
+        </>
       )}
       <Button color="error" fullWidth size="large" variant="text">
         Unsubscribe

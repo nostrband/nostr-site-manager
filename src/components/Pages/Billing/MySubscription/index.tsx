@@ -1,26 +1,50 @@
 "use client";
-import Link from "next/link";
 import { Button, Container, Grid } from "@mui/material";
 import { useListSites } from "@/hooks/useListSites";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { ChevronLeftIcon } from "@/components/Icons";
-import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { StyledTitlePage } from "@/components/shared/styled";
 import { MySubscriptionItem } from "./components/MySubscriptionItem";
-import { SUBSCRIPTION_PLAN } from "@/consts";
+import { useRouter } from "next/navigation";
+import { useServices } from "@/hooks/useServices";
+import { getSubscriptionStatus } from "@/utils";
+import Link from "next/link";
+import { StyledCardActionArea } from "../styled";
 
 const MySubscription = () => {
   const { data, isLoading, isFetching } = useListSites();
-  const { siteId } = useGetSiteId();
-  const getSite = data?.find((el) => el.id === siteId);
+  const { data: dataServices } = useServices();
+  const router = useRouter();
 
-  const { logo = "", name = "", title = "", url = "" } = getSite || {};
+  const getServices = () => {
+    if (data && dataServices) {
+      return dataServices.map((el) => {
+        const { object_id, paid_until, id, price_id } = el;
 
-  const siteInfo = {
-    logo,
-    name,
-    title,
-    url,
+        const subscriptionStatus = getSubscriptionStatus(paid_until);
+
+        const getSite = data?.find((el) => el.id === object_id);
+
+        const { logo = "", name = "", title = "", url = "" } = getSite || {};
+
+        const siteInfo = {
+          logo,
+          name,
+          title,
+          url,
+        };
+
+        return {
+          siteInfo,
+          subscriptionPlan: subscriptionStatus,
+          serviceId: id,
+          priceId: price_id,
+          siteId: object_id,
+        };
+      });
+    } else {
+      return [];
+    }
   };
 
   if (isLoading || isFetching) {
@@ -35,8 +59,7 @@ const MySubscription = () => {
     <Container maxWidth="lg">
       <StyledTitlePage>
         <Button
-          LinkComponent={Link}
-          href="/admin"
+          onClick={router.back}
           variant="text"
           color="secondary"
           sx={{ minWidth: "auto" }}
@@ -47,47 +70,22 @@ const MySubscription = () => {
       </StyledTitlePage>
 
       <Grid container spacing={{ xs: "16px", sm: "24px" }}>
-        <Grid item xs={12} sm={6} lg={4}>
-          <MySubscriptionItem
-            subscriptionPlan={SUBSCRIPTION_PLAN.PAID}
-            siteInfo={siteInfo}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} lg={4}>
-          <MySubscriptionItem
-            subscriptionPlan={SUBSCRIPTION_PLAN.UNPAID}
-            siteInfo={siteInfo}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} lg={4}>
-          <MySubscriptionItem
-            subscriptionPlan={SUBSCRIPTION_PLAN.PAST_DUE}
-            siteInfo={siteInfo}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} lg={4}>
-          <MySubscriptionItem
-            subscriptionPlan={SUBSCRIPTION_PLAN.PAID}
-            siteInfo={siteInfo}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} lg={4}>
-          <MySubscriptionItem
-            subscriptionPlan={SUBSCRIPTION_PLAN.UNPAID}
-            siteInfo={siteInfo}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} lg={4}>
-          <MySubscriptionItem
-            subscriptionPlan={SUBSCRIPTION_PLAN.PAST_DUE}
-            siteInfo={siteInfo}
-          />
-        </Grid>
+        {getServices().map((el, i) => {
+          return (
+            <Grid key={i} item xs={12} sm={6} lg={4}>
+              <StyledCardActionArea
+                LinkComponent={Link}
+                // @ts-expect-error err
+                href={`/admin/renew-subscription?serviceId=${el.serviceId}&priceId=${el.priceId}&siteId=${el.siteId}`}
+              >
+                <MySubscriptionItem
+                  subscriptionPlan={el.subscriptionPlan}
+                  siteInfo={el.siteInfo}
+                />
+              </StyledCardActionArea>
+            </Grid>
+          );
+        })}
       </Grid>
     </Container>
   );

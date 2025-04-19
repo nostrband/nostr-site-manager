@@ -21,9 +21,14 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
   const { isAuth, isLoading } = useContext(AuthContext);
 
   const isPathAdmin = pathname === "/admin";
-  const isPathAdminAdd = ["/admin/add", "/admin/create-site"].includes(
-    pathname,
-  );
+  const isPathAdminAdd = [
+    "/admin/add",
+    "/admin/create-site",
+    "/admin/my-subscription",
+    "/admin/subscription",
+    "/admin/order",
+    "/admin/renew-subscription",
+  ].includes(pathname);
 
   const getValidParamsId = useCallback(
     (list: ReturnSitesDataType[], id: string | string[]) => {

@@ -58,7 +58,7 @@ export const PendingInvoices = () => {
         <Grid item xs={12} sm={6} md={6}>
           <StyledStikyWrap>
             <TotalAmountDescription description="total PAYMENT">
-              <TotalAmount usd="30" sats="30,000" />
+              <TotalAmount size="small" usd={30} sats={30000} />
             </TotalAmountDescription>
             <Button fullWidth size="large" variant="contained">
               Pay Now

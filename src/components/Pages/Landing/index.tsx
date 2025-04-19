@@ -4,19 +4,17 @@ import { StyledIframe } from "./styled";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-
-
 type IframeMessage = {
   type: string;
   payload?: string;
 };
 
 const Landing = () => {
-    const router = useRouter();
+  const router = useRouter();
   useEffect(() => {
     const handleMessage = (event: MessageEvent<IframeMessage>) => {
       if (event.data.type === "BUTTON_CLICKED") {
-        router.push('/onboarding');
+        router.push("/onboarding");
       }
     };
 

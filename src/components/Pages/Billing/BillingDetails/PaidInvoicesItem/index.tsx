@@ -15,7 +15,7 @@ export const PaidInvoicesItem = () => {
     <StyledCard>
       <StyledAmountWrap>
         <StatusSubscription subscriptionPlan={SUBSCRIPTION_PLAN.PAID} />
-        <TotalAmount size="small" usd="30" sats="30,000" />
+        <TotalAmount size="small" usd={30} sats={30000} />
       </StyledAmountWrap>
 
       <StyledFeatureList>

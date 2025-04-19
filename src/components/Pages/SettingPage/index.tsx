@@ -46,6 +46,7 @@ import { StyledTitlePage } from "@/components/shared/styled";
 import { SITE_TASK_SETTINGS } from "@/services/nostr/tasks";
 import { AnalyticsAdmin } from "./components/AnalyticsAdmin";
 import { AnalyticsDev } from "./components/AnalyticsDev";
+import { useListSites } from "@/hooks/useListSites";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -105,6 +106,8 @@ const SettingPage = () => {
   const { siteId } = useGetSiteId();
   const { back } = useBack();
 
+  const { refetch } = useListSites();
+
   const {
     data,
     isLoading: isLoadingSetting,
@@ -140,6 +143,9 @@ const SettingPage = () => {
 
         try {
           await editSite(values);
+
+          await refetch();
+
           enqueueSnackbar("Saved the settings and updated your site!", {
             autoHideDuration: 3000,
             variant: "success",

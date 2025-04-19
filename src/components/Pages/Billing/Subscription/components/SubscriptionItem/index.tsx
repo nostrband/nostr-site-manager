@@ -1,29 +1,32 @@
-import { BrokenIcon, CheckIcon } from "@/components/Icons";
-import {
-  StyledCardHeader,
-  StyledCardSubHeader,
-  StyledCardTitle,
-} from "@/components/PreviewSite/styled";
-import { StyledAvatarSite, StyledCard } from "@/components/shared/styled";
-import useImageLoader from "@/hooks/useImageLoader";
+import { CheckIcon } from "@/components/Icons";
+import { StyledCard } from "@/components/shared/styled";
 import { Button, Divider, Typography } from "@mui/material";
 import { TotalAmount } from "@/components/shared/TotalAmount";
 import { TotalAmountDescription } from "@/components/shared/TotalAmountDescription";
 import { StyledFeatureSubscription } from "../../../styled";
+import {
+  SiteBaseInfoPreview,
+  SiteBaseInfoPreviewProps,
+} from "@/components/shared/SiteBaseInfoPreview";
 
-interface ISubscriptionItem {
-  siteInfo: {
-    logo: string;
-    name: string;
-    title: string;
-    url: string;
+interface ISubscriptionItem extends SiteBaseInfoPreviewProps {
+  prices: {
+    usd: number;
+    sats: number;
   };
+
+  onClick: () => void;
+
+  isLoading: boolean;
 }
 
-export const SubscriptionItem = ({ siteInfo }: ISubscriptionItem) => {
-  const { logo, name, title, url } = siteInfo;
-
-  const { isLoaded: isLoadedLogo } = useImageLoader(logo);
+export const SubscriptionItem = ({
+  siteInfo,
+  prices,
+  onClick,
+  isLoading,
+}: ISubscriptionItem) => {
+  const { usd, sats } = prices;
 
   return (
     <StyledCard>
@@ -34,23 +37,7 @@ export const SubscriptionItem = ({ siteInfo }: ISubscriptionItem) => {
         </Typography>
       </Typography>
 
-      <StyledCardHeader
-        avatar={
-          isLoadedLogo ? (
-            <StyledAvatarSite variant="square" src={logo}>
-              {name}
-            </StyledAvatarSite>
-          ) : (
-            <StyledAvatarSite variant="square">
-              <BrokenIcon fontSize="inherit" />
-            </StyledAvatarSite>
-          )
-        }
-        title={<StyledCardTitle variant="h6">{title}</StyledCardTitle>}
-        subheader={
-          <StyledCardSubHeader variant="body5">{url}</StyledCardSubHeader>
-        }
-      />
+      <SiteBaseInfoPreview siteInfo={siteInfo} />
 
       <Typography variant="body4">
         By subscribing to this site you will receive the following benefits:
@@ -69,10 +56,17 @@ export const SubscriptionItem = ({ siteInfo }: ISubscriptionItem) => {
       <Divider />
 
       <TotalAmountDescription description="total amount per month">
-        <TotalAmount usd="30" sats="30,000" />
+        <TotalAmount usd={usd} sats={sats} />
       </TotalAmountDescription>
 
-      <Button fullWidth size="large" variant="contained">
+      <Button
+        loading={isLoading}
+        disabled={isLoading}
+        onClick={onClick}
+        fullWidth
+        size="large"
+        variant="contained"
+      >
         Subscribe
       </Button>
     </StyledCard>

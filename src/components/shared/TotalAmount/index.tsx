@@ -5,8 +5,8 @@ type TypographyVariant = TypographyProps["variant"];
 
 interface ITotalAmount {
   size?: "large" | "medium" | "small";
-  usd: string;
-  sats: string;
+  usd: number;
+  sats: number;
 }
 
 export const TotalAmount = ({ size = "large", usd, sats }: ITotalAmount) => {
@@ -29,7 +29,7 @@ export const TotalAmount = ({ size = "large", usd, sats }: ITotalAmount) => {
         {usd} USD
       </Typography>
       <Typography color="secondary" variant="body4">
-        {sats} {sat}
+        {new Intl.NumberFormat("en-US").format(sats)} {sat}
       </Typography>
     </StyledTotalAmount>
   );

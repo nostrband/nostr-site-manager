@@ -17,7 +17,7 @@ import {
   StyledCardAuthorName,
   StyledCardAuthorStatus,
   StyledAvatarGroup,
-} from "./styled";
+} from "../shared/PreviewSite/styled";
 import { StyledAvatarSite } from "@/components/shared/styled";
 import { getContrastingTextColor } from "@/utils/contrasting-color";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";

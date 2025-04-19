@@ -73,6 +73,10 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
     }
   };
 
+  const handleNavigateToSubscription = () => {
+    router.push(`/admin/subscription?siteId=${siteId}&type=site&plan=pro`);
+  };
+
   useEffect(() => {
     getTasks(siteId);
   }, [getTasks, siteId]);
@@ -84,6 +88,19 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
       <StyledTypography variant="body4">
         One step at a time, slow but steady.
       </StyledTypography>
+
+      <StyledAlertExpiringPlan
+        onClick={handleNavigateToSubscription}
+        severity="warning"
+        action={
+          <IconButton color="inherit" size="small">
+            <StyledAlertExpiringPlanIcon />
+          </IconButton>
+        }
+      >
+        Upgrade to pro
+      </StyledAlertExpiringPlan>
+
       {isLoading ? (
         <SpinerWrap>
           <SpinerCircularProgress />
@@ -114,21 +131,10 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               isGutter={isGutter}
               value="todo"
             >
-              <StyledAlertExpiringPlan
-                severity="warning"
-                action={
-                  <IconButton color="inherit" size="small">
-                    <StyledAlertExpiringPlanIcon />
-                  </IconButton>
-                }
-              >
-                Your plan is expiring
-              </StyledAlertExpiringPlan>
-
               {isNeedMigrateKey(siteId) && <MigrateTask siteId={siteId} />}
 
               {isEmptyTodo && (
-                <StyledTypography variant="body4">
+                <StyledTypography component="div" variant="body4">
                   You&apos;ve completed all the tasks
                 </StyledTypography>
               )}

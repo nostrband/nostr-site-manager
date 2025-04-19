@@ -1,30 +1,44 @@
 "use client";
-import Link from "next/link";
-import { Box, Button, Container } from "@mui/material";
-import { useListSites } from "@/hooks/useListSites";
+import { Button, Container } from "@mui/material";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { ChevronLeftIcon } from "@/components/Icons";
-import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { StyledTitlePage } from "@/components/shared/styled";
 import { RenewSubscriptionItem } from "./components/RenewSubscriptionItem";
-import { SUBSCRIPTION_PLAN } from "@/consts";
 import { StyledWrapColumn } from "../styled";
+import { useRouter, useSearchParams } from "next/navigation";
+import { usePrices } from "@/hooks/usePrices";
+import { getSubscriptionStatus } from "@/utils";
+import { useServices } from "@/hooks/useServices";
+import { useSiteBaseInfo } from "@/hooks/useSiteBaseInfo";
+import { useConvertCurrency } from "@/hooks/useConvertCurrency";
 
 const RenewSubscription = () => {
-  const { data, isLoading, isFetching } = useListSites();
-  const { siteId } = useGetSiteId();
-  const getSite = data?.find((el) => el.id === siteId);
+  const { data: dataServices } = useServices();
+  const {
+    data: dataPrices,
+    isLoading: isLoadingPrices,
+    isFetching: isFetchingPrices,
+  } = usePrices();
 
-  const { logo = "", name = "", title = "", url = "" } = getSite || {};
+  const router = useRouter();
+  const params = useSearchParams();
+  const siteId = params.get("siteId");
+  const serviceId = params.get("serviceId");
+  const priceId = params.get("priceId");
 
-  const siteInfo = {
-    logo,
-    name,
-    title,
-    url,
-  };
+  const { isLoadingBaseInfo, siteInfo } = useSiteBaseInfo(siteId);
 
-  if (isLoading || isFetching) {
+  const subscriptionAmount =
+    (dataPrices ?? []).find((el) => el.id === priceId)?.amount ?? 0;
+
+  const { currencies, isPending } = useConvertCurrency(subscriptionAmount);
+
+  const getService = dataServices?.find((el) => el.id === serviceId);
+  const subscriptionStatus = getSubscriptionStatus(
+    getService ? getService.paid_until : 0,
+  );
+
+  if (isLoadingBaseInfo || isLoadingPrices || isFetchingPrices || isPending) {
     return (
       <SpinerWrap>
         <SpinerCircularProgress />
@@ -37,8 +51,7 @@ const RenewSubscription = () => {
       <StyledWrapColumn>
         <StyledTitlePage>
           <Button
-            LinkComponent={Link}
-            href="/admin"
+            onClick={router.back}
             variant="text"
             color="secondary"
             sx={{ minWidth: "auto" }}
@@ -49,18 +62,9 @@ const RenewSubscription = () => {
         </StyledTitlePage>
 
         <RenewSubscriptionItem
-          subscriptionPlan={SUBSCRIPTION_PLAN.PAID}
+          subscriptionPlan={subscriptionStatus}
           siteInfo={siteInfo}
-        />
-        <Box sx={{ height: 10 }} />
-        <RenewSubscriptionItem
-          subscriptionPlan={SUBSCRIPTION_PLAN.UNPAID}
-          siteInfo={siteInfo}
-        />
-        <Box sx={{ height: 10 }} />
-        <RenewSubscriptionItem
-          subscriptionPlan={SUBSCRIPTION_PLAN.PAST_DUE}
-          siteInfo={siteInfo}
+          prices={currencies}
         />
       </StyledWrapColumn>
     </Container>

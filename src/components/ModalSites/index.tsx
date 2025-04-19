@@ -8,8 +8,8 @@ import {
 } from "@/components/ModalAuthor/styled";
 import { TYPES_THEMES_TAG } from "@/consts";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import { StyledCardHeader } from "@/components/PreviewSite/styled";
-import { StyledCardNoImage } from "@/components/PreviewSite/styled";
+import { StyledCardHeader } from "@/components/shared/PreviewSite/styled";
+import { StyledCardNoImage } from "@/components/shared/PreviewSite/styled";
 import { StyledIconButton } from "@/components/PreviewNavigation/styled";
 import { useRouter } from "next/navigation";
 import { StyledAvatarSite } from "@/components/shared/styled";

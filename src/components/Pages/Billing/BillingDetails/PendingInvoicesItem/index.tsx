@@ -18,7 +18,7 @@ export const PendingInvoicesItem = () => {
         <Checkbox defaultChecked />
         <StatusSubscription subscriptionPlan={SUBSCRIPTION_PLAN.UNPAID} />
         <StyledTotalAmount>
-          <TotalAmount size="small" usd="15" sats="15,000" />
+          <TotalAmount size="small" usd={30} sats={30000} />
         </StyledTotalAmount>
       </StyledAmountWrap>
 

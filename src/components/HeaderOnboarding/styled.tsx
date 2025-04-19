@@ -1,16 +1,16 @@
 "use client";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
-import { isMobile } from 'react-device-detect';
+import { isMobile } from "react-device-detect";
 
-export const StyledHeaderOnboarding = styled(Box)(({theme}) => ({
+export const StyledHeaderOnboarding = styled(Box)(({ theme }) => ({
   position: "fixed",
   width: isMobile ? "100%" : "calc(100% - 15px)",
   padding: "12px 80px",
   zIndex: 9999,
   top: 0,
   left: 0,
-  background: '#fff',
+  background: "#fff",
   boxShadow: theme.shadows[5],
   display: "flex",
   alignItems: "center",

@@ -11,50 +11,67 @@ import {
   StyledPaymentItem,
 } from "./styled";
 import { Box, Typography } from "@mui/material";
+import { ReturnInvoiceType, ReturnOrderType } from "@/services/billing.service";
+import { useConvertCurrency } from "@/hooks/useConvertCurrency";
+import { format } from "date-fns";
+import { ReturnSettingsSiteDataType } from "@/services/sites.service";
 
-export const PaymentItem = () => {
+interface PaymentItemProps {
+  paymentInfo: {
+    order: ReturnOrderType;
+    invoices: {
+      invoice: ReturnInvoiceType;
+      siteInfo?: ReturnSettingsSiteDataType;
+    }[];
+  };
+}
+
+export const PaymentItem = ({ paymentInfo }: PaymentItemProps) => {
+  const { currencies } = useConvertCurrency(paymentInfo.order.amount);
+
+  const paymentDate = format(
+    new Date(paymentInfo.order.paid_timestamp * 1000),
+    "MMM dd, yyyy hh:mm a",
+  );
+
   return (
     <StyledCard>
       <StyledPaymentItem>
         <StyledAmountWrap>
           <StatusSubscription subscriptionPlan={SUBSCRIPTION_PLAN.PAID} />
-          <TotalAmount size="small" usd={30} sats={30000} />
+          <TotalAmount
+            size="small"
+            usd={currencies.usd}
+            sats={currencies.sats}
+          />
         </StyledAmountWrap>
 
         <StyledDate>
           <Typography variant="body5">Date</Typography>
           <Typography color="secondary" variant="body2">
-            Jan 09, 2025 03:30 PM
+            {paymentDate}
           </Typography>
         </StyledDate>
 
         <Box>
-          <StyledPaymentInvoice>
-            <StyledPaymentInvoiceInfo>
-              <Typography variant="body5">Invoice #3</Typography>
-              <Typography color="secondary" variant="body2">
-                Subscription PRO for website Crypto Example
-              </Typography>
-            </StyledPaymentInvoiceInfo>
-            <StyledPaymentInvoicePrice>
-              <Typography color="secondary" variant="body2">
-                15 USD
-              </Typography>
-            </StyledPaymentInvoicePrice>
-          </StyledPaymentInvoice>
-          <StyledPaymentInvoice>
-            <StyledPaymentInvoiceInfo>
-              <Typography variant="body5">Invoice #3</Typography>
-              <Typography color="secondary" variant="body2">
-                Subscription PRO for website Crypto Example
-              </Typography>
-            </StyledPaymentInvoiceInfo>
-            <StyledPaymentInvoicePrice>
-              <Typography color="secondary" variant="body2">
-                15 USD
-              </Typography>
-            </StyledPaymentInvoicePrice>
-          </StyledPaymentInvoice>
+          {paymentInfo.invoices.map((el, i) => {
+            return (
+              <StyledPaymentInvoice key={i}>
+                <StyledPaymentInvoiceInfo>
+                  <Typography variant="body5">Invoice #{i + 1}</Typography>
+                  <Typography color="secondary" variant="body2">
+                    Subscription PRO for website{" "}
+                    {el.siteInfo && el.siteInfo.title}
+                  </Typography>
+                </StyledPaymentInvoiceInfo>
+                <StyledPaymentInvoicePrice>
+                  <Typography color="secondary" variant="body2">
+                    {el.invoice.amount} USD
+                  </Typography>
+                </StyledPaymentInvoicePrice>
+              </StyledPaymentInvoice>
+            );
+          })}
         </Box>
       </StyledPaymentItem>
     </StyledCard>

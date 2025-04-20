@@ -18,12 +18,20 @@ import { isNeedMigrateKey } from "@/services/nostr/migrate";
 import { TaskType } from "@/types";
 import { fetchTasks, setDoneTask } from "@/services/nostr/tasks";
 import { MigrateTask } from "./components/MigrateTask";
+import { useServiceByPlan } from "@/hooks/useServiceByPlan";
+import { SUBSCRIPTION_PLAN } from "@/consts";
 
 interface TasksUserProps {
   siteId: string;
 }
 
 export const TasksUser = ({ siteId }: TasksUserProps) => {
+  const {
+    isProPlan,
+    urlRedirectToSubscription,
+    statusPlan,
+    isLoading: isLoadingService,
+  } = useServiceByPlan(siteId);
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isLoading, setLoading] = useState(true);
   const router = useRouter();
@@ -61,20 +69,28 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
     setLoading(false);
   }, []);
 
-  const handleOpen = (idTask: string, isCompleted: boolean) => {
-    if (isCompleted) {
-      const linkSettingsCompleted = `/admin/${siteId}/settings?idTaskCompleted=${idTask}`;
-
-      router.push(linkSettingsCompleted);
-    } else {
-      setDoneTask(siteId, idTask);
-      const linkSettings = `/admin/${siteId}/settings?idTask=${idTask}`;
-      router.push(linkSettings);
-    }
+  const handleNavigateToSubscription = () => {
+    router.push(urlRedirectToSubscription);
   };
 
-  const handleNavigateToSubscription = () => {
-    router.push(`/admin/subscription?siteId=${siteId}&type=site&plan=pro`);
+  const handleOpen = (
+    idTask: string,
+    isCompleted: boolean,
+    isRedirectToSubscribtion: boolean,
+  ) => {
+    if (isRedirectToSubscribtion) {
+      handleNavigateToSubscription();
+    } else {
+      if (isCompleted) {
+        const linkSettingsCompleted = `/admin/${siteId}/settings?idTaskCompleted=${idTask}`;
+
+        router.push(linkSettingsCompleted);
+      } else {
+        setDoneTask(siteId, idTask);
+        const linkSettings = `/admin/${siteId}/settings?idTask=${idTask}`;
+        router.push(linkSettings);
+      }
+    }
   };
 
   useEffect(() => {
@@ -89,17 +105,23 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
         One step at a time, slow but steady.
       </StyledTypography>
 
-      <StyledAlertExpiringPlan
-        onClick={handleNavigateToSubscription}
-        severity="warning"
-        action={
-          <IconButton color="inherit" size="small">
-            <StyledAlertExpiringPlanIcon />
-          </IconButton>
-        }
-      >
-        Upgrade to pro
-      </StyledAlertExpiringPlan>
+      {isLoadingService ? (
+        <></>
+      ) : (
+        (!isProPlan || statusPlan !== SUBSCRIPTION_PLAN.PAID) && (
+          <StyledAlertExpiringPlan
+            onClick={handleNavigateToSubscription}
+            severity="warning"
+            action={
+              <IconButton color="inherit" size="small">
+                <StyledAlertExpiringPlanIcon />
+              </IconButton>
+            }
+          >
+            Upgrade to pro
+          </StyledAlertExpiringPlan>
+        )
+      )}
 
       {isLoading ? (
         <SpinerWrap>
@@ -145,6 +167,8 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
                     key={i}
                     subscriptionPlan={el.paymentPlan}
                     task={el}
+                    isProPlan={isProPlan}
+                    statusPlan={statusPlan}
                     onOpen={handleOpen}
                   />
                 );
@@ -167,7 +191,9 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
                     subscriptionPlan={el.paymentPlan}
                     key={i}
                     task={el}
+                    isProPlan={isProPlan}
                     onOpen={handleOpen}
+                    statusPlan={statusPlan}
                   />
                 );
               })}

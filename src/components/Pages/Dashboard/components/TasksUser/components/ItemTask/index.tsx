@@ -12,18 +12,34 @@ import { SUBSCRIPTION_PLAN } from "@/consts";
 
 interface ItemTaskProps {
   task: TaskType;
-  onOpen: (id: string, isCompleted: boolean) => void;
+  onOpen: (
+    id: string,
+    isCompleted: boolean,
+    isRedirectToSubscribtion: boolean,
+  ) => void;
   subscriptionPlan: string;
+  isProPlan: boolean;
+  statusPlan: SUBSCRIPTION_PLAN;
 }
 
-export const ItemTask = ({ task, onOpen, subscriptionPlan }: ItemTaskProps) => {
+export const ItemTask = ({
+  task,
+  onOpen,
+  subscriptionPlan,
+  isProPlan,
+  statusPlan,
+}: ItemTaskProps) => {
   const { isCompleted, id } = task;
 
-  const handleOpen = () => {
-    onOpen(id, isCompleted);
-  };
-
   const isPro = subscriptionPlan === "pro";
+
+  const isRedirectToSubscribtion =
+    (!isProPlan && isPro) ||
+    (isProPlan && statusPlan !== SUBSCRIPTION_PLAN.PAID && isPro);
+
+  const handleOpen = () => {
+    onOpen(id, isCompleted, isRedirectToSubscribtion);
+  };
 
   return (
     <StyledWrap onClick={handleOpen}>
@@ -34,9 +50,7 @@ export const ItemTask = ({ task, onOpen, subscriptionPlan }: ItemTaskProps) => {
       <Typography variant="subtitle4">{task.text}</Typography>
 
       <StyledActions>
-        {isPro && (
-          <SubscriptionPlanBadge subscriptionPlan={SUBSCRIPTION_PLAN.PAID} />
-        )}
+        {isPro && <SubscriptionPlanBadge subscriptionPlan={statusPlan} />}
 
         <StyledIconChevron>
           <ChevronLeftIcon />

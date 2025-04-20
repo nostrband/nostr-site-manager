@@ -4,7 +4,7 @@ const ApiBillingClient = axios.create({
   baseURL: "https://billingapi.npubpro.com",
 });
 
-type ReturnPriceType = {
+export type ReturnPriceType = {
   id: string;
   type: "site";
   plan: "pro";
@@ -14,7 +14,7 @@ type ReturnPriceType = {
   timestamp: number;
 };
 
-type ReturnOrderType = {
+export type ReturnOrderType = {
   id: string;
   pubkey: string;
   amount: number;
@@ -26,13 +26,27 @@ type ReturnOrderType = {
   error: string;
 };
 
-type ReturnServiceType = {
+export type ReturnServiceType = {
   id: string;
   pubkey: string;
   price_id: string;
   object_id: string;
   timestamp: number;
   paid_until: number;
+};
+
+export type ReturnInvoiceType = {
+  id: string;
+  pubkey: string;
+  service_id: string;
+  timestamp: number;
+  price_id: string;
+  amount: number;
+  unit: "usd";
+  period: "1m";
+  due_timestamp: number;
+  paid_timestamp: number;
+  paid_order_id: string;
 };
 
 ApiBillingClient.interceptors.request.use((config) => {
@@ -54,6 +68,16 @@ export const getPrices = async (): Promise<ReturnPriceType[]> => {
   }
 };
 
+export const getInvoices = async (): Promise<ReturnInvoiceType[]> => {
+  try {
+    const res = await ApiBillingClient.get("/invoices");
+
+    return res.data.invoices;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
 export const getServices = async (): Promise<ReturnServiceType[]> => {
   try {
     const res = await ApiBillingClient.get("/services");
@@ -64,11 +88,35 @@ export const getServices = async (): Promise<ReturnServiceType[]> => {
   }
 };
 
+export const getOrders = async (): Promise<ReturnOrderType[]> => {
+  try {
+    const res = await ApiBillingClient.get("/orders");
+
+    return res.data.orders;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
 export const byPlan = async (siteId: string): Promise<ReturnOrderType> => {
   try {
     const res = await ApiBillingClient.post(`/pro?site=${siteId}`);
 
     return res.data.order;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const createOrder = async (
+  invoices: string[],
+): Promise<ReturnOrderType> => {
+  try {
+    const res = await ApiBillingClient.post(
+      `/order?invoices=${invoices.join(",")}`,
+    );
+
+    return res.data;
   } catch (error: any) {
     throw new Error(error);
   }

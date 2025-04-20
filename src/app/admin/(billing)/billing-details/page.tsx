@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 
 const BillingDetailsPage = dynamic(
-  () => import("../../../../../components/Pages/Billing/BillingDetails"),
+  () => import("../../../../components/Pages/Billing/BillingDetails"),
   {
     ssr: false,
   },

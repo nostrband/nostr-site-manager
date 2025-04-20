@@ -40,6 +40,10 @@ const Order = () => {
           await queryClient.invalidateQueries({
             queryKey: ["billing-services"],
           });
+
+          await queryClient.refetchQueries({
+            queryKey: ["billing-services"],
+          });
         }
       } catch (error) {
         console.error("Error pingStatus:", error);

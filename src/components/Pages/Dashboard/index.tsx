@@ -24,7 +24,7 @@ import { useRouter } from "next/navigation";
 import { getLinksMenu } from "@/utils";
 import { CardFeatureContent } from "@/components/shared/CardFeatureContent";
 import { StyledWrapMenu } from "./styled";
-import { SUBSCRIPTION_PLAN } from "@/consts";
+import { useServiceByPlan } from "@/hooks/useServiceByPlan";
 
 const Dashboard = () => {
   const { isAuth } = useContext(AuthContext);
@@ -33,6 +33,8 @@ const Dashboard = () => {
   const router = useRouter();
   const { siteId } = useGetSiteId();
   const getSite = data?.find((el) => el.id === siteId);
+
+  const { isProPlan, statusPlan } = useServiceByPlan(siteId);
 
   const userIsAdmin =
     userPubkey && getSite && getSite.adminPubkey === userPubkey;
@@ -92,7 +94,8 @@ const Dashboard = () => {
                   accentColor={getSite.accentColor}
                   contributors={getSite.contributors}
                   actions={<TasksUser siteId={getSite.id} />}
-                  subscriptionPlan={SUBSCRIPTION_PLAN.PAID}
+                  statusPlan={statusPlan}
+                  isProPlan={isProPlan}
                 />
               </Box>
               <ModalConfirmDeleteSite

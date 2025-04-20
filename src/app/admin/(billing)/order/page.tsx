@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 
 const OrderPage = dynamic(
-  () => import("../../../components/Pages/Billing/Order"),
+  () => import("../../../../components/Pages/Billing/Order"),
   {
     ssr: false,
   },

@@ -11,6 +11,8 @@ import { getSubscriptionStatus } from "@/utils";
 import { useServices } from "@/hooks/useServices";
 import { useSiteBaseInfo } from "@/hooks/useSiteBaseInfo";
 import { useConvertCurrency } from "@/hooks/useConvertCurrency";
+import { createOrder } from "@/services/billing.service";
+import { useInvoices } from "@/hooks/useInvoices";
 
 const RenewSubscription = () => {
   const { data: dataServices } = useServices();
@@ -19,6 +21,11 @@ const RenewSubscription = () => {
     isLoading: isLoadingPrices,
     isFetching: isFetchingPrices,
   } = usePrices();
+  const {
+    data: dataInvoices,
+    isLoading: isLoadingInvoices,
+    isFetching: isFetchingInvoices,
+  } = useInvoices();
 
   const router = useRouter();
   const params = useSearchParams();
@@ -34,11 +41,27 @@ const RenewSubscription = () => {
   const { currencies, isPending } = useConvertCurrency(subscriptionAmount);
 
   const getService = dataServices?.find((el) => el.id === serviceId);
+
   const subscriptionStatus = getSubscriptionStatus(
     getService ? getService.paid_until : 0,
   );
 
-  if (isLoadingBaseInfo || isLoadingPrices || isFetchingPrices || isPending) {
+  const handlePay = async () => {
+    if (serviceId && dataInvoices) {
+      const invoiceId = dataInvoices.find((el) => el.id)?.id as string;
+
+      await createOrder([invoiceId]);
+    }
+  };
+
+  if (
+    isLoadingBaseInfo ||
+    isLoadingPrices ||
+    isFetchingPrices ||
+    isPending ||
+    isLoadingInvoices ||
+    isFetchingInvoices
+  ) {
     return (
       <SpinerWrap>
         <SpinerCircularProgress />
@@ -64,6 +87,7 @@ const RenewSubscription = () => {
         <RenewSubscriptionItem
           subscriptionPlan={subscriptionStatus}
           siteInfo={siteInfo}
+          onPay={handlePay}
           prices={currencies}
         />
       </StyledWrapColumn>

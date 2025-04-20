@@ -33,7 +33,8 @@ type PreviewDashboardSiteType = {
   actions?: ReactNode;
   settingsLink?: string;
   userPubkey?: string;
-  subscriptionPlan: SUBSCRIPTION_PLAN;
+  statusPlan: SUBSCRIPTION_PLAN;
+  isProPlan: boolean;
 };
 
 export type PreviewDashboardSitePropsType = PreviewDashboardSiteType &
@@ -63,7 +64,8 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
   description,
   actions,
   settingsLink,
-  subscriptionPlan,
+  statusPlan,
+  isProPlan,
 }: PreviewDashboardSitePropsType) {
   // put them all into the same bucket
   pubkeysContributors = useMemo(
@@ -107,7 +109,9 @@ export const PreviewDashboardSite = memo(function PreviewDashboardSite({
           title={
             <StyledCardTitleWrap>
               <StyledCardTitle variant="h6">{title}</StyledCardTitle>
-              <SubscriptionPlanBadge subscriptionPlan={subscriptionPlan} />
+              {isProPlan && (
+                <SubscriptionPlanBadge subscriptionPlan={statusPlan} />
+              )}
             </StyledCardTitleWrap>
           }
           subheader={

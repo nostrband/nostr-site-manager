@@ -23,12 +23,15 @@ interface IRenewSubscriptionItem extends SiteBaseInfoPreviewProps {
     usd: number;
     sats: number;
   };
+
+  onPay: () => void;
 }
 
 export const RenewSubscriptionItem = ({
   siteInfo,
   subscriptionPlan,
   prices,
+  onPay,
 }: IRenewSubscriptionItem) => {
   const { usd, sats } = prices;
 
@@ -91,7 +94,7 @@ export const RenewSubscriptionItem = ({
           <TotalAmountDescription description="total amount">
             <TotalAmount usd={usd} sats={sats} />
           </TotalAmountDescription>
-          <Button fullWidth size="large" variant="contained">
+          <Button onClick={onPay} fullWidth size="large" variant="contained">
             Pay Now
           </Button>
         </>

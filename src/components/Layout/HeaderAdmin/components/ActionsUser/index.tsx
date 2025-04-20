@@ -186,7 +186,11 @@ export const ActionsUser = () => {
             <ListItemText>My subscriptions</ListItemText>
           </MenuItem>
 
-          <MenuItem onClick={handleCloseUserMenu} href="/90" component={Link}>
+          <MenuItem
+            onClick={handleCloseUserMenu}
+            href="/admin/billing-details"
+            component={Link}
+          >
             <ListItemText>Billing</ListItemText>
           </MenuItem>
           <MenuItem onClick={logout}>

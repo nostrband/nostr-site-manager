@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 
 const MySubscriptionPage = dynamic(
-  () => import("../../../components/Pages/Billing/MySubscription"),
+  () => import("../../../../components/Pages/Billing/MySubscription"),
   {
     ssr: false,
   },

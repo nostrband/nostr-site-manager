@@ -28,6 +28,7 @@ export const DashboardWrapper = ({ children }: { children: ReactNode }) => {
     "/admin/subscription",
     "/admin/order",
     "/admin/renew-subscription",
+    "/admin/billing-details",
   ].includes(pathname);
 
   const getValidParamsId = useCallback(

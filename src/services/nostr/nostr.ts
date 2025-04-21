@@ -322,7 +322,7 @@ export async function fetchWithSession(
   url: string,
   body: any | undefined = undefined,
   method?: string,
-  baseUrl = NPUB_PRO_API
+  baseUrl = NPUB_PRO_API,
 ) {
   url = `${baseUrl}${url}`;
 

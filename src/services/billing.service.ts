@@ -53,7 +53,7 @@ export const getPrices = async (): Promise<ReturnPriceType[]> => {
       "/prices",
       undefined,
       undefined,
-      BILLING_API_PATH
+      BILLING_API_PATH,
     );
 
     const data: { prices: ReturnPriceType[] } = await res.json();
@@ -70,7 +70,7 @@ export const getInvoices = async (): Promise<ReturnInvoiceType[]> => {
       "/invoices",
       undefined,
       undefined,
-      BILLING_API_PATH
+      BILLING_API_PATH,
     );
 
     const data: { invoices: ReturnInvoiceType[] } = await res.json();
@@ -87,7 +87,7 @@ export const getServices = async (): Promise<ReturnServiceType[]> => {
       "/services",
       undefined,
       undefined,
-      BILLING_API_PATH
+      BILLING_API_PATH,
     );
 
     const data: { services: ReturnServiceType[] } = await res.json();
@@ -104,7 +104,7 @@ export const getOrders = async (): Promise<ReturnOrderType[]> => {
       "/orders",
       undefined,
       undefined,
-      BILLING_API_PATH
+      BILLING_API_PATH,
     );
 
     const data: { orders: ReturnOrderType[] } = await res.json();
@@ -121,7 +121,7 @@ export const byPlan = async (siteId: string): Promise<ReturnOrderType> => {
       `/pro?site=${siteId}`,
       undefined,
       "post",
-      BILLING_API_PATH
+      BILLING_API_PATH,
     );
 
     const data: { order: ReturnOrderType } = await res.json();
@@ -133,14 +133,14 @@ export const byPlan = async (siteId: string): Promise<ReturnOrderType> => {
 };
 
 export const createOrder = async (
-  invoices: string[]
+  invoices: string[],
 ): Promise<ReturnOrderType> => {
   try {
     const res = await fetchWithSession(
       `/order?invoices=${invoices.join(",")}`,
       undefined,
       undefined,
-      BILLING_API_PATH
+      BILLING_API_PATH,
     );
 
     const data: { order: ReturnOrderType } = await res.json();
@@ -152,14 +152,14 @@ export const createOrder = async (
 };
 
 export const getOrderById = async (
-  orderId: string
+  orderId: string,
 ): Promise<ReturnOrderType | undefined> => {
   try {
     const res = await fetchWithSession(
       `/orders?id=${orderId}`,
       undefined,
       undefined,
-      BILLING_API_PATH
+      BILLING_API_PATH,
     );
 
     const data: { orders: ReturnOrderType[] } = await res.json();
@@ -173,7 +173,7 @@ export const getOrderById = async (
 export const getBtcUsdCurrencies = async (): Promise<number> => {
   try {
     const res = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
+      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
     );
 
     const data: { bitcoin: { usd: number } } = await res.json();

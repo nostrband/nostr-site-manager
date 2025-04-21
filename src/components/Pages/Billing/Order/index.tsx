@@ -31,19 +31,21 @@ const Order = () => {
       try {
         const order = await getOrderById(orderId);
 
-        if (
-          new Date(order.paid_timestamp * 1000).toDateString() ===
-          new Date().toDateString()
-        ) {
-          setPaid(true);
+        if (order) {
+          if (
+            new Date(order.paid_timestamp * 1000).toDateString() ===
+            new Date().toDateString()
+          ) {
+            setPaid(true);
 
-          await queryClient.invalidateQueries({
-            queryKey: ["billing-services"],
-          });
+            await queryClient.invalidateQueries({
+              queryKey: ["billing-services"],
+            });
 
-          await queryClient.refetchQueries({
-            queryKey: ["billing-services"],
-          });
+            await queryClient.refetchQueries({
+              queryKey: ["billing-services"],
+            });
+          }
         }
       } catch (error) {
         console.error("Error pingStatus:", error);

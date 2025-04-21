@@ -1,8 +1,6 @@
-import axios from "axios";
+import { fetchWithSession } from "./nostr/nostr";
 
-const ApiBillingClient = axios.create({
-  baseURL: "https://billingapi.npubpro.com",
-});
+const BILLING_API_PATH = "https://billingapi.npubpro.com";
 
 export type ReturnPriceType = {
   id: string;
@@ -49,20 +47,18 @@ export type ReturnInvoiceType = {
   paid_order_id: string;
 };
 
-ApiBillingClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-
-  if (token) {
-    config.headers["X-NpubPro-Token"] = token;
-  }
-  return config;
-});
-
 export const getPrices = async (): Promise<ReturnPriceType[]> => {
   try {
-    const res = await ApiBillingClient.get("/prices");
+    const res = await fetchWithSession(
+      "/prices",
+      undefined,
+      undefined,
+      BILLING_API_PATH
+    );
 
-    return res.data.prices;
+    const data: { prices: ReturnPriceType[] } = await res.json();
+
+    return data.prices;
   } catch (error: any) {
     throw new Error(error);
   }
@@ -70,9 +66,16 @@ export const getPrices = async (): Promise<ReturnPriceType[]> => {
 
 export const getInvoices = async (): Promise<ReturnInvoiceType[]> => {
   try {
-    const res = await ApiBillingClient.get("/invoices");
+    const res = await fetchWithSession(
+      "/invoices",
+      undefined,
+      undefined,
+      BILLING_API_PATH
+    );
 
-    return res.data.invoices;
+    const data: { invoices: ReturnInvoiceType[] } = await res.json();
+
+    return data.invoices;
   } catch (error: any) {
     throw new Error(error);
   }
@@ -80,9 +83,16 @@ export const getInvoices = async (): Promise<ReturnInvoiceType[]> => {
 
 export const getServices = async (): Promise<ReturnServiceType[]> => {
   try {
-    const res = await ApiBillingClient.get("/services");
+    const res = await fetchWithSession(
+      "/services",
+      undefined,
+      undefined,
+      BILLING_API_PATH
+    );
 
-    return res.data.services;
+    const data: { services: ReturnServiceType[] } = await res.json();
+
+    return data.services;
   } catch (error: any) {
     throw new Error(error);
   }
@@ -90,9 +100,16 @@ export const getServices = async (): Promise<ReturnServiceType[]> => {
 
 export const getOrders = async (): Promise<ReturnOrderType[]> => {
   try {
-    const res = await ApiBillingClient.get("/orders");
+    const res = await fetchWithSession(
+      "/orders",
+      undefined,
+      undefined,
+      BILLING_API_PATH
+    );
 
-    return res.data.orders;
+    const data: { orders: ReturnOrderType[] } = await res.json();
+
+    return data.orders;
   } catch (error: any) {
     throw new Error(error);
   }
@@ -100,37 +117,54 @@ export const getOrders = async (): Promise<ReturnOrderType[]> => {
 
 export const byPlan = async (siteId: string): Promise<ReturnOrderType> => {
   try {
-    const res = await ApiBillingClient.post(`/pro?site=${siteId}`);
+    const res = await fetchWithSession(
+      `/pro?site=${siteId}`,
+      undefined,
+      "post",
+      BILLING_API_PATH
+    );
 
-    return res.data.order;
+    const data: { order: ReturnOrderType } = await res.json();
+
+    return data.order;
   } catch (error: any) {
     throw new Error(error);
   }
 };
 
 export const createOrder = async (
-  invoices: string[],
+  invoices: string[]
 ): Promise<ReturnOrderType> => {
   try {
-    const res = await ApiBillingClient.post(
+    const res = await fetchWithSession(
       `/order?invoices=${invoices.join(",")}`,
+      undefined,
+      undefined,
+      BILLING_API_PATH
     );
 
-    return res.data;
+    const data: { order: ReturnOrderType } = await res.json();
+
+    return data.order;
   } catch (error: any) {
     throw new Error(error);
   }
 };
 
 export const getOrderById = async (
-  orderId: string,
-): Promise<ReturnOrderType> => {
+  orderId: string
+): Promise<ReturnOrderType | undefined> => {
   try {
-    const res = await ApiBillingClient.get(`/orders?id=${orderId}`);
+    const res = await fetchWithSession(
+      `/orders?id=${orderId}`,
+      undefined,
+      undefined,
+      BILLING_API_PATH
+    );
 
-    console.log(res.data.orders);
+    const data: { orders: ReturnOrderType[] } = await res.json();
 
-    return res.data.orders.find((el: ReturnOrderType) => el.id === orderId);
+    return data.orders.find((el: ReturnOrderType) => el.id === orderId);
   } catch (error: any) {
     throw new Error(error);
   }
@@ -138,11 +172,13 @@ export const getOrderById = async (
 
 export const getBtcUsdCurrencies = async (): Promise<number> => {
   try {
-    const res = await axios.get(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
+    const res = await fetch(
+      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
     );
 
-    return res.data.bitcoin.usd;
+    const data: { bitcoin: { usd: number } } = await res.json();
+
+    return data.bitcoin.usd;
   } catch (error: any) {
     throw new Error(error);
   }

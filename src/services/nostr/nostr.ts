@@ -322,8 +322,10 @@ export async function fetchWithSession(
   url: string,
   body: any | undefined = undefined,
   method?: string,
+  baseUrl = NPUB_PRO_API
 ) {
-  url = `${NPUB_PRO_API}${url}`;
+  url = `${baseUrl}${url}`;
+
   try {
     method = method || (body ? "POST" : "GET");
     const fetchIt = async () => {

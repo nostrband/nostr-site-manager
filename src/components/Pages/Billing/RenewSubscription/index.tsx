@@ -10,9 +10,10 @@ import { usePrices } from "@/hooks/usePrices";
 import { getSubscriptionStatus } from "@/utils";
 import { useServices } from "@/hooks/useServices";
 import { useSiteBaseInfo } from "@/hooks/useSiteBaseInfo";
-import { useConvertCurrency } from "@/hooks/useConvertCurrency";
-import { createOrder } from "@/services/billing.service";
+import { createOrder, unsubscribeService } from "@/services/billing.service";
 import { useInvoices } from "@/hooks/useInvoices";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 const RenewSubscription = () => {
   const { data: dataServices } = useServices();
@@ -26,6 +27,7 @@ const RenewSubscription = () => {
     isLoading: isLoadingInvoices,
     isFetching: isFetchingInvoices,
   } = useInvoices();
+  const queryClient = useQueryClient();
 
   const router = useRouter();
   const params = useSearchParams();
@@ -33,14 +35,16 @@ const RenewSubscription = () => {
   const serviceId = params.get("serviceId");
   const priceId = params.get("priceId");
 
+  const [isLoadingUnsubscribe, setLoadingUnsubscribe] = useState(false);
+
   const { isLoadingBaseInfo, siteInfo } = useSiteBaseInfo(siteId);
 
   const subscriptionAmount =
     (dataPrices ?? []).find((el) => el.id === priceId)?.amount ?? 0;
 
-  const { currencies, isPending } = useConvertCurrency(subscriptionAmount);
-
   const getService = dataServices?.find((el) => el.id === serviceId);
+
+  const dateFinishSubscribe = getService ? getService.cancel_tm : 0;
 
   const subscriptionStatus = getSubscriptionStatus(
     getService ? getService.paid_until : 0,
@@ -48,9 +52,37 @@ const RenewSubscription = () => {
 
   const handlePay = async () => {
     if (serviceId && dataInvoices) {
-      const invoiceId = dataInvoices.find((el) => el.id)?.id as string;
+      setLoadingUnsubscribe(true);
+      try {
+        const invoiceId = dataInvoices.find((el) => el.id)?.id as string;
 
-      await createOrder([invoiceId]);
+        await createOrder([invoiceId]);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingUnsubscribe(false);
+      }
+    }
+  };
+
+  const handleUnsubscribe = async () => {
+    if (serviceId) {
+      setLoadingUnsubscribe(true);
+      try {
+        await unsubscribeService(serviceId);
+
+        await queryClient.invalidateQueries({
+          queryKey: ["billing-services"],
+        });
+
+        await queryClient.refetchQueries({
+          queryKey: ["billing-services"],
+        });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingUnsubscribe(false);
+      }
     }
   };
 
@@ -58,7 +90,6 @@ const RenewSubscription = () => {
     isLoadingBaseInfo ||
     isLoadingPrices ||
     isFetchingPrices ||
-    isPending ||
     isLoadingInvoices ||
     isFetchingInvoices
   ) {
@@ -88,7 +119,10 @@ const RenewSubscription = () => {
           subscriptionPlan={subscriptionStatus}
           siteInfo={siteInfo}
           onPay={handlePay}
-          prices={currencies}
+          onUnsubscribe={handleUnsubscribe}
+          amount={subscriptionAmount}
+          dateFinishSubscribe={dateFinishSubscribe}
+          isLoadingUnsubscribe={isLoadingUnsubscribe}
         />
       </StyledWrapColumn>
     </Container>

@@ -87,7 +87,7 @@ const Order = () => {
               </Typography>
               {isPaid && (
                 <Typography variant="body4">
-                  Premium customer support activated for 30 days
+                  Premium features activated for 30 days
                 </Typography>
               )}
             </StyledCardHead>

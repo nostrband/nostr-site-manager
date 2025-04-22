@@ -25,19 +25,21 @@ export const useConvertCurrency = (usdAmount: number): ConversionResult => {
     staleTime: 15_000,
   });
 
+  const usd = Math.round(usdAmount * 100) / 10000; // like as toFixed(2)
+
   const sats = useMemo(() => {
     if (!btcRate || btcRate <= 0) {
       return 0;
     }
 
-    const btcAmount = usdAmount / btcRate;
+    const btcAmount = usd / btcRate;
 
     return Math.round(btcAmount * 1e8);
-  }, [usdAmount, btcRate]);
+  }, [usd, btcRate]);
 
   return {
     currencies: {
-      usd: usdAmount,
+      usd,
       sats: isPending ? 0 : sats,
     },
     isPending,

@@ -31,6 +31,7 @@ export type ReturnServiceType = {
   object_id: string;
   timestamp: number;
   paid_until: number;
+  cancel_tm: number;
 };
 
 export type ReturnInvoiceType = {
@@ -64,10 +65,14 @@ export const getPrices = async (): Promise<ReturnPriceType[]> => {
   }
 };
 
-export const getInvoices = async (): Promise<ReturnInvoiceType[]> => {
+export const getInvoices = async (params?: {
+  paid: boolean;
+}): Promise<ReturnInvoiceType[]> => {
+  const url =
+    params === undefined ? "/invoices" : `/invoices?paid=${params.paid}`;
   try {
     const res = await fetchWithSession(
-      "/invoices",
+      url,
       undefined,
       undefined,
       BILLING_API_PATH,
@@ -151,6 +156,25 @@ export const createOrder = async (
   }
 };
 
+export const unsubscribeService = async (
+  serviceId: string,
+): Promise<ReturnOrderType> => {
+  try {
+    const res = await fetchWithSession(
+      `/unsubscribe?service=${serviceId}`,
+      undefined,
+      undefined,
+      BILLING_API_PATH,
+    );
+
+    const data: { order: ReturnOrderType } = await res.json();
+
+    return data.order;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
 export const getOrderById = async (
   orderId: string,
 ): Promise<ReturnOrderType | undefined> => {
@@ -183,3 +207,21 @@ export const getBtcUsdCurrencies = async (): Promise<number> => {
     throw new Error(error);
   }
 };
+
+// export const getBtcUsdCurrenciesByTimestamp = async (
+//   timestamp: number
+// ): Promise<number> => {
+//   try {
+//     const res = await fetch(
+//       `https://api.coincap.io/v2/assets/bitcoin/history?interval=d1&start=${timestamp}&end=${timestamp}`
+//     );
+
+//     console.log({res})
+
+//     // const data: { bitcoin: { usd: number } } = await res.json();
+
+//     // return data.bitcoin.usd;
+//   } catch (error: any) {
+//     throw new Error(error);
+//   }
+// };

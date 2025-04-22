@@ -9,19 +9,45 @@ import {
   StyledPaidInvoicesHead,
 } from "./styled";
 import { Typography } from "@mui/material";
+import { ReturnInvoiceType } from "@/services/billing.service";
+import { ReturnSettingsSiteDataType } from "@/services/sites.service";
+import { format } from "date-fns";
+import { useConvertCurrency } from "@/hooks/useConvertCurrency";
 
-export const PaidInvoicesItem = () => {
+interface PaidInvoicesItemProps {
+  invoiceInfo: {
+    id: number;
+    invoice: ReturnInvoiceType;
+    siteInfo?: ReturnSettingsSiteDataType;
+  };
+}
+
+export const PaidInvoicesItem = ({ invoiceInfo }: PaidInvoicesItemProps) => {
+  const paidDate = format(
+    new Date(invoiceInfo.invoice.paid_timestamp * 1000),
+    "MMM dd, yyyy hh:mm a",
+  );
+
+  const pastDueDate = format(
+    new Date(invoiceInfo.invoice.due_timestamp * 1000),
+    "MMM dd, yyyy hh:mm a",
+  );
+
+  const { currencies } = useConvertCurrency(invoiceInfo.invoice.amount);
+
+  const { usd, sats } = currencies;
+
   return (
     <StyledCard>
       <StyledAmountWrap>
         <StatusSubscription subscriptionPlan={SUBSCRIPTION_PLAN.PAID} />
-        <TotalAmount size="small" usd={30} sats={30000} />
+        <TotalAmount size="small" usd={usd} sats={sats} />
       </StyledAmountWrap>
 
       <StyledFeatureList>
         <StyledPaidInvoicesHead>
           <StyledFeature>
-            <Typography variant="body5">Invoice #3</Typography>
+            <Typography variant="body5">Invoice #{invoiceInfo.id}</Typography>
             <Typography variant="body5">Paid monthly</Typography>
           </StyledFeature>
 
@@ -30,21 +56,21 @@ export const PaidInvoicesItem = () => {
             <Typography component="span" variant="subtitle4" color="primary">
               PRO
             </Typography>{" "}
-            for website Crypto Example
+            for website {invoiceInfo.siteInfo?.title}
           </Typography>
         </StyledPaidInvoicesHead>
 
         <StyledFeature>
           <Typography variant="body5">Due Date</Typography>
           <Typography variant="body4" color="secondary">
-            Jan 09, 2025 03:30 PM
+            {pastDueDate}
           </Typography>
         </StyledFeature>
 
         <StyledFeature>
           <Typography variant="body5">Payment Date</Typography>
           <Typography variant="body4" color="secondary">
-            Jan 09, 2025 03:30 PM
+            {paidDate}
           </Typography>
         </StyledFeature>
       </StyledFeatureList>

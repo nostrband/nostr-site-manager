@@ -2,19 +2,13 @@ import { StatusSubscription } from "@/components/shared/StatusSubscription";
 import { StyledCard } from "@/components/shared/styled";
 import { TotalAmount } from "@/components/shared/TotalAmount";
 import { SUBSCRIPTION_PLAN } from "@/consts";
-import {
-  StyledAmountWrap,
-  StyledDate,
-  StyledPaymentInvoice,
-  StyledPaymentInvoiceInfo,
-  StyledPaymentInvoicePrice,
-  StyledPaymentItem,
-} from "./styled";
+import { StyledAmountWrap, StyledDate, StyledPaymentItem } from "./styled";
 import { Box, Typography } from "@mui/material";
 import { ReturnInvoiceType, ReturnOrderType } from "@/services/billing.service";
 import { useConvertCurrency } from "@/hooks/useConvertCurrency";
 import { format } from "date-fns";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
+import { InvoiceInfo } from "./components/InvoiceInfo";
 
 interface PaymentItemProps {
   paymentInfo: {
@@ -56,20 +50,12 @@ export const PaymentItem = ({ paymentInfo }: PaymentItemProps) => {
         <Box>
           {paymentInfo.invoices.map((el, i) => {
             return (
-              <StyledPaymentInvoice key={i}>
-                <StyledPaymentInvoiceInfo>
-                  <Typography variant="body5">Invoice #{i + 1}</Typography>
-                  <Typography color="secondary" variant="body2">
-                    Subscription PRO for website{" "}
-                    {el.siteInfo && el.siteInfo.title}
-                  </Typography>
-                </StyledPaymentInvoiceInfo>
-                <StyledPaymentInvoicePrice>
-                  <Typography color="secondary" variant="body2">
-                    {el.invoice.amount} USD
-                  </Typography>
-                </StyledPaymentInvoicePrice>
-              </StyledPaymentInvoice>
+              <InvoiceInfo
+                key={i}
+                id={i + 1}
+                amount={el.invoice.amount}
+                titleSite={el.siteInfo ? el.siteInfo.title : ""}
+              />
             );
           })}
         </Box>

@@ -9,33 +9,38 @@ import {
 import { SUBSCRIPTION_PLAN, SUBSCRIPTION_PLAN_COLOR } from "@/consts";
 import { StatusSubscription } from "@/components/shared/StatusSubscription";
 import { SubscriptionStatus } from "@/utils";
-import { TotalAmountDescription } from "@/components/shared/TotalAmountDescription";
-import { TotalAmount } from "@/components/shared/TotalAmount";
 import {
   SiteBaseInfoPreview,
   SiteBaseInfoPreviewProps,
 } from "@/components/shared/SiteBaseInfoPreview";
+import { TotalAmountSubscription } from "../TotalAmountSubscription";
+import { format } from "date-fns";
 
 interface IRenewSubscriptionItem extends SiteBaseInfoPreviewProps {
   subscriptionPlan: SubscriptionStatus;
 
-  prices: {
-    usd: number;
-    sats: number;
-  };
+  dateFinishSubscribe: number;
+
+  amount: number;
 
   onPay: () => void;
+
+  onUnsubscribe: () => void;
+
+  isLoadingUnsubscribe: boolean;
 }
 
 export const RenewSubscriptionItem = ({
   siteInfo,
   subscriptionPlan,
-  prices,
+  amount,
+  dateFinishSubscribe,
   onPay,
+  onUnsubscribe,
+  isLoadingUnsubscribe,
 }: IRenewSubscriptionItem) => {
-  const { usd, sats } = prices;
-
   const isPaid = subscriptionPlan.status === SUBSCRIPTION_PLAN.PAID;
+  const isPastDue = subscriptionPlan.status === SUBSCRIPTION_PLAN.PAST_DUE;
 
   const colorIndicate = SUBSCRIPTION_PLAN_COLOR[subscriptionPlan.status];
 
@@ -45,6 +50,21 @@ export const RenewSubscriptionItem = ({
     ) : (
       <CheckIcon color={colorIndicate} />
     );
+
+  const isUnsubscribed = dateFinishSubscribe !== 0;
+
+  const textButtonUnsubscribe = isUnsubscribed
+    ? `Unsubscribed on ${format(
+        new Date(dateFinishSubscribe * 1000),
+        "dd.mm.yy",
+      )}`
+    : "Unsubscribe";
+
+  const handleUnsubscribe = () => {
+    if (!isUnsubscribed) {
+      onUnsubscribe();
+    }
+  };
 
   return (
     <StyledCard>
@@ -91,17 +111,32 @@ export const RenewSubscriptionItem = ({
       {!isPaid && (
         <>
           <Divider />
-          <TotalAmountDescription description="total amount">
-            <TotalAmount usd={usd} sats={sats} />
-          </TotalAmountDescription>
-          <Button onClick={onPay} fullWidth size="large" variant="contained">
+          <TotalAmountSubscription amount={amount} />
+          <Button
+            disabled={isLoadingUnsubscribe}
+            loading={isLoadingUnsubscribe}
+            onClick={onPay}
+            fullWidth
+            size="large"
+            variant="contained"
+          >
             Pay Now
           </Button>
         </>
       )}
-      <Button color="error" fullWidth size="large" variant="text">
-        Unsubscribe
-      </Button>
+      {!isPastDue && (
+        <Button
+          onClick={handleUnsubscribe}
+          color="error"
+          fullWidth
+          size="large"
+          variant="text"
+          disabled={isLoadingUnsubscribe || isUnsubscribed}
+          loading={isLoadingUnsubscribe}
+        >
+          {textButtonUnsubscribe}
+        </Button>
+      )}
     </StyledCard>
   );
 };

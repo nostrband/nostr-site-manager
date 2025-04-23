@@ -56,7 +56,7 @@ export const RenewSubscriptionItem = ({
   const textButtonUnsubscribe = isUnsubscribed
     ? `Unsubscribed on ${format(
         new Date(dateFinishSubscribe * 1000),
-        "dd.mm.yy",
+        "dd.MM.yy",
       )}`
     : "Unsubscribe";
 

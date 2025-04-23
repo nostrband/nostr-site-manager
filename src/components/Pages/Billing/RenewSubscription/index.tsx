@@ -22,6 +22,7 @@ const RenewSubscription = () => {
     isLoading: isLoadingPrices,
     isFetching: isFetchingPrices,
   } = usePrices();
+  
   const {
     data: dataInvoices,
     isLoading: isLoadingInvoices,

@@ -144,7 +144,7 @@ export const createOrder = async (
     const res = await fetchWithSession(
       `/order?invoices=${invoices.join(",")}`,
       undefined,
-      undefined,
+      "post",
       BILLING_API_PATH,
     );
 
@@ -163,7 +163,7 @@ export const unsubscribeService = async (
     const res = await fetchWithSession(
       `/unsubscribe?service=${serviceId}`,
       undefined,
-      undefined,
+      "post",
       BILLING_API_PATH,
     );
 

@@ -18,7 +18,10 @@ export const PaymentsTab = () => {
     data: dataInvoices,
     isLoading: isLoadingInvoices,
     isFetching: isFetchingInvoices,
-  } = useInvoices();
+  } = useInvoices(
+    { paid: true },
+    { refetchOnMount: true, refetchOnWindowFocus: true },
+  );
 
   const {
     data: dataServices,

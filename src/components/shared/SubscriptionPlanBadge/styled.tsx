@@ -6,6 +6,7 @@ import { SUBSCRIPTION_PLAN, SUBSCRIPTION_PLAN_COLOR } from "@/consts";
 
 interface IBadge {
   subscriptionPlan: SUBSCRIPTION_PLAN;
+  onClick?: () => void;
 }
 
 export type IStyledBadge = IBadge & BoxProps;
@@ -26,4 +27,5 @@ export const StyledBadge = styled(
   color: "#fff",
   borderRadius: theme.shape.borderRadius / 2,
   padding: "2px 4px",
+  display: "inline-block",
 }));

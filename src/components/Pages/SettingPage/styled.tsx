@@ -32,6 +32,7 @@ export const StyledTitleBlock = styled((props: TypographyProps) => {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
+  flexWrap: "wrap",
 });
 
 export const StyledDescriptionBlock = styled((props: TypographyProps) => {

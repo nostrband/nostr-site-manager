@@ -3,11 +3,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import _ from "lodash";
 import { Button, Container } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import { SETTINGS_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG, SUBSCRIPTION_PLAN } from "@/consts";
 import { addHttps, resetLevelNavigation, updateLevelNavigation } from "@/utils";
 import { editSite } from "@/services/nostr/api";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
@@ -47,6 +47,7 @@ import { SITE_TASK_SETTINGS } from "@/services/nostr/tasks";
 import { AnalyticsAdmin } from "./components/AnalyticsAdmin";
 import { AnalyticsDev } from "./components/AnalyticsDev";
 import { useListSites } from "@/hooks/useListSites";
+import { useServiceByPlan } from "@/hooks/useServiceByPlan";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -104,15 +105,25 @@ const SettingPage = () => {
   const [choiceSetting, setChoiceSetting] = useState<Setting | null>(null);
   const { enqueueSnackbar } = useSnackbar();
   const { siteId } = useGetSiteId();
+  const {
+    isProPlan: isProPlanPaid,
+    urlRedirectToSubscription,
+    statusPlan,
+    isLoading: isLoadingService,
+  } = useServiceByPlan(siteId);
   const { back } = useBack();
 
   const { refetch } = useListSites();
+
+  const isProPlan = !isProPlanPaid || statusPlan !== SUBSCRIPTION_PLAN.PAID;
 
   const {
     data,
     isLoading: isLoadingSetting,
     isFetching,
   } = useSettingsSite(siteId);
+
+  const router = useRouter();
 
   const handleChoiceSetting = (setting: Setting | null) => {
     setChoiceSetting(setting);
@@ -169,6 +180,10 @@ const SettingPage = () => {
       }
     },
   });
+
+  const handleRedirectToSubscription = () => {
+    router.push(urlRedirectToSubscription);
+  };
 
   const handleChangeNavigation = useCallback(
     (input: InputNavigation) => {
@@ -404,7 +419,7 @@ const SettingPage = () => {
     }
   }, [params, isLoadingSetting, isFetching, scrollToTask]);
 
-  if (isLoadingSetting || isFetching) {
+  if (isLoadingSetting || isFetching || isLoadingService) {
     return (
       <SpinerWrap>
         <SpinerCircularProgress />
@@ -452,6 +467,9 @@ const SettingPage = () => {
               submitForm={submitForm}
               updateWebSiteAddress={handleUpdateWebSiteAddress}
               isLoading={isLoading}
+              isProPlan={isProPlan}
+              statusPlan={statusPlan}
+              handleRedirectToSubscription={handleRedirectToSubscription}
             />
 
             <TitleDescription

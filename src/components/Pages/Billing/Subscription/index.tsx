@@ -41,7 +41,7 @@ const Subscription = () => {
       try {
         const order = await byPlan(siteId);
 
-        window.open(order.checkout_url, "_blank", "noopener,noreferrer");
+        window.open(order.checkout_url, "_blank");
 
         router.push(`/admin/order?orderId=${order.id}&siteId=${siteId}`);
       } catch (error) {

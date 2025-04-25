@@ -98,9 +98,9 @@ export const CustomDomains = memo(
         <StyledHeadSettingBlock>
           <StyledTitleBlock>
             <StyledTextTitle>
-              {" "}
-              <span>{SETTINGS_CONFIG.customDomains.title}</span>{" "}
+              <span>{SETTINGS_CONFIG.customDomains.title}</span>
               <StyledBadgeTitle
+                isProPlan={isProPlan}
                 onClick={!isProPlan ? undefined : handleRedirectToSubscription}
               >
                 <SubscriptionPlanBadge
@@ -165,7 +165,7 @@ export const CustomDomains = memo(
         />
       </StyledSettingBlock>
     );
-  },
+  }
 );
 
 CustomDomains.displayName = "CustomDomains";

@@ -5,7 +5,6 @@ import {
   StyledFormFields,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledTitleBlock,
 } from "../../styled";
 import { Button } from "@mui/material";
 import { SaveButton } from "../SaveButton";
@@ -19,7 +18,7 @@ import { userIsReadOnly } from "@/services/nostr/nostr";
 import { PlusCircleIcon } from "@/components/Icons";
 import { ItemDomain } from "./components/ItemDomain";
 import { SubscriptionPlanBadge } from "@/components/shared/SubscriptionPlanBadge";
-import { StyledBadgeTitle, StyledTextTitle } from "./styled";
+import { StyledBadgeTitle, StyledTextTitle, StyledTitleHead } from "./styled";
 
 interface ICustomDomains extends IBaseSetting {
   siteId: string;
@@ -96,7 +95,7 @@ export const CustomDomains = memo(
     return (
       <StyledSettingBlock id={SETTINGS_CONFIG.customDomains.anchor}>
         <StyledHeadSettingBlock>
-          <StyledTitleBlock>
+          <StyledTitleHead>
             <StyledTextTitle>
               <span>{SETTINGS_CONFIG.customDomains.title}</span>
               <StyledBadgeTitle
@@ -120,7 +119,7 @@ export const CustomDomains = memo(
                 disabled={isProPlan}
               />
             )}
-          </StyledTitleBlock>
+          </StyledTitleHead>
 
           {userIsReadOnly && (
             <StyledDescriptionBlock color="red">

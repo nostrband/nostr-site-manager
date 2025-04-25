@@ -1,12 +1,19 @@
 import { styled } from "@mui/material/styles";
 import { Box, BoxProps } from "@mui/material";
 import { forwardRef } from "react";
+import { StyledTitleBlock } from "../../styled";
 
 interface StyledBadgeTitleProps {
   isProPlan?: boolean;
 }
 
 export type BoxType = StyledBadgeTitleProps & BoxProps;
+
+export const StyledTitleHead = styled(StyledTitleBlock)(({ theme }) => ({
+  [theme.breakpoints.down("sm")]: {
+    alignItems: "start",
+  },
+}));
 
 export const StyledTextTitle = styled(Box)(({ theme }) => ({
   display: "flex",

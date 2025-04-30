@@ -70,7 +70,6 @@ export const HeaderOnboarding = () => {
           <Button
             onClick={handleLogin}
             variant="contained"
-            size="large"
             startIcon={<LoginIcon />}
           >
             Login

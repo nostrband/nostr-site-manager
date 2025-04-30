@@ -4,6 +4,8 @@ import { useListSites } from "@/hooks/useListSites";
 import { useInvoices } from "@/hooks/useInvoices";
 import { useServices } from "@/hooks/useServices";
 import { PaidInvoicesItem } from "../PaidInvoicesItem";
+import { EmptyBlock } from "@/components/EmptyBlock";
+import { EmptyBillingTwoToneIcon } from "@/components/Icons";
 
 export const PaidInvoicesTab = () => {
   const { data: dataSites, isLoading, isFetching } = useListSites();
@@ -58,9 +60,13 @@ export const PaidInvoicesTab = () => {
 
   return (
     <StyledWrapColumn>
-      {invoicesItems.map((el, i) => {
-        return <PaidInvoicesItem invoiceInfo={el} key={i} />;
-      })}
+      {invoicesItems.length === 0 ? (
+        <EmptyBlock text="Empty paid invoices" icon={EmptyBillingTwoToneIcon} />
+      ) : (
+        invoicesItems.map((el, i) => {
+          return <PaidInvoicesItem invoiceInfo={el} key={i} />;
+        })
+      )}
     </StyledWrapColumn>
   );
 };

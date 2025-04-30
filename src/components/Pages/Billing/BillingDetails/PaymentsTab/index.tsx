@@ -5,6 +5,8 @@ import { useListSites } from "@/hooks/useListSites";
 import { useOrders } from "@/hooks/useOrders";
 import { useInvoices } from "@/hooks/useInvoices";
 import { useServices } from "@/hooks/useServices";
+import { EmptyBlock } from "@/components/EmptyBlock";
+import { EmptyBillingTwoToneIcon } from "@/components/Icons";
 
 export const PaymentsTab = () => {
   const { data: dataSites, isLoading, isFetching } = useListSites();
@@ -73,9 +75,13 @@ export const PaymentsTab = () => {
 
   return (
     <StyledWrapColumn>
-      {paymentsItems.map((el, i) => {
-        return <PaymentItem paymentInfo={el} key={i} />;
-      })}
+      {paymentsItems.length === 0 ? (
+        <EmptyBlock text="Empty payments" icon={EmptyBillingTwoToneIcon} />
+      ) : (
+        paymentsItems.map((el, i) => {
+          return <PaymentItem paymentInfo={el} key={i} />;
+        })
+      )}
     </StyledWrapColumn>
   );
 };

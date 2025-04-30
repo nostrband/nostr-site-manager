@@ -164,7 +164,7 @@ export const CustomDomains = memo(
         />
       </StyledSettingBlock>
     );
-  }
+  },
 );
 
 CustomDomains.displayName = "CustomDomains";

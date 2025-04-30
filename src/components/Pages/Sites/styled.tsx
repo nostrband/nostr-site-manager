@@ -3,11 +3,6 @@ import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import { PageTitle } from "@/components/shared/styled";
 
-export const StyledEmptyBlock = styled(Box)(() => ({
-  maxWidth: 187,
-  margin: "0 auto",
-}));
-
 export const SpinerWrapSites = styled(Box)(() => ({
   display: "flex",
 }));
@@ -15,6 +10,7 @@ export const SpinerWrapSites = styled(Box)(() => ({
 export const StyledTitle = styled(PageTitle)(({ theme }) => ({
   paddingBottom: 24,
   paddingTop: 40,
+  textAlign: "center",
   [theme.breakpoints.down("sm")]: {
     paddingTop: 16,
   },

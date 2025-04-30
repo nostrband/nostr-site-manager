@@ -1,5 +1,5 @@
 "use client";
-import { Alert, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import { Head } from "./components/Head";
 import { Filter, FilterRef } from "./components/Filter";
@@ -13,9 +13,10 @@ import {
   StyledWrap,
   StyledWrapListPosts,
 } from "./styled";
-import { NotFoundIcon } from "@/components/Icons";
 import { PostCard } from "@/components/PostCard";
 import { LoadingButton } from "@mui/lab";
+import { EmptyBlock } from "@/components/EmptyBlock";
+import { EmptyPostsTwoToneIcon } from "@/components/Icons";
 
 const PostManagement = () => {
   const { siteId } = useGetSiteId();
@@ -75,12 +76,7 @@ const PostManagement = () => {
 
         {isNotFound && !isLoadingPosts && (
           <StyledEmptyBlock>
-            <Alert
-              icon={<NotFoundIcon fontSize="inherit" />}
-              severity="warning"
-            >
-              <b>Posts not found</b>
-            </Alert>
+            <EmptyBlock text="Posts not found" icon={EmptyPostsTwoToneIcon} />
           </StyledEmptyBlock>
         )}
 

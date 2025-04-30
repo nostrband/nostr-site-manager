@@ -1,14 +1,8 @@
 "use client";
-import {
-  Alert,
-  CircularProgress,
-  Container,
-  InputAdornment,
-} from "@mui/material";
+import { CircularProgress, Container, InputAdornment } from "@mui/material";
 
 import {
   SpinerWrapSites,
-  StyledEmptyBlock,
   StyledSearchField,
   StyledShowMore,
   StyledTitle,
@@ -29,9 +23,10 @@ import { searchSites } from "@/services/nostr/api";
 import { LoadingButton } from "@mui/lab";
 import useResponsive from "@/hooks/useResponsive";
 import { InputField } from "@/components/InputField";
-import { NotFoundIcon, SearchIcon } from "@/components/Icons";
+import { SearchIcon, SitesNotFoundTwoToneIcon } from "@/components/Icons";
 import { ListSites } from "@/components/ListSites";
 import { HeaderDiscover } from "./components/Header";
+import { EmptyBlock } from "@/components/EmptyBlock";
 
 const Sites = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -134,14 +129,7 @@ const Sites = () => {
         </StyledSearchField>
 
         {isNotFound && (
-          <StyledEmptyBlock>
-            <Alert
-              icon={<NotFoundIcon fontSize="inherit" />}
-              severity="warning"
-            >
-              <b>Sites not found</b>
-            </Alert>
-          </StyledEmptyBlock>
+          <EmptyBlock text="Sites not found" icon={SitesNotFoundTwoToneIcon} />
         )}
 
         {data && (

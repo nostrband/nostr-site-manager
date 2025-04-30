@@ -28,8 +28,13 @@ export const PaidInvoicesItem = ({ invoiceInfo }: PaidInvoicesItemProps) => {
     "MMM dd, yyyy hh:mm a",
   );
 
+  const timestampDueDate =
+    invoiceInfo.invoice.due_timestamp !== 0
+      ? invoiceInfo.invoice.due_timestamp
+      : invoiceInfo.invoice.paid_timestamp;
+
   const pastDueDate = format(
-    new Date(invoiceInfo.invoice.due_timestamp * 1000),
+    new Date(timestampDueDate * 1000),
     "MMM dd, yyyy hh:mm a",
   );
 

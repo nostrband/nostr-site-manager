@@ -32,11 +32,11 @@ export const StyledBadgeTitle = styled(
   forwardRef<HTMLDivElement, BoxType>(function CardNoImageName(props, ref) {
     const exclude = new Set(["isProPlan"]);
     const omitProps = Object.fromEntries(
-      Object.entries(props).filter((e) => !exclude.has(e[0]))
+      Object.entries(props).filter((e) => !exclude.has(e[0])),
     );
 
     return <Box ref={ref} {...omitProps} />;
-  })
+  }),
 )(({ isProPlan, theme }) => ({
   order: "1",
   cursor: isProPlan ? "pointer" : "default",

@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Grid, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid } from "@mui/material";
 import { PendingInvoicesItem } from "../PendingInvoicesItem";
 import { TotalAmountDescription } from "@/components/shared/TotalAmountDescription";
 import { TotalAmount } from "@/components/shared/TotalAmount";
@@ -11,6 +11,8 @@ import { useState } from "react";
 import { createOrder, ReturnInvoiceType } from "@/services/billing.service";
 import { useConvertCurrency } from "@/hooks/useConvertCurrency";
 import { StyledCardActionArea } from "../../styled";
+import { EmptyBlock } from "@/components/EmptyBlock";
+import { EmptyBillingTwoToneIcon } from "@/components/Icons";
 
 export const PendingInvoicesTab = () => {
   const { data: dataSites, isLoading, isFetching } = useListSites();
@@ -118,7 +120,10 @@ export const PendingInvoicesTab = () => {
         )}
         {isEmptyInvoices ? (
           <Grid item xs={12}>
-            <Typography>Empty pending invoices</Typography>
+            <EmptyBlock
+              text="Empty pending invoices"
+              icon={EmptyBillingTwoToneIcon}
+            />
           </Grid>
         ) : (
           <>

@@ -113,7 +113,13 @@ export const useSubscriptionFlow = () => {
     setIsSubscribing(true);
     try {
       const order = await byPlan(siteId);
-      window.open(order.checkout_url, "_blank", "noopener,noreferrer");
+
+
+      setTimeout(() => {
+     
+        window.open(order.checkout_url, "_blank", "noopener,noreferrer");
+       
+      }, 500);
       router.push(`/admin/order?orderId=${order.id}&siteId=${siteId}`);
     } catch (e) {
       console.error(e);

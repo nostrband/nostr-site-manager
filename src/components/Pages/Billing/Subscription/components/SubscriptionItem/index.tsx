@@ -18,6 +18,8 @@ interface ISubscriptionItem extends SiteBaseInfoPreviewProps {
   onClick: () => void;
 
   isLoading: boolean;
+
+  isDisabled: boolean;
 }
 
 export const SubscriptionItem = ({
@@ -25,6 +27,7 @@ export const SubscriptionItem = ({
   prices,
   onClick,
   isLoading,
+  isDisabled,
 }: ISubscriptionItem) => {
   const { usd, sats } = prices;
 
@@ -61,7 +64,7 @@ export const SubscriptionItem = ({
 
       <Button
         loading={isLoading}
-        disabled={isLoading}
+        disabled={isLoading || isDisabled}
         onClick={onClick}
         fullWidth
         size="large"

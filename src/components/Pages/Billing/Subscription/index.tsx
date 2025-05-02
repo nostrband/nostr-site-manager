@@ -7,10 +7,8 @@ import { StyledWrapColumn } from "../styled";
 import { SubscriptionItem } from "./components/SubscriptionItem";
 import { useRouter } from "next/navigation";
 import { useSubscriptionFlow } from "../hooks/useSubscriptionFlow";
-import { useEffect, useRef } from "react";
 
 const Subscription = () => {
-  
   const router = useRouter();
   const {
     isLoading,
@@ -20,17 +18,6 @@ const Subscription = () => {
     siteInfo,
     currencies,
   } = useSubscriptionFlow();
-
-  const linkRef = useRef(null);
-
-  useEffect(() => {
-
-    setTimeout(() => {
-      // @ts-expect-error err
-      linkRef.current?.click();
-    }, 5000);
-
-  }, [])
 
   if (isLoading) {
     return (
@@ -54,14 +41,16 @@ const Subscription = () => {
           </Button>
           Subscription
         </StyledTitlePage>
-        <a
-        ref={linkRef}
-        href="https://example.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Перейти на example.com
-      </a>
+        <iframe
+          style={{
+            width: "100%",
+            height: "300px",
+            border: 0,
+            background: "#fff",
+          }}
+          src="https://example.com"
+          sandbox="allow-scripts"
+        ></iframe>
         <SubscriptionItem
           isLoading={isSubscribing}
           isDisabled={isDisabled}

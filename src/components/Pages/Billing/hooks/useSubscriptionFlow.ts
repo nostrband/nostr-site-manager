@@ -114,7 +114,9 @@ export const useSubscriptionFlow = () => {
     try {
       const order = await byPlan(siteId);
 
-      router.push(`/admin/order?orderId=${order.id}&siteId=${siteId}&checkoutUrl=${order.checkout_url}`);
+      router.push(
+        `/admin/order?orderId=${order.id}&siteId=${siteId}&checkoutUrl=${order.checkout_url}`,
+      );
     } catch (e) {
       console.error(e);
       setIsSubscribing(false);

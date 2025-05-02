@@ -1,11 +1,19 @@
 "use client";
-import { Button, Container, Typography } from "@mui/material";
+import { Button, DialogTitle, Fab, Typography } from "@mui/material";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { StyledWrapColumn } from "../styled";
-import { StyledCardHead, StyledCardIcon, StyledWrapPage } from "./styled";
-import { CheckCircleIcon } from "@/components/Icons";
+import {
+  StyledWrap,
+  StyledContainer,
+  StyledCardHead,
+  StyledCardIcon,
+  StyledWrapPage,
+  StyledDialogContent,
+  StyledTitle,
+  StyledDialog,
+} from "./styled";
+import { CheckCircleIcon, CrossIcon } from "@/components/Icons";
 import { getOrderById } from "@/services/billing.service";
 import Link from "next/link";
 import { StyledCard } from "@/components/shared/styled";
@@ -17,6 +25,7 @@ const Order = () => {
   const queryClient = useQueryClient();
 
   const [isPaid, setPaid] = useState(false);
+  const [isOpenModal, setOpenModal] = useState(true);
 
   const params = useSearchParams();
   const siteId = params.get("siteId");
@@ -24,6 +33,10 @@ const Order = () => {
   const checkoutUrl = params.get("checkoutUrl");
 
   const { isLoadingBaseInfo, siteInfo } = useSiteBaseInfo(siteId);
+
+  const handleOpenModal = () => {
+    setOpenModal((prev) => !prev);
+  };
 
   useEffect(() => {
     if (!orderId) return;
@@ -71,58 +84,86 @@ const Order = () => {
   }
 
   return (
-    <StyledWrapPage>
-      <Container maxWidth="lg">
-        <StyledWrapColumn>
-          <StyledCard>
-            <StyledCardHead>
-              <StyledCardIcon>
-                {isPaid ? (
-                  <CheckCircleIcon color="success" fontSize="inherit" />
-                ) : (
-                  <SpinerCircularProgress />
-                )}
-              </StyledCardIcon>
-              <Typography variant="h5">
-                {isPaid ? "Your payment was successful" : "Waiting payment..."}
-              </Typography>
-              {isPaid && (
-                <Typography variant="body4">
-                  Premium features activated for 30 days
+    <>
+      <StyledWrapPage>
+        <StyledContainer maxWidth="lg">
+          <StyledWrap>
+            <StyledCard>
+              <StyledCardHead>
+                <StyledCardIcon>
+                  {isPaid ? (
+                    <CheckCircleIcon color="success" fontSize="inherit" />
+                  ) : (
+                    <SpinerCircularProgress />
+                  )}
+                </StyledCardIcon>
+                <Typography variant="h5">
+                  {isPaid
+                    ? "Your payment was successful"
+                    : "Waiting payment..."}
                 </Typography>
-              )}
-            </StyledCardHead>
+                {isPaid && (
+                  <Typography variant="body4">
+                    Premium features activated for 30 days
+                  </Typography>
+                )}
+              </StyledCardHead>
 
-            <SiteBaseInfoPreview siteInfo={siteInfo} />
-
-            {checkoutUrl && (
-              <iframe
-                style={{
-                  width: "100%",
-                  height: "300px",
-                  border: 0,
-                  background: "#fff",
-                }}
-                src={checkoutUrl}
-                sandbox="allow-scripts allow-same-origin"
-              />
-            )}
-
-            {isPaid && (
+              <SiteBaseInfoPreview siteInfo={siteInfo} />
               <Button
-                component={Link}
-                href={`/admin/${siteId}/dashboard`}
                 size="large"
-                variant="contained"
+                variant="outlined"
+                color="secondary"
                 fullWidth
+                onClick={handleOpenModal}
               >
-                Go to Dashboard
+                {isPaid ? "Open details payments" : "Open payments process"}
               </Button>
-            )}
-          </StyledCard>
-        </StyledWrapColumn>
-      </Container>
-    </StyledWrapPage>
+              {isPaid && (
+                <Button
+                  component={Link}
+                  href={`/admin/${siteId}/dashboard`}
+                  size="large"
+                  variant="contained"
+                  fullWidth
+                >
+                  Go to Dashboard
+                </Button>
+              )}
+            </StyledCard>
+          </StyledWrap>
+        </StyledContainer>
+      </StyledWrapPage>
+
+      <StyledDialog
+        open={isOpenModal}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle component="div" id="alert-dialog-title">
+          <StyledTitle variant="body1">
+            {isPaid ? "Details payments" : "Payments process"}
+            <Fab onClick={handleOpenModal} size="small" aria-label="close">
+              <CrossIcon />
+            </Fab>
+          </StyledTitle>
+        </DialogTitle>
+        <StyledDialogContent>
+          {checkoutUrl && (
+            <iframe
+              style={{
+                width: "100%",
+                height: "100%",
+                border: 0,
+                background: "#fff",
+              }}
+              src={checkoutUrl}
+              sandbox="allow-scripts allow-same-origin"
+            />
+          )}
+        </StyledDialogContent>
+      </StyledDialog>
+    </>
   );
 };
 

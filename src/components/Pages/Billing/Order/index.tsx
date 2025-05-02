@@ -21,6 +21,7 @@ const Order = () => {
   const params = useSearchParams();
   const siteId = params.get("siteId");
   const orderId = params.get("orderId");
+  const checkoutUrl = params.get("checkoutUrl");
 
   const { isLoadingBaseInfo, siteInfo } = useSiteBaseInfo(siteId);
 
@@ -93,6 +94,19 @@ const Order = () => {
             </StyledCardHead>
 
             <SiteBaseInfoPreview siteInfo={siteInfo} />
+
+            {checkoutUrl && (
+              <iframe
+                style={{
+                  width: "100%",
+                  height: "300px",
+                  border: 0,
+                  background: "#fff",
+                }}
+                src={checkoutUrl}
+                sandbox="allow-scripts allow-same-origin"
+              />
+            )}
 
             {isPaid && (
               <Button

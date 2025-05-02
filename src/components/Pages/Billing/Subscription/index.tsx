@@ -41,16 +41,7 @@ const Subscription = () => {
           </Button>
           Subscription
         </StyledTitlePage>
-        <iframe
-          style={{
-            width: "100%",
-            height: "300px",
-            border: 0,
-            background: "#fff",
-          }}
-          src="https://example.com"
-          sandbox="allow-scripts"
-        ></iframe>
+
         <SubscriptionItem
           isLoading={isSubscribing}
           isDisabled={isDisabled}

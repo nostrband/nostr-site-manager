@@ -40,13 +40,13 @@ export const PaidInvoicesItem = ({ invoiceInfo }: PaidInvoicesItemProps) => {
 
   const { currencies } = useConvertCurrency(invoiceInfo.invoice.amount);
 
-  const { usd, sats } = currencies;
+  const { usd } = currencies;
 
   return (
     <StyledCard>
       <StyledAmountWrap>
         <StatusSubscription subscriptionPlan={SUBSCRIPTION_PLAN.PAID} />
-        <TotalAmount size="small" usd={usd} sats={sats} />
+        <TotalAmount size="small" usd={usd} />
       </StyledAmountWrap>
 
       <StyledFeatureList>

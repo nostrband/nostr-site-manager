@@ -2,8 +2,8 @@ import { StatusSubscription } from "@/components/shared/StatusSubscription";
 import { StyledCard } from "@/components/shared/styled";
 import { TotalAmount } from "@/components/shared/TotalAmount";
 import { SUBSCRIPTION_PLAN } from "@/consts";
-import { StyledAmountWrap, StyledDate, StyledPaymentItem } from "./styled";
-import { Box, Typography } from "@mui/material";
+import { StyledAmountWrap, StyledDate, StyledInvoices, StyledPaymentItem } from "./styled";
+import { Typography } from "@mui/material";
 import { ReturnInvoiceType, ReturnOrderType } from "@/services/billing.service";
 import { useConvertCurrency } from "@/hooks/useConvertCurrency";
 import { format } from "date-fns";
@@ -36,7 +36,6 @@ export const PaymentItem = ({ paymentInfo }: PaymentItemProps) => {
           <TotalAmount
             size="small"
             usd={currencies.usd}
-            sats={currencies.sats}
           />
         </StyledAmountWrap>
 
@@ -47,7 +46,7 @@ export const PaymentItem = ({ paymentInfo }: PaymentItemProps) => {
           </Typography>
         </StyledDate>
 
-        <Box>
+        <StyledInvoices>
           {paymentInfo.invoices.map((el, i) => {
             return (
               <InvoiceInfo
@@ -58,7 +57,7 @@ export const PaymentItem = ({ paymentInfo }: PaymentItemProps) => {
               />
             );
           })}
-        </Box>
+        </StyledInvoices>
       </StyledPaymentItem>
     </StyledCard>
   );

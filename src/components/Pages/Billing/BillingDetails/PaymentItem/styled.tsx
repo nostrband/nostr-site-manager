@@ -26,7 +26,7 @@ export const StyledAmountWrap = styled(Box)(({ theme }) => ({
 export const StyledDate = styled(Box)(() => ({
   maxWidth: 196,
   width: "100%",
-  padding: "8px 16px",
+  padding: "0px 16px",
 }));
 
 export const StyledPaymentInvoice = styled(Box)(({ theme }) => ({
@@ -41,11 +41,18 @@ export const StyledPaymentInvoice = styled(Box)(({ theme }) => ({
 }));
 
 export const StyledPaymentInvoiceInfo = styled(Box)(() => ({
-  padding: "8px 16px",
+  padding: "0px 16px",
 }));
 
 export const StyledPaymentInvoicePrice = styled(Box)(() => ({
   maxWidth: 82,
   width: "100%",
-  padding: "8px 16px",
+  padding: "0px 16px",
+}));
+
+export const StyledInvoices = styled(Box)(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 8,
+  width: '100%'
 }));

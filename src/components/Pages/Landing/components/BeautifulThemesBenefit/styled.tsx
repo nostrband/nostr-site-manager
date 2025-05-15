@@ -34,7 +34,7 @@ export const StyledTitle = styled(Typography)(({ theme }) => ({
     color: "#fff",
   },
   ".decorate-text": {
-    color: theme.palette.decorate.main,
+    color: theme.palette.primary.main,
   },
 }));
 

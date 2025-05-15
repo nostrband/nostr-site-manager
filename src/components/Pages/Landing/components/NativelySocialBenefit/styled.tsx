@@ -27,7 +27,7 @@ export const StyledGroupIcon = styled(Box)(({ theme }) => ({
 
 export const StyledWrapIcon = styled(Box)(({ theme }) => ({
   borderRadius: "50%",
-  background: theme.palette.decorate.main,
+  background: theme.palette.primary.main,
   [theme.breakpoints.up("xs")]: {
     height: 56,
     width: 56,
@@ -86,7 +86,7 @@ export const StyledTitle = styled(Typography)(({ theme }) => ({
   lineHeight: "59px",
   color: theme.palette.secondary.main,
   span: {
-    color: theme.palette.decorate.main,
+    color: theme.palette.primary.main,
   },
   [theme.breakpoints.down("md")]: {
     fontSize: 24,

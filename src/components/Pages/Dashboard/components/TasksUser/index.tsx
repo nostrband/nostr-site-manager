@@ -1,16 +1,16 @@
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { useCallback, useEffect, useState } from "react";
 import {
-  StyledDescription,
+  StyledTypography,
   StyledDivider,
-  StyledEmptyTasks,
   StyledTabPanel,
   StyledTabs,
-  StyledTitle,
   StyledWrap,
+  StyledAlertExpiringPlan,
+  StyledAlertExpiringPlanIcon,
 } from "./styled";
 import { TabContext, TabList } from "@mui/lab";
-import { Tab } from "@mui/material";
+import { Button, IconButton, Tab } from "@mui/material";
 import { CheckCircleIcon, FIleTextIcon } from "@/components/Icons";
 import { ItemTask } from "./components/ItemTask";
 import { useRouter } from "next/navigation";
@@ -18,12 +18,20 @@ import { isNeedMigrateKey } from "@/services/nostr/migrate";
 import { TaskType } from "@/types";
 import { fetchTasks, setDoneTask } from "@/services/nostr/tasks";
 import { MigrateTask } from "./components/MigrateTask";
+import { useServiceByPlan } from "@/hooks/useServiceByPlan";
+import { SUBSCRIPTION_PLAN } from "@/consts";
 
 interface TasksUserProps {
   siteId: string;
 }
 
 export const TasksUser = ({ siteId }: TasksUserProps) => {
+  const {
+    isProPlan,
+    urlRedirectToSubscription,
+    statusPlan,
+    isLoading: isLoadingService,
+  } = useServiceByPlan(siteId);
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isLoading, setLoading] = useState(true);
   const router = useRouter();
@@ -61,15 +69,27 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
     setLoading(false);
   }, []);
 
-  const handleOpen = (idTask: string, isCompleted: boolean) => {
-    if (isCompleted) {
-      const linkSettingsCompleted = `/admin/${siteId}/settings?idTaskCompleted=${idTask}`;
+  const handleNavigateToSubscription = () => {
+    router.push(urlRedirectToSubscription);
+  };
 
-      router.push(linkSettingsCompleted);
+  const handleOpen = (
+    idTask: string,
+    isCompleted: boolean,
+    isRedirectToSubscribtion: boolean
+  ) => {
+    if (isRedirectToSubscribtion) {
+      handleNavigateToSubscription();
     } else {
-      setDoneTask(siteId, idTask);
-      const linkSettings = `/admin/${siteId}/settings?idTask=${idTask}`;
-      router.push(linkSettings);
+      if (isCompleted) {
+        const linkSettingsCompleted = `/admin/${siteId}/settings?idTaskCompleted=${idTask}`;
+
+        router.push(linkSettingsCompleted);
+      } else {
+        setDoneTask(siteId, idTask);
+        const linkSettings = `/admin/${siteId}/settings?idTask=${idTask}`;
+        router.push(linkSettings);
+      }
     }
   };
 
@@ -80,10 +100,42 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
   return (
     <StyledWrap>
       <StyledDivider />
-      <StyledTitle>Let&apos;s Improve It!</StyledTitle>
-      <StyledDescription variant="body2">
+      <StyledTypography variant="h5">Let&apos;s Improve It!</StyledTypography>
+      <StyledTypography variant="body4">
         One step at a time, slow but steady.
-      </StyledDescription>
+      </StyledTypography>
+
+      {isLoadingService ? (
+        <></>
+      ) : (
+        (!isProPlan || statusPlan !== SUBSCRIPTION_PLAN.PAID) && (
+          <StyledAlertExpiringPlan
+            onClick={handleNavigateToSubscription}
+            severity="warning"
+            action={
+              <IconButton color="inherit" size="small">
+                <StyledAlertExpiringPlanIcon />
+              </IconButton>
+            }
+          >
+            {isProPlan && statusPlan !== SUBSCRIPTION_PLAN.PAID
+              ? "Renew Subscription"
+              : "Upgrade to pro"}
+          </StyledAlertExpiringPlan>
+        )
+      )}
+
+      {isProPlan && statusPlan === SUBSCRIPTION_PLAN.PAID && (
+        <Button
+          variant="contained"
+          size="large"
+          endIcon={<StyledAlertExpiringPlanIcon />}
+          onClick={handleNavigateToSubscription}
+        >
+          Renew Subscription
+        </Button>
+      )}
+
       {isLoading ? (
         <SpinerWrap>
           <SpinerCircularProgress />
@@ -117,13 +169,22 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               {isNeedMigrateKey(siteId) && <MigrateTask siteId={siteId} />}
 
               {isEmptyTodo && (
-                <StyledEmptyTasks variant="body2">
+                <StyledTypography component="div" variant="body4">
                   You&apos;ve completed all the tasks
-                </StyledEmptyTasks>
+                </StyledTypography>
               )}
 
               {todoTasks.map((el, i) => {
-                return <ItemTask key={i} task={el} onOpen={handleOpen} />;
+                return (
+                  <ItemTask
+                    key={i}
+                    subscriptionPlan={el.paymentPlan}
+                    task={el}
+                    isProPlan={isProPlan}
+                    statusPlan={statusPlan}
+                    onOpen={handleOpen}
+                  />
+                );
               })}
             </StyledTabPanel>
             <StyledTabPanel
@@ -132,13 +193,22 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               value="completed"
             >
               {isEmptyCompleted && (
-                <StyledEmptyTasks variant="body2">
+                <StyledTypography component="div" variant="body4">
                   No completed tasks yet
-                </StyledEmptyTasks>
+                </StyledTypography>
               )}
 
               {completedTasks.map((el, i) => {
-                return <ItemTask key={i} task={el} onOpen={handleOpen} />;
+                return (
+                  <ItemTask
+                    subscriptionPlan={el.paymentPlan}
+                    key={i}
+                    task={el}
+                    isProPlan={isProPlan}
+                    onOpen={handleOpen}
+                    statusPlan={statusPlan}
+                  />
+                );
               })}
             </StyledTabPanel>
           </TabContext>

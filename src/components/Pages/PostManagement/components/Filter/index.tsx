@@ -37,7 +37,6 @@ import {
   useEffect,
   useImperativeHandle,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -579,17 +578,12 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
             submitForm();
           }}
         >
-          <StyledTitleFilter>
-            <StyledCloseFilterButton
-              onClick={handleClose}
-              color="primary"
-              variant="text"
-            >
+          <StyledTitleFilter variant="h6">
+            <StyledCloseFilterButton onClick={handleClose} variant="text">
               <ChevronLeftIcon />
             </StyledCloseFilterButton>
             Filter
             <StyledCollapseButtonFilter
-              color="decorate"
               isOpenMoreFilter={isOpenMoreFilter}
               variant="text"
               endIcon={
@@ -727,7 +721,6 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
                   loading={isLoadingFilter}
                   variant="contained"
                   fullWidth
-                  color="decorate"
                   size="large"
                   endIcon={
                     !isDesktop ? <CheckIcon fontSize="inherit" /> : undefined
@@ -764,7 +757,6 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
               onClick={handleClickOpen}
               size="large"
               fullWidth
-              color="decorate"
               variant="outlined"
               startIcon={<FilterIcon fontSize="inherit" />}
             >
@@ -776,7 +768,6 @@ const FilterComponent = forwardRef<FilterRef, IFilter>(
               href={linkToAddPost}
               size="large"
               fullWidth
-              color="decorate"
               variant="contained"
               endIcon={<PlusIcon fontSize="inherit" />}
             >

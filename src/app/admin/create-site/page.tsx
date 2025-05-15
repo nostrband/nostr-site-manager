@@ -1,6 +1,13 @@
 "use client";
-import { CreateSite } from "@/components/Pages/CreateSite";
+import dynamic from "next/dynamic";
 import { Suspense } from "react";
+
+const CreateSite = dynamic(
+  () => import("../../../components/Pages/CreateSite"),
+  {
+    ssr: false,
+  },
+);
 
 export default function CreateSitePage() {
   return (

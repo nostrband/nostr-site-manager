@@ -43,7 +43,7 @@ export class Mutex {
   }
 
   public async run<T>(cb: () => Promise<T>) {
-    return new Promise<T>(async (ok, err) => {
+    return new Promise<T>((ok, err) => {
       this.queue.push({ cb, ok, err });
       if (!this.running && this.queue.length === 1) this.execute();
     });

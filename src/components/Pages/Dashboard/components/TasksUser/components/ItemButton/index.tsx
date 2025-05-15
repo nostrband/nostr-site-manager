@@ -1,11 +1,6 @@
 import { ChevronLeftIcon, KeyIcon } from "@/components/Icons";
-import {
-  StyledIcon,
-  StyledIconChevron,
-  StyledText,
-  StyledWrap,
-} from "../styled";
-import { CircularProgress } from "@mui/material";
+import { StyledIcon, StyledIconChevron, StyledWrap } from "../styled";
+import { CircularProgress, Typography } from "@mui/material";
 
 interface ItemButtonProps {
   onClick: () => void;
@@ -29,7 +24,7 @@ export const ItemButton = ({ onClick, isLoading }: ItemButtonProps) => {
         </StyledIcon>
       )}
 
-      <StyledText>Connect keys</StyledText>
+      <Typography variant="subtitle4">Connect keys</Typography>
 
       <StyledIconChevron>
         <ChevronLeftIcon />

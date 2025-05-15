@@ -11,7 +11,7 @@ import { enqueueSnackbar } from "notistack";
 import { useRouter } from "next/navigation";
 import { useListSites } from "@/hooks/useListSites";
 
-export const CreateSite = () => {
+const CreateSite = () => {
   const [screen, setScreen] = useState<TypesScreens>(SCREEN.START);
   const router = useRouter();
   const getSites = useListSites();
@@ -68,3 +68,5 @@ export const CreateSite = () => {
     </Container>
   );
 };
+
+export default CreateSite;

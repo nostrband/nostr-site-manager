@@ -1,8 +1,16 @@
+import { SUBSCRIPTION_PLAN } from "@/consts";
 import { fetchProfiles } from "@/services/nostr/api";
 import { parseProfileEvent } from "@/services/nostr/nostr";
 import { LevelNavigation } from "@/services/sites.service";
 import { TypeAuthor } from "@/types";
 import { InputNavigation, InputNavigationReset } from "@/types/setting.types";
+
+export interface SubscriptionStatus {
+  status: SUBSCRIPTION_PLAN;
+  daysRemaining: number;
+  progressPercent: number;
+  totalPeriodDays: number;
+}
 
 export const addHttps = (url: string): string => {
   if (!url.startsWith("https://")) {
@@ -83,5 +91,50 @@ export const getLinksMenu = (siteId: string, themeId?: string) => {
     linkSwitchTheme,
     linkSettings,
     linkPostManagement,
+  };
+};
+
+export const getSubscriptionStatus = (
+  timestamp: number,
+): SubscriptionStatus => {
+  const prepareTimestamp = timestamp * 1000;
+  const now = Date.now();
+  const timeDiff = prepareTimestamp - now;
+  const daysRemaining = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+  const totalPeriodDays = 30;
+
+  const calculateProgress = (days: number): number => {
+    return Math.min(
+      100,
+      Math.max(
+        0,
+        Math.floor(((totalPeriodDays - days) / totalPeriodDays) * 100),
+      ),
+    );
+  };
+
+  if (daysRemaining <= 0) {
+    return {
+      status: SUBSCRIPTION_PLAN.PAST_DUE,
+      daysRemaining: 0,
+      progressPercent: 100,
+      totalPeriodDays,
+    };
+  }
+
+  if (daysRemaining <= 5) {
+    return {
+      status: SUBSCRIPTION_PLAN.UNPAID,
+      daysRemaining,
+      progressPercent: calculateProgress(daysRemaining),
+      totalPeriodDays,
+    };
+  }
+
+  return {
+    status: SUBSCRIPTION_PLAN.PAID,
+    daysRemaining,
+    progressPercent: calculateProgress(daysRemaining),
+    totalPeriodDays,
   };
 };

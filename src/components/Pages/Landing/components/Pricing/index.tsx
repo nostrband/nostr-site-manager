@@ -7,17 +7,21 @@ import {
   StyledIconPrice,
   StyledItem,
   StyledPlanPrice,
-  StyledTitle,
-  StyledWrap,
 } from "@/components/Pages/Landing/components/Pricing/styled";
 import { Box, Button, Container, Grid } from "@mui/material";
 import { IconCheck } from "@/components/Pages/Landing/components/Pricing/IconCheck";
+import {
+  StyledTitleSectionLanding,
+  StyledWrapSectionLanding,
+} from "../shared/styled";
 
 export const Pricing = () => {
   return (
-    <StyledWrap>
+    <StyledWrapSectionLanding>
       <Container maxWidth="lg">
-        <StyledTitle id="pricing">Pricing</StyledTitle>
+        <StyledTitleSectionLanding id="pricing">
+          Pricing
+        </StyledTitleSectionLanding>
 
         <Grid container spacing={{ xs: "24px" }} justifyContent="center">
           <Grid item xs={12} sm={6} md={4}>
@@ -28,7 +32,6 @@ export const Pricing = () => {
               <Button
                 size="large"
                 fullWidth
-                color="decorate"
                 variant="contained"
                 href="#themes-onboarding"
               >
@@ -138,7 +141,6 @@ export const Pricing = () => {
               <Button
                 size="large"
                 fullWidth
-                color="decorate"
                 variant="contained"
                 disabled={true}
               >
@@ -206,6 +208,6 @@ export const Pricing = () => {
           </Grid>
         </Grid>
       </Container>
-    </StyledWrap>
+    </StyledWrapSectionLanding>
   );
 };

@@ -1,38 +1,25 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import { Box, Typography, Grid } from "@mui/material";
-import { InterDisplay } from "@/mui/theme";
+import { Typography, Grid } from "@mui/material";
+import {
+  StyledTitleSectionLanding,
+  StyledWrapSectionLanding,
+} from "../shared/styled";
 
-export const StyledWrap = styled(Box)(({ theme }) => ({
-  color: theme.palette.primary.main,
-  paddingBottom: "120px",
-  paddingTop: "120px",
-  [theme.breakpoints.down("md")]: {
-    paddingBottom: "64px",
-    paddingTop: "64px",
-  },
+export const StyledWrap = styled(StyledWrapSectionLanding)(() => ({
+  background: "#fff",
   hr: {
     margin: 0,
     border: "1px solid #EFEFEF",
   },
 }));
 
-export const StyledTitle = styled(Typography)(({ theme }) => ({
-  fontSize: 48,
-  color: theme.palette.primary.main,
-  textAlign: "center",
-  fontWeight: "bold",
-  fontFamily: InterDisplay.style.fontFamily,
-  marginBottom: 64,
-  [theme.breakpoints.down("md")]: {
-    fontSize: 32,
-    marginBottom: 24,
-  },
+export const StyledTitle = styled(StyledTitleSectionLanding)(({ theme }) => ({
+  color: theme.typography.h1.color,
 }));
 
 export const StyledTitleFAQ = styled(Typography)(({ theme }) => ({
   fontSize: 24,
-  color: theme.palette.primary.main,
   fontWeight: "600",
   lineHeight: "34px",
   [theme.breakpoints.down("md")]: {
@@ -43,7 +30,6 @@ export const StyledTitleFAQ = styled(Typography)(({ theme }) => ({
 
 export const StyledTitleDescription = styled(Typography)(({ theme }) => ({
   fontSize: 18,
-  color: theme.palette.primary.main,
   fontWeight: "400",
   lineHeight: "28px",
   [theme.breakpoints.down("md")]: {

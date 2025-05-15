@@ -19,8 +19,8 @@ import {
   StyledSelectButtonSubText,
   StyledSelectButtonText,
   StyledWrapAuthor,
+  StyledWrapBlock,
 } from "../../styled";
-import { StyledTitle, StyledWrapBlock } from "../StartScreen/styled";
 import { LIST_SITE_TYPES, RECOMMENDED_AUTHORS } from "@/consts";
 import { TypeAuthor } from "@/types";
 import { getRecomendAuthors } from "@/utils";
@@ -116,7 +116,7 @@ export const ChooseProfile = ({ author, selectAuthor }: ChooseProfileProps) => {
   return (
     <>
       <StyledWrapBlock ref={buttonRef} id="basic-button">
-        <StyledTitle>User Profile</StyledTitle>
+        <Typography variant="h5">User Profile</Typography>
 
         <Typography typography={"body2"}>
           Pre-populate the site with user&apos;s posts and profile data like
@@ -133,8 +133,10 @@ export const ChooseProfile = ({ author, selectAuthor }: ChooseProfileProps) => {
           <StyledWrapAuthor>
             <StyledAuthorAvatar src={author.img} />
             <Box>
-              <StyledSelectButtonText>{author.name}</StyledSelectButtonText>
-              <StyledSelectButtonSubText variant="body2">
+              <StyledSelectButtonText variant="h6">
+                {author.name}
+              </StyledSelectButtonText>
+              <StyledSelectButtonSubText variant="body4">
                 {author.typename}
               </StyledSelectButtonSubText>
             </Box>
@@ -191,8 +193,10 @@ export const ChooseProfile = ({ author, selectAuthor }: ChooseProfileProps) => {
                   <StyledWrapAuthor>
                     <StyledAuthorAvatar src={el.img} />
                     <Box>
-                      <StyledSelectButtonText>{el.name}</StyledSelectButtonText>
-                      <StyledSelectButtonSubText variant="body2">
+                      <StyledSelectButtonText variant="h6">
+                        {el.name}
+                      </StyledSelectButtonText>
+                      <StyledSelectButtonSubText variant="body4">
                         {el.typename}
                       </StyledSelectButtonSubText>
                     </Box>

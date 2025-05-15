@@ -89,7 +89,7 @@ export const Contributors = memo(
 
           <StyledAutorProfileGroup>
             {contributors.map((el, i) => {
-              let meta = JSON.parse(el.content);
+              const meta = JSON.parse(el.content);
 
               const npub = el.pubkey
                 ? nip19.npubEncode(el.pubkey).substring(0, 8) + "..."

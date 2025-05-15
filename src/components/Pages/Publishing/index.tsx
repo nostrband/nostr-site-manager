@@ -114,7 +114,6 @@ const Publishing = () => {
           <Button
             variant="contained"
             fullWidth
-            color="primary"
             sx={{ marginTop: "10px" }}
             onClick={tryAgain}
           >
@@ -128,15 +127,10 @@ const Publishing = () => {
   return (
     <StyledWrap>
       <SpinnerPublishing isLoading={state !== "done"} />
-      <StyledTitle variant="h4">{title}</StyledTitle>
-      <StyledDescription variant="body1">{description}</StyledDescription>
+      <StyledTitle variant="h5">{title}</StyledTitle>
+      <StyledDescription variant="body4">{description}</StyledDescription>
       {state === "done" && (
-        <Button
-          onClick={handleClick}
-          color="decorate"
-          size="large"
-          variant="contained"
-        >
+        <Button onClick={handleClick} size="large" variant="contained">
           Open site
         </Button>
       )}

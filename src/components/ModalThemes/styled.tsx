@@ -1,11 +1,6 @@
 import { styled } from "@mui/material/styles";
-import {
-  Typography,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Box,
-} from "@mui/material";
+import { Typography, Dialog, DialogContent, Box } from "@mui/material";
+import { ChevronLeftIcon } from "../Icons";
 
 export const StyledTitle = styled(Typography)(() => ({
   fontWeight: "bold",
@@ -31,4 +26,8 @@ export const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
     width: "300px",
   },
+}));
+
+export const StyledEndIcon = styled(ChevronLeftIcon)(() => ({
+  transform: "rotate(-90deg)",
 }));

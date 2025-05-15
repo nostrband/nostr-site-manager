@@ -14,7 +14,7 @@ import { enqueueSnackbar } from "notistack";
 import { BuildingScreen } from "@/components/BuildingScreen";
 import { useListSites } from "@/hooks/useListSites";
 
-export const CreateSiteOnboarding = () => {
+const CreateSiteOnboarding = () => {
   const router = useRouter();
   const getSites = useListSites();
 
@@ -98,3 +98,5 @@ export const CreateSiteOnboarding = () => {
 
   return <Start createSite={createSiteHandler} />;
 };
+
+export default CreateSiteOnboarding;

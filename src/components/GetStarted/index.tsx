@@ -21,7 +21,6 @@ export const GetStarted = () => {
           LinkComponent={Link}
           href="/admin/create-site"
           size="large"
-          color="decorate"
           variant="contained"
         >
           Create site &rarr;

@@ -28,14 +28,14 @@ export const BuildLoader = () => {
       <GradientBottom />
       <WrapBuildLoaderAnimation>
         {items.map((item, index) => (
-          <TextAnimation key={index} variant="body2">
+          <TextAnimation key={index} variant="body3">
             {item.icon}
             {item.text}
           </TextAnimation>
         ))}
 
         {items.map((item, index) => (
-          <TextAnimation key={`${index}-clone`} variant="body2">
+          <TextAnimation key={`${index}-clone`} variant="body3">
             {item.icon}
             {item.text}
           </TextAnimation>

@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 import { Typography } from "@mui/material";
-import { blue } from "@mui/material/colors";
 import { Accept, useDropzone } from "react-dropzone";
 import { StyledDropzoneContainer, StyledText } from "./styled";
 

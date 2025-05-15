@@ -23,8 +23,13 @@ import {
   DashboardIcon,
   FIleTextIcon,
   IconLink,
+  LogOutIcon,
   MoreIcon,
+  PayIcon,
   SettingsIcon,
+  SubscriptionIcon,
+  SupportIcon,
+  SwitchIcon,
   TrashIcon,
 } from "@/components/Icons";
 import { useListSites } from "@/hooks/useListSites";
@@ -32,7 +37,7 @@ import useImageLoader from "@/hooks/useImageLoader";
 import { useGetSiteId } from "@/hooks/useGetSiteId";
 import Link from "next/link";
 import { ModalConfirmDeleteSite } from "@/components/ModalConfirmDeleteSite";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getLinksMenu } from "@/utils";
 
 export const ActionsUser = () => {
@@ -40,8 +45,20 @@ export const ActionsUser = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [isOpenMenuSite, setOpenSite] = useState(false);
   const router = useRouter();
+  const path = usePathname();
   const [author, setAuthor] = useState<NDKEvent | undefined>(undefined);
   const [isOpenConfirm, setOpenConfirm] = useState(false);
+
+  const slugs = [
+    "billing-details",
+    "my-subscription",
+    "renew-subscription",
+    "subscription",
+  ];
+
+  const isBilling = slugs.some((str) =>
+    path.toLowerCase().includes(str.toLowerCase()),
+  );
 
   const badgeRef = useRef<HTMLElement>(null);
 
@@ -107,7 +124,9 @@ export const ActionsUser = () => {
   if (author) {
     try {
       meta = JSON.parse(author.content);
-    } catch {}
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   const npub = nip19.npubEncode(userPubkey).substring(0, 8) + "...";
@@ -116,7 +135,7 @@ export const ActionsUser = () => {
 
   return (
     <>
-      {Boolean(siteId && getSite) && (
+      {Boolean(siteId && getSite && !isBilling) && (
         <Link href={linkToDashboard}>
           <StyledBadgeWrap ref={badgeRef}>
             {isLoaded ? (
@@ -129,7 +148,7 @@ export const ActionsUser = () => {
               </StyledBadgeAvatar>
             )}
 
-            <StyledBadgeTitle variant="body2">
+            <StyledBadgeTitle variant="subtitle2">
               {getSite?.title}
             </StyledBadgeTitle>
 
@@ -161,9 +180,46 @@ export const ActionsUser = () => {
           onClose={handleCloseUserMenu}
         >
           <MenuItem onClick={handleSwitchAccount}>
+            <StyledListItemIcon>
+              <SwitchIcon fontSize="small" />
+            </StyledListItemIcon>
             <ListItemText>Switch account</ListItemText>
           </MenuItem>
+          <MenuItem
+            onClick={handleCloseUserMenu}
+            href="/admin/my-subscription"
+            component={Link}
+          >
+            <StyledListItemIcon>
+              <SubscriptionIcon fontSize="small" />
+            </StyledListItemIcon>
+            <ListItemText>My subscriptions</ListItemText>
+          </MenuItem>
+          <MenuItem
+            onClick={handleCloseUserMenu}
+            href="/admin/billing-details"
+            component={Link}
+          >
+            <StyledListItemIcon>
+              <PayIcon fontSize="small" />
+            </StyledListItemIcon>
+            <ListItemText>Billing</ListItemText>
+          </MenuItem>
+          <MenuItem
+            onClick={handleCloseUserMenu}
+            href="https://primal.net/p/nprofile1qqsq36k72r04rkj2gt6acpz7xkehrypwqmt2spfpt0kr6ukudp7vkpqrxf4my"
+            component={Link}
+            target="_blank"
+          >
+            <StyledListItemIcon>
+              <SupportIcon fontSize="small" />
+            </StyledListItemIcon>
+            <ListItemText>Support</ListItemText>
+          </MenuItem>
           <MenuItem onClick={logout}>
+            <StyledListItemIcon>
+              <LogOutIcon fontSize="small" />
+            </StyledListItemIcon>
             <ListItemText>Logout</ListItemText>
           </MenuItem>
         </Menu>
@@ -176,7 +232,7 @@ export const ActionsUser = () => {
       />
 
       <Menu
-        sx={{ mt: "34px" }}
+        sx={{ mt: "45px" }}
         anchorEl={badgeRef.current}
         anchorOrigin={{
           vertical: "top",

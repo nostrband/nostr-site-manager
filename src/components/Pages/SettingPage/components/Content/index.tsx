@@ -159,7 +159,6 @@ export const Content = memo(
                 typeof option === "string" ? option : option.title
               }
               renderOption={(props, option) => {
-                // @ts-ignore
                 const { key, ...optionProps } = props;
                 return (
                   <ListItem {...optionProps} key={key}>

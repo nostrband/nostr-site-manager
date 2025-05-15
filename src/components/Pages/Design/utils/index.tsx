@@ -1,12 +1,7 @@
 "use client";
 import { FormikErrors, FormikProps } from "formik";
 import { CustomConfigType } from "../types";
-import {
-  FormControlLabel,
-  MenuItem,
-  SelectChangeEvent,
-  Switch,
-} from "@mui/material";
+import { FormControlLabel, MenuItem, Switch } from "@mui/material";
 import {
   StyledDescriptionField,
   StyledFormControl,
@@ -40,7 +35,6 @@ const BooleanField: React.FC<FieldProps> = React.memo(
       <FormControlLabel
         control={
           <Switch
-            color="decorate"
             checked={value}
             onChange={(_, v) =>
               setFieldValue(name, v).then(() => {

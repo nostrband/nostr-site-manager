@@ -24,14 +24,17 @@ import { useRouter } from "next/navigation";
 import { getLinksMenu } from "@/utils";
 import { CardFeatureContent } from "@/components/shared/CardFeatureContent";
 import { StyledWrapMenu } from "./styled";
+import { useServiceByPlan } from "@/hooks/useServiceByPlan";
 
-export const Dashboard = () => {
+const Dashboard = () => {
   const { isAuth } = useContext(AuthContext);
   const [isOpenConfirm, setOpenConfirm] = useState(false);
   const { data, isLoading, isFetching } = useListSites();
   const router = useRouter();
   const { siteId } = useGetSiteId();
   const getSite = data?.find((el) => el.id === siteId);
+
+  const { isProPlan, statusPlan } = useServiceByPlan(siteId);
 
   const userIsAdmin =
     userPubkey && getSite && getSite.adminPubkey === userPubkey;
@@ -65,8 +68,8 @@ export const Dashboard = () => {
           <Button
             LinkComponent={Link}
             href="/admin"
-            color="primary"
             variant="text"
+            color="secondary"
             sx={{ minWidth: "auto" }}
           >
             <ChevronLeftIcon />
@@ -91,6 +94,8 @@ export const Dashboard = () => {
                   accentColor={getSite.accentColor}
                   contributors={getSite.contributors}
                   actions={<TasksUser siteId={getSite.id} />}
+                  statusPlan={statusPlan}
+                  isProPlan={isProPlan}
                 />
               </Box>
               <ModalConfirmDeleteSite
@@ -107,7 +112,6 @@ export const Dashboard = () => {
                     LinkComponent={Link}
                     size="large"
                     variant="contained"
-                    color="decorate"
                     href={getSite.url}
                     fullWidth
                     endIcon={<ArrowRightIcon />}
@@ -119,7 +123,6 @@ export const Dashboard = () => {
                     LinkComponent={Link}
                     size="large"
                     variant="outlined"
-                    color="decorate"
                     href={linkPostManagement}
                     fullWidth
                     endIcon={<FIleTextIcon />}
@@ -133,7 +136,6 @@ export const Dashboard = () => {
                         LinkComponent={Link}
                         size="large"
                         variant="outlined"
-                        color="decorate"
                         href={linkSwitchTheme}
                         fullWidth
                         endIcon={<BrushIcon />}
@@ -144,7 +146,6 @@ export const Dashboard = () => {
                         LinkComponent={Link}
                         size="large"
                         variant="outlined"
-                        color="decorate"
                         href={linkSettings}
                         fullWidth
                         endIcon={<SettingsIcon />}
@@ -171,7 +172,6 @@ export const Dashboard = () => {
                 siteId={getSite.id}
                 isSendStats={getSite.sendStats}
               />
-
             </Grid>
           </Grid>
         )}
@@ -179,3 +179,5 @@ export const Dashboard = () => {
     </Container>
   );
 };
+
+export default Dashboard;

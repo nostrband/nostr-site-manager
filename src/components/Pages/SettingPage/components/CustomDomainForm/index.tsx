@@ -19,11 +19,8 @@ import {
 import {
   StyledDialog,
   StyledDialogContent,
-  StyledDialogSubDescription,
-  StyledDialogSubTitle,
   StyledDialogTitle,
   StyledNotifyWhenLoading,
-  StyledTitle,
 } from "./styled";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { LoadingButton } from "@mui/lab";
@@ -277,7 +274,7 @@ export const CustomDomainForm = ({
   ) {
     return (
       <Fragment key={i}>
-        <StyledDialogSubTitle>DNS record #{i + 1}</StyledDialogSubTitle>
+        <Typography variant="h6">DNS record #{i + 1}</Typography>
 
         <ReadOnlyInput label="Type" value={dns.type} />
 
@@ -304,7 +301,7 @@ export const CustomDomainForm = ({
     >
       <Box ref={contentRef}>
         <StyledDialogTitle>
-          <StyledTitle variant="body1">Custom domain</StyledTitle>
+          <Typography variant="h5">Custom domain</Typography>
 
           <Button
             onClick={onClose}
@@ -355,7 +352,6 @@ export const CustomDomainForm = ({
 
               <LoadingButton
                 fullWidth
-                color="decorate"
                 variant="contained"
                 size="large"
                 endIcon={<ArrowRightIcon fontSize="inherit" />}
@@ -372,12 +368,12 @@ export const CustomDomainForm = ({
             stepForm === "edit-dns-success" ||
             stepForm === "edit-dns-error") && (
             <>
-              <StyledDialogSubTitle>Update DNS settings</StyledDialogSubTitle>
-              <StyledDialogSubDescription variant="body2">
+              <Typography variant="h6">Update DNS settings</Typography>
+              <Typography variant="body4">
                 Please edit DNS records of <b>{domainInfo!.apex}</b>. We need
                 this to make sure you own this domain and to issue SSL
                 certificate.
-              </StyledDialogSubDescription>
+              </Typography>
 
               {dataDns &&
                 dataDns.dnsValidation.map((dns, i) => (
@@ -411,7 +407,6 @@ export const CustomDomainForm = ({
                 <>
                   <LoadingButton
                     fullWidth
-                    color="decorate"
                     variant="contained"
                     size="large"
                     loading={isLoading}
@@ -423,7 +418,7 @@ export const CustomDomainForm = ({
                   </LoadingButton>
 
                   {isLoading && (
-                    <StyledNotifyWhenLoading variant="body2">
+                    <StyledNotifyWhenLoading variant="body5">
                       Waiting for SSL certificate...
                     </StyledNotifyWhenLoading>
                   )}
@@ -442,7 +437,6 @@ export const CustomDomainForm = ({
               {stepForm === "edit-dns-success" && (
                 <LoadingButton
                   fullWidth
-                  color="decorate"
                   variant="contained"
                   size="large"
                   loading={isLoading}
@@ -457,7 +451,6 @@ export const CustomDomainForm = ({
               {stepForm === "edit-dns-error" && (
                 <LoadingButton
                   fullWidth
-                  color="primary"
                   variant="contained"
                   size="medium"
                   loading={isLoading}
@@ -475,13 +468,11 @@ export const CustomDomainForm = ({
             <>
               {domainInfo!.isApex && (
                 <>
-                  <StyledDialogSubTitle>
-                    Choose main address
-                  </StyledDialogSubTitle>
-                  <StyledDialogSubDescription variant="body2">
+                  <Typography variant="h6">Choose main address</Typography>
+                  <Typography variant="body4">
                     Main site address will be used as canonical, and the
                     alternative name will be redirected to the main address.
-                  </StyledDialogSubDescription>
+                  </Typography>
 
                   <Box>
                     <Chip
@@ -505,24 +496,21 @@ export const CustomDomainForm = ({
                           control={<Radio />}
                           label={`www.${domainValues.domain}`}
                         />
-                        <StyledDialogSubDescription
+                        <Typography
                           sx={{ mb: "16px", marginTop: "8px" }}
-                          variant="body2"
+                          variant="body4"
                         >
                           Supported by all DNS providers
-                        </StyledDialogSubDescription>
+                        </Typography>
                         <FormControlLabel
                           disabled={isLoading}
                           value={domainValues.domain}
                           control={<Radio />}
                           label={domainValues.domain}
                         />
-                        <StyledDialogSubDescription
-                          sx={{ marginTop: "8px" }}
-                          variant="body2"
-                        >
+                        <Typography sx={{ marginTop: "8px" }} variant="body4">
                           Supported by limited number of DNS providers
-                        </StyledDialogSubDescription>
+                        </Typography>
                       </RadioGroup>
                     </FormControl>
                   </Box>
@@ -591,7 +579,6 @@ export const CustomDomainForm = ({
                 {stepForm === "choose-options-error" ? (
                   <LoadingButton
                     fullWidth
-                    color="primary"
                     variant="contained"
                     size="medium"
                     loading={isLoading}
@@ -604,7 +591,6 @@ export const CustomDomainForm = ({
                   <>
                     <LoadingButton
                       fullWidth
-                      color="decorate"
                       variant="contained"
                       size="large"
                       loading={isLoading}
@@ -619,7 +605,7 @@ export const CustomDomainForm = ({
               </FormControl>
 
               {isLoading && (
-                <StyledNotifyWhenLoading variant="body2">
+                <StyledNotifyWhenLoading variant="body5">
                   Waiting for deployment up to 60 seconds...
                 </StyledNotifyWhenLoading>
               )}
@@ -639,7 +625,6 @@ export const CustomDomainForm = ({
               <FormControl fullWidth size="medium">
                 <LoadingButton
                   fullWidth
-                  color="decorate"
                   variant="contained"
                   size="large"
                   onClick={handleUpdateWebSiteAddress}

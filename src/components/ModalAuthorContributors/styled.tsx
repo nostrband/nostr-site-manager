@@ -12,9 +12,6 @@ export const StyledTitle = styled(Typography)(() => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  fontWeight: "bold",
-  fontSize: "20px",
-  lineHeight: "26px",
 }));
 
 export const StyledAuthorWrap = styled(Box)(() => ({
@@ -41,12 +38,6 @@ export const StyledAuthor = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
   gap: 8,
-}));
-
-export const StyledAuthorName = styled(Typography)(() => ({
-  fontSize: "14px",
-  fontWeight: "700",
-  lineHeight: "18px",
 }));
 
 export const StyledDialog = styled(Dialog)(() => ({

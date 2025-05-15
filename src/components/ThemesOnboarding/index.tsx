@@ -41,7 +41,7 @@ export const ThemesOnboarding = () => {
   };
 
   const getColor = (tag: TYPES_THEMES_TAG) =>
-    activeTag === tag ? "decorate" : "lightInfo";
+    activeTag === tag ? "primary" : "secondary";
 
   const handleMoreTheme = () => {
     setShowAllThemes((prev) => !prev);
@@ -140,6 +140,7 @@ export const ThemesOnboarding = () => {
               {displayedThemes.map((el, index) => (
                 <Grid item xs={4} sm={4} md={4} key={index}>
                   <ThemePreview
+                    alt={el.name}
                     preview={el.preview}
                     handleNavigate={() => handleNavigate(el.id)}
                   />
@@ -150,11 +151,7 @@ export const ThemesOnboarding = () => {
 
           <StyledMoreButton>
             {!showAllThemes && (
-              <StyledButton
-                color="decorate"
-                variant="contained"
-                onClick={handleMoreTheme}
-              >
+              <StyledButton variant="contained" onClick={handleMoreTheme}>
                 More Themes
               </StyledButton>
             )}

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "@/services/nostr/nostr";
 import { useContext, useEffect } from "react";
 
-export const StartOnboarding = () => {
+const StartOnboarding = () => {
   const router = useRouter();
   const { isAuth, isLoading } = useContext(AuthContext);
 
@@ -22,8 +22,8 @@ export const StartOnboarding = () => {
 
   return (
     <>
-      <StyledTitlePage>Are you on Nostr?</StyledTitlePage>
-      <StyledDescriptionPage variant="body2">
+      <StyledTitlePage variant="h3">Are you on Nostr?</StyledTitlePage>
+      <StyledDescriptionPage variant="body3">
         Do you have an account on the{" "}
         <Link href={"https://nostr.org/"} target="_blank">
           Nostr network
@@ -36,7 +36,6 @@ export const StartOnboarding = () => {
           href="/onboarding/connection?method=signup"
           fullWidth
           size="large"
-          color="decorate"
           variant="outlined"
         >
           No
@@ -46,7 +45,6 @@ export const StartOnboarding = () => {
           href="/onboarding/connection?method=login"
           fullWidth
           size="large"
-          color="decorate"
           variant="contained"
         >
           Yes
@@ -55,3 +53,5 @@ export const StartOnboarding = () => {
     </>
   );
 };
+
+export default StartOnboarding;

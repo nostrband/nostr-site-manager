@@ -16,7 +16,6 @@ export const TextAnimation = styled(Typography)(() => ({
   alignItems: "center",
   gap: "10px",
   marginBottom: "16px",
-  fontSize: "16px",
 }));
 
 export const GradientTop = styled(Box)(() => ({

@@ -1,7 +1,7 @@
 "use client";
 import { styled } from "@mui/material/styles";
 import { CardActionArea, Typography } from "@mui/material";
-import { CARD_MEDIA_HEIGHT } from "@/components/PreviewSite/styled";
+import { CARD_MEDIA_HEIGHT } from "@/components/shared/PreviewSite/styled";
 import { grey } from "@mui/material/colors";
 
 export const StyledCardAddImage = styled(CardActionArea)(({ theme }) => ({
@@ -22,8 +22,5 @@ export const StyledCardAddImage = styled(CardActionArea)(({ theme }) => ({
 }));
 
 export const StyledTextAddImage = styled(Typography)(() => ({
-  fontSize: 14,
-  lineHeight: "22px",
-  fontWeight: "400",
   color: grey[500],
 }));

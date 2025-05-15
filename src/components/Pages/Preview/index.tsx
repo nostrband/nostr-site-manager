@@ -37,7 +37,7 @@ import { Mutex } from "@/services/nostr/utils";
 const mutex = new Mutex();
 let mounted = false;
 
-export const Preview = () => {
+const Preview = () => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const params = useSearchParams();
@@ -241,3 +241,5 @@ export const Preview = () => {
     </>
   );
 };
+
+export default Preview;

@@ -3,7 +3,6 @@ import {
   $applyNodeReplacement,
   DOMExportOutput,
   ElementNode,
-  LexicalEditor,
   LexicalNode,
   NodeKey,
   SerializedElementNode,
@@ -52,9 +51,9 @@ export class HtmlNode extends ElementNode {
     return node;
   }
 
-  exportDOM(editor: LexicalEditor): DOMExportOutput {
+  exportDOM(): DOMExportOutput {
     const parser = new DOMParser();
-    // @ts-ignore
+    // @ts-expect-error err
     const element = parser.parseFromString(
       this.getHtml(),
       "text/html",

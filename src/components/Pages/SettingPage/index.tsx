@@ -3,11 +3,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import _ from "lodash";
 import { Button, Container } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { useFormik } from "formik";
 import { useSettingsSite } from "@/hooks/useSettingsSite";
 import { ReturnSettingsSiteDataType } from "@/services/sites.service";
-import { SETTINGS_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG, SUBSCRIPTION_PLAN } from "@/consts";
 import { addHttps, resetLevelNavigation, updateLevelNavigation } from "@/utils";
 import { editSite } from "@/services/nostr/api";
 import { validationSchemaMakePrivateSite } from "@/validations/rules";
@@ -46,6 +46,8 @@ import { StyledTitlePage } from "@/components/shared/styled";
 import { SITE_TASK_SETTINGS } from "@/services/nostr/tasks";
 import { AnalyticsAdmin } from "./components/AnalyticsAdmin";
 import { AnalyticsDev } from "./components/AnalyticsDev";
+import { useListSites } from "@/hooks/useListSites";
+import { useServiceByPlan } from "@/hooks/useServiceByPlan";
 
 const initialSettingValue: ReturnSettingsSiteDataType = {
   id: "",
@@ -97,19 +99,31 @@ const initialSettingValue: ReturnSettingsSiteDataType = {
   sendStatsDev: false,
 };
 
-export const SettingPage = () => {
+const SettingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [initialData, setInitialData] = useState(initialSettingValue);
   const [choiceSetting, setChoiceSetting] = useState<Setting | null>(null);
   const { enqueueSnackbar } = useSnackbar();
   const { siteId } = useGetSiteId();
+  const {
+    isProPlan: isProPlanPaid,
+    urlRedirectToSubscription,
+    statusPlan,
+    isLoading: isLoadingService,
+  } = useServiceByPlan(siteId);
   const { back } = useBack();
+
+  const { refetch } = useListSites();
+
+  const isProPlan = !isProPlanPaid || statusPlan !== SUBSCRIPTION_PLAN.PAID;
 
   const {
     data,
     isLoading: isLoadingSetting,
     isFetching,
   } = useSettingsSite(siteId);
+
+  const router = useRouter();
 
   const handleChoiceSetting = (setting: Setting | null) => {
     setChoiceSetting(setting);
@@ -140,6 +154,9 @@ export const SettingPage = () => {
 
         try {
           await editSite(values);
+
+          await refetch();
+
           enqueueSnackbar("Saved the settings and updated your site!", {
             autoHideDuration: 3000,
             variant: "success",
@@ -163,6 +180,10 @@ export const SettingPage = () => {
       }
     },
   });
+
+  const handleRedirectToSubscription = () => {
+    router.push(urlRedirectToSubscription);
+  };
 
   const handleChangeNavigation = useCallback(
     (input: InputNavigation) => {
@@ -398,7 +419,7 @@ export const SettingPage = () => {
     }
   }, [params, isLoadingSetting, isFetching, scrollToTask]);
 
-  if (isLoadingSetting || isFetching) {
+  if (isLoadingSetting || isFetching || isLoadingService) {
     return (
       <SpinerWrap>
         <SpinerCircularProgress />
@@ -411,8 +432,8 @@ export const SettingPage = () => {
       <StyledWrap>
         <StyledTitlePage>
           <Button
+            color="secondary"
             onClick={handleBack}
-            color="primary"
             variant="text"
             sx={{ minWidth: "auto" }}
           >
@@ -446,6 +467,9 @@ export const SettingPage = () => {
               submitForm={submitForm}
               updateWebSiteAddress={handleUpdateWebSiteAddress}
               isLoading={isLoading}
+              isProPlan={isProPlan}
+              statusPlan={statusPlan}
+              handleRedirectToSubscription={handleRedirectToSubscription}
             />
 
             <TitleDescription
@@ -626,3 +650,5 @@ export const SettingPage = () => {
     </Container>
   );
 };
+
+export default SettingPage;

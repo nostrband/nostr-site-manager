@@ -1,12 +1,6 @@
 import { styled } from "@mui/material/styles";
 import { Typography, DialogContent, DialogTitle, Dialog } from "@mui/material";
 
-export const StyledTitle = styled(Typography)(() => ({
-  fontSize: 20,
-  lineHeight: "26px",
-  fontWeight: "bold",
-}));
-
 export const StyledDialogTitle = styled(DialogTitle)(() => ({
   display: "flex",
   justifyContent: "space-between",
@@ -38,18 +32,5 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 export const StyledNotifyWhenLoading = styled(Typography)(() => ({
-  fontSize: 12,
   textAlign: "center",
-  lineHeight: "12px",
-}));
-
-export const StyledDialogSubTitle = styled(Typography)(() => ({
-  fontSize: 16,
-  lineHeight: "20px",
-  fontWeight: "bold",
-}));
-
-export const StyledDialogSubDescription = styled(Typography)(() => ({
-  fontSize: 14,
-  lineHeight: "22px",
 }));

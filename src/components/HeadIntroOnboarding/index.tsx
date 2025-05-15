@@ -29,7 +29,6 @@ export const HeadIntroOnboarding = () => {
       <Button
         size="large"
         variant="contained"
-        color="decorate"
         LinkComponent={Link}
         href="/onboarding"
       >

@@ -1,112 +1,9 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
-import { grey, red } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
 import localFont from "next/font/local";
 import shadows from "@mui/material/styles/shadows";
-
-declare module "@mui/material/styles" {
-  interface Palette {
-    customBackground: Palette["primary"];
-    appBar: Palette["primary"];
-    decorate: Palette["primary"];
-    textColor: Palette["primary"];
-    textColorDanger: Palette["primary"];
-    buttonSidebarBackground: Palette["primary"];
-    buttonSidebarActive: Palette["primary"];
-    lightInfo: Palette["primary"];
-    darkInfo: Palette["primary"];
-  }
-
-  interface PaletteOptions {
-    customBackground?: PaletteOptions["primary"];
-    appBar?: Palette["primary"];
-    decorate?: Palette["primary"];
-    textColor?: Palette["primary"];
-    textColorDanger?: Palette["primary"];
-    buttonSidebarBackground?: Palette["primary"];
-    buttonSidebarActive?: Palette["primary"];
-    lightInfo?: Palette["primary"];
-    darkInfo?: Palette["primary"];
-  }
-}
-
-declare module "@mui/material/AppBar" {
-  interface AppBarPropsColorOverrides {
-    appBar: true;
-  }
-}
-
-declare module "@mui/material/Chip" {
-  interface ChipPropsColorOverrides {
-    decorate: true;
-    lightInfo: true;
-    primary: true;
-  }
-}
-
-declare module "@mui/material/Rating" {
-  interface RatingPropsColorOverrides {
-    decorate: true;
-  }
-}
-
-declare module "@mui/material/Button" {
-  interface ButtonPropsColorOverrides {
-    textColor: true;
-    buttonSidebarBackground: true;
-    buttonSidebarActive: true;
-    decorate: true;
-    lightInfo: true;
-    darkInfo: true;
-    primary: true;
-  }
-}
-
-declare module "@mui/material/Checkbox" {
-  interface CheckboxPropsColorOverrides {
-    textColor: true;
-    buttonSidebarBackground: true;
-    buttonSidebarActive: true;
-    decorate: true;
-    lightInfo: true;
-    darkInfo: true;
-    primary: true;
-  }
-}
-
-declare module "@mui/material/LinearProgress" {
-  interface LinearProgressPropsColorOverrides {
-    decorate: true;
-  }
-}
-
-declare module "@mui/material/CircularProgress" {
-  interface CircularProgressPropsColorOverrides {
-    decorate: true;
-  }
-}
-
-declare module "@mui/material/IconButton" {
-  interface IconButtonPropsColorOverrides {
-    textColorDanger: true;
-    primary: true;
-    decorate: true;
-  }
-}
-
-declare module "@mui/material/Fab" {
-  interface FabPropsColorOverrides {
-    decorate: true;
-    primary: true;
-    lightInfo: true;
-  }
-}
-
-declare module "@mui/material/Switch" {
-  interface SwitchPropsColorOverrides {
-    decorate: true;
-  }
-}
+import { PRIMARY_COLOR } from "@/consts";
 
 export const InterDisplay = localFont({
   src: [
@@ -152,72 +49,24 @@ const InterVariable = localFont({
 
 const theme = createTheme({
   palette: {
+    mode: "light",
     primary: {
-      main: "#292C34",
+      main: PRIMARY_COLOR,
     },
     secondary: {
-      main: "#696F7D",
+      main: "#000",
     },
-    // info: {
-    //   light: "#0000EE",
-    //   main: "#0000EE",
-    //   dark: "#0000EE",
-    //   contrastText: "#0000EE",
-    // },
+    warning: {
+      main: "#EF6C00",
+    },
     error: {
-      main: red.A400,
+      main: "#FF4B4E",
     },
-    customBackground: {
-      light: grey[100],
-      main: "#F5F5F5",
+    success: {
+      main: "#2E7D32",
     },
-    buttonSidebarBackground: {
-      light: "#292C34",
-      main: "#f8f8f8",
-      dark: "#f4f0f0",
-      contrastText: "#292C34",
-    },
-    buttonSidebarActive: {
-      light: "#292C34",
-      main: "#f8f8f8",
-      dark: "#f4f0f0",
-      contrastText: "#292C34",
-    },
-    appBar: {
-      light: "#fff",
-      main: "#fff",
-      dark: "#292C34",
-      contrastText: "#292C34",
-    },
-    textColor: {
-      light: "#fff",
-      main: "#292C34",
-      dark: "#2f313a",
-      contrastText: "#fff",
-    },
-    textColorDanger: {
-      light: "#f5bdbd",
-      main: "#292C34",
-      dark: "#302a2a",
-      contrastText: "#b34040",
-    },
-    decorate: {
-      light: "#fff",
-      main: "#FF3ED9",
-      dark: "#c62fa9",
-      contrastText: "#fff",
-    },
-    lightInfo: {
-      light: "#fff",
-      main: "rgba(105, 111, 125, 0.08)",
-      dark: "#A5A1A4",
-      contrastText: "#292C34",
-    },
-    darkInfo: {
-      light: "#fff",
-      main: "#988F97",
-      dark: "#7c747b",
-      contrastText: "#fff",
+    background: {
+      default: grey[100],
     },
   },
   shadows: [
@@ -249,14 +98,79 @@ const theme = createTheme({
   ] as typeof shadows,
   typography: {
     fontFamily: InterVariable.style.fontFamily,
-    allVariants: {
+    h3: {
+      fontSize: 30,
+      fontWeight: "bold",
+      lineHeight: "130%",
+    },
+    h4: {
+      fontSize: 24,
+      lineHeight: "130%",
+      fontWeight: "bold",
+    },
+    h5: {
+      fontSize: 20,
+      lineHeight: "130%",
+      fontWeight: "bold",
+    },
+    h6: {
+      fontSize: 16,
+      lineHeight: "130%",
+      fontWeight: "bold",
+    },
+    h7: {
       color: "#000",
+      fontWeight: "bold",
+      fontSize: 14,
+      lineHeight: "130%",
+      fontFamily: InterVariable.style.fontFamily,
+    },
+    subtitle2: {
+      color: "rgba(0, 0, 0, 0.6)",
+      fontSize: 14,
+      fontWeight: "500",
+      lineHeight: "157%",
+    },
+    subtitle3: {
+      fontSize: 16,
+      fontWeight: "600",
+      lineHeight: "140%",
+    },
+    subtitle4: {
+      color: "#000",
+      fontSize: 14,
+      fontWeight: "600",
+      lineHeight: "130%",
     },
     body1: {
+      fontSize: 16,
+      lineHeight: "150%",
+      fontWeight: "400",
       color: "#000",
     },
     body2: {
       color: "rgba(0, 0, 0, 0.6)",
+    },
+    body3: {
+      color: "rgba(0, 0, 0, 0.6)",
+      fontSize: 16,
+      fontWeight: "400",
+      lineHeight: "160%",
+    },
+    body4: {
+      color: "rgba(0, 0, 0, 0.6)",
+      fontSize: 14,
+      fontWeight: "400",
+      lineHeight: "160%",
+    },
+    body5: {
+      fontSize: 12,
+      fontWeight: "400",
+      lineHeight: "160%",
+      color: "rgba(0, 0, 0, 0.6)",
+    },
+    allVariants: {
+      color: "#000",
     },
   },
   shape: {
@@ -267,14 +181,6 @@ const theme = createTheme({
       styleOverrides: {
         colorPrimary: {
           backgroundColor: "#fff",
-          color: "#000",
-        },
-      },
-    },
-    MuiTypography: {
-      defaultProps: {
-        variantMapping: {
-          body1: "div",
         },
       },
     },
@@ -302,31 +208,8 @@ const theme = createTheme({
             borderColor: "rgba(0, 0, 0, 0.23)",
           },
 
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#FF3ED9",
-          },
-
           "&.MuiInputBase-sizeSmall:not(.MuiInputBase-multiline)": {
             height: "42px",
-          },
-        },
-      },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          color: "inherit",
-          "&.Mui-focused": {
-            color: "#FF3ED9",
-          },
-        },
-      },
-    },
-    MuiRadio: {
-      styleOverrides: {
-        root: {
-          "&.Mui-checked": {
-            color: "#FF3ED9",
           },
         },
       },
@@ -377,26 +260,10 @@ const theme = createTheme({
         },
       },
     },
-    MuiStepIcon: {
-      styleOverrides: {
-        root: {
-          "&.Mui-active": {
-            color: "#FF3ED9",
-          },
-          "&.Mui-completed": {
-            color: "#FF3ED9",
-          },
-        },
-      },
-    },
-
     MuiTabs: {
       styleOverrides: {
         root: {
           minHeight: "42px",
-        },
-        indicator: {
-          backgroundColor: "#FF3ED9",
         },
       },
     },
@@ -405,9 +272,6 @@ const theme = createTheme({
         root: {
           minHeight: "42px",
           textTransform: "none",
-          "&.Mui-selected": {
-            color: "#FF3ED9",
-          },
         },
       },
     },

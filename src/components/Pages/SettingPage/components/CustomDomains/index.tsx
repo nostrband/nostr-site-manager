@@ -5,19 +5,20 @@ import {
   StyledFormFields,
   StyledHeadSettingBlock,
   StyledSettingBlock,
-  StyledTitleBlock,
 } from "../../styled";
-import { Typography, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { SaveButton } from "../SaveButton";
 import { useEditSettingMode } from "@/hooks/useEditSettingMode";
 import { IBaseSetting } from "@/types/setting.types";
-import { SETTINGS_CONFIG } from "@/consts";
+import { SETTINGS_CONFIG, SUBSCRIPTION_PLAN } from "@/consts";
 import { CustomDomainForm } from "../CustomDomainForm";
 import { fetchDomains } from "@/services/nostr/api";
 import { enqueueSnackbar } from "notistack";
 import { userIsReadOnly } from "@/services/nostr/nostr";
 import { PlusCircleIcon } from "@/components/Icons";
 import { ItemDomain } from "./components/ItemDomain";
+import { SubscriptionPlanBadge } from "@/components/shared/SubscriptionPlanBadge";
+import { StyledBadgeTitle, StyledTextTitle, StyledTitleHead } from "./styled";
 
 interface ICustomDomains extends IBaseSetting {
   siteId: string;
@@ -25,7 +26,15 @@ interface ICustomDomains extends IBaseSetting {
 }
 
 export const CustomDomains = memo(
-  ({ siteId, submitForm, isLoading, updateWebSiteAddress }: ICustomDomains) => {
+  ({
+    siteId,
+    submitForm,
+    isLoading,
+    updateWebSiteAddress,
+    isProPlan,
+    statusPlan,
+    handleRedirectToSubscription,
+  }: ICustomDomains) => {
     const [isEdit, handleAction] = useEditSettingMode(submitForm, isLoading);
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDisabled, setDisabled] = useState(false);
@@ -86,16 +95,31 @@ export const CustomDomains = memo(
     return (
       <StyledSettingBlock id={SETTINGS_CONFIG.customDomains.anchor}>
         <StyledHeadSettingBlock>
-          <StyledTitleBlock>
-            {SETTINGS_CONFIG.customDomains.title}
+          <StyledTitleHead>
+            <StyledTextTitle>
+              <span>{SETTINGS_CONFIG.customDomains.title}</span>
+              <StyledBadgeTitle
+                isProPlan={isProPlan}
+                onClick={!isProPlan ? undefined : handleRedirectToSubscription}
+              >
+                <SubscriptionPlanBadge
+                  text={!isProPlan ? undefined : "Upgrade to PRO"}
+                  subscriptionPlan={
+                    statusPlan ? statusPlan : SUBSCRIPTION_PLAN.PAID
+                  }
+                />
+              </StyledBadgeTitle>
+            </StyledTextTitle>
+
             {!userIsReadOnly && (
               <SaveButton
                 isEdit={isEdit}
                 isLoading={isLoading}
                 handleAction={handleClick}
+                disabled={isProPlan}
               />
             )}
-          </StyledTitleBlock>
+          </StyledTitleHead>
 
           {userIsReadOnly && (
             <StyledDescriptionBlock color="red">
@@ -104,23 +128,26 @@ export const CustomDomains = memo(
           )}
 
           <StyledFormFields>
-            {Boolean(listDomains.length)
-              ? listDomains.map((el, i) => (
-                  <ItemDomain
-                    disabled={!isEdit}
-                    siteId={siteId}
-                    key={i}
-                    domain={el}
-                  />
-                ))
-              : SETTINGS_CONFIG.customDomains.description}
+            {listDomains.length ? (
+              listDomains.map((el, i) => (
+                <ItemDomain
+                  disabled={!isEdit}
+                  siteId={siteId}
+                  key={i}
+                  domain={el}
+                />
+              ))
+            ) : (
+              <StyledDescriptionBlock>
+                {SETTINGS_CONFIG.customDomains.description}
+              </StyledDescriptionBlock>
+            )}
           </StyledFormFields>
         </StyledHeadSettingBlock>
 
         <Button
           variant="contained"
           disabled={!isEdit}
-          color="decorate"
           size="large"
           fullWidth
           onClick={handleOpenCustomDomain}

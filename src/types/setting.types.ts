@@ -1,3 +1,4 @@
+import { SUBSCRIPTION_PLAN } from "@/consts";
 import { FormikHandlers } from "formik";
 
 export interface IBaseSetting {
@@ -5,6 +6,11 @@ export interface IBaseSetting {
   handleBlur?: FormikHandlers["handleBlur"];
   submitForm: () => Promise<void>;
   isLoading: boolean;
+
+  // Billing props
+  statusPlan?: SUBSCRIPTION_PLAN;
+  isProPlan?: boolean;
+  handleRedirectToSubscription?: () => void;
 }
 
 export type InputNavigation = {

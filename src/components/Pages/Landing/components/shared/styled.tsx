@@ -93,7 +93,7 @@ export const StyledTitleBlock = styled(Typography)(({ theme }) => ({
   lineHeight: "39px",
   color: theme.palette.secondary.main,
   span: {
-    color: theme.palette.decorate.main,
+    color: theme.palette.primary.main,
   },
   [theme.breakpoints.down("md")]: {
     fontSize: 24,
@@ -128,4 +128,30 @@ export const StyledSubTitleFullBlock = styled(Typography)(() => ({
   fontSize: 24,
   color: "#fff",
   lineHeight: "34px",
+}));
+
+export const StyledWrapSectionLanding = styled(Box)(({ theme }) => ({
+  paddingBottom: "120px",
+  paddingTop: "120px",
+  [theme.breakpoints.down("md")]: {
+    paddingBottom: "64px",
+    paddingTop: "64px",
+  },
+
+  ...(theme.palette.mode === "light" && {
+    background: "#292c34",
+  }),
+}));
+
+export const StyledTitleSectionLanding = styled(Typography)(({ theme }) => ({
+  fontSize: 48,
+  color: "#fff",
+  textAlign: "center",
+  fontWeight: "bold",
+  fontFamily: InterDisplay.style.fontFamily,
+  marginBottom: 64,
+  [theme.breakpoints.down("md")]: {
+    fontSize: 32,
+    marginBottom: 24,
+  },
 }));

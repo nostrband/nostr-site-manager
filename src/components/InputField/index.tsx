@@ -22,8 +22,7 @@ export const InputField = ({
   const [isFocus, setFocus] = useState(true);
   const isValue =
     typeof value === "string" ? Boolean(value.length) : Boolean(value);
-  const isStartIcon =
-    !Boolean(startAdornment) && Boolean(startIcon) && !isValue;
+  const isStartIcon = !startAdornment && Boolean(startIcon) && !isValue;
 
   const handleSetFocus = () => {
     setFocus((prev) => !prev);

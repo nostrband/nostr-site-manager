@@ -9,8 +9,9 @@
     "lint": "next lint",
     "format": "npx prettier --write src",
     "prepare": "husky",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "test-update": "npx playwright test --update-snapshots",
+    "test-setup": "npx playwright test --project=setup",
+    "test-chromium": "npx playwright test --project=chromium"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -22,7 +23,6 @@
     "@lexical/markdown": "^0.17.0",
     "@lexical/react": "^0.17.0",
     "@lexical/rich-text": "^0.17.0",
-    "@mui/icons-material": "^6.2.0",
     "@mui/lab": "^6.0.0-beta.19",
     "@mui/material": "^6.2.0",
     "@mui/styled-engine-sc": "^6.2.0",
@@ -55,26 +55,20 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^3.2.2",
-    "@storybook/addon-essentials": "^8.4.2",
-    "@storybook/addon-interactions": "^8.4.2",
-    "@storybook/addon-onboarding": "^8.4.2",
-    "@storybook/addon-themes": "^8.4.2",
-    "@storybook/addon-viewport": "^8.4.4",
-    "@storybook/blocks": "^8.4.2",
-    "@storybook/nextjs": "^8.4.2",
-    "@storybook/react": "^8.4.2",
-    "@storybook/test": "^8.4.2",
+    "@playwright/test": "^1.51.0",
     "@types/lodash": "^4.17.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
-    "eslint-plugin-storybook": "^0.11.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "husky": "^9.0.11",
+    "install": "^0.13.0",
+    "npm": "^11.2.0",
     "prettier": "^3.2.5",
-    "storybook": "^8.4.2",
     "typescript": "^5"
   }
 }

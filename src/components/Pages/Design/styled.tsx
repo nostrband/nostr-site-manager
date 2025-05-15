@@ -43,8 +43,7 @@ export const StyledTitle = styled(Typography)(() => ({
   marginBottom: "20px",
 }));
 
-export const StyledLabel = styled(InputLabel)(({ theme }) => ({
-  color: theme.palette.primary.main,
+export const StyledLabel = styled(InputLabel)(() => ({
   fontWeight: "bold",
 }));
 
@@ -127,12 +126,12 @@ export const StyledTitleGroupField = styled(Typography)(({ theme }) => ({
   paddingBottom: "10px",
   marginBottom: "10px",
   fontWeight: "bold",
-  color: theme.palette.decorate.main,
+  color: theme.palette.primary.main,
   borderBottom: "1px solid",
-  borderColor: theme.palette.decorate.main,
+  borderColor: theme.palette.primary.main,
   marginTop: "25px",
 }));
 
 export const StyledDescriptionField = styled(Typography)(({ theme }) => ({
-  color: theme.palette.darkInfo.main,
+  color: theme.palette.background.default,
 }));

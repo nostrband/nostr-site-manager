@@ -9,7 +9,6 @@ import { enqueueSnackbar } from "notistack";
 import useResponsive from "@/hooks/useResponsive";
 import { useState } from "react";
 import {
-  Box,
   Button,
   CircularProgress,
   FormControl,
@@ -62,7 +61,7 @@ export const LoginDM = ({
             }
 
             const res = await axios.get(
-              `https://${domain}/.well-known/nostr.json?name=${name}`
+              `https://${domain}/.well-known/nostr.json?name=${name}`,
             );
             pubkey = res.data.names[name];
           } else {
@@ -105,7 +104,7 @@ export const LoginDM = ({
 
   const handleAdvanced = async () => {
     document.dispatchEvent(
-      new CustomEvent("nlLaunch", { detail: "welcome-login" })
+      new CustomEvent("nlLaunch", { detail: "welcome-login" }),
     );
     await new Promise<void>((ok) => {
       addOnAuth(async (type: string) => {
@@ -119,8 +118,8 @@ export const LoginDM = ({
 
   return (
     <>
-      <StyledTitlePage>Log in</StyledTitlePage>
-      <StyledDescriptionPage variant="body2">
+      <StyledTitlePage variant="h3">Log in</StyledTitlePage>
+      <StyledDescriptionPage variant="body3">
         Enter your user name or npub. You will receive a direct message with a
         code.
       </StyledDescriptionPage>
@@ -153,7 +152,6 @@ export const LoginDM = ({
         fullWidth
         disabled={isLoading ? false : !values.npub.length}
         size="large"
-        color="decorate"
         variant="contained"
         endIcon={<ArrowRightIcon />}
         startIcon={startIconCreate}
@@ -165,7 +163,6 @@ export const LoginDM = ({
       <StyledActions>
         <Button
           size="small"
-          color="decorate"
           variant="text"
           startIcon={<ChevronLeftIcon />}
           onClick={handleBack}
@@ -174,7 +171,6 @@ export const LoginDM = ({
         </Button>
         <Button
           size="small"
-          color="decorate"
           variant="text"
           startIcon={<KeyIcon />}
           onClick={handleAdvanced}

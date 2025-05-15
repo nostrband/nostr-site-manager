@@ -1,7 +1,6 @@
 import { SiteAddr, fetchEvents, parseAddr } from "libnostrsite";
 import { STATS_RELAYS, addOnAuth, ndk, userNip46, userPubkey } from "./nostr";
-import { NDKEvent, NDKNip07Signer, NDKUser } from "@nostr-dev-kit/ndk";
-import { nip19 } from "nostr-tools";
+import { NDKEvent } from "@nostr-dev-kit/ndk";
 
 const KIND_STATS = 1995;
 
@@ -66,7 +65,7 @@ async function loadEvents() {
   const newEvents = await fetchEvents(
     ndk,
     {
-      // @ts-ignore
+      // @ts-expect-error err
       kinds: [KIND_STATS],
       "#p": [userPubkey],
       since,
@@ -90,7 +89,7 @@ async function loadEvents() {
         const content = JSON.parse(
           // NOTE: talk directly to nostr-login bcs
           // NDKNip07Signer only supports single-threaded access
-          // @ts-ignore
+          // @ts-expect-error err
           await window.nostr.nip04.decrypt(event.pubkey, event.content),
         );
         // console.log("stats event", content, event);
@@ -152,7 +151,7 @@ export async function fetchSiteStats(id: string) {
     return e.content.user || e.content.vid;
   };
 
-  let visitMap = new Map<string, number>();
+  const visitMap = new Map<string, number>();
   let visits = 0;
   for (const e of siteEvents) {
     if (e.content.type !== "pageview") continue;

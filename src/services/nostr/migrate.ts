@@ -37,7 +37,7 @@ export async function migrateToConnectedKey(siteId: string) {
               method: string;
               pubkey: string;
             }
-          // @ts-ignore
+          // @ts-expect-error err
           | undefined = e.detail;
         if (!info || info.type !== "login") return;
         console.log("key migration, login pubkey", info.pubkey);

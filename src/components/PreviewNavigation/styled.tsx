@@ -1,6 +1,7 @@
 "use client";
 import { styled } from "@mui/material/styles";
 import { Box, Button, IconButton } from "@mui/material";
+import { ChevronLeftIcon } from "../Icons";
 
 export const StyledWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -34,4 +35,8 @@ export const StyledButtonHashtagKind = styled(Button)(() => ({
     textOverflow: "ellipsis",
     textWrap: "nowrap",
   },
+}));
+
+export const StyledEndIcon = styled(ChevronLeftIcon)(() => ({
+  transform: "rotate(-90deg)",
 }));

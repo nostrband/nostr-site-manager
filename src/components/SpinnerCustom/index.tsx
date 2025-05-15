@@ -1,3 +1,5 @@
+import { PRIMARY_COLOR } from "@/consts";
+
 export const SpinnerCustom = () => {
   return (
     <svg
@@ -30,7 +32,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="25.4815"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,159.07330322265625"
         >
@@ -48,7 +50,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="25.4815"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,159.07330322265625"
         >
@@ -66,7 +68,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="25.4815"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,159.07330322265625"
         >
@@ -84,7 +86,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="25.4815"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,159.07330322265625"
         >
@@ -102,7 +104,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="25.4815"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,159.07330322265625"
         >
@@ -120,7 +122,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="43.8148"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,274.8518371582031"
         >
@@ -138,7 +140,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="43.8148"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,274.8518371582031"
         >
@@ -156,7 +158,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="43.8148"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,274.8518371582031"
         >
@@ -174,7 +176,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="43.8148"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,274.8518371582031"
         >
@@ -192,7 +194,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="43.8148"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,274.8518371582031"
         >
@@ -210,7 +212,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="64.1852"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,402.6361083984375"
         >
@@ -228,7 +230,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="64.1852"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,402.6361083984375"
         >
@@ -246,7 +248,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="64.1852"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,402.6361083984375"
         >
@@ -264,7 +266,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="64.1852"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,402.6361083984375"
         >
@@ -282,7 +284,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="64.1852"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,402.6361083984375"
         >
@@ -300,7 +302,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="84.5556"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,530.4202270507812"
         >
@@ -318,7 +320,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="84.5556"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,530.4202270507812"
         >
@@ -336,7 +338,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="84.5556"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,530.4202270507812"
         >
@@ -354,7 +356,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="84.5556"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,530.4202270507812"
         >
@@ -372,7 +374,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="84.5556"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,530.4202270507812"
         >
@@ -390,7 +392,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="109"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,684.184326171875"
         >
@@ -408,7 +410,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="109"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,684.184326171875"
         >
@@ -426,7 +428,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="109"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,684.184326171875"
         >
@@ -444,7 +446,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="109"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,684.184326171875"
         >
@@ -462,7 +464,7 @@ export const SpinnerCustom = () => {
           cx="110"
           cy="110"
           r="109"
-          stroke="#FF3ED9"
+          stroke={PRIMARY_COLOR}
           strokeWidth="2"
           strokeDasharray="0,0,0,0,0,684.184326171875"
         >

@@ -56,7 +56,7 @@ export const StyledItemWrap = styled(ListItem)(({ theme }) => ({
   position: "relative",
 }));
 
-export const StyledItemWrapDiv = styled(Box)(({ theme }) => ({
+export const StyledItemWrapDiv = styled(Box)(() => ({
   background: "#fff",
   px: 0,
   borderBottom: "1px solid #ececec",
@@ -91,7 +91,7 @@ export const StyledItemHead = styled(Box)(() => ({
   gap: "10px",
 }));
 
-export const StyledTitleItem = styled(Typography)(({ theme }) => ({
+export const StyledTitleItem = styled(Typography)(() => ({
   display: "-webkit-box",
   WebkitBoxOrient: "vertical",
   overflow: "hidden",

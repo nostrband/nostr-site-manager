@@ -46,8 +46,8 @@ export const PostDetails = memo(
           <StyledTitlePage>
             <Button
               onClick={handleBack}
-              color="primary"
               variant="text"
+              color="secondary"
               sx={{ minWidth: "auto" }}
             >
               <ChevronLeftIcon />

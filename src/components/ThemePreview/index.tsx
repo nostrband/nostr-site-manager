@@ -7,25 +7,24 @@ import Image, { StaticImageData } from "next/image";
 interface IThemePreview {
   preview: StaticImageData;
   handleNavigate: () => void;
+  alt?: string;
 }
 
-export const ThemePreview = ({ preview, handleNavigate }: IThemePreview) => {
+export const ThemePreview = ({
+  preview,
+  alt = "",
+  handleNavigate,
+}: IThemePreview) => {
   return (
     <StyledWrapPreview>
       <StyledButtonPreview
         onClick={handleNavigate}
-        color="decorate"
         variant="contained"
         size="large"
       >
         Preview
       </StyledButtonPreview>
-      <Image
-        src={preview}
-        alt="Description of image"
-        width={500}
-        height={500}
-      />
+      <Image src={preview} alt={alt} width={500} height={500} />
     </StyledWrapPreview>
   );
 };

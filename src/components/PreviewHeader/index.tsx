@@ -1,9 +1,11 @@
 "use client";
-import { StyledWrapper } from "@/components/PreviewHeader/styled";
+import {
+  StyledEndIcon,
+  StyledWrapper,
+} from "@/components/PreviewHeader/styled";
 import { Button } from "@mui/material";
 import { ModalThemes } from "@/components/ModalThemes";
 import React, { useState } from "react";
-import { ExpandMoreTwoTone as ExpandMoreTwoToneIcon } from "@mui/icons-material";
 
 export const PreviewHeader = ({
   themeName,
@@ -27,10 +29,9 @@ export const PreviewHeader = ({
       <StyledWrapper>
         <Button
           sx={{ span: { paddingLeft: "4px" } }}
-          color="primary"
           variant="outlined"
           onClick={handleOpen}
-          endIcon={<ExpandMoreTwoToneIcon />}
+          endIcon={<StyledEndIcon />}
         >
           Theme:
           <b>

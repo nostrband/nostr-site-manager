@@ -1,7 +1,3 @@
-import {
-  StyledTitle,
-  StyledWrap,
-} from "@/components/Pages/Landing/components/Benefits/styled";
 import { Container, Grid } from "@mui/material";
 import { SocialBenefit } from "@/components/Pages/Landing/components/SocialBenefit";
 import { SeoBenefit } from "@/components/Pages/Landing/components/SeoBenefit";
@@ -13,12 +9,16 @@ import { OpenSourceBenefit } from "@/components/Pages/Landing/components/OpenSou
 import { PopularAppsBenefit } from "@/components/Pages/Landing/components/PopularAppsBenefit";
 import { NativelySocialBenefit } from "@/components/Pages/Landing/components/NativelySocialBenefit";
 import { BeautifulThemesBenefit } from "@/components/Pages/Landing/components/BeautifulThemesBenefit";
+import {
+  StyledTitleSectionLanding,
+  StyledWrapSectionLanding,
+} from "../shared/styled";
 
 export const Benefits = () => {
   return (
-    <StyledWrap>
+    <StyledWrapSectionLanding>
       <Container maxWidth="lg">
-        <StyledTitle>Powerful Benefits</StyledTitle>
+        <StyledTitleSectionLanding>Powerful Benefits</StyledTitleSectionLanding>
 
         <Grid
           container
@@ -65,6 +65,6 @@ export const Benefits = () => {
           </Grid>
         </Grid>
       </Container>
-    </StyledWrap>
+    </StyledWrapSectionLanding>
   );
 };

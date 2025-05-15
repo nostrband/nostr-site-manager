@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
 
     <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content="Framer c105afa" />
+    <meta name="generator" content="Framer dc5e905" />
     <title>Npub.pro</title>
     <meta
       name="description"
@@ -13,7 +13,7 @@
     />
     <meta
       name="framer-search-index"
-      content="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/searchIndex-ck0jSj8zIIYj.json"
+      content="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/searchIndex-jTrkCIC_B6T4.json"
     />
     <link
       href="https://framerusercontent.com/images/e7piYZEYcHrFvzi9YjkwJsei4.png"
@@ -41,11 +41,6 @@
     />
 
     <meta name="robots" content="max-image-preview:large" />
-    <link rel="canonical" href="https://flowing-truly-284104.framer.app/" />
-    <meta
-      property="og:url"
-      content="https://flowing-truly-284104.framer.app/"
-    />
     <style data-framer-breakpoint-css>
       @media (min-width: 1920px) {
         .hidden-72rtr7 {
@@ -123,6 +118,7 @@
         --token-a50368a4-89ba-4a1b-94a1-abf6af665592: rgb(255, 62, 217);
         --token-8a610b0e-e961-42ae-a174-34ca6072335e: rgb(97, 97, 255);
         --token-d78e7fae-35f7-451b-be3a-693091ef39d1: rgba(255, 62, 217, 0.3);
+        --token-9969d053-4e40-471e-94e0-f7ec8592f4ba: rgba(255, 62, 217, 0.5);
       }
       #__framer-badge-container {
         position: fixed;
@@ -1639,27 +1635,42 @@
       }
       ul.framer-text,
       ol.framer-text {
-        display: table;
-        width: 100%;
+        padding-left: 3ch;
+        position: relative;
       }
       li.framer-text {
-        display: table-row;
         counter-increment: list-item;
         list-style: none;
       }
       ol.framer-text > li.framer-text:before {
-        display: table-cell;
-        width: 2.25ch;
-        box-sizing: border-box;
-        padding-inline-end: 0.75ch;
+        position: absolute;
+        left: 0;
         content: counter(list-item, var(--list-style-type)) ".";
-        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+      ol.framer-text > li.framer-text:nth-last-child(n + 100),
+      ol.framer-text > li.framer-text:nth-last-child(n + 100) ~ li {
+        padding-left: 1ch;
+      }
+      ol.framer-text > li.framer-text:nth-last-child(n + 1000),
+      ol.framer-text > li.framer-text:nth-last-child(n + 1000) ~ li {
+        padding-left: 2ch;
+      }
+      ol.framer-text > li.framer-text:nth-last-child(n + 10000),
+      ol.framer-text > li.framer-text:nth-last-child(n + 10000) ~ li {
+        padding-left: 3ch;
+      }
+      ol.framer-text > li.framer-text:nth-last-child(n + 100000),
+      ol.framer-text > li.framer-text:nth-last-child(n + 100000) ~ li {
+        padding-left: 4ch;
+      }
+      ol.framer-text > li.framer-text:nth-last-child(n + 1000000),
+      ol.framer-text > li.framer-text:nth-last-child(n + 1000000) ~ li {
+        padding-left: 5ch;
       }
       ul.framer-text > li.framer-text:before {
-        display: table-cell;
-        width: 2.25ch;
-        box-sizing: border-box;
-        padding-inline-end: 0.75ch;
+        position: absolute;
+        left: 0;
         content: "\2022";
       }
       .framer-table-wrapper {
@@ -2145,22 +2156,22 @@
   <body>
     <!-- <script
       async
-      src="https://events.framer.com/script?v=1"
+      src="https://events.framer.com/script?v=2"
       data-fid="146d5a6f767d627c0dbf3084ce13eee3e84544d5249a00542e75671a6b2970da"
       data-no-nt
     ></script> -->
 
-    <div id="main"></div>
+    <div id="main" data-framer-no-content></div>
 
     <script data-framer-appear-animation="no-preference"></script>
     <!-- <link
       rel="modulepreload"
       fetchpriority="low"
-      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-PWRDFB2F.mjs"
+      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-C3DZXXXS.mjs"
     /><link
       rel="modulepreload"
       fetchpriority="low"
-      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-FIZTVOUW.mjs"
+      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-HZL4YIMB.mjs"
     /><link
       rel="modulepreload"
       fetchpriority="low"
@@ -2168,7 +2179,7 @@
     /><link
       rel="modulepreload"
       fetchpriority="low"
-      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/vhMxu122ftJfmHT8ko-_sm5QlJioPsdp4ri1GImR7jo.KIYAJYEU.mjs"
+      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/5ZufLSGKjxjY_UmUY0JHf4TFJSoZiMKASHZ9FQQ0r0E.RLMO4U6D.mjs"
     /><link
       rel="modulepreload"
       fetchpriority="low"
@@ -2176,18 +2187,18 @@
     /><link
       rel="modulepreload"
       fetchpriority="low"
-      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-PBG3BFJX.mjs"
+      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/chunk-G6YEWIAF.mjs"
     /><link
       rel="modulepreload"
       fetchpriority="low"
-      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/script_main.FA2NIPUS.mjs"
+      href="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/script_main.LNUB4KMP.mjs"
     /> -->
     <script
       type="module"
       async
       data-framer-bundle="main"
       fetchpriority="low"
-      src="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/script_main.FA2NIPUS.mjs"
+      src="https://framerusercontent.com/sites/4dgQnwxl6GGeUJGUsuc92t/script_main.LNUB4KMP.mjs"
     ></script>
 
     <script>
@@ -2196,10 +2207,12 @@
 
         if (
           button &&
-          button.textContent.trim().toLowerCase().includes("get started")
+          (button.textContent.trim().toLowerCase().includes("0001") ||
+            button.textContent.trim().toLowerCase().includes("0002") ||
+            button.textContent.trim().toLowerCase().includes("0003"))
         ) {
           window.parent.postMessage(
-            { type: "BUTTON_CLICKED", payload: "Button was clicked!" },
+            { type: "BUTTON_CLICKED", payload: "GET_STARTED" },
             "*"
           );
         }
@@ -2210,24 +2223,10 @@
 
         if (
           button &&
-          button.textContent.trim().toLowerCase().includes("try for free")
+          button.textContent.trim().toLowerCase().includes("0004")
         ) {
           window.parent.postMessage(
-            { type: "BUTTON_CLICKED", payload: "Button was clicked!" },
-            "*"
-          );
-        }
-      });
-
-      document.getElementById("main").addEventListener("click", (e) => {
-        const button = e.target.closest("button");
-
-        if (
-          button &&
-          button.textContent.trim().toLowerCase().includes("try now for free")
-        ) {
-          window.parent.postMessage(
-            { type: "BUTTON_CLICKED", payload: "Button was clicked!" },
+            { type: "BUTTON_CLICKED", payload: "BUY_SUBSCRIPTION" },
             "*"
           );
         }

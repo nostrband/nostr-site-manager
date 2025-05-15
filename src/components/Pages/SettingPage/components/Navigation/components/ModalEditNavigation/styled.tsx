@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 export const StyledDialog = styled(Dialog)(() => ({
   "& .MuiPaper-root": {
@@ -21,10 +21,4 @@ export const StyledDialogTitle = styled(DialogTitle)(() => ({
   alignItems: "center",
   padding: 16,
   paddingBottom: 0,
-}));
-
-export const StyledTitle = styled(Typography)(() => ({
-  fontSize: 20,
-  lineHeight: "26px",
-  fontWeight: "bold",
 }));

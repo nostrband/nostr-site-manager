@@ -7,12 +7,6 @@ export const SpinerWrapSites = styled(Box)(() => ({
   marginTop: 100,
 }));
 
-export const StyledEmptyBlock = styled(Box)(() => ({
-  maxWidth: 187,
-  margin: "0 auto",
-  marginTop: 50,
-}));
-
 export const StyledWrapListPosts = styled(Box)(({ theme }) => ({
   paddingTop: "24px",
   paddingBottom: "100px",
@@ -39,4 +33,8 @@ export const StyledShowMore = styled(Box)(({ theme }) => ({
 export const StyledWrap = styled(Box)(() => ({
   maxWidth: 720,
   margin: "0 auto",
+}));
+
+export const StyledEmptyBlock = styled(Box)(() => ({
+  marginTop: 24,
 }));

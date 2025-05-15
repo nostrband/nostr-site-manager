@@ -8,6 +8,9 @@
 
 # testing
 /coverage
+/test-results
+/playwright-report
+/playwright
 
 # next.js
 /.next/
@@ -35,5 +38,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-*storybook.log
 .qodo

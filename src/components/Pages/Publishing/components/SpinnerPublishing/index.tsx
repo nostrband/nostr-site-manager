@@ -1,4 +1,5 @@
 import { SpinnerCustom } from "@/components/SpinnerCustom";
+import { PRIMARY_COLOR } from "@/consts";
 
 export const SpinnerPublishing = ({ isLoading }: { isLoading: boolean }) => {
   if (isLoading) {
@@ -15,7 +16,7 @@ export const SpinnerPublishing = ({ isLoading }: { isLoading: boolean }) => {
     >
       <path
         d="M45.001 81L69.001 105L117.001 57M161.001 81C161.001 125.183 125.184 161 81.001 161C36.8182 161 1.00098 125.183 1.00098 81C1.00098 36.8172 36.8182 1 81.001 1C125.184 1 161.001 36.8172 161.001 81Z"
-        stroke="#FF3ED9"
+        stroke={PRIMARY_COLOR}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

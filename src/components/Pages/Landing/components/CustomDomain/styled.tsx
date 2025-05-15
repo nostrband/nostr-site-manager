@@ -9,7 +9,7 @@ export const StyledWrapDomain = styled(Box)(({ theme }) => ({
   gap: 16,
   borderRadius: "50px",
   padding: "12px 16px",
-  background: theme.palette.decorate.main,
+  background: theme.palette.primary.main,
   color: "#fff",
 }));
 
@@ -28,7 +28,7 @@ export const StyledGroupDomain = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const StyledWrapDomainDark = styled(Box)(({ theme }) => ({
+export const StyledWrapDomainDark = styled(Box)(() => ({
   maxWidth: "100%",
   display: "flex",
   alignItems: "center",

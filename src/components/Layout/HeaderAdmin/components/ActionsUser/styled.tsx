@@ -34,7 +34,7 @@ export const StyledBadgeWrap = styled(Box)(() => ({
 }));
 
 export const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
-  color: theme.palette.decorate.main,
+  color: theme.palette.primary.main,
 }));
 
 export const StyledListItemIconDelete = styled(ListItemIcon)(({ theme }) => ({
@@ -50,10 +50,6 @@ export const StyledBadgeAvatar = styled(Avatar)(() => ({
 }));
 
 export const StyledBadgeTitle = styled(Typography)(() => ({
-  fontSize: "14px",
-  lineHeight: "22px",
-  fontWeight: "500",
-
   width: "100%",
   overflow: "hidden",
   textOverflow: "ellipsis",

@@ -51,8 +51,8 @@ export const StyledPaymentInvoicePrice = styled(Box)(() => ({
 }));
 
 export const StyledInvoices = styled(Box)(() => ({
-  display: 'flex',
-  flexDirection: 'column',
+  display: "flex",
+  flexDirection: "column",
   gap: 8,
-  width: '100%'
+  width: "100%",
 }));

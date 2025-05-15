@@ -10,7 +10,7 @@ import {
   StyledAlertExpiringPlanIcon,
 } from "./styled";
 import { TabContext, TabList } from "@mui/lab";
-import { IconButton, Tab } from "@mui/material";
+import { Button, IconButton, Tab } from "@mui/material";
 import { CheckCircleIcon, FIleTextIcon } from "@/components/Icons";
 import { ItemTask } from "./components/ItemTask";
 import { useRouter } from "next/navigation";
@@ -118,9 +118,25 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               </IconButton>
             }
           >
-            Upgrade to pro
+            Upgrade to pro {/* подписка нет */}
+
+           Renew Subscription {/* подписка истекает */}
           </StyledAlertExpiringPlan>
         )
+      )}
+
+
+
+{/* подписка есть и не истекла */}
+      {isProPlan && (
+        <Button
+          variant="contained"
+          size="large"
+          endIcon={<StyledAlertExpiringPlanIcon />}
+          onClick={handleNavigateToSubscription}
+        >
+          Renew Subscription
+        </Button>
       )}
 
       {isLoading ? (

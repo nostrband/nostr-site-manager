@@ -208,20 +208,21 @@ export const getBtcUsdCurrencies = async (): Promise<number> => {
   }
 };
 
-// export const getBtcUsdCurrenciesByTimestamp = async (
-//   timestamp: number
-// ): Promise<number> => {
-//   try {
-//     const res = await fetch(
-//       `https://api.coincap.io/v2/assets/bitcoin/history?interval=d1&start=${timestamp}&end=${timestamp}`
-//     );
+export const createTestInvoice = async (
+  serviceId: string,
+): Promise<ReturnOrderType> => {
+  try {
+    const res = await fetchWithSession(
+      `/create-test-invoice?serviceId=${serviceId}`,
+      undefined,
+      "post",
+      BILLING_API_PATH,
+    );
 
-//     console.log({res})
+    const data: { order: ReturnOrderType } = await res.json();
 
-//     // const data: { bitcoin: { usd: number } } = await res.json();
-
-//     // return data.bitcoin.usd;
-//   } catch (error: any) {
-//     throw new Error(error);
-//   }
-// };
+    return data.order;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};

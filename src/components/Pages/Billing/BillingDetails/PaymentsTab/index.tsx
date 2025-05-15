@@ -34,9 +34,12 @@ export const PaymentsTab = () => {
   const paymentsItems =
     dataOrders && dataInvoices && dataSites && dataServices
       ? dataOrders.map((orderItem) => {
-          const invoices = dataInvoices.filter(
-            (invoice) => invoice.id === orderItem.invoice_ids,
-          );
+          const invoices = dataInvoices.filter((invoice) => {
+            const invoice_ids = orderItem.invoice_ids.split(",");
+
+            return invoice_ids.includes(invoice.id);
+          });
+
           return {
             order: orderItem,
             invoices: invoices.map((invoice) => {

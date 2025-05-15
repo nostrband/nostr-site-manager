@@ -8,13 +8,19 @@ import { useInvoices } from "@/hooks/useInvoices";
 import { useServices } from "@/hooks/useServices";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { useState } from "react";
-import { createOrder, ReturnInvoiceType } from "@/services/billing.service";
+import {
+  createOrder,
+  // createTestInvoice,
+  ReturnInvoiceType,
+} from "@/services/billing.service";
 import { useConvertCurrency } from "@/hooks/useConvertCurrency";
 import { StyledCardActionArea } from "../../styled";
 import { EmptyBlock } from "@/components/EmptyBlock";
 import { EmptyBillingTwoToneIcon } from "@/components/Icons";
+import { useRouter } from "next/navigation";
 
 export const PendingInvoicesTab = () => {
+  const router = useRouter();
   const { data: dataSites, isLoading, isFetching } = useListSites();
   const [listChoiceInvoices, setListChoiceInvoices] = useState<
     ReturnInvoiceType[]
@@ -85,13 +91,21 @@ export const PendingInvoicesTab = () => {
     try {
       const invoiceIds = listChoiceInvoices.map((el) => el.id);
 
-      await createOrder(invoiceIds);
+      const order = await createOrder(invoiceIds);
+
+      router.push(
+        `/admin/order?orderId=${order.id}&checkoutUrl=${order.checkout_url}`,
+      );
     } catch (error) {
       console.error(error);
-    } finally {
+
       setLoadingPay(false);
     }
   };
+
+  // const handleTest = async () => {
+  //   await createTestInvoice('5004fa45-cc6d-4b96-9648-ee47f0586f04')
+  // }
 
   if (
     isFetchingServices ||
@@ -111,6 +125,7 @@ export const PendingInvoicesTab = () => {
   return (
     <>
       <Grid container spacing={{ xs: "24px" }} columns={{ xs: 12, sm: 12 }}>
+        {/* <button onClick={handleTest}>test</button> */}
         {!isEmptyInvoices && (
           <Grid item xs={12}>
             <Alert severity="warning">

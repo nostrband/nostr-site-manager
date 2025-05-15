@@ -109,7 +109,7 @@ const Order = () => {
                 )}
               </StyledCardHead>
 
-              <SiteBaseInfoPreview siteInfo={siteInfo} />
+              {siteId && <SiteBaseInfoPreview siteInfo={siteInfo} />}
               <Button
                 size="large"
                 variant="outlined"

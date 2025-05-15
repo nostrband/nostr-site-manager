@@ -10,10 +10,23 @@ import { StyledTitlePage } from "@/components/shared/styled";
 import { MySubscriptionItem } from "./components/MySubscriptionItem";
 import { useRouter } from "next/navigation";
 import { useServices } from "@/hooks/useServices";
-import { getSubscriptionStatus } from "@/utils";
+import { getSubscriptionStatus, SubscriptionStatus } from "@/utils";
 import Link from "next/link";
 import { StyledCardActionArea } from "../styled";
 import { EmptyBlock } from "@/components/EmptyBlock";
+
+interface ServiceItem {
+  siteInfo: {
+    logo: string;
+    name: string;
+    title: string;
+    url: string;
+  };
+  subscriptionPlan: SubscriptionStatus;
+  serviceId: string;
+  priceId: string;
+  siteId: string;
+}
 
 const MySubscription = () => {
   const { data, isLoading, isFetching } = useListSites();
@@ -22,14 +35,16 @@ const MySubscription = () => {
 
   const services =
     data && dataServices
-      ? dataServices.map((el) => {
+      ? dataServices.reduce((acc: ServiceItem[], el) => {
           const { object_id, paid_until, id, price_id } = el;
 
           const subscriptionStatus = getSubscriptionStatus(paid_until);
 
           const getSite = data?.find((el) => el.id === object_id);
 
-          const { logo = "", name = "", title = "", url = "" } = getSite || {};
+          if (!getSite) return acc;
+
+          const { logo = "", name = "", title = "", url = "" } = getSite;
 
           const siteInfo = {
             logo,
@@ -38,14 +53,16 @@ const MySubscription = () => {
             url,
           };
 
-          return {
+          acc.push({
             siteInfo,
             subscriptionPlan: subscriptionStatus,
             serviceId: id,
             priceId: price_id,
             siteId: object_id,
-          };
-        })
+          });
+
+          return acc;
+        }, [])
       : [];
 
   if (isLoading || isFetching) {

@@ -57,10 +57,14 @@ const RenewSubscription = () => {
       try {
         const invoiceId = dataInvoices.find((el) => el.id)?.id as string;
 
-        await createOrder([invoiceId]);
+        const order = await createOrder([invoiceId]);
+
+        router.push(
+          `/admin/order?orderId=${order.id}&siteId=${siteId}&checkoutUrl=${order.checkout_url}`,
+        );
       } catch (error) {
         console.error(error);
-      } finally {
+
         setLoadingUnsubscribe(false);
       }
     }

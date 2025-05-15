@@ -56,7 +56,7 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
 
   const handleChange = (
     _: React.SyntheticEvent,
-    newValue: "todo" | "completed",
+    newValue: "todo" | "completed"
   ) => {
     setValue(newValue);
   };
@@ -76,7 +76,7 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
   const handleOpen = (
     idTask: string,
     isCompleted: boolean,
-    isRedirectToSubscribtion: boolean,
+    isRedirectToSubscribtion: boolean
   ) => {
     if (isRedirectToSubscribtion) {
       handleNavigateToSubscription();
@@ -118,17 +118,14 @@ export const TasksUser = ({ siteId }: TasksUserProps) => {
               </IconButton>
             }
           >
-            Upgrade to pro {/* подписка нет */}
-
-           Renew Subscription {/* подписка истекает */}
+            {isProPlan && statusPlan !== SUBSCRIPTION_PLAN.PAID
+              ? "Renew Subscription"
+              : "Upgrade to pro"}
           </StyledAlertExpiringPlan>
         )
       )}
 
-
-
-{/* подписка есть и не истекла */}
-      {isProPlan && (
+      {isProPlan && statusPlan === SUBSCRIPTION_PLAN.PAID && (
         <Button
           variant="contained"
           size="large"

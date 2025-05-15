@@ -1,6 +1,6 @@
 "use client";
 import { Button, Radio, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { CrossCircleIcon, CrossIcon } from "@/components/Icons";
 import {
   StyledDialog,
@@ -16,6 +16,7 @@ import { useListSites } from "@/hooks/useListSites";
 import { SiteBaseInfoPreview } from "@/components/shared/SiteBaseInfoPreview";
 import { SpinerCircularProgress, SpinerWrap } from "@/components/Spiner";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/services/nostr/nostr";
 
 export const ModalSites = ({
   isOpen,
@@ -24,6 +25,7 @@ export const ModalSites = ({
   isOpen: boolean;
   handleClose: () => void;
 }) => {
+    const { isAuth } = useContext(AuthContext);
   const { data, isLoading, isFetching } = useListSites();
   const router = useRouter();
   const [selectSite, setSelectSite] = useState("");
@@ -32,7 +34,7 @@ export const ModalSites = ({
     setSelectSite(id);
   };
 
-  const isEmpty = data?.length === 0;
+  const isEmpty = !isAuth || data?.length === 0;
 
   const handleNavigateToSubscription = () => {
     router.push(`/admin/subscription?siteId=${selectSite}&type=site&plan=pro`);
